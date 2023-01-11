@@ -10,4 +10,9 @@
         android:id="@+id/navigation_income"
         android:title="Income"
         android:icon="@drawable/ic_arrow_downward"/>
+
+    <item
+        android:id="@+id/navigation_expense"
+        android:title="Expense"
+        android:icon="@drawable/ic_arrow_upward"/>
 </menu>

@@ -2,31 +2,31 @@ package com.romandevyatov.bestfinance
 
 import android.content.DialogInterface
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.romandevyatov.bestfinance.adapters.GroupListAdapter
-import com.romandevyatov.bestfinance.databinding.FragmentIncomeBinding
+import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
 import com.romandevyatov.bestfinance.models.IncomeGroup
 
 
-class IncomeFragment : Fragment() {
-    private var _binding : FragmentIncomeBinding? = null
+class ExpenseFragment : Fragment() {
+    private var _binding : FragmentExpenseBinding? = null
 
     private val binding get() = _binding!!
 
     class IncomeViewModel : ViewModel() {
 
         private val _text = MutableLiveData<String>().apply {
-            value = "This is income Fragment"
+            value = "This is expense Fragment"
         }
         val text: LiveData<String> = _text
     }
@@ -36,14 +36,14 @@ class IncomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val incomeViewModel =
+        val expenseViewModel =
             ViewModelProvider(this).get(IncomeViewModel::class.java)
 
-        _binding = FragmentIncomeBinding.inflate(inflater, container, false)
+        _binding = FragmentExpenseBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        incomeViewModel.text.observe(viewLifecycleOwner) {
-            binding.textIncome.text = it
+        expenseViewModel.text.observe(viewLifecycleOwner) {
+            binding.textExpense.text = it
         }
 
         binding.viewButton.setOnClickListener {
@@ -71,17 +71,17 @@ class IncomeFragment : Fragment() {
     }
 
     private fun saveRecord() {
-        val id = binding.incomeGroupIdEditText.text.toString()
-        val name = binding.incomeGroupNameEditText.text.toString()
+        val id = binding.expenseGroupIdEditText.text.toString()
+        val name = binding.expenseGroupNameEditText.text.toString()
 
-        val incomeGroupDatabaseHandler: IncomeGroupDatabaseHandler = IncomeGroupDatabaseHandler(requireActivity())
+        val expenseGroupDatabaseHandler: IncomeGroupDatabaseHandler = IncomeGroupDatabaseHandler(requireActivity())
         if (id.trim() != "" && name.trim() != "" ) {
-            val status = incomeGroupDatabaseHandler.addIncomeGroup(IncomeGroup(Integer.parseInt(id), name))
+            val status = expenseGroupDatabaseHandler.addIncomeGroup(IncomeGroup(Integer.parseInt(id), name))
 
             if (status > -1) {
                 Toast.makeText(activity,"record save", Toast.LENGTH_LONG).show()
-                binding.incomeGroupIdEditText.text.clear()
-                binding.incomeGroupNameEditText.text.clear()
+                binding.expenseGroupIdEditText.text.clear()
+                binding.expenseGroupNameEditText.text.clear()
             }
         } else {
             Toast.makeText(activity,"id or name or email cannot be blank", Toast.LENGTH_LONG).show()
@@ -90,22 +90,22 @@ class IncomeFragment : Fragment() {
     }
 
     private fun viewRecord() {
-        val incomeGroupDatabaseHandler: IncomeGroupDatabaseHandler = IncomeGroupDatabaseHandler(requireActivity())
+        val expenseGroupDatabaseHandler: IncomeGroupDatabaseHandler = IncomeGroupDatabaseHandler(requireActivity())
 
-        val incomeGroups: List<IncomeGroup> = incomeGroupDatabaseHandler.getAllIncomeGroups()
+        val expenseGroups: List<IncomeGroup> = expenseGroupDatabaseHandler.getAllIncomeGroups()
 
-        val incomeGroupIds = Array<String>(incomeGroups.size) {"0"}
-        val incomeGroupNames = Array<String>(incomeGroups.size) {"null"}
+        val expenseGroupIds = Array<String>(expenseGroups.size) {"0"}
+        val expenseGroupNames = Array<String>(expenseGroups.size) {"null"}
 
         var index = 0
-        for (incomeGroup in incomeGroups) {
-            incomeGroupIds[index] = incomeGroup.id.toString()
-            incomeGroupNames[index] = incomeGroup.name
+        for (expenseGroup in expenseGroups) {
+            expenseGroupIds[index] = expenseGroup.id.toString()
+            expenseGroupNames[index] = expenseGroup.name
             ++index
         }
 
-        val incomeGroupListAdapter = GroupListAdapter(requireActivity(), incomeGroupIds, incomeGroupNames)
-        binding.listView.adapter = incomeGroupListAdapter
+        val expenseGroupListAdapter = GroupListAdapter(requireActivity(), expenseGroupIds, expenseGroupNames)
+        binding.listView.adapter = expenseGroupListAdapter
     }
 
     fun updateRecord() {
@@ -159,10 +159,10 @@ class IncomeFragment : Fragment() {
             if (deleteId.trim() != "") {
                 val status = incomGroupDatabaseHandler.deleteIncomeGroup(IncomeGroup(Integer.parseInt(deleteId),""))
                 if (status > -1){
-                    Toast.makeText(activity,"Record is deleted",Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity,"Record is deleted", Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(activity,"id or name or email cannot be blank",Toast.LENGTH_LONG).show()
+                Toast.makeText(activity,"id or name or email cannot be blank", Toast.LENGTH_LONG).show()
             }
 
         })

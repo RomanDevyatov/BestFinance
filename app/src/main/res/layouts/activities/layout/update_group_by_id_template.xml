@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="enter id"
+        android:hint="Enter id"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="enter name"
+        android:hint="Enter name"
         app:layout_constraintTop_toBottomOf="@+id/updateId"
         tools:layout_editor_absoluteX="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

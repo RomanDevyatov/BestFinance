@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncomeFragment">
+    tools:context=".ExpenseFragment">
 
     <TextView
-        android:id="@+id/text_income"
+        android:id="@+id/text_expense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Income Fragment ХУЙ"
+        android:text="Expense Fragment ХУЙ"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,17 +20,17 @@
         android:id="@+id/table_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/text_income">
+        app:layout_constraintTop_toBottomOf="@+id/text_expense">
 
         <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:text="Income Group Id" />
+                android:text="Expense Group Id" />
 
             <EditText
-                android:id="@+id/income_group_id_edit_text"
+                android:id="@+id/expense_group_id_edit_text"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
@@ -42,10 +42,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:text="Income Group Name" />
+                android:text="Expense Group Name" />
 
             <EditText
-                android:id="@+id/income_group_name_edit_text"
+                android:id="@+id/expense_group_name_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
@@ -96,6 +96,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/table_layout" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

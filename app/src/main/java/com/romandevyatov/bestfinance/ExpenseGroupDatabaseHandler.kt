@@ -6,13 +6,13 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
-import com.romandevyatov.bestfinance.models.IncomeGroup
+import com.romandevyatov.bestfinance.models.ExpenseGroup
 
-class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASTE_VERSION) {
+class ExpenseGroupDatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASTE_VERSION) {
     companion object {
         private val DATABASTE_VERSION = 1
         private val DATABASE_NAME = "BestFinanceDatabase"
-        private val TABLE_INCOME_GROUPS = "IncomeGroupTable"
+        private val TABLE_INCOME_GROUPS = "ExpenseGroupTable"
         private val KEY_ID = "id"
         private val KEY_NAME = "name"
     }
@@ -28,9 +28,9 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
-    fun addIncomeGroup(incomeGroup: IncomeGroup) : Long {
+    fun addExpenseGroup(expenseGroup: ExpenseGroup) : Long {
         val contentValues = ContentValues()
-        contentValues.put(KEY_NAME, incomeGroup.name)
+        contentValues.put(KEY_NAME, expenseGroup.name)
 
         val db = this.writableDatabase
         val success = db.insert(TABLE_INCOME_GROUPS, null, contentValues)
@@ -39,8 +39,8 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         return success
     }
 
-    fun getAllIncomeGroups() : List<IncomeGroup> {
-        val incomeGroupArrayList: ArrayList<IncomeGroup> = ArrayList<IncomeGroup>()
+    fun getAllExpenseGroups() : List<ExpenseGroup> {
+        val expenseGroupArrayList: ArrayList<ExpenseGroup> = ArrayList<ExpenseGroup>()
         val SELECT_ALL_INCOME_GROUP_QUERY = "SELECT * FROM $TABLE_INCOME_GROUPS"
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -48,42 +48,42 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         try {
             cursor = db.rawQuery(SELECT_ALL_INCOME_GROUP_QUERY, null)
         } catch (e: SQLiteException) {
-            throw SQLiteException("Error running income group select all", e)
+            throw SQLiteException("Error running expense group select all", e)
         }
 
-        var incomeGroupId: Int
-        var incomeGroupName: String
+        var expenseGroupId: Int
+        var expenseGroupName: String
 
         if (cursor.moveToFirst()) {
             do {
-                incomeGroupId = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
-                incomeGroupName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-                val incomeGroup = IncomeGroup(id = incomeGroupId, name = incomeGroupName)
-                incomeGroupArrayList.add(incomeGroup)
+                expenseGroupId = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                expenseGroupName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val expenseGroup = ExpenseGroup(id = expenseGroupId, name = expenseGroupName)
+                expenseGroupArrayList.add(expenseGroup)
             } while (cursor.moveToNext())
         }
 
-        return incomeGroupArrayList
+        return expenseGroupArrayList
     }
 
-    fun updateIncomeGroup(incomeGroup: IncomeGroup) : Int {
+    fun updateExpenseGroup(expenseGroup: ExpenseGroup) : Int {
         val contentValues = ContentValues()
-        contentValues.put(KEY_ID, incomeGroup.id)
-        contentValues.put(KEY_NAME, incomeGroup.name)
+        contentValues.put(KEY_ID, expenseGroup.id)
+        contentValues.put(KEY_NAME, expenseGroup.name)
 
         val db = this.writableDatabase
-        val success = db.update(TABLE_INCOME_GROUPS, contentValues,"id="+incomeGroup.id,null)
+        val success = db.update(TABLE_INCOME_GROUPS, contentValues,"id="+expenseGroup.id,null)
         db.close()
 
         return success
     }
 
-    fun deleteIncomeGroup(incomeGroup: IncomeGroup) : Int {
+    fun deleteExpenseGroup(expenseGroup: ExpenseGroup) : Int {
         val contentValues = ContentValues()
-        contentValues.put(KEY_ID, incomeGroup.id)
+        contentValues.put(KEY_ID, expenseGroup.id)
 
         val db = this.writableDatabase
-        val success = db.delete(TABLE_INCOME_GROUPS,"id="+incomeGroup.id,null)
+        val success = db.delete(TABLE_INCOME_GROUPS,"id="+expenseGroup.id,null)
         db.close()
 
         return success
