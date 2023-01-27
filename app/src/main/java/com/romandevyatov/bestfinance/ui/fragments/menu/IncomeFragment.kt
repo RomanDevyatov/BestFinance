@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeBinding
@@ -34,7 +33,7 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentIncomeBinding.bind(view)
 
-        setRecyclerView()
+        initRecyclerView()
 
         binding.addIncomeGroupButton.setOnClickListener {
             val newIncomeGroupName = binding.newIncomeGroupName.text.toString()
@@ -44,11 +43,11 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
         }
 
         incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) {
-            incomeGroupAdapter.differ.submitList(it)
+            incomeGroupAdapter.submitList(it)
         }
     }
 
-    private fun setRecyclerView() {
+    private fun initRecyclerView() {
         incomeGroupAdapter = IncomeGroupAdapter(this)
         binding.incomeGroupRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.incomeGroupRecyclerView.adapter = incomeGroupAdapter

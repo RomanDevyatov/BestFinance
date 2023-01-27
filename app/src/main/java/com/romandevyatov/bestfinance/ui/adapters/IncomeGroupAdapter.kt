@@ -12,16 +12,6 @@ class IncomeGroupAdapter(
     private val onClickListener: IncomeGroupItemClickListener
 ) : RecyclerView.Adapter<IncomeGroupItemViewHolder>() {
 
-//    inner class MyViewHolder(val incomeGroupCardBinding: IncomeGroupCardBinding): RecyclerView.ViewHolder(incomeGroupCardBinding.root) {
-//        init {
-//            incomeGroupCardBinding.root.setOnClickListener {
-//                val position = adapterPosition
-////                onClickListener.deleteOnClick(position)
-//                true
-//            }
-//        }
-//    }
-
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeGroup>() {
         override fun areItemsTheSame(oldItem: IncomeGroup, newItem: IncomeGroup): Boolean {
             return oldItem.id == newItem.id
@@ -32,7 +22,7 @@ class IncomeGroupAdapter(
         }
     }
 
-    val differ = AsyncListDiffer(this, differentCallback)
+    private val differ = AsyncListDiffer(this, differentCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeGroupItemViewHolder {
         val from = LayoutInflater.from(parent.context)
@@ -41,11 +31,14 @@ class IncomeGroupAdapter(
     }
 
     override fun onBindViewHolder(holder: IncomeGroupItemViewHolder, position: Int) {
-        holder.bindIncomeGroupItem(differ.currentList[position])
+        holder.bindItem(differ.currentList[position])
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
 
+    fun submitList(list: List<IncomeGroup>) {
+        differ.submitList(list)
+    }
 }

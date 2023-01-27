@@ -11,7 +11,7 @@ class IncomeGroupItemViewHolder  (
     private val clickListener: IncomeGroupItemClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bindIncomeGroupItem(incomeGroup: IncomeGroup) {
+    fun bindItem(incomeGroup: IncomeGroup) {
         binding.textView.text = incomeGroup.name
 
         binding.removeIncomeGroupIcon.setOnClickListener{
