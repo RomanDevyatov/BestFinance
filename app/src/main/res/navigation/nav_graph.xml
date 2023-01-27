@@ -7,20 +7,17 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.HomeFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_income"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.IncomeFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.IncomeFragment"
         android:label="Income"
         tools:layout="@layout/fragment_income" />
 
-    <fragment
-        android:id="@+id/navigation_expense"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.ExpenseFragment"
-        android:label="Expense"
-        tools:layout="@layout/fragment_expense" />
+
+
 
 </navigation>

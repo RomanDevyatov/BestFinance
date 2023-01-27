@@ -27,7 +27,6 @@ class MainActivity() : AppCompatActivity() {
         setContentView(binding.root)
 
         setNavBar()
-
     }
 
     private fun setNavBar() {
