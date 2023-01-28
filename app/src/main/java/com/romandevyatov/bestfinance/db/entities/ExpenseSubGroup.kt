@@ -22,7 +22,7 @@ data class ExpenseSubGroup(
     val id: Long? = null,
 
     @ColumnInfo(name = "name")
-    val name: String?,
+    val name: String,
 
     @ColumnInfo(name = "expense_group_id")
     val expenseGroupId: Long

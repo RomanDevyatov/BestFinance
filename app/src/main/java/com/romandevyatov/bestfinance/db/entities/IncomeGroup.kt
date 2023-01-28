@@ -6,10 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "income_group")
 data class IncomeGroup(
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
     @ColumnInfo(name = "name")
-    val name: String?
+    val name: String
 )

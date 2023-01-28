@@ -20,10 +20,12 @@ object DatabaseModule {
     fun providesBudgetDatabase(
         @ApplicationContext context: Context
     ) = Room.databaseBuilder(
-        context,
-        BestFinanceDatabase::class.java,
-        DATABASE_NAME
-    ).build()
+            context,
+            BestFinanceDatabase::class.java,
+            DATABASE_NAME)
+        .fallbackToDestructiveMigration()
+        .createFromAsset("database/bestfinance_database_pre.db")
+        .build()
 
     @Provides
     @Singleton

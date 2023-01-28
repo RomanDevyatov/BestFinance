@@ -9,8 +9,8 @@ data class ExpenseGroup(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int?,
+    val id: Long?,
 
     @ColumnInfo(name = "name")
-    val name: String?
+    val name: String
 )
