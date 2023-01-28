@@ -9,13 +9,12 @@ import androidx.room.Query
 import androidx.room.OnConflictStrategy
 
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IncomeGroupDao {
 
     @Query("SELECT * FROM income_group order by id ASC")
-    fun getAll():LiveData<List<IncomeGroup>>
+    fun getAll(): LiveData<List<IncomeGroup>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(incomeGroup: IncomeGroup)

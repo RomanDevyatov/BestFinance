@@ -17,6 +17,12 @@
         android:label="Income"
         tools:layout="@layout/fragment_income" />
 
+    <fragment
+        android:id="@+id/navigation_expense"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragment"
+        android:label="Expense"
+        tools:layout="@layout/fragment_expense" />
+
 
 
 

@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "expense_group")
 data class ExpenseGroup(
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int?,
