@@ -35,4 +35,12 @@ object DatabaseModule {
     @Singleton
     fun providesExpenseGroupDao(db: BestFinanceDatabase) = db.getExpenseGroupDao()
 
+    @Provides
+    @Singleton
+    fun providesWalletDao(db: BestFinanceDatabase) = db.getWalletDao()
+
+    @Provides
+    @Singleton
+    fun providesIncomeHistoryDao(db: BestFinanceDatabase) = db.getIncomeHistoryDao()
+
 }

@@ -14,7 +14,8 @@ import androidx.room.PrimaryKey
             childColumns = ["expense_group_id"], // ExpenseSubGroup
             onDelete = CASCADE
         )
-    ])
+    ]
+)
 data class ExpenseSubGroup(
 
     @PrimaryKey(autoGenerate = true)

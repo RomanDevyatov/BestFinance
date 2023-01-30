@@ -1,14 +1,10 @@
 package com.romandevyatov.bestfinance.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
-import androidx.room.Query
-import androidx.room.OnConflictStrategy
+import androidx.room.*
 
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+
 
 @Dao
 interface IncomeGroupDao {
@@ -25,9 +21,10 @@ interface IncomeGroupDao {
     @Update
     suspend fun update(incomeGroup: IncomeGroup)
 
-    @Query("DELETE FROM income_group")
+    @Query("DELETE * FROM income_group")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM income_group WHERE id = :id")
+    @Query("DELETE * FROM income_group WHERE id = :id")
     suspend fun deleteById(id: Int)
+
 }
