@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_income"
@@ -18,16 +22,24 @@
         tools:layout="@layout/fragment_income" />
 
     <fragment
-        android:id="@+id/navigation_expense"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragment"
-        android:label="Expense"
-        tools:layout="@layout/fragment_expense" />
-
-    <fragment
         android:id="@+id/navigation_wallet"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.WalletFragment"
         android:label="Wallet"
         tools:layout="@layout/fragment_wallet" />
+
+    <fragment
+        android:id="@+id/navigation_add_income"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddIncomeHistory"
+        android:label="AddIncome"
+        tools:layout="@layout/fragment_add_income_history" />
+    <navigation android:id="@+id/navigation"
+        app:startDestination="@id/navigation_expense">
+        <fragment
+            android:id="@+id/navigation_expense"
+            android:name="com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragment"
+            android:label="Expense"
+            tools:layout="@layout/fragment_expense" />
+    </navigation>
 
 
 </navigation>
