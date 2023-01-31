@@ -7,6 +7,7 @@ import com.romandevyatov.bestfinance.db.dao.ExpenseGroupDao
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.dao.IncomeHistoryDao
 import com.romandevyatov.bestfinance.db.dao.WalletDao
+import com.romandevyatov.bestfinance.db.dao.relation.IncomeHistoryWithIncomeGroupAndWalletDao
 import com.romandevyatov.bestfinance.db.entities.*
 import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
 
@@ -30,5 +31,7 @@ abstract class BestFinanceDatabase : RoomDatabase() {
     abstract fun getWalletDao(): WalletDao
 
     abstract fun getIncomeHistoryDao(): IncomeHistoryDao
+
+    abstract fun getIncomeHistoryWithIncomeGroupAndWalletDao(): IncomeHistoryWithIncomeGroupAndWalletDao
 
 }

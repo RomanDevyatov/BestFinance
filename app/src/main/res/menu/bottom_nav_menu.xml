@@ -15,4 +15,10 @@
         android:id="@+id/navigation_expense"
         android:title="Expense"
         android:icon="@drawable/ic_arrow_upward"/>
+
+    <item
+        android:id="@+id/navigation_wallet"
+        android:title="Profile"
+        android:icon="@drawable/ic_account"/>
+
 </menu>

@@ -23,7 +23,11 @@
         android:label="Expense"
         tools:layout="@layout/fragment_expense" />
 
-
+    <fragment
+        android:id="@+id/navigation_wallet"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.WalletFragment"
+        android:label="Wallet"
+        tools:layout="@layout/fragment_wallet" />
 
 
 </navigation>

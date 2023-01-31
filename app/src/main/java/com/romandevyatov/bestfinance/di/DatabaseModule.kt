@@ -41,6 +41,6 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun providesIncomeHistoryDao(db: BestFinanceDatabase) = db.getIncomeHistoryDao()
+    fun providesIncomeHistoryWithIncomeGroupAndWalletDao(db: BestFinanceDatabase) = db.getIncomeHistoryWithIncomeGroupAndWalletDao()
 
 }

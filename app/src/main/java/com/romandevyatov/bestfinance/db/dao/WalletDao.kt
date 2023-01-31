@@ -25,10 +25,10 @@ interface WalletDao {
     @Update
     suspend fun update(wallet: Wallet)
 
-    @Query("DELETE * FROM wallet")
+    @Query("DELETE FROM wallet")
     suspend fun deleteAll()
 
-    @Query("DELETE * FROM wallet WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    @Query("DELETE FROM wallet WHERE id = :id")
+    suspend fun deleteById(id: Long)
 
 }

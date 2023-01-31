@@ -12,18 +12,19 @@ import java.util.Date
         ForeignKey(
             entity = IncomeGroup::class,
             parentColumns = ["id"], // IncomeGroup
-            childColumns = ["income_group_id"], // IncomeHistory
+            childColumns = ["income_group_id"], // in IncomeHistory
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Wallet::class,
             parentColumns = ["id"], // Wallet
-            childColumns = ["wallet_id"], // IncomeHistory
+            childColumns = ["wallet_id"], // in IncomeHistory
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class IncomeHistory(
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
@@ -32,7 +33,7 @@ data class IncomeHistory(
     val incomeGroupId: Long,
 
     @ColumnInfo(name = "amount")
-    val amount: Long,
+    val amount: Double,
 
     @ColumnInfo(name = "comment")
     val comment: String?,

@@ -12,6 +12,6 @@ interface IncomeHistoryWithIncomeGroupAndWalletDao {
 
     @Transaction
     @Query("SELECT * FROM income_history")
-    suspend fun getAllIncomeHistoryWithIncomeGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>>
+    fun getAllIncomeHistoryWithIncomeGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>>
 
 }

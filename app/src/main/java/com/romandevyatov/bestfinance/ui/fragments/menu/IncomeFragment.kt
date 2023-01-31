@@ -24,6 +24,7 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private lateinit var incomeGroupAdapter: IncomeGroupAdapter
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentIncomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -56,6 +57,5 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
     override fun deleteIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupViewModel.deleteIncomeGroup(incomeGroup)
     }
-
 
 }

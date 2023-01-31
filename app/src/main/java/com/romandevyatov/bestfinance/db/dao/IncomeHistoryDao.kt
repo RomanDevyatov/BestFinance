@@ -25,10 +25,10 @@ interface IncomeHistoryDao {
     @Update
     suspend fun update(incomeHistory: IncomeHistory)
 
-    @Query("DELETE * FROM income_history")
+    @Query("DELETE FROM income_history")
     suspend fun deleteAll()
 
-    @Query("DELETE * FROM income_history WHERE id = :id")
+    @Query("DELETE FROM income_history WHERE id = :id")
     suspend fun deleteById(id: Int)
 
 }
