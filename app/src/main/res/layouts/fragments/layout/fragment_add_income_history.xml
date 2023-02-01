@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/AddIncomeFragment">
@@ -9,46 +10,38 @@
         android:id="@+id/incomeGroupSpinner"
         android:layout_width="290dp"
         android:layout_height="23dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/incomeSubGroupSpinner"
+        android:id="@+id/walletSpinner"
         android:layout_width="312dp"
         android:layout_height="25dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="88dp"
         app:layout_constraintEnd_toEndOf="@+id/incomeGroupSpinner"
-        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="@+id/incomeGroupSpinner"
         app:layout_constraintTop_toBottomOf="@+id/incomeGroupSpinner" />
-
-    <EditText
-        android:id="@+id/walletNameEditText"
-        android:layout_width="279dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toEndOf="@+id/incomeSubGroupSpinner"
-        app:layout_constraintStart_toStartOf="@+id/incomeSubGroupSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupSpinner" />
 
     <EditText
         android:id="@+id/walletBalanceEditText"
         android:layout_width="264dp"
         android:layout_height="46dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintEnd_toEndOf="@+id/walletNameEditText"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="@+id/walletNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameEditText" />
+        android:layout_marginTop="84dp"
+        app:layout_constraintEnd_toEndOf="@+id/walletSpinner"
+        app:layout_constraintStart_toStartOf="@+id/walletSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/walletSpinner" />
 
     <EditText
         android:id="@+id/dateEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="76dp"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="@+id/walletBalanceEditText"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/walletBalanceEditText"
         app:layout_constraintTop_toBottomOf="@+id/walletBalanceEditText" />
 
@@ -56,10 +49,11 @@
         android:id="@+id/addWalletButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="88dp"
         android:text="Add income"
         app:layout_constraintEnd_toEndOf="@+id/dateEditText"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="@+id/dateEditText"
         app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
