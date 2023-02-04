@@ -33,24 +33,24 @@ class WalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentWalletBinding.bind(view)
 
-        initRecyclerView()
-
-        binding.addWalletButton.setOnClickListener {
-            val nameOfNewWallet = binding.walletNameEditText.text.toString()
-            val balanceOfNewWallet = binding.walletBalanceEditText.text.toString()
-            walletViewModel.insertWallet(
-                Wallet(
-                    name = nameOfNewWallet,
-                    balance = balanceOfNewWallet.toDouble()
-                )
-            )
-
-            Snackbar.make(binding.root, "Wallet $nameOfNewWallet was added", Snackbar.LENGTH_SHORT).show()
-        }
+//        binding.addWalletButton.setOnClickListener {
+//            val nameOfNewWallet = binding.walletNameEditText.text.toString()
+//            val balanceOfNewWallet = binding.walletBalanceEditText.text.toString()
+//            walletViewModel.insertWallet(
+//                Wallet(
+//                    name = nameOfNewWallet,
+//                    balance = balanceOfNewWallet.toDouble()
+//                )
+//            )
+//
+//            Snackbar.make(binding.root, "Wallet $nameOfNewWallet was added", Snackbar.LENGTH_SHORT).show()
+//        }
 
         walletViewModel.walletsLiveData.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
+
+        initRecyclerView()
     }
 
     private fun initRecyclerView() {

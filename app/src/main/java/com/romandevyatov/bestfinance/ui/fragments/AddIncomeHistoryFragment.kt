@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
@@ -22,6 +23,7 @@ import java.util.*
 class AddIncomeHistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentAddIncomeHistoryBinding
+
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
 
@@ -32,11 +34,14 @@ class AddIncomeHistoryFragment : Fragment() {
     ): View? {
         binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
 
+
         initIncomeGroupSpinner()
         initWalletSpinner()
 
         return binding.root
     }
+
+
 
     private fun initIncomeGroupSpinner() {
         val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
@@ -129,6 +134,12 @@ class AddIncomeHistoryFragment : Fragment() {
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+
+            }
+        })
     }
 
     fun updateDate(calendar: Calendar){

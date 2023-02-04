@@ -34,8 +34,6 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentIncomeBinding.bind(view)
 
-        initRecyclerView()
-
         binding.addIncomeGroupButton.setOnClickListener {
             val newIncomeGroupName = binding.newIncomeGroupName.text.toString()
             incomeGroupViewModel.insertIncomeGroup(IncomeGroup(name = newIncomeGroupName))
@@ -46,6 +44,8 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
         incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) {
             incomeGroupAdapter.submitList(it)
         }
+
+        initRecyclerView()
     }
 
     private fun initRecyclerView() {

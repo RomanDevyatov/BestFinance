@@ -24,7 +24,6 @@ class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>
 
     private val walletDiffer = AsyncListDiffer(this, differentCallback)
 
-    private val viewPool = RecyclerView.RecycledViewPool()
 
     inner class WalletItemViewHolder(
         private val binding: WalletCardBinding

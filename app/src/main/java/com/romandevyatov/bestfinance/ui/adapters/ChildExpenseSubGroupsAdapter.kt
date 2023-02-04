@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemRowChildBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 
+
 class ChildExpenseSubGroupsAdapter(
         var expenseSubGroups: List<ExpenseSubGroup>
 ) : RecyclerView.Adapter<ChildExpenseSubGroupsAdapter.ExpenseSubGroupItemViewHolder>() {
@@ -28,9 +29,6 @@ class ChildExpenseSubGroupsAdapter(
         init {
                 this.expenseSubGroupDiffer.submitList(expenseSubGroups)
         }
-
-
-        var onItemClick: ((String) -> Unit)? = null
 
         inner class ExpenseSubGroupItemViewHolder(
                 private val binding: ItemRowChildBinding

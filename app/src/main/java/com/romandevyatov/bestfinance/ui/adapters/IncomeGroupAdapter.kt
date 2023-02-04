@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.IncomeGroupCardBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeGroupItemViewHolder
+
 
 class IncomeGroupAdapter(
     private val onClickListener: IncomeGroupItemClickListener
@@ -24,10 +26,11 @@ class IncomeGroupAdapter(
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeGroupItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = IncomeGroupCardBinding.inflate(from, parent, false)
-        return IncomeGroupItemViewHolder(parent.context, binding, onClickListener)
+        return IncomeGroupItemViewHolder(binding, onClickListener)
     }
 
     override fun onBindViewHolder(holder: IncomeGroupItemViewHolder, position: Int) {
