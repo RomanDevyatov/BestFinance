@@ -12,8 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
+import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupWithExpenseSubGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -21,11 +21,11 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class AddIncomeHistoryFragment : Fragment() {
+class AddExpenseHistoryFragment : Fragment() {
 
-    private lateinit var binding: FragmentAddIncomeHistoryBinding
+    private lateinit var binding: FragmentAddExpenseHistoryBinding
 
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
+    private val expenseGroupWithExpenseSubGroupViewModel: ExpenseGroupWithExpenseSubGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
 
     override fun onCreateView(
@@ -33,17 +33,19 @@ class AddIncomeHistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
+        binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
 
-        initIncomeGroupSpinner()
+
+        initExpenseGroupSpinner()
         initWalletSpinner()
 
         return binding.root
     }
 
-    private fun initIncomeGroupSpinner() {
+    private fun getSpinnerAdapter(name: String): ArrayAdapter<String> {
         val spinnerAdapter: ArrayAdapter<String> =
             object : ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item) {
+
                 override fun isEnabled(position: Int): Boolean {
                     return position != 0
                 }
@@ -58,7 +60,6 @@ class AddIncomeHistoryFragment : Fragment() {
                     parent: ViewGroup
                 ): View {
                     val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                    //set the color of first item in the drop down list to gray
                     if(position == 0) {
                         view.setTextColor(Color.GRAY)
                     } else {
@@ -69,25 +70,43 @@ class AddIncomeHistoryFragment : Fragment() {
                 }
             }
 
-        spinnerAdapter.add("Income group")
+        spinnerAdapter.add(name)
 
-        incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
-            incomeGroupList?.forEach { it ->
-                spinnerAdapter.add(it.name)
+        return spinnerAdapter
+    }
+
+    private fun initExpenseGroupSpinner() {
+        val expenseGroupSpinnerAdapter = getSpinnerAdapter("Expense group")
+
+        expenseGroupWithExpenseSubGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+            expenseGroupList?.forEach { it ->
+                expenseGroupSpinnerAdapter.add(it.expenseGroup.name)
             }
         }
 
-        val incomeGroupSpinner = binding.incomeGroupSpinner
-        incomeGroupSpinner.adapter = spinnerAdapter
+        val expenseGroupSpinner = binding.expenseGroupSpinner
+        expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
 
-        incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                val item = binding.incomeGroupSpinner.getItemAtPosition(position).toString()
+                val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
+
+                val subGroups = expenseGroupWithExpenseSubGroupViewModel.getExpenseGroupWithExpenseSubGroupByGroupName(item)
+
+                val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
+
+                subGroups?.forEach {
+                    expenseSubGroupSpinnerAdapter.add(it.name)
+                }
+
+                val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
+                expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
+
                 Toast.makeText(
                     requireContext(),
                     item,
@@ -100,6 +119,7 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         }
     }
+
 
     private fun initWalletSpinner() {
         val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
@@ -121,6 +141,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 id: Long
             ) {
                 val item = binding.walletSpinner.getItemAtPosition(position).toString()
+
                 Toast.makeText(
                     requireContext(),
                     item,
@@ -136,7 +157,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddIncomeHistoryBinding.bind(view)
+        binding = FragmentAddExpenseHistoryBinding.bind(view)
 
         val dateET = binding.dateEditText
 

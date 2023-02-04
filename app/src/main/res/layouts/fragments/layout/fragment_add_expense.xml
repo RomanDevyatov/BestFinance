@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupSpinner" />
 
     <EditText
-        android:id="@+id/walletBalanceEditText"
+        android:id="@+id/amountEditText"
         android:layout_width="264dp"
         android:layout_height="46dp"
         android:layout_marginTop="60dp"
@@ -48,9 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="@+id/walletBalanceEditText"
-        app:layout_constraintStart_toStartOf="@+id/walletBalanceEditText"
-        app:layout_constraintTop_toBottomOf="@+id/walletBalanceEditText" />
+        app:layout_constraintEnd_toEndOf="@+id/amountEditText"
+        app:layout_constraintStart_toStartOf="@+id/amountEditText"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
     <Button
         android:id="@+id/addWalletButton"

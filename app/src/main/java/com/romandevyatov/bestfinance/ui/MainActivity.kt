@@ -2,7 +2,9 @@ package com.romandevyatov.bestfinance.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -39,10 +41,17 @@ class MainActivity() : AppCompatActivity() {
             )
         )
 
-
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener {
+                _: NavController,
+                destination: NavDestination,
+                _: Bundle? ->
+             navView.isVisible =
+                appBarConfiguration.topLevelDestinations.contains(destination.id)
+        }
 
     }
 

@@ -28,12 +28,12 @@ interface ExpenseGroupDao {
     @Query("DELETE FROM expense_group WHERE id = :id")
     suspend fun deleteById(id: Int)
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpenseSubGroup(expenseSubGroup: List<ExpenseSubGroup>)
 
     @Transaction
     @Query("SELECT * FROM expense_group")
     fun getExpenseGroupWithExpenseSubGroup(): LiveData<List<ExpenseGroupWithExpenseSubGroup>>
+
 
 }

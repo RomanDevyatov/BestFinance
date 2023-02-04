@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_add_expense"
+            app:destination="@id/anavigation_add_expense" />
     </fragment>
 
     <fragment
@@ -38,7 +41,11 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.AddIncomeHistoryFragment"
         android:label="AddIncome"
         tools:layout="@layout/fragment_add_income_history" />
-
+    <fragment
+        android:id="@+id/anavigation_add_expense"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddExpenseHistoryFragment"
+        android:label="fragment_add_expense_history"
+        tools:layout="@layout/fragment_add_expense_history" />
 
 
 </navigation>

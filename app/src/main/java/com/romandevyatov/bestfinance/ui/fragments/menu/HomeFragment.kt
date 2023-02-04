@@ -35,6 +35,15 @@ class HomeFragment : Fragment() {
                 R.id.action_navigation_home_to_navigation_add_income
             )
         }
+
+        binding.addExpenseButton.setOnClickListener {
+
+            findNavController().navigate(
+                R.id.action_navigation_home_to_navigation_add_expense
+            )
+        }
+
+
     }
 
 

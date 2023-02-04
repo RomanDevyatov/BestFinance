@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/AddIncomeFragment"
-    tools:context=".ui.fragments.AddIncomeHistoryFragment">
+    android:id="@+id/AddExpenseFragment"
+    tools:context=".ui.fragments.AddExpenseHistoryFragment">
+
 
     <Spinner
-        android:id="@+id/incomeGroupSpinner"
+        android:id="@+id/expenseGroupSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
@@ -18,13 +19,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:id="@+id/expenseSubGroupSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinner" />
+
+    <Spinner
         android:id="@+id/walletSpinner"
         android:layout_width="312dp"
         android:layout_height="25dp"
         android:layout_marginTop="88dp"
-        app:layout_constraintEnd_toEndOf="@+id/incomeGroupSpinner"
-        app:layout_constraintStart_toStartOf="@+id/incomeGroupSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/incomeGroupSpinner" />
+        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinner"
+        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" />
 
     <EditText
         android:id="@+id/amountEditText"
@@ -53,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
-        android:text="Add income"
+        android:text="Add expense"
         app:layout_constraintEnd_toEndOf="@+id/dateEditText"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="@+id/dateEditText"
