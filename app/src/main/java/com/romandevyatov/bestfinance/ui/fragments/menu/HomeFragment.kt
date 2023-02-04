@@ -29,7 +29,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addIncomeButton.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_navigation_add_income)
+            findNavController().navigate(
+                R.id.action_navigation_home_to_navigation_add_income
+            )
         }
     }
 

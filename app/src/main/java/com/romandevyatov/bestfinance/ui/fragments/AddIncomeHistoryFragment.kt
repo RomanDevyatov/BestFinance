@@ -1,7 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments
 
 import android.app.DatePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
@@ -21,7 +19,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class AddIncomeHistory : Fragment() {
+class AddIncomeHistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentAddIncomeHistoryBinding
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()

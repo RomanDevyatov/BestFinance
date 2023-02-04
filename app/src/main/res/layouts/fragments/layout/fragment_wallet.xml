@@ -30,7 +30,7 @@
         android:layout_width="278dp"
         android:layout_height="49dp"
         android:layout_marginTop="28dp"
-        android:hint="balance"
+        android:hint="Init balance"
         app:layout_constraintEnd_toEndOf="@+id/walletNameEditText"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/walletNameEditText"

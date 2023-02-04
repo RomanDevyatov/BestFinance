@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
+import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
 import com.romandevyatov.bestfinance.ui.adapters.ParentExpenseGroupAdapter
 import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupWithExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ExpenseFragment : Fragment() {
@@ -20,7 +22,12 @@ class ExpenseFragment : Fragment() {
     private val expenseViewModel: ExpenseGroupWithExpenseSubGroupViewModel by viewModels()
     private lateinit var parentExpenseGroupAdapter: ParentExpenseGroupAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentExpenseBinding.inflate(inflater, container, false)
         return binding.root
     }
