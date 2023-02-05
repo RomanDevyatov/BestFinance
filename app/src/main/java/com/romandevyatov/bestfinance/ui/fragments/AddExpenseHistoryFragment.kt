@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
@@ -159,6 +160,7 @@ class AddExpenseHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddExpenseHistoryBinding.bind(view)
 
+
         val dateET = binding.dateEditText
 
         val myCalendar = Calendar.getInstance()
@@ -180,7 +182,6 @@ class AddExpenseHistoryFragment : Fragment() {
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-
     }
 
     fun updateDate(calendar: Calendar){
@@ -188,6 +189,7 @@ class AddExpenseHistoryFragment : Fragment() {
         val sdf = SimpleDateFormat(dateFormat, Locale.US);
         binding.dateEditText.setText(sdf.format(calendar.time));
     }
+
 
 
 }

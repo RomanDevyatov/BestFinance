@@ -7,6 +7,7 @@
     android:id="@+id/HomeFragment"
     tools:context=".ui.fragments.menu.HomeFragment">
 
+
     <TextView
         android:id="@+id/totalIncomeTextView"
         android:layout_width="111dp"

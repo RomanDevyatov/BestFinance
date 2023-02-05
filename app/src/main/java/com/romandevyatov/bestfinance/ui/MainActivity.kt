@@ -2,6 +2,7 @@ package com.romandevyatov.bestfinance.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -25,10 +26,21 @@ class MainActivity() : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setNavBar()
+        setNavigationTopBar()
+        setNavigationBottomBar()
     }
 
-    private fun setNavBar() {
+    private fun setNavigationTopBar() {
+        val toolbar: Toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+
+        val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+    }
+
+    private fun setNavigationBottomBar() {
         val navView: BottomNavigationView = binding.bottomNavigationView
 
         val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -41,8 +53,6 @@ class MainActivity() : AppCompatActivity() {
             )
         )
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener {
@@ -52,11 +62,6 @@ class MainActivity() : AppCompatActivity() {
              navView.isVisible =
                 appBarConfiguration.topLevelDestinations.contains(destination.id)
         }
-
     }
-
-    override fun onBackPressed() {
-    }
-
 
 }
