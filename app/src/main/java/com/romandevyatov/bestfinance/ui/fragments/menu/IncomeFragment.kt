@@ -11,13 +11,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.adapters.IncomeGroupAdapter
-import com.romandevyatov.bestfinance.ui.adapters.IncomeGroupItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.ItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
+class IncomeFragment : Fragment(), ItemClickListener<IncomeGroup> {
 
     private lateinit var binding: FragmentIncomeBinding
 
@@ -27,6 +27,7 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentIncomeBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -54,8 +55,8 @@ class IncomeFragment : Fragment(), IncomeGroupItemClickListener {
         binding.incomeGroupRecyclerView.adapter = incomeGroupAdapter
     }
 
-    override fun deleteIncomeGroup(incomeGroup: IncomeGroup) {
-        incomeGroupViewModel.deleteIncomeGroup(incomeGroup)
+    override fun deleteItem(item: IncomeGroup) {
+        incomeGroupViewModel.deleteIncomeGroup(item)
     }
 
 }

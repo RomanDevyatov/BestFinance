@@ -13,7 +13,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -27,6 +29,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
+    private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -158,6 +161,14 @@ class AddIncomeHistoryFragment : Fragment() {
                 myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
+        }
+
+        binding.addIncomeHistoryButton.setOnClickListener {
+
+//            incomeHistoryViewModel.insertIncomeHistory(
+//                IncomeHistory(
+//                incomeGroupId =
+//            ))
         }
 
     }

@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
     <Button
-        android:id="@+id/addWalletButton"
+        android:id="@+id/addIncomeHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"

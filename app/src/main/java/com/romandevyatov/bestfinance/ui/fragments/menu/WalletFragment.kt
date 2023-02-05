@@ -7,16 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.ui.adapters.ItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class WalletFragment : Fragment() {
+class WalletFragment : Fragment(), ItemClickListener<Wallet> {
 
     private lateinit var binding: FragmentWalletBinding
 
@@ -54,9 +54,13 @@ class WalletFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        walletAdapter = WalletAdapter()
+        walletAdapter = WalletAdapter(this)
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletAdapter
+    }
+
+    override fun deleteItem(item: Wallet) {
+        walletViewModel.deleteWallet(item)
     }
 
 //    override fun deleteIncomeGroup(incomeGroup: IncomeGroup) {

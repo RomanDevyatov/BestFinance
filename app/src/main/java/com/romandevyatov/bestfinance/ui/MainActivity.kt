@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
@@ -53,15 +53,17 @@ class MainActivity() : AppCompatActivity() {
             )
         )
 
+        setupActionBarWithNavController(this, navController, appBarConfiguration)
+
         navView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener {
-                _: NavController,
-                destination: NavDestination,
-                _: Bundle? ->
-             navView.isVisible =
-                appBarConfiguration.topLevelDestinations.contains(destination.id)
-        }
+//        navController.addOnDestinationChangedListener {
+//                _: NavController,
+//                destination: NavDestination,
+//                _: Bundle? ->
+//             navView.isVisible =
+//                appBarConfiguration.topLevelDestinations.contains(destination.id)
+//        }
     }
 
 }

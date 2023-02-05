@@ -41,5 +41,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesIncomeHistoryWithIncomeGroupAndWalletDao(db: BestFinanceDatabase) = db.getIncomeHistoryWithIncomeGroupAndWalletDao()
+
+    @Provides
+    @Singleton
+    fun providesIncomeHistoryDao(db: BestFinanceDatabase) = db.getIncomeHistoryDao()
 //        .fallbackToDestructiveMigration()
 }

@@ -11,7 +11,7 @@ import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeGroupItemView
 
 
 class IncomeGroupAdapter(
-    private val onClickListener: IncomeGroupItemClickListener
+    private val onClickListener: ItemClickListener<IncomeGroup>
 ) : RecyclerView.Adapter<IncomeGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeGroup>() {

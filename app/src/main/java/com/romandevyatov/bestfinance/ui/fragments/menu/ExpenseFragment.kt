@@ -35,6 +35,7 @@ class ExpenseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentExpenseBinding.bind(view)
 
+
         initRecyclerView()
 
         expenseViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) {

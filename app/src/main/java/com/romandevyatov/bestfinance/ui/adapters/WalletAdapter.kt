@@ -6,10 +6,14 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.WalletCardBinding
+import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 
 
-class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
+class WalletAdapter(
+    private val onClickListener: ItemClickListener<Wallet>
+) : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<Wallet>() {
 
@@ -26,18 +30,26 @@ class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>
 
 
     inner class WalletItemViewHolder(
-        private val binding: WalletCardBinding
+        private val binding: WalletCardBinding,
+        private val clickListener: ItemClickListener<Wallet>
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(wallet: Wallet) {
             binding.walletNameTextView.text = wallet.name
+            binding.balanceTextView.text = wallet.balance.toString()
+
+            binding.removeIncomeGroupIcon.setOnClickListener{
+                clickListener.deleteItem(wallet)
+            }
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = WalletCardBinding.inflate(from, parent, false)
-        return WalletItemViewHolder(binding)
+        return WalletItemViewHolder(binding, onClickListener)
     }
 
     override fun onBindViewHolder(holder: WalletItemViewHolder, position: Int) {
