@@ -13,14 +13,14 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group order by id ASC")
     fun getAll(): LiveData<List<ExpenseGroup>>
 
-    @Update
-    suspend fun update(expenseGroup: ExpenseGroup)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExpenseGroup(expenseGroup: ExpenseGroup)
+    suspend fun insert(expenseSubGroup: ExpenseGroup)
 
     @Delete
-    suspend fun delete(expenseGroup: ExpenseGroup)
+    suspend fun delete(expenseSubGroup: ExpenseGroup)
+
+    @Update
+    suspend fun update(expenseSubGroup: ExpenseGroup)
 
     @Query("DELETE FROM expense_group")
     suspend fun deleteAll()
@@ -28,8 +28,6 @@ interface ExpenseGroupDao {
     @Query("DELETE FROM expense_group WHERE id = :id")
     suspend fun deleteById(id: Int)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExpenseSubGroup(expenseSubGroup: List<ExpenseSubGroup>)
 
     @Transaction
     @Query("SELECT * FROM expense_group")

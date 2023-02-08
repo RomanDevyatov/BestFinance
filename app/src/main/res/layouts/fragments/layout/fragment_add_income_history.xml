@@ -41,22 +41,32 @@
         android:layout_width="250dp"
         android:layout_height="45dp"
         android:layout_marginTop="76dp"
-        android:focusable="false"
         android:hint="Date"
         app:layout_constraintEnd_toEndOf="@+id/amountEditText"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/amountEditText"
         app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
+    <EditText
+        android:id="@+id/commentEditText"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="48dp"
+        android:hint="Comment"
+        app:layout_constraintEnd_toEndOf="@+id/dateEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/dateEditText"
+        app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
+
     <Button
         android:id="@+id/addIncomeHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="156dp"
         android:text="Add income"
-        app:layout_constraintEnd_toEndOf="@+id/dateEditText"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="@+id/dateEditText"
+        app:layout_constraintEnd_toEndOf="@+id/commentEditText"
+        app:layout_constraintHorizontal_bias="0.438"
+        app:layout_constraintStart_toStartOf="@+id/commentEditText"
         app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

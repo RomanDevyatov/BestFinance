@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
@@ -31,20 +30,39 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val passiveIncomeValue = null
+        binding.passiveIncomeValueTextView.text = passiveIncomeValue
+
+        val totalIncomeValue = null
+        binding.totalIncomeValueTextView.text = totalIncomeValue
+
+        val totalExpensesValue = null
+        binding.totalExpensesValueTextView.text = totalExpensesValue
+
+        val moneyFlowValue = null
+        binding.moneyFlowValueTextView.text = moneyFlowValue
 
 
-        binding.addIncomeButton.setOnClickListener {
+        binding.goToAddIncomeButton.setOnClickListener {
 
             findNavController().navigate(
                 R.id.action_navigation_home_to_navigation_add_income
             )
         }
 
-        binding.addExpenseButton.setOnClickListener {
+        binding.goToAddExpenseButton.setOnClickListener {
 
             findNavController().navigate(
                 R.id.action_navigation_home_to_navigation_add_expense
             )
+        }
+
+        binding.goToHistoryButton.setOnClickListener {
+
+            findNavController().navigate(
+                R.id.action_navigation_home_to_navigation_history
+            )
+
         }
 
 

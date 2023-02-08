@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true" >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/walletRecyclerView"
@@ -59,7 +59,7 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/addWalletButton"
+            android:id="@+id/addExpenseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

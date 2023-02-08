@@ -12,6 +12,24 @@ class ExpenseGroupRepository @Inject constructor(
 ) {
 //    fun getAllExpenseGroups(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAll()
 
+    fun getAllExpenseGroups(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAll()
+
+    suspend fun insertExpenseGroup(expenseGroup: ExpenseGroup) {
+        expenseGroupDao.insert(expenseGroup)
+    }
+
+    suspend fun deleteExpenseGroup(expenseGroup: ExpenseGroup) {
+        expenseGroupDao.delete(expenseGroup)
+    }
+
+    suspend fun updateExpenseGroup(expenseGroup: ExpenseGroup) {
+        expenseGroupDao.update(expenseGroup)
+    }
+
+    suspend fun deleteExpenseGroupById(id: Int) = expenseGroupDao.deleteById(id)
+
+    suspend fun deleteAllExpenseGroups() = expenseGroupDao.deleteAll()
+
     fun getAllExpenseGroupWithExpenseSubGroup() : LiveData<List<ExpenseGroupWithExpenseSubGroup>> {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroup()
     }

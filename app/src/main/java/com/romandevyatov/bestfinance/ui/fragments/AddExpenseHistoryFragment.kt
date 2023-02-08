@@ -10,12 +10,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupWithExpenseSubGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,8 +26,10 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentAddExpenseHistoryBinding
 
-    private val expenseGroupWithExpenseSubGroupViewModel: ExpenseGroupWithExpenseSubGroupViewModel by viewModels()
+//    private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
+    private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
+    private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,48 +79,48 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     private fun initExpenseGroupSpinner() {
-        val expenseGroupSpinnerAdapter = getSpinnerAdapter("Expense group")
-
-        expenseGroupWithExpenseSubGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
-            expenseGroupList?.forEach { it ->
-                expenseGroupSpinnerAdapter.add(it.expenseGroup.name)
-            }
-        }
-
-        val expenseGroupSpinner = binding.expenseGroupSpinner
-        expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
-
-        expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
-
-                val subGroups = expenseGroupWithExpenseSubGroupViewModel.getExpenseGroupWithExpenseSubGroupByGroupName(item)
-
-                val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
-
-                subGroups?.forEach {
-                    expenseSubGroupSpinnerAdapter.add(it.name)
-                }
-
-                val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
-                expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
-
-                Toast.makeText(
-                    requireContext(),
-                    item,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
-            }
-        }
+//        val expenseGroupSpinnerAdapter = getSpinnerAdapter("Expense group")
+//
+//        expenseGroupWithExpenseSubGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+//            expenseGroupList?.forEach { it ->
+//                expenseGroupSpinnerAdapter.add(it.expenseGroup.name)
+//            }
+//        }
+//
+//        val expenseGroupSpinner = binding.expenseGroupSpinner
+//        expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
+//
+//        expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
+//
+//                val subGroups = expenseGroupWithExpenseSubGroupViewModel.getExpenseGroupWithExpenseSubGroupByGroupName(item)
+//
+//                val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
+//
+//                subGroups?.forEach {
+//                    expenseSubGroupSpinnerAdapter.add(it.name)
+//                }
+//
+//                val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
+//                expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
+//
+//                Toast.makeText(
+//                    requireContext(),
+//                    item,
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {
+//                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
+//            }
+//        }
     }
 
 
@@ -181,6 +183,55 @@ class AddExpenseHistoryFragment : Fragment() {
                 myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
+        }
+
+        binding.addExpenseButton.setOnClickListener {
+
+
+            val expenseGroupNameBinding = binding.expenseGroupSpinner.selectedItem.toString()
+            val expenseGroup =
+                expenseGroupViewModel.expenseGroupsLiveData.value?.filter { expenseGroup ->
+                    expenseGroup.name == expenseGroupNameBinding
+                }!!.single()
+            val expenseGroupId = expenseGroup.id!!.toLong()
+
+            val expenseSubGroupNameBinding = binding.expenseGroupSpinner.selectedItem.toString()
+            val expenseSubGroup =
+                expenseGroupViewModel.expenseGroupsLiveData.value?.filter { expenseSubGroup ->
+                    expenseSubGroup.name == expenseSubGroupNameBinding
+                }!!.single()
+            val expenseSubGroupId = expenseSubGroup.id!!.toLong()
+
+            val amountBinding = binding.amountEditText.text.toString().toDouble()
+
+            val walletNameBinding = binding.walletSpinner.selectedItem.toString()
+            val wallet = walletViewModel.walletsLiveData.value?.filter { wallet ->
+                wallet.name == walletNameBinding
+            }!!.single()
+            val walletId = wallet.id!!.toLong()
+
+//            expenseHistoryViewModel.insertIncomeHistory(
+//                ExpenseHistory(
+//                    expenseGroupId = expenseGroupId,
+//                    expenseSubGroupId = expenseSubGroupId,
+//                    amount = amountBinding,
+//                    comment = binding commentEditText.text.toString(),
+//                    date = Date(binding.dateEditText.text.toString()),
+//                    walletId = walletId
+//                )
+//            )
+//
+//            val updatedBalance = wallet.balance + amountBinding
+//
+//            walletViewModel.updateWallet(
+//                Wallet(
+//                    id = walletId,
+//                    name = expenseGroupNameBinding,
+//                    balance = updatedBalance
+//                )
+//            )
+
+            findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
         }
     }
 

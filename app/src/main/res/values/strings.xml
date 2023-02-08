@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BestFinance</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">20000 Deneg Amount</string>
 
 </resources>

@@ -6,6 +6,7 @@ import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 
+
 data class IncomeHistoryWithIncomeGroupAndWallet(
 
     @Embedded
@@ -16,5 +17,5 @@ data class IncomeHistoryWithIncomeGroupAndWallet(
 
     @Relation(entity = Wallet::class, parentColumn = "wallet_id", entityColumn = "id")
     var wallet: Wallet
-)
 
+)

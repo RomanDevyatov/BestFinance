@@ -1,11 +1,10 @@
 package com.romandevyatov.bestfinance.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isVisible
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
@@ -41,7 +40,7 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun setNavigationBottomBar() {
-        val navView: BottomNavigationView = binding.bottomNavigationView
+        val bottomNavigationView: BottomNavigationView = binding.bottomNavigationView
 
         val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
@@ -55,7 +54,22 @@ class MainActivity() : AppCompatActivity() {
 
         setupActionBarWithNavController(this, navController, appBarConfiguration)
 
-        navView.setupWithNavController(navController)
+        val bottomNavViewExcludedArray = arrayOf(
+            R.id.navigation_add_income,
+            R.id.navigation_add_expense,
+            R.id.navigation_history
+        )
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (bottomNavViewExcludedArray.contains(destination.id)) {
+                bottomNavigationView.visibility = View.GONE
+            } else {
+                bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
+
+        bottomNavigationView.setupWithNavController(navController)
+
+
 
 //        navController.addOnDestinationChangedListener {
 //                _: NavController,

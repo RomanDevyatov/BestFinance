@@ -12,8 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
+import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
@@ -164,11 +167,41 @@ class AddIncomeHistoryFragment : Fragment() {
         }
 
         binding.addIncomeHistoryButton.setOnClickListener {
+            val incomeGroupName =  binding.incomeGroupSpinner.selectedItem.toString()
+            val incomeGroup = incomeGroupViewModel.incomeGroupsLiveData.value?.filter { incomeGroup ->
+                incomeGroup.name == incomeGroupName
+            }!!.single()
+            val incomeGroupId = incomeGroup.id!!.toLong()
 
-//            incomeHistoryViewModel.insertIncomeHistory(
-//                IncomeHistory(
-//                incomeGroupId =
-//            ))
+            val amountBinding = binding.amountEditText.text.toString().toDouble()
+
+            val walletNameBinding = binding.walletSpinner.selectedItem.toString()
+            val wallet = walletViewModel.walletsLiveData.value?.filter { wallet ->
+                wallet.name == walletNameBinding
+            }!!.single()
+            val walletName = wallet.name
+            val walletId = wallet.id!!.toLong()
+
+            incomeHistoryViewModel.insertIncomeHistory(
+                IncomeHistory(
+                    incomeGroupId = incomeGroupId,
+                    amount = amountBinding,
+                    comment = binding.commentEditText.text.toString(),
+                    date = Date(binding.dateEditText.text.toString()),
+                    walletId = walletId
+                )
+            )
+
+            val updatedBalance = wallet.balance + amountBinding
+
+            walletViewModel.updateWallet(
+                Wallet(
+                    id = walletId,
+                    name = walletName,
+                    balance = updatedBalance)
+            )
+
+            findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
         }
 
     }
