@@ -9,19 +9,18 @@ import javax.inject.Inject
 
 
 class IncomeHistoryRepository @Inject constructor(
-    private val incomeHistoryWithIncomeGroupAndWalletDao: IncomeHistoryWithIncomeGroupAndWalletDao,
     private val incomeHistoryDao: IncomeHistoryDao
 ) {
 
     fun getAllIncomeHistoryWithIncomeGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>> {
-        return incomeHistoryWithIncomeGroupAndWalletDao.getAllIncomeHistoryWithIncomeGroupAndWallet()
+        return incomeHistoryDao.getAllIncomeHistoryWithIncomeGroupAndWallet()
     }
 
     fun getAllIncomeHistory(): LiveData<List<IncomeHistory>> {
         return incomeHistoryDao.getAll()
     }
 
-    suspend fun insertIncomeHostory(incomeHistory: IncomeHistory) {
+    suspend fun insertIncomeHistory(incomeHistory: IncomeHistory) {
         incomeHistoryDao.insert(incomeHistory)
     }
 

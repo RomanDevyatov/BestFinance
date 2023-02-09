@@ -26,7 +26,6 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
-//    var onItemClick: ((com.romandevyatov.bestfinance.db.entities.ExpenseGroup) -> Unit)? = null
 
     inner class ExpenseGroupItemViewHolder(
         private val binding: ItemRowParentBinding
