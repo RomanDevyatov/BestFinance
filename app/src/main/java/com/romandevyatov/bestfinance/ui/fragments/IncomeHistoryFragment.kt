@@ -42,7 +42,7 @@ class IncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeHistoryViewModel.getAllIncomeHistoryWithIncomeGroupAndWallet.observe(viewLifecycleOwner) {
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) {
             incomeHistoryAdapter.submitList(it)
         }
 

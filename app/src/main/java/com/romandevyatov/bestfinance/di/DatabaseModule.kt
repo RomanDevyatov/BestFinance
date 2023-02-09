@@ -51,9 +51,9 @@ object DatabaseModule {
     @Singleton
     fun providesIncomeHistoryDao(db: BestFinanceDatabase) = db.getIncomeHistoryDao()
 
-//    @Provides
-//    @Singleton
-//    fun providesExpenseHistoryDao(db: BestFinanceDatabase) = db.getExpenseHistoryDao()
+    @Provides
+    @Singleton
+    fun providesExpenseHistoryDao(db: BestFinanceDatabase) = db.getExpenseHistoryDao()
 
 
 //        .fallbackToDestructiveMigration()

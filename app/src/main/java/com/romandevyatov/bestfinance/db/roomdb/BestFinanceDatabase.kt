@@ -15,7 +15,8 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
         ExpenseGroup::class,
         ExpenseSubGroup::class,
         Wallet::class,
-        IncomeHistory::class
+        IncomeHistory::class,
+        ExpenseHistory::class
     ],
     version = 4,
     exportSchema = true
@@ -33,7 +34,7 @@ abstract class BestFinanceDatabase : RoomDatabase() {
 
     abstract fun getIncomeHistoryDao(): IncomeHistoryDao
 
-    //abstract fun getExpenseHistoryDao(): ExpenseHistoryDao
+    abstract fun getExpenseHistoryDao(): ExpenseHistoryDao
 
     abstract fun getIncomeHistoryWithIncomeGroupAndWalletDao(): IncomeHistoryWithIncomeGroupAndWalletDao
 

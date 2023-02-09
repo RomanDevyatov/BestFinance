@@ -23,6 +23,6 @@ class IncomeHistoryViewModel @Inject constructor(
         incomeHistoryRepository.insertIncomeHistory(incomeHistory)
     }
 
-    val getAllIncomeHistoryWithIncomeGroupAndWallet: LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeGroupAndWallet()
+    val allIncomeHistoryWithIncomeGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeGroupAndWallet()
 
 }
