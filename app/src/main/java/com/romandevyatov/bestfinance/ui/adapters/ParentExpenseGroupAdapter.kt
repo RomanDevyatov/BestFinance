@@ -7,17 +7,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemRowParentBinding
-import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroup
+import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 
 class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapter.ExpenseGroupItemViewHolder>() {
 
-    private val differentCallback = object: DiffUtil.ItemCallback<ExpenseGroupWithExpenseSubGroup>() {
+    private val differentCallback = object: DiffUtil.ItemCallback<ExpenseGroupWithExpenseSubGroups>() {
 
-        override fun areItemsTheSame(oldItem: ExpenseGroupWithExpenseSubGroup, newItem: ExpenseGroupWithExpenseSubGroup): Boolean {
+        override fun areItemsTheSame(oldItem: ExpenseGroupWithExpenseSubGroups, newItem: ExpenseGroupWithExpenseSubGroups): Boolean {
             return oldItem.expenseGroup == newItem.expenseGroup
         }
 
-        override fun areContentsTheSame(oldItem: ExpenseGroupWithExpenseSubGroup, newItem: ExpenseGroupWithExpenseSubGroup): Boolean {
+        override fun areContentsTheSame(oldItem: ExpenseGroupWithExpenseSubGroups, newItem: ExpenseGroupWithExpenseSubGroups): Boolean {
             return oldItem == newItem
         }
     }
@@ -31,12 +31,12 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
         private val binding: ItemRowParentBinding
         ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(expenseGroupWithExpenseSubGroup: ExpenseGroupWithExpenseSubGroup) {
-            binding.groupNameTextView.text = expenseGroupWithExpenseSubGroup.expenseGroup.name
+        fun bind(expenseGroupWithExpenseSubGroups: ExpenseGroupWithExpenseSubGroups) {
+            binding.groupNameTextView.text = expenseGroupWithExpenseSubGroups.expenseGroup.name
 
-            val childAdapter = ChildExpenseSubGroupsAdapter(expenseGroupWithExpenseSubGroup.expenseSubGroups)
+            val childAdapter = ChildExpenseSubGroupsAdapter(expenseGroupWithExpenseSubGroups.expenseSubGroups)
             val lm = LinearLayoutManager(binding.childRecyclerView.context, LinearLayoutManager.VERTICAL, false)
-            lm.initialPrefetchItemCount = expenseGroupWithExpenseSubGroup.expenseSubGroups.size
+            lm.initialPrefetchItemCount = expenseGroupWithExpenseSubGroups.expenseSubGroups.size
 
             binding.childRecyclerView.layoutManager = lm
             binding.childRecyclerView.adapter = childAdapter
@@ -59,7 +59,7 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
         return expenseGroupWithExpenseSubGroupDiffer.currentList.size
     }
 
-    fun submitList(expenseSubGroups: List<ExpenseGroupWithExpenseSubGroup>) {
+    fun submitList(expenseSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
         expenseGroupWithExpenseSubGroupDiffer.submitList(expenseSubGroups)
     }
 }

@@ -9,28 +9,28 @@
 
     <Spinner
         android:id="@+id/incomeGroupSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_width="270dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/walletSpinner"
-        android:layout_width="312dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="88dp"
+        android:layout_width="270dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="@+id/incomeGroupSpinner"
         app:layout_constraintStart_toStartOf="@+id/incomeGroupSpinner"
         app:layout_constraintTop_toBottomOf="@+id/incomeGroupSpinner" />
 
     <EditText
         android:id="@+id/amountEditText"
-        android:layout_width="264dp"
+        android:layout_width="270dp"
         android:layout_height="46dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="32dp"
         android:hint="Amount"
         app:layout_constraintEnd_toEndOf="@+id/walletSpinner"
         app:layout_constraintStart_toStartOf="@+id/walletSpinner"
@@ -38,9 +38,9 @@
 
     <EditText
         android:id="@+id/dateEditText"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="76dp"
+        android:layout_width="270dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="32dp"
         android:hint="Date"
         app:layout_constraintEnd_toEndOf="@+id/amountEditText"
         app:layout_constraintHorizontal_bias="1.0"
@@ -49,9 +49,9 @@
 
     <EditText
         android:id="@+id/commentEditText"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="48dp"
+        android:layout_width="270dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="32dp"
         android:hint="Comment"
         app:layout_constraintEnd_toEndOf="@+id/dateEditText"
         app:layout_constraintHorizontal_bias="0.0"
@@ -62,11 +62,11 @@
         android:id="@+id/addIncomeHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="156dp"
+        android:layout_marginTop="32dp"
         android:text="Add income"
         app:layout_constraintEnd_toEndOf="@+id/commentEditText"
-        app:layout_constraintHorizontal_bias="0.438"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/commentEditText"
-        app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/commentEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

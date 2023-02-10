@@ -6,7 +6,8 @@ import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 // and  - 1 to 1
 // with - 1 to 0 or many
-data class ExpenseGroupWithExpenseSubGroup(
+data class ExpenseGroupWithExpenseSubGroups(
+
     @Embedded
     val expenseGroup: ExpenseGroup,
 
@@ -15,4 +16,5 @@ data class ExpenseGroupWithExpenseSubGroup(
         entityColumn = "expense_group_id" // ExpenseSubGroup
     )
     val expenseSubGroups: List<ExpenseSubGroup>
+
 )

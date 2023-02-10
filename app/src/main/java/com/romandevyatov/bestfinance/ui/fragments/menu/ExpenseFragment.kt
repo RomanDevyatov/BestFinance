@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
 import com.romandevyatov.bestfinance.ui.adapters.ParentExpenseGroupAdapter
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupWithExpenseSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -18,7 +18,7 @@ class ExpenseFragment : Fragment() {
 
     private lateinit var binding: FragmentExpenseBinding
 
-    private val expenseViewModel: ExpenseGroupWithExpenseSubGroupViewModel by viewModels()
+    private val expenseViewModel: ExpenseGroupViewModel by viewModels()
     private lateinit var parentExpenseGroupAdapter: ParentExpenseGroupAdapter
 
 
@@ -38,7 +38,7 @@ class ExpenseFragment : Fragment() {
 
         initRecyclerView()
 
-        expenseViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) {
+        expenseViewModel.allExpenseGroupWithExpenseSubGroupsLiveData.observe(viewLifecycleOwner) {
             parentExpenseGroupAdapter.submitList(it)
         }
     }

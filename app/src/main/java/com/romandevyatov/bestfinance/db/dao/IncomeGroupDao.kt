@@ -1,8 +1,12 @@
 package com.romandevyatov.bestfinance.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
-
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Insert
+import androidx.room.Delete
+import androidx.room.Update
+import androidx.room.OnConflictStrategy
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 
 

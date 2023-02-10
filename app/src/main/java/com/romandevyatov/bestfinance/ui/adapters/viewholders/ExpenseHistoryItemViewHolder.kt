@@ -10,6 +10,6 @@ class ExpenseHistoryItemViewHolder (private val binding: ExpenseHistoryCardBindi
     fun bindItem(expenseHistory: ExpenseHistoryWithExpenseSubGroupAndWallet) {
         binding.balanceTextView.text = expenseHistory.expenseHistory.amount.toString()
         binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup.name
-
+        binding.dateTextView.text = expenseHistory.expenseHistory.date.toString()
     }
 }

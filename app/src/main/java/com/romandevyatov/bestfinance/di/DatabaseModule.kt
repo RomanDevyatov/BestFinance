@@ -23,7 +23,6 @@ object DatabaseModule {
             context,
             BestFinanceDatabase::class.java,
             DATABASE_NAME)
-        .fallbackToDestructiveMigration()
         .createFromAsset("database/bestfinance_database_pre.db")
         .build()
 
@@ -43,9 +42,9 @@ object DatabaseModule {
     @Singleton
     fun providesWalletDao(db: BestFinanceDatabase) = db.getWalletDao()
 
-    @Provides
-    @Singleton
-    fun providesIncomeHistoryWithIncomeGroupAndWalletDao(db: BestFinanceDatabase) = db.getIncomeHistoryWithIncomeGroupAndWalletDao()
+//    @Provides
+//    @Singleton
+//    fun providesIncomeHistoryWithIncomeGroupAndWalletDao(db: BestFinanceDatabase) = db.getIncomeHistoryWithIncomeGroupAndWalletDao()
 
     @Provides
     @Singleton

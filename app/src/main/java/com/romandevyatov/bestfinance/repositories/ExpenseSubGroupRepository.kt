@@ -27,4 +27,6 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
+    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getExpenseSubGroupByName(name)
+
 }

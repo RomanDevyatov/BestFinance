@@ -1,14 +1,17 @@
 package com.romandevyatov.bestfinance.viewmodels
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ExpenseSubGroupViewModel @Inject constructor(
@@ -36,5 +39,31 @@ class ExpenseSubGroupViewModel @Inject constructor(
     fun deleteAllExpenseSubGroup() = viewModelScope.launch(Dispatchers.IO) {
         expenseSubGroupRepository.deleteAllExpenseSubGroups()
     }
+
+    // val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
+
+//    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
+//        expenseSubGroupsLiveData.value?.forEach { it ->
+//            if (it.name == expenseSubGroupName) {
+//                return it
+//            }
+//        }
+//
+//        return null
+//    }
+
+    fun getExpenseSubGroupByName(name: String): ExpenseSubGroup {
+//        return expenseSubGroupRepository.getExpenseSubGroupByName(name)
+        return expenseSubGroupsLiveData.value!!.single{
+            it.name == name
+        }
+//        expenseSubGroupsLiveData.value?.forEach{ it ->
+//            if (it.name == name) {
+//                return it
+//            }
+//        }
+    }
+
+
 
 }

@@ -26,4 +26,7 @@ interface ExpenseSubGroupDao {
     @Query("DELETE FROM expense_sub_group WHERE id = :id")
     suspend fun deleteById(id: Int)
 
+    @Query("SELECT * FROM expense_sub_group WHERE name = :name")
+    fun getExpenseSubGroupByName(name: String?): LiveData<ExpenseSubGroup>
+
 }

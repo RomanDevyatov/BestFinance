@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.romandevyatov.bestfinance.db.dao.*
-import com.romandevyatov.bestfinance.db.dao.relation.IncomeHistoryWithIncomeGroupAndWalletDao
 import com.romandevyatov.bestfinance.db.entities.*
 import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
 
@@ -36,6 +35,6 @@ abstract class BestFinanceDatabase : RoomDatabase() {
 
     abstract fun getExpenseHistoryDao(): ExpenseHistoryDao
 
-    abstract fun getIncomeHistoryWithIncomeGroupAndWalletDao(): IncomeHistoryWithIncomeGroupAndWalletDao
+//    abstract fun getIncomeHistoryWithIncomeGroupAndWalletDao(): IncomeHistoryWithIncomeGroupAndWalletDao
 
 }
