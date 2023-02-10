@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
+import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -16,6 +20,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val walletViewModel: WalletViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,9 +71,12 @@ class HomeFragment : Fragment() {
 
         }
 
+        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
+            binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
+        }
+
 
     }
-
 
 
     override fun onDestroyView() {
