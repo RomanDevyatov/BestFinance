@@ -6,8 +6,9 @@ import com.romandevyatov.bestfinance.db.dao.ExpenseHistoryDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class ExpenseHistoryRepository @Inject constructor(
     private val expenseHistoryDao: ExpenseHistoryDao
 ) {

@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class IncomeGroupRepository @Inject constructor(
     private val incomeGroupDao: IncomeGroupDao
 ) {

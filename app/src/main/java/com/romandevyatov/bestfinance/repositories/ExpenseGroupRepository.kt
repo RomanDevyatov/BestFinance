@@ -6,8 +6,9 @@ import com.romandevyatov.bestfinance.db.dao.ExpenseGroupDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class ExpenseGroupRepository @Inject constructor(
     private val expenseGroupDao: ExpenseGroupDao
 ) {

@@ -5,8 +5,9 @@ import com.romandevyatov.bestfinance.db.dao.IncomeHistoryDao
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeGroupAndWallet
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class IncomeHistoryRepository @Inject constructor(
     private val incomeHistoryDao: IncomeHistoryDao
 ) {

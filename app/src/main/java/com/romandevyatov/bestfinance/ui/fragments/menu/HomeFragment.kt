@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,12 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -22,6 +27,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
+    private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
+    private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
+    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,17 +44,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val passiveIncomeValue = null
-        binding.passiveIncomeValueTextView.text = passiveIncomeValue
+        var passiveIncomeValue: Double? = null
+//        binding.passiveIncomeValueTextView.text = passiveIncomeValue
 
-        val totalIncomeValue = null
-        binding.totalIncomeValueTextView.text = totalIncomeValue
+        var totalIncomeValue: Double? = null
+//        binding.totalIncomeValueTextView.text = totalIncomeValue
 
-        val totalExpensesValue = null
-        binding.totalExpensesValueTextView.text = totalExpensesValue
+        var totalExpensesValue: Double? = null
+//        binding.totalExpensesValueTextView.text = totalExpensesValue
 
-        val moneyFlowValue = null
-        binding.moneyFlowValueTextView.text = moneyFlowValue
+        val moneyFlowValue: Double? = null
+//        binding.moneyFlowValueTextView.text = moneyFlowValue
 
 
         binding.goToAddIncomeButton.setOnClickListener {
@@ -75,7 +83,20 @@ class HomeFragment : Fragment() {
             binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
         }
 
+        incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
+            passiveIncomeValue = (history.filter { it.incomeGroupId == 3L}).sumOf { it.amount }
+            binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
 
+            totalIncomeValue = history.sumOf { it.amount }
+            binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
+
+            expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
+                totalExpensesValue = expenseHistory.sumOf { it.amount }
+                binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
+                
+                binding.moneyFlowValueTextView.text = ((totalIncomeValue!!.minus(totalExpensesValue!!) * 100.0).roundToInt() / 100.0).toString()
+            }
+        }
     }
 
 
