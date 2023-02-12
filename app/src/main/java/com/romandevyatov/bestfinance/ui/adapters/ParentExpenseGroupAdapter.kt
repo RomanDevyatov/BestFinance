@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.adapters
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemRowParentBinding
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
+
 
 class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapter.ExpenseGroupItemViewHolder>() {
 
@@ -22,7 +24,7 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
         }
     }
 
-    private val expenseGroupWithExpenseSubGroupDiffer = AsyncListDiffer(this, differentCallback)
+    private val expenseGroupWithExpenseSubGroupsDiffer = AsyncListDiffer(this, differentCallback)
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
@@ -52,14 +54,14 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
     }
 
     override fun onBindViewHolder(holder: ParentExpenseGroupAdapter.ExpenseGroupItemViewHolder, position: Int) {
-        holder.bind(expenseGroupWithExpenseSubGroupDiffer.currentList[position])
+        holder.bind(expenseGroupWithExpenseSubGroupsDiffer.currentList[position])
     }
 
     override fun getItemCount(): Int {
-        return expenseGroupWithExpenseSubGroupDiffer.currentList.size
+        return expenseGroupWithExpenseSubGroupsDiffer.currentList.size
     }
 
     fun submitList(expenseSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
-        expenseGroupWithExpenseSubGroupDiffer.submitList(expenseSubGroups)
+        expenseGroupWithExpenseSubGroupsDiffer.submitList(expenseSubGroups)
     }
 }

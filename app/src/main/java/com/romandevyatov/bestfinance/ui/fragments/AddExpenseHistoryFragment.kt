@@ -86,9 +86,9 @@ class AddExpenseHistoryFragment : Fragment() {
     private fun initExpenseGroupSpinner() {
         val expenseGroupSpinnerAdapter = getSpinnerAdapter("Expense group")
 
-        expenseGroupViewModel.allExpenseGroupWithExpenseSubGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+        expenseGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             expenseGroupList?.forEach { it ->
-                expenseGroupSpinnerAdapter.add(it.expenseGroup.name)
+                expenseGroupSpinnerAdapter.add(it.name)
             }
         }
 
@@ -104,16 +104,20 @@ class AddExpenseHistoryFragment : Fragment() {
             ) {
                 val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
-                val subGroups = expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(item)
+                expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(item)!!.observe(viewLifecycleOwner) { list ->
+                    if (list != null) {
+                        val subGroups = list.expenseSubGroups
 
-                val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
+                        val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
 
-                subGroups?.forEach {
-                    expenseSubGroupSpinnerAdapter.add(it.name)
+                        subGroups.forEach {
+                            expenseSubGroupSpinnerAdapter.add(it.name)
+                        }
+
+                        val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
+                        expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
+                    }
                 }
-
-                val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
-                expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
 
                 Toast.makeText(
                     requireContext(),

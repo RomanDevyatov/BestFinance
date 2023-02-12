@@ -33,6 +33,6 @@ interface ExpenseGroupDao {
 
     @Transaction
     @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName")
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): ExpenseGroupWithExpenseSubGroups
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
 
 }

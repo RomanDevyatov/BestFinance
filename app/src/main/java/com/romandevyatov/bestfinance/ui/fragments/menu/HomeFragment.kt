@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -40,16 +40,10 @@ class ExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.deleteAllExpenseGroups()
     }
 
-    val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroup()
-
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(groupName: String) : List<ExpenseSubGroup>? {
-        allExpenseGroupWithExpenseSubGroupsLiveData.value?.forEach { it ->
-            if (it.expenseGroup.name == groupName) {
-                return it.expenseSubGroups
-            }
-        }
-
-        return null
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups>? {
+        return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
     }
+
+    val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroup()
 
 }

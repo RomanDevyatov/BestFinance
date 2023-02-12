@@ -4,6 +4,7 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.ExpenseGroupDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,7 +36,7 @@ class ExpenseGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseGroups() = expenseGroupDao.deleteAll()
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): ExpenseGroupWithExpenseSubGroups {
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName)
     }
 
