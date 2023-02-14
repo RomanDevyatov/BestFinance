@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
+import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 
 
 @Dao
@@ -34,5 +35,9 @@ interface ExpenseGroupDao {
     @Transaction
     @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName")
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
+
+    @Transaction
+    @Query("SELECT * FROM expense_group")
+    fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistories(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
 
 }

@@ -1,11 +1,12 @@
 package com.romandevyatov.bestfinance.db.entities.relations
 
+
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
+
 
 data class ExpenseHistoryWithExpenseSubGroupAndWallet (
     
