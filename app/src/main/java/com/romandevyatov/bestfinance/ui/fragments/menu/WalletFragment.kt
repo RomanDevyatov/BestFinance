@@ -9,14 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.ItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.income.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class WalletFragment : Fragment(), ItemClickListener<Wallet> {
+class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
 
     private lateinit var binding: FragmentWalletBinding
 

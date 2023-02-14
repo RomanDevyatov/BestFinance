@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters
+package com.romandevyatov.bestfinance.ui.adapters.income
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeGroupItemView
 
 
 class IncomeGroupAdapter(
-    private val onClickListener: ItemClickListener<IncomeGroup>
+    private val onClickListener: DeleteItemClickListener<IncomeGroup>
 ) : RecyclerView.Adapter<IncomeGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeGroup>() {

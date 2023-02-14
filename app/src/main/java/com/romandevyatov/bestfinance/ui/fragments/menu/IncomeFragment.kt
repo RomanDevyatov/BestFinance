@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.ui.adapters.IncomeGroupAdapter
-import com.romandevyatov.bestfinance.ui.adapters.ItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.income.IncomeGroupAdapter
+import com.romandevyatov.bestfinance.ui.adapters.income.DeleteItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class IncomeFragment : Fragment(), ItemClickListener<IncomeGroup> {
+class IncomeFragment : Fragment(), DeleteItemClickListener<IncomeGroup> {
 
     private lateinit var binding: FragmentIncomeBinding
 

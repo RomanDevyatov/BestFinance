@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemRowParentBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 
 
-class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapter.ExpenseGroupItemViewHolder>() {
+class ParentExpenseGroupAdapter(
+    private val onClickListener: AddItemClickListener<ExpenseGroup>
+) : RecyclerView.Adapter<ParentExpenseGroupAdapter.ExpenseGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>() {
 
@@ -29,7 +32,8 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
     private val viewPool = RecyclerView.RecycledViewPool()
 
     inner class ExpenseGroupItemViewHolder(
-        private val binding: ItemRowParentBinding
+        private val binding: ItemRowParentBinding,
+        private val onClickListener: AddItemClickListener<ExpenseGroup>
         ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(expenseGroupWithExpenseSubGroupsIncludingExpenseHistories: ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories) {
@@ -42,13 +46,17 @@ class ParentExpenseGroupAdapter() : RecyclerView.Adapter<ParentExpenseGroupAdapt
             binding.childRecyclerView.layoutManager = lm
             binding.childRecyclerView.adapter = childAdapter
             binding.childRecyclerView.setRecycledViewPool(viewPool)
+
+            binding.addNewIncomeOfSelectedGroupIcon .setOnClickListener{
+                onClickListener.addItem(expenseGroupWithExpenseSubGroupsIncludingExpenseHistories.expenseGroup)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseGroupItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = ItemRowParentBinding.inflate(from, parent, false)
-        return ExpenseGroupItemViewHolder(binding)
+        return ExpenseGroupItemViewHolder(binding, onClickListener)
     }
 
     override fun onBindViewHolder(holder: ExpenseGroupItemViewHolder, position: Int) {

@@ -6,13 +6,12 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.WalletCardBinding
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.ui.adapters.income.DeleteItemClickListener
 
 
 class WalletAdapter(
-    private val onClickListener: ItemClickListener<Wallet>
+    private val onClickListener: DeleteItemClickListener<Wallet>
 ) : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<Wallet>() {
@@ -31,7 +30,7 @@ class WalletAdapter(
 
     inner class WalletItemViewHolder(
         private val binding: WalletCardBinding,
-        private val clickListener: ItemClickListener<Wallet>
+        private val clickListener: DeleteItemClickListener<Wallet>
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(wallet: Wallet) {

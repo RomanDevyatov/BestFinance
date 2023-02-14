@@ -23,7 +23,7 @@
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/sumOfExpenseHistoryAmountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="HAHA, balance"
@@ -39,7 +39,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/sumOfExpenseHistoryAmountTextView"
             app:layout_constraintVertical_bias="0.0"
             tools:layout_editor_absoluteX="145dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
