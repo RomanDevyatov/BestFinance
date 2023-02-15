@@ -48,7 +48,7 @@ class AddExpenseHistoryFragment : Fragment() {
         return binding.root
     }
 
-    private fun getSpinnerAdapter(name: String): ArrayAdapter<String> {
+    private fun getSpinnerAdapter(): ArrayAdapter<String> {
         val spinnerAdapter: ArrayAdapter<String> =
             object : ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item) {
 
@@ -69,21 +69,19 @@ class AddExpenseHistoryFragment : Fragment() {
                     if (position == 0) {
                         view.setTextColor(Color.GRAY)
                     } else {
-                        //here it is possible to define color for other items by
-                        //view.setTextColor(Color.RED)
+
                     }
 
                     return view
                 }
             }
 
-        spinnerAdapter.add(name)
-
         return spinnerAdapter
     }
 
     private fun initExpenseGroupSpinner() {
-        val expenseGroupSpinnerAdapter = getSpinnerAdapter("Expense group")
+        val expenseGroupSpinnerAdapter = getSpinnerAdapter()
+        expenseGroupSpinnerAdapter.add("Expense group")
 
         expenseGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             expenseGroupList?.forEach { it ->
@@ -96,10 +94,14 @@ class AddExpenseHistoryFragment : Fragment() {
             }
         }
 
-
-
         val expenseGroupSpinner = binding.expenseGroupSpinner
         expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
+
+        val expenseSubGroupSpinnerAdapter = getSpinnerAdapter()
+        expenseSubGroupSpinnerAdapter.add("Expense sub group")
+
+        val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
+        expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
 
         expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -114,25 +116,14 @@ class AddExpenseHistoryFragment : Fragment() {
                     if (list != null) {
                         val subGroups = list.expenseSubGroups
 
-                        val expenseSubGroupSpinnerAdapter = getSpinnerAdapter("Expense sub group")
+                        expenseSubGroupSpinnerAdapter.clear()
+                        expenseSubGroupSpinnerAdapter.add("Expense sub group")
 
                         subGroups.forEach {
                             expenseSubGroupSpinnerAdapter.add(it.name)
                         }
-
-                        val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
-                        expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
-
-//                        for (i in 0 until subGroups.size) {
-//                            if (subGroups[i].name == args.expenseGroupName) {
-//                                expenseSubGroupSpinner.setSelection(i)
-//                            }
-//                        }
-
                     }
                 }
-
-
 
                 Toast.makeText(
                     requireContext(),
@@ -183,7 +174,7 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    val args: AddExpenseHistoryFragmentArgs by navArgs() // new
+    val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -211,10 +202,11 @@ class AddExpenseHistoryFragment : Fragment() {
             ).show()
         }
 
-        expenseSubGroupViewModel.expenseSubGroupsLiveData.observe(viewLifecycleOwner){
-            //In such case, we won't observe multiple LiveData but one
+        updateDate(myCalendar)
+
+        expenseSubGroupViewModel.expenseSubGroupsLiveData.observe(viewLifecycleOwner) {
+
         }
-//Then during our ClickListener, we just do API method call without any callback.
 
         binding.addExpenseButton.setOnClickListener {
             val expenseSubGroupNameBinding = binding.expenseSubGroupSpinner.selectedItem.toString()
@@ -256,9 +248,9 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     fun updateDate(calendar: Calendar){
-        val dateFormat = "dd/MM/yy";
-        val sdf = SimpleDateFormat(dateFormat, Locale.US);
-        binding.dateEditText.setText(sdf.format(calendar.time));
+        val dateFormat = "yyyy-MM-dd HH:mm:ss"
+        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+        binding.dateEditText.setText(sdf.format(calendar.time))
     }
 
 

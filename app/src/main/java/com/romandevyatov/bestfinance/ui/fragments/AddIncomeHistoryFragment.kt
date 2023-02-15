@@ -166,6 +166,8 @@ class AddIncomeHistoryFragment : Fragment() {
             ).show()
         }
 
+        updateDate(myCalendar)
+
         binding.addIncomeHistoryButton.setOnClickListener {
             val incomeGroupName =  binding.incomeGroupSpinner.selectedItem.toString()
             val incomeGroup = incomeGroupViewModel.incomeGroupsLiveData.value?.filter { incomeGroup ->
@@ -206,10 +208,10 @@ class AddIncomeHistoryFragment : Fragment() {
 
     }
 
-    fun updateDate(calendar: Calendar){
-        val dateFormat = "dd/MM/yy";
-        val sdf = SimpleDateFormat(dateFormat, Locale.US);
-        binding.dateEditText.setText(sdf.format(calendar.time));
+    fun updateDate(calendar: Calendar) {
+        val dateFormat = "yyyy-MM-dd HH:mm:ss"
+        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+        binding.dateEditText.setText(sdf.format(calendar.time))
     }
 
 
