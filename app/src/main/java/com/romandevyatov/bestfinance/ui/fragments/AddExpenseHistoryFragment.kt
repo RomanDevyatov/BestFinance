@@ -4,14 +4,10 @@ package com.romandevyatov.bestfinance.ui.fragments
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -43,6 +39,8 @@ class AddExpenseHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
+
+
 
         initExpenseGroupSpinner()
         initWalletSpinner()
@@ -91,7 +89,14 @@ class AddExpenseHistoryFragment : Fragment() {
             expenseGroupList?.forEach { it ->
                 expenseGroupSpinnerAdapter.add(it.name)
             }
+
+            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
+                val spinnerPosition = expenseGroupSpinnerAdapter.getPosition(args.expenseGroupName.toString())
+                binding.expenseGroupSpinner.setSelection(spinnerPosition)
+            }
         }
+
+
 
         val expenseGroupSpinner = binding.expenseGroupSpinner
         expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
@@ -117,8 +122,17 @@ class AddExpenseHistoryFragment : Fragment() {
 
                         val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
                         expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
+
+//                        for (i in 0 until subGroups.size) {
+//                            if (subGroups[i].name == args.expenseGroupName) {
+//                                expenseSubGroupSpinner.setSelection(i)
+//                            }
+//                        }
+
                     }
                 }
+
+
 
                 Toast.makeText(
                     requireContext(),
@@ -131,6 +145,8 @@ class AddExpenseHistoryFragment : Fragment() {
                 Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
             }
         }
+
+
     }
 
     private fun initWalletSpinner() {
@@ -172,8 +188,6 @@ class AddExpenseHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddExpenseHistoryBinding.bind(view)
-
-        val arg = args.expenseGroupName // new
 
         val dateET = binding.dateEditText
 

@@ -64,7 +64,8 @@ class ExpenseFragment : Fragment(),
     }
 
     override fun addItem(item: ExpenseGroup) {
-        val action = ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddExpense(item.name)
+        val action = ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddExpense()
+        action.expenseGroupName = item.name
         findNavController().navigate(action)
     }
 }
