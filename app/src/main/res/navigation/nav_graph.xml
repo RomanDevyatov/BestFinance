@@ -60,6 +60,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_income_group"
+            app:destination="@id/navigation_add_new_income_group" />
     </fragment>
     <fragment
         android:id="@+id/navigation_add_expense"
@@ -81,6 +84,17 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/navigation_add_new_income_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeGroupNameFragment"
+        android:label="fragment_add_new_income_group"
+        tools:layout="@layout/fragment_add_new_income_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+    </fragment>
 
 
 </navigation>

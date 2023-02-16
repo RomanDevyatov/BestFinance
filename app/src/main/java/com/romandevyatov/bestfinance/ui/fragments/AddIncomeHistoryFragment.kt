@@ -65,12 +65,13 @@ class AddIncomeHistoryFragment : Fragment() {
                 ): View {
                     val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
                     //set the color of first item in the drop down list to gray
-                    if(position == 0) {
+                    if (position == 0) {
                         view.setTextColor(Color.GRAY)
                     } else {
                         //here it is possible to define color for other items by
                         //view.setTextColor(Color.RED)
                     }
+
                     return view
                 }
             }
@@ -81,6 +82,7 @@ class AddIncomeHistoryFragment : Fragment() {
             incomeGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }
+            spinnerAdapter.add("Add new income group")
         }
 
         val incomeGroupSpinner = binding.incomeGroupSpinner
@@ -94,6 +96,11 @@ class AddIncomeHistoryFragment : Fragment() {
                 id: Long
             ) {
                 val item = binding.incomeGroupSpinner.getItemAtPosition(position).toString()
+                if (item == "Add new income group") {
+                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewIncomeGroup()
+                    findNavController().navigate(action)
+                }
+
                 Toast.makeText(
                     requireContext(),
                     item,

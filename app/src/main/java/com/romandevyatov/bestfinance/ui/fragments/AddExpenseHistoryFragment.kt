@@ -96,7 +96,11 @@ class AddExpenseHistoryFragment : Fragment() {
                 val spinnerPosition = expenseGroupSpinnerAdapter.getPosition(args.expenseGroupName.toString())
                 binding.expenseGroupSpinner.setSelection(spinnerPosition)
             }
+
+            expenseGroupSpinnerAdapter.add("Add new expense group")
         }
+
+
 
         val expenseGroupSpinner = binding.expenseGroupSpinner
         expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
@@ -116,6 +120,10 @@ class AddExpenseHistoryFragment : Fragment() {
             ) {
                 val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
+                if (item == "Add new expense group") {
+                    // new fragment at the bottom: name et + btn
+                }
+
                 expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(item)!!.observe(viewLifecycleOwner) { list ->
                     if (list != null) {
                         val subGroups = list.expenseSubGroups
@@ -125,6 +133,12 @@ class AddExpenseHistoryFragment : Fragment() {
 
                         subGroups.forEach {
                             expenseSubGroupSpinnerAdapter.add(it.name)
+                        }
+
+                        expenseSubGroupSpinnerAdapter.add("Add new sub expense group")
+
+                        if (item == "Add new sub expense group") {
+                            // new fragment at the bottom: name et + btn
                         }
                     }
                 }
