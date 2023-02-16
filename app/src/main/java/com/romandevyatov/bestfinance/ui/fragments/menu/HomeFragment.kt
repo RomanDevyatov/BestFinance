@@ -1,17 +1,14 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
-import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
@@ -85,7 +82,7 @@ class HomeFragment : Fragment() {
         }
 
         incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
-            passiveIncomeValue = (history.filter { it.incomeGroupId == 3L}).sumOf { it.amount }
+            passiveIncomeValue = (history.filter { it.incomeSubGroupId == 3L}).sumOf { it.amount }
             binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
 
             totalIncomeValue = history.sumOf { it.amount }

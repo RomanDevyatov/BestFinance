@@ -3,20 +3,19 @@ package com.romandevyatov.bestfinance.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "expense_sub_group",
+@Entity(tableName = "income_sub_group",
     foreignKeys = [
         ForeignKey(
-            entity = ExpenseGroup::class,
-            parentColumns = ["id"], // ExpenseGroup
-            childColumns = ["expense_group_id"], // ExpenseSubGroup
-            onDelete = CASCADE
+            entity = IncomeGroup::class,
+            parentColumns = ["id"], // IncomeGroup
+            childColumns = ["income_group_id"], // IncomeSubGroup
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class ExpenseSubGroup(
+data class IncomeSubGroup (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -25,7 +24,7 @@ data class ExpenseSubGroup(
     @ColumnInfo(name = "name")
     val name: String,
 
-    @ColumnInfo(name = "expense_group_id")
-    val expenseGroupId: Long
+    @ColumnInfo(name = "income_group_id")
+    val incomeGroupId: Long
 
 )

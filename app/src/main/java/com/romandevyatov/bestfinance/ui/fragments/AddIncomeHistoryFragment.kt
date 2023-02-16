@@ -22,8 +22,6 @@ import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -192,7 +190,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             incomeHistoryViewModel.insertIncomeHistory(
                 IncomeHistory(
-                    incomeGroupId = incomeGroupId,
+                    incomeSubGroupId = incomeGroupId,
                     amount = amountBinding,
                     comment = binding.commentEditText.text.toString(),
                     date = Date(binding.dateEditText.text.toString()),

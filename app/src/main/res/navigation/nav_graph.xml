@@ -35,7 +35,11 @@
         android:id="@+id/navigation_income"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.IncomeFragment"
         android:label="Income"
-        tools:layout="@layout/fragment_income" />
+        tools:layout="@layout/fragment_income" >
+        <action
+            android:id="@+id/action_navigation_income_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_wallet"
@@ -51,6 +55,11 @@
         <action
             android:id="@+id/action_navigation_add_income_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <argument
+            android:name="incomeGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/navigation_add_expense"

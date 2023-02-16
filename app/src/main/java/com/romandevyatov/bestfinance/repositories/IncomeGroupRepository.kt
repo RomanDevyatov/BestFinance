@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,5 +29,9 @@ class IncomeGroupRepository @Inject constructor(
     suspend fun deleteIncomeGroupById(id: Int) = incomeGroupDao.deleteById(id)
 
     suspend fun deleteAllIncomeGroups() = incomeGroupDao.deleteAll()
+
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
+        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
+    }
 
 }

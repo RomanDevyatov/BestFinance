@@ -16,49 +16,70 @@
         android:layout_marginEnd="10dp"
         android:fitsSystemWindows="true">
 
+<!--        <TextView-->
+<!--            android:id="@+id/totalIncomeTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Here is summa"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/incomeGroupRecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/totalIncomeTextView"-->
+<!--            tools:layout_editor_absoluteX="0dp" />-->
+
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/newWalletBalanceNameLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/incomeGroupRecyclerView">-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/newIncomeGroupName"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="Group name" />-->
+
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/addIncomeGroupButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:text="add"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/newWalletBalanceNameLayout" />-->
+
+
         <TextView
-            android:id="@+id/totalIncomeTextView"
+            android:id="@+id/sumOfIncomeHistoryAmountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Here is summa"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="HAHA, balance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/incomeGroupRecyclerView"
+            android:id="@+id/parent_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/totalIncomeTextView"
-            tools:layout_editor_absoluteX="0dp" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/newWalletBalanceNameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/incomeGroupRecyclerView">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/newIncomeGroupName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Group name" />
-
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/addIncomeGroupButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="add"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="10dp"
+            android:paddingBottom="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newWalletBalanceNameLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/sumOfIncomeHistoryAmountTextView"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="145dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

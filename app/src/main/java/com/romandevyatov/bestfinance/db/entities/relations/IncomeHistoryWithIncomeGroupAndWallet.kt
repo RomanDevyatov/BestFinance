@@ -12,7 +12,7 @@ data class IncomeHistoryWithIncomeGroupAndWallet(
     @Embedded
     var incomeHistory: IncomeHistory,
 
-    @Relation(entity = IncomeGroup::class, parentColumn = "income_group_id", entityColumn = "id")
+    @Relation(entity = IncomeGroup::class, parentColumn = "income_sub_group_id", entityColumn = "id")
     var incomeGroup: IncomeGroup,
 
     @Relation(entity = Wallet::class, parentColumn = "wallet_id", entityColumn = "id")

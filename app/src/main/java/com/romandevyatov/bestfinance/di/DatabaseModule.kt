@@ -41,6 +41,10 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun providesIncomeSubGroupDao(db: BestFinanceDatabase) = db.getIncomeSubGroupDao()
+
+    @Provides
+    @Singleton
     fun providesWalletDao(db: BestFinanceDatabase) = db.getWalletDao()
 
 //    @Provides

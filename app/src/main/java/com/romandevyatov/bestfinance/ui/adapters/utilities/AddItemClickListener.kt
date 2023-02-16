@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.expense
+package com.romandevyatov.bestfinance.ui.adapters.utilities
 
 interface AddItemClickListener<T> {
 

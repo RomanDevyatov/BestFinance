@@ -10,9 +10,9 @@ import java.util.Date
 @Entity(tableName = "income_history",
     foreignKeys = [
         ForeignKey(
-            entity = IncomeGroup::class,
+            entity = IncomeSubGroup::class,
             parentColumns = ["id"], // IncomeGroup
-            childColumns = ["income_group_id"], // in IncomeHistory
+            childColumns = ["income_sub_group_id"], // in IncomeHistory
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -29,8 +29,8 @@ data class IncomeHistory(
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
-    @ColumnInfo(name = "income_group_id")
-    val incomeGroupId: Long,
+    @ColumnInfo(name = "income_sub_group_id")
+    val incomeSubGroupId: Long,
 
     @ColumnInfo(name = "amount")
     val amount: Double,

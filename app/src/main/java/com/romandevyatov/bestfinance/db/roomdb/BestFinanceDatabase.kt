@@ -12,12 +12,13 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
     entities = [
         IncomeGroup::class,
         ExpenseGroup::class,
+        IncomeSubGroup::class,
         ExpenseSubGroup::class,
         Wallet::class,
         IncomeHistory::class,
         ExpenseHistory::class
     ],
-    version = 4,
+    version = 7,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -28,6 +29,8 @@ abstract class BestFinanceDatabase : RoomDatabase() {
     abstract fun getExpenseGroupDao(): ExpenseGroupDao
 
     abstract fun getExpenseSubGroupDao(): ExpenseSubGroupDao
+
+    abstract fun getIncomeSubGroupDao(): IncomeSubGroupDao
 
     abstract fun getWalletDao(): WalletDao
 
