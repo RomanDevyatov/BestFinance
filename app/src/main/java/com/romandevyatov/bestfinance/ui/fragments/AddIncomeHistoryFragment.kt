@@ -22,6 +22,8 @@ import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -183,6 +185,10 @@ class AddIncomeHistoryFragment : Fragment() {
             }!!.single()
             val walletName = wallet.name
             val walletId = wallet.id!!.toLong()
+
+//            val str = binding.dateEditText.text.toString()
+//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
 
             incomeHistoryViewModel.insertIncomeHistory(
                 IncomeHistory(

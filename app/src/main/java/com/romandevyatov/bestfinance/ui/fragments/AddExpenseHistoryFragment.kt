@@ -3,11 +3,13 @@ package com.romandevyatov.bestfinance.ui.fragments
 
 import android.app.DatePickerDialog
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,6 +21,8 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -222,6 +226,10 @@ class AddExpenseHistoryFragment : Fragment() {
             val amountBinding = binding.amountEditText.text.toString().toDouble()
 
             val id = expenseSubGroup.id!!
+
+//            val str = binding.dateEditText.text.toString()
+//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
 
             expenseHistoryViewModel.insertExpenseHistory(
                 ExpenseHistory(

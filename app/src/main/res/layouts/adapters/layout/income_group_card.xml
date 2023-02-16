@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp" >
@@ -11,16 +12,15 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:layout_margin="4dp"
                     android:text="Income Group Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/removeIncomeGroupIcon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,17 +36,19 @@
 <!--            app:layout_constraintTop_toBottomOf="@+id/title_text_view"-->
 <!--            tools:text="+100%/1000р за месяц" />-->
 
-        <ImageView
-            android:id="@+id/removeIncomeGroupIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_remove"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/removeIncomeGroupIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_remove"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
+
+
+                <!--        <androidx.recyclerview.widget.RecyclerView-->
 <!--            android:id="@+id/items_container"-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="297dp"-->
