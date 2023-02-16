@@ -76,9 +76,9 @@ class AddIncomeHistoryFragment : Fragment() {
                 }
             }
 
-        spinnerAdapter.add("Income group")
-
         incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
+            spinnerAdapter.clear()
+            spinnerAdapter.add("Income group")
             incomeGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }
