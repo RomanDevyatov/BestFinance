@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -33,16 +35,30 @@ class MainActivity() : AppCompatActivity() {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
-        val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(this, navController, appBarConfiguration)
+    }
+
+    lateinit var navController: NavController
+
+    override fun onSupportNavigateUp(): Boolean {
+        return when(navController.currentDestination?.id) {
+            R.id.navigation_add_income -> {
+                navController.navigate(R.id.navigation_home)
+                true
+            }
+            else -> navController.navigateUp()
+        }
     }
 
     private fun setNavigationBottomBar() {
         val bottomNavigationView: BottomNavigationView = binding.bottomNavigationView
 
         val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
@@ -59,6 +75,7 @@ class MainActivity() : AppCompatActivity() {
             R.id.navigation_add_expense,
             R.id.navigation_history
         )
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (bottomNavViewExcludedArray.contains(destination.id)) {
                 bottomNavigationView.visibility = View.GONE
@@ -67,17 +84,8 @@ class MainActivity() : AppCompatActivity() {
             }
         }
 
+
         bottomNavigationView.setupWithNavController(navController)
-
-
-
-//        navController.addOnDestinationChangedListener {
-//                _: NavController,
-//                destination: NavDestination,
-//                _: Bundle? ->
-//             navView.isVisible =
-//                appBarConfiguration.topLevelDestinations.contains(destination.id)
-//        }
     }
 
 }

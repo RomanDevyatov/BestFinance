@@ -1,8 +1,10 @@
 package com.romandevyatov.bestfinance.ui.fragments
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -45,6 +49,10 @@ class AddIncomeHistoryFragment : Fragment() {
         initWalletSpinner()
 
         return binding.root
+    }
+
+    private fun getArraySpinner() {
+
     }
 
     private fun initIncomeGroupSpinner() {
@@ -147,9 +155,24 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddIncomeHistoryBinding.bind(view)
+
+
+
 
         val dateET = binding.dateEditText
 
