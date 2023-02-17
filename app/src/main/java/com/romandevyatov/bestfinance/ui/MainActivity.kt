@@ -21,6 +21,10 @@ class MainActivity() : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var navController: NavController
+    private lateinit var bottomNavigationView: BottomNavigationView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,34 +39,15 @@ class MainActivity() : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        toolbar.setNavigationOnClickListener {
-            if (navController.currentDestination?.id == R.id.navigation_add_income) {
-                navController.navigate(R.id.navigation_home)
-            } else {
-                navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-            }
-        }
-    }
-
-    lateinit var navController: NavController
-
-// default app bar
-//    override fun onSupportNavigateUp(): Boolean {
-//        return when(navController.currentDestination?.id) {
-//            R.id.navigation_add_income -> {
+//        val appBarConfiguration = AppBarConfiguration(navController.graph)
+//        toolbar.setupWithNavController(navController, appBarConfiguration)
+//        toolbar.setNavigationOnClickListener {
+//            if (navController.currentDestination?.id == R.id.navigation_add_income) {
 //                navController.navigate(R.id.navigation_home)
-//                true
+//            } else {
+//                navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 //            }
-//            else -> navController.navigateUp()
 //        }
-//    }
-
-    private fun setNavigationBottomBar() {
-        val bottomNavigationView: BottomNavigationView = binding.bottomNavigationView
-
-        val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -72,9 +57,29 @@ class MainActivity() : AppCompatActivity() {
                 R.id.navigation_wallet
             )
         )
-
         setupActionBarWithNavController(this, navController, appBarConfiguration)
+    }
 
+    // default app bar
+    override fun onSupportNavigateUp(): Boolean {
+        return when(navController.currentDestination?.id) {
+            R.id.navigation_add_income -> {
+                navController.navigate(R.id.navigation_home)
+                true
+            }
+            else -> navController.navigateUp()
+        }
+    }
+
+    private fun setNavigationBottomBar() {
+        bottomNavigationView = binding.bottomNavigationView
+
+        bottomNavigationView.setupWithNavController(navController)
+
+        hideBottomNavigationBar()
+    }
+
+    private fun hideBottomNavigationBar() {
         val bottomNavViewExcludedArray = arrayOf(
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
@@ -88,9 +93,5 @@ class MainActivity() : AppCompatActivity() {
                 bottomNavigationView.visibility = View.VISIBLE
             }
         }
-
-
-        bottomNavigationView.setupWithNavController(navController)
     }
-
 }
