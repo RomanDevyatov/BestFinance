@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
@@ -37,22 +36,28 @@ class MainActivity() : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-
         toolbar.setupWithNavController(navController, appBarConfiguration)
-        setupActionBarWithNavController(this, navController, appBarConfiguration)
+        toolbar.setNavigationOnClickListener {
+            if (navController.currentDestination?.id == R.id.navigation_add_income) {
+                navController.navigate(R.id.navigation_home)
+            } else {
+                navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+            }
+        }
     }
 
     lateinit var navController: NavController
 
-    override fun onSupportNavigateUp(): Boolean {
-        return when(navController.currentDestination?.id) {
-            R.id.navigation_add_income -> {
-                navController.navigate(R.id.navigation_home)
-                true
-            }
-            else -> navController.navigateUp()
-        }
-    }
+// default app bar
+//    override fun onSupportNavigateUp(): Boolean {
+//        return when(navController.currentDestination?.id) {
+//            R.id.navigation_add_income -> {
+//                navController.navigate(R.id.navigation_home)
+//                true
+//            }
+//            else -> navController.navigateUp()
+//        }
+//    }
 
     private fun setNavigationBottomBar() {
         val bottomNavigationView: BottomNavigationView = binding.bottomNavigationView

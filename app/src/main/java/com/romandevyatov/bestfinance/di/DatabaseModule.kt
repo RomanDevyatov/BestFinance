@@ -24,7 +24,6 @@ object DatabaseModule {
             context,
             BestFinanceDatabase::class.java,
             DATABASE_NAME)
-        .fallbackToDestructiveMigration()
         .createFromAsset("database/bestfinance_database_pre.db")
         .build()
 
