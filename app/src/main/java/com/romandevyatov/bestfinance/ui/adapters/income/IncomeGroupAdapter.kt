@@ -24,7 +24,7 @@ class IncomeGroupAdapter(
         }
     }
 
-    private val differ = AsyncListDiffer(this, differentCallback)
+    val differ = AsyncListDiffer(this, differentCallback)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeGroupItemViewHolder {

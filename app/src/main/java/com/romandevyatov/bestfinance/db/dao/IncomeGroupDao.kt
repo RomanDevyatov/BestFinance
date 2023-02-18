@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
 
 
 @Dao
@@ -30,5 +31,9 @@ interface IncomeGroupDao {
     @Transaction
     @Query("SELECT * FROM income_group")
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+
+    @Transaction
+    @Query("SELECT * FROM income_group WHERE is_archived = 0")
+    fun getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
 }

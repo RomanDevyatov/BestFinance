@@ -14,5 +14,9 @@ data class ExpenseGroup(
     val id: Long? = null,
 
     @ColumnInfo(name = "name")
-    val name: String
+    val name: String,
+
+    @ColumnInfo(name = "is_archived")
+    val isArchived: Int = 0
+
 )

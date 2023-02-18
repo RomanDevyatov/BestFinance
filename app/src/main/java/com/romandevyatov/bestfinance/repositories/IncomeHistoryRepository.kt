@@ -24,4 +24,12 @@ class IncomeHistoryRepository @Inject constructor(
         incomeHistoryDao.insert(incomeHistory)
     }
 
+    suspend fun updateIncomeHistory(incomeHistory: IncomeHistory) {
+        incomeHistoryDao.update(incomeHistory)
+    }
+
+    suspend fun deleteIncomeHistory(incomeHistory: IncomeHistory) {
+        incomeHistoryDao.delete(incomeHistory)
+    }
+
 }

@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = IncomeGroup::class,
-            parentColumns = ["id"], // IncomeGroup
-            childColumns = ["income_group_id"], // IncomeSubGroup
+            parentColumns = ["id"],
+            childColumns = ["income_group_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -25,6 +25,9 @@ data class IncomeSubGroup (
     val name: String,
 
     @ColumnInfo(name = "income_group_id")
-    val incomeGroupId: Long
+    val incomeGroupId: Long,
+
+    @ColumnInfo(name = "is_archived")
+    val isArchived: Int = 0
 
 )

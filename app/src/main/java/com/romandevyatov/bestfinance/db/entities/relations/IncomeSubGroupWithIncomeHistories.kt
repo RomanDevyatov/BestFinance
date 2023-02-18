@@ -8,13 +8,13 @@ import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 class IncomeSubGroupWithIncomeHistories (
 
     @Embedded
-    var incomeSubGroup: IncomeSubGroup,
+    val incomeSubGroup: IncomeSubGroup,
 
     @Relation(
         entity = IncomeHistory::class,
         parentColumn = "id",
         entityColumn = "income_sub_group_id"
     )
-    var incomeHistory: List<IncomeHistory>
+    val incomeHistories: List<IncomeHistory>
 
 )

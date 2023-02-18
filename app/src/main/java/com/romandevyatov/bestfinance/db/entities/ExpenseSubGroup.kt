@@ -26,6 +26,9 @@ data class ExpenseSubGroup(
     val name: String,
 
     @ColumnInfo(name = "expense_group_id")
-    val expenseGroupId: Long
+    val expenseGroupId: Long,
+
+    @ColumnInfo(name = "is_archived")
+    val isArchived: Int = 0
 
 )

@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui
 
+
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,7 @@ class MainActivity() : AppCompatActivity() {
 //            }
 //        }
 
+        // for default app bar
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
@@ -60,7 +62,7 @@ class MainActivity() : AppCompatActivity() {
         setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
 
-    // default app bar
+    // for default app bar
     override fun onSupportNavigateUp(): Boolean {
         return when(navController.currentDestination?.id) {
             R.id.navigation_add_income -> {

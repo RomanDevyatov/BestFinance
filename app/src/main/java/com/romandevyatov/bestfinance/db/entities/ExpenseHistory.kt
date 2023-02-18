@@ -44,6 +44,9 @@ class ExpenseHistory (
     val date: Date,
 
     @ColumnInfo(name = "wallet_id")
-    val walletId: Long
+    val walletId: Long,
+
+    @ColumnInfo(name = "is_archived")
+    val isArchived: Int = 0
 
 )

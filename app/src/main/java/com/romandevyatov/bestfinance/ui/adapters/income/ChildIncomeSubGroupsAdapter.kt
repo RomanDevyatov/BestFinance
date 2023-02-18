@@ -10,7 +10,7 @@ import com.romandevyatov.bestfinance.databinding.ItemRowChildBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
 
 class ChildIncomeSubGroupsAdapter (
-    incomeSubGroupWithIncomeHistories: List<IncomeSubGroupWithIncomeHistories>
+    incomeSubGroupWithIncomeHistoriesList: List<IncomeSubGroupWithIncomeHistories>
 ) : RecyclerView.Adapter<ChildIncomeSubGroupsAdapter.IncomeSubGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeSubGroupWithIncomeHistories>() {
@@ -25,10 +25,10 @@ class ChildIncomeSubGroupsAdapter (
         }
     }
 
-    private val incomeSubGroupWithIncomeHistoriesDiffer = AsyncListDiffer(this, differentCallback)
+    val notArchivedIncomeSubGroupWithIncomeHistoriesDiffer = AsyncListDiffer(this, differentCallback)
 
     init {
-        this.incomeSubGroupWithIncomeHistoriesDiffer.submitList(incomeSubGroupWithIncomeHistories)
+        this.notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.submitList(incomeSubGroupWithIncomeHistoriesList)
     }
 
     inner class IncomeSubGroupItemViewHolder(
@@ -37,7 +37,7 @@ class ChildIncomeSubGroupsAdapter (
 
         fun bindItem(incomeSubGroup: IncomeSubGroupWithIncomeHistories) {
             itemRowChildBinding.subGroupNameTextView.text = incomeSubGroup.incomeSubGroup.name
-            itemRowChildBinding.summaTextView.text =  incomeSubGroup.incomeHistory.sumOf { it.amount }.toString()
+            itemRowChildBinding.summaTextView.text =  incomeSubGroup.incomeHistories.sumOf { it.amount }.toString()
         }
 
     }
@@ -49,15 +49,15 @@ class ChildIncomeSubGroupsAdapter (
     }
 
     override fun onBindViewHolder(holder: IncomeSubGroupItemViewHolder, position: Int) {
-        holder.bindItem(incomeSubGroupWithIncomeHistoriesDiffer.currentList[position])
+        holder.bindItem(notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.currentList[position])
     }
 
     override fun getItemCount(): Int {
-        return incomeSubGroupWithIncomeHistoriesDiffer.currentList.size
+        return notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.currentList.size
     }
 
     fun submitList(incomeSubGroupWithIncomeHistories: List<IncomeSubGroupWithIncomeHistories>) {
-        incomeSubGroupWithIncomeHistoriesDiffer.submitList(incomeSubGroupWithIncomeHistories)
+        notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.submitList(incomeSubGroupWithIncomeHistories)
     }
 
 }

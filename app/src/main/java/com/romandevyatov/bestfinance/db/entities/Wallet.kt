@@ -15,5 +15,9 @@ data class Wallet(
     val name: String,
 
     @ColumnInfo(name = "balance")
-    val balance: Double
+    val balance: Double,
+
+    @ColumnInfo(name = "is_archived")
+    val isArchived: Int = 0
+
 )

@@ -34,4 +34,9 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
     }
 
+    fun getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
+        return incomeGroupDao.getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
+    }
+
+
 }

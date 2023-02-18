@@ -18,7 +18,7 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
         IncomeHistory::class,
         ExpenseHistory::class
     ],
-    version = 7,
+    version = 11,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

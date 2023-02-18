@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeGroupAndWallet
 import com.romandevyatov.bestfinance.repositories.IncomeHistoryRepository
@@ -21,6 +22,14 @@ class IncomeHistoryViewModel @Inject constructor(
 
     fun insertIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
         incomeHistoryRepository.insertIncomeHistory(incomeHistory)
+    }
+
+    fun updateIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
+        incomeHistoryRepository.updateIncomeHistory(incomeHistory)
+    }
+
+    fun deleteIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
+        incomeHistoryRepository.deleteIncomeHistory(incomeHistory)
     }
 
     val allIncomeHistoryWithIncomeGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeGroupAndWallet()
