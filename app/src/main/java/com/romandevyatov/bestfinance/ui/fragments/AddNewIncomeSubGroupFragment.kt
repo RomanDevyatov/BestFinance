@@ -126,8 +126,10 @@ class AddNewIncomeSubGroupFragment : Fragment() {
                 )
             }
 
+
             val action = AddNewIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
             action.incomeGroupName = selectedIncomeGroupName
+            action.incomeSubGroupName = binding.newIncomeSubGroupName.text.toString()
             findNavController().navigate(action)
         }
     }

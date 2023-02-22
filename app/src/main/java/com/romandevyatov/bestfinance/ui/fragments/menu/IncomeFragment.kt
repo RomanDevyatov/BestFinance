@@ -32,7 +32,8 @@ import java.time.OffsetDateTime
 @AndroidEntryPoint
 class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveItemBySwipe {
 
-    private lateinit var binding: FragmentIncomeBinding
+    private var _binding: FragmentIncomeBinding? = null
+    private val binding get() = _binding!!
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
@@ -42,14 +43,14 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentIncomeBinding.inflate(inflater, container, false)
+        _binding = FragmentIncomeBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentIncomeBinding.bind(view)
+        _binding = FragmentIncomeBinding.bind(view)
 
 //        setGroupSwipeListener(view)
 
@@ -115,6 +116,30 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
         return updatedIncomeGroupWithIncomeSubGroupsWithIncomeHistories
     }
 
+    private fun updateIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories: IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories) {
+        incomeGroupViewModel.updateIncomeGroup(updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeGroup)
+        updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeSubGroupWithIncomeHistories.forEach { incomeSubGroupWithIncomeHistories ->
+            incomeSubGroupViewModel.updateIncomeSubGroup(incomeSubGroupWithIncomeHistories.incomeSubGroup)
+            incomeSubGroupWithIncomeHistories.incomeHistories.forEach {
+                incomeHistoryViewModel.updateIncomeHistory(it)
+            }
+        }
+    }
+
+    private fun initRecyclerView() {
+        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.parentRecyclerView.adapter = parentIncomeGroupAdapter
+    }
+
+    override fun addItem(item: IncomeGroup) {
+        val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddIncome()
+        action.incomeGroupName = item.name
+        findNavController().navigate(action)
+    }
+
+    override fun updateInnerItem(incomeSubGroup: IncomeSubGroup) {
+        incomeSubGroupViewModel.updateIncomeSubGroup(incomeSubGroup)
+    }
 
     private fun setGroupSwipeListener(view: View) {
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(
@@ -154,31 +179,9 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
         }
     }
 
-    private fun updateIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories: IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories) {
-        incomeGroupViewModel.updateIncomeGroup(updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeGroup)
-        updatedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeSubGroupWithIncomeHistories.forEach { incomeSubGroupWithIncomeHistories ->
-            incomeSubGroupViewModel.updateIncomeSubGroup(incomeSubGroupWithIncomeHistories.incomeSubGroup)
-            incomeSubGroupWithIncomeHistories.incomeHistories.forEach {
-                incomeHistoryViewModel.updateIncomeHistory(it)
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-
-
-    private fun initRecyclerView() {
-        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.parentRecyclerView.adapter = parentIncomeGroupAdapter
-    }
-
-    override fun addItem(item: IncomeGroup) {
-        val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddIncome()
-        action.incomeGroupName = item.name
-        findNavController().navigate(action)
-    }
-
-    override fun updateInnerItem(incomeSubGroup: IncomeSubGroup) {
-        incomeSubGroupViewModel.updateIncomeSubGroup(incomeSubGroup)
-    }
-
 
 }

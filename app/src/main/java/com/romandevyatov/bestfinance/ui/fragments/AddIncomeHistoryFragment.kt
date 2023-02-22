@@ -46,9 +46,8 @@ class AddIncomeHistoryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -106,30 +105,6 @@ class AddIncomeHistoryFragment : Fragment() {
 
         val incomeSubGroupArraySpinner = getArraySpinner()
         incomeSubGroupArraySpinner.add("Income sub group")
-        binding.incomeSubGroupSpinner.adapter = incomeSubGroupArraySpinner
-        binding.incomeSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val selectedIncomeSubGroupName = binding.incomeSubGroupSpinner.getItemAtPosition(position).toString()
-
-                if (selectedIncomeSubGroupName == "Add new sub income group") {
-                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
-                    action.incomeGroupName = binding.incomeGroupSpinner.selectedItem.toString()
-                    findNavController().navigate(action)
-                }
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-
-        }
 
         binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
@@ -165,40 +140,53 @@ class AddIncomeHistoryFragment : Fragment() {
 
         }
 
+        binding.incomeSubGroupSpinner.adapter = incomeSubGroupArraySpinner
+        binding.incomeSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedIncomeSubGroupName = binding.incomeSubGroupSpinner.getItemAtPosition(position).toString()
+
+                if (selectedIncomeSubGroupName == "Add new sub income group") {
+                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
+                    val selectedIncomeGroup = binding.incomeGroupSpinner.selectedItem
+                    if (selectedIncomeGroup != null) {
+                        action.incomeGroupName = selectedIncomeGroup.toString()
+                    }
+                    findNavController().navigate(action)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
 
     }
 
     private fun initWalletSpinner() {
-        val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
+        val spinnerAdapter = getArraySpinner()
 
         walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
+            spinnerAdapter.clear()
+            spinnerAdapter.add("Wallet")
+
             walletList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }
+
+            spinnerAdapter.add("Add new wallet")
         }
 
         val walletSpinner = binding.walletSpinner
         walletSpinner.adapter = spinnerAdapter
 
-//        walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>,
-//                view: View,
-//                position: Int,
-//                id: Long
-//            ) {
-//                val item = binding.walletSpinner.getItemAtPosition(position).toString()
-//                Toast.makeText(
-//                    requireContext(),
-//                    item,
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>) {
-//                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
-//            }
-//        }
     }
 
     override fun onAttach(context: Context) {
