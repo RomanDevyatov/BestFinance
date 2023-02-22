@@ -40,7 +40,7 @@ class ExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.deleteAllExpenseGroups()
     }
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups>? {
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameAndArchivedDateIsNullLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
     }
 

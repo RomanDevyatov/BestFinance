@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments
 
-
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Build
@@ -21,7 +20,6 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -42,7 +40,7 @@ class AddExpenseHistoryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
 
         initExpenseGroupSpinner()
@@ -82,76 +80,90 @@ class AddExpenseHistoryFragment : Fragment() {
         return spinnerAdapter
     }
 
+    private val args: AddExpenseHistoryFragmentArgs by navArgs()
+
     private fun initExpenseGroupSpinner() {
         val expenseGroupSpinnerAdapter = getSpinnerAdapter()
-        expenseGroupSpinnerAdapter.add("Expense group")
+        binding.expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
 
         expenseGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+            expenseGroupSpinnerAdapter.clear()
+            expenseGroupSpinnerAdapter.add("Expense group")
+
             expenseGroupList?.forEach { it ->
                 expenseGroupSpinnerAdapter.add(it.name)
             }
+
+            expenseGroupSpinnerAdapter.add("Add new expense group")
 
             if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
                 val spinnerPosition = expenseGroupSpinnerAdapter.getPosition(args.expenseGroupName.toString())
                 binding.expenseGroupSpinner.setSelection(spinnerPosition)
             }
-
-            expenseGroupSpinnerAdapter.add("Add new expense group")
         }
-
-
-
-        val expenseGroupSpinner = binding.expenseGroupSpinner
-        expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
 
         val expenseSubGroupSpinnerAdapter = getSpinnerAdapter()
         expenseSubGroupSpinnerAdapter.add("Expense sub group")
 
-        val expenseSubGroupSpinner = binding.expenseSubGroupSpinner
-        expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
-
-        expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                val item = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
+                val selectedExpenseGroupName = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
-                if (item == "Add new expense group") {
-                    // new fragment at the bottom: name et + btn
+                if (selectedExpenseGroupName == "Add new expense group") {
+//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
+//                    findNavController().navigate(action)
                 }
 
-                expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(item)!!.observe(viewLifecycleOwner) { list ->
+                expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameAndArchivedDateIsNullLiveData(selectedExpenseGroupName).observe(viewLifecycleOwner) { list ->
+                    expenseSubGroupSpinnerAdapter.clear()
+                    expenseSubGroupSpinnerAdapter.add("Expense sub group")
+
                     if (list != null) {
                         val subGroups = list.expenseSubGroups
-
-                        expenseSubGroupSpinnerAdapter.clear()
-                        expenseSubGroupSpinnerAdapter.add("Expense sub group")
 
                         subGroups.forEach {
                             expenseSubGroupSpinnerAdapter.add(it.name)
                         }
-
-                        expenseSubGroupSpinnerAdapter.add("Add new sub expense group")
-
-                        if (item == "Add new sub expense group") {
-                            // new fragment at the bottom: name et + btn
-                        }
                     }
+                    expenseSubGroupSpinnerAdapter.add("Add new sub expense group")
                 }
-
-                Toast.makeText(
-                    requireContext(),
-                    item,
-                    Toast.LENGTH_SHORT
-                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
             }
+        }
+
+        binding.expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
+        binding.expenseSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedIncomeSubGroupName = binding.expenseSubGroupSpinner.getItemAtPosition(position).toString()
+
+                if (selectedIncomeSubGroupName == "Add new sub expense group") {
+//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewSubExpenseGroup()
+//                    val selectedExpenseGroup = binding.expenseGroupSpinner.selectedItem
+//                    if (selectedExpenseGroup != null) {
+//                        action.expenseGroupName = selectedExpenseGroup.toString()
+//                    }
+//                    findNavController().navigate(action)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
         }
 
 
@@ -191,7 +203,7 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    private val args: AddExpenseHistoryFragmentArgs by navArgs()
+
 
 //    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
@@ -231,7 +243,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
         binding.addExpenseButton.setOnClickListener {
             val expenseSubGroupNameBinding = binding.expenseSubGroupSpinner.selectedItem.toString()
-
             val expenseSubGroup = expenseSubGroupViewModel.getExpenseSubGroupByName(expenseSubGroupNameBinding)
 
             val walletNameBinding = binding.walletSpinner.selectedItem.toString()
@@ -247,13 +258,13 @@ class AddExpenseHistoryFragment : Fragment() {
 //            val str = binding.dateEditText.text.toString()
 //            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 //            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
-
+            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             expenseHistoryViewModel.insertExpenseHistory(
                 ExpenseHistory(
                     expenseSubGroupId = id,
                     amount = amountBinding,
                     comment = binding.commentEditText.text.toString(),
-                    date = OffsetDateTime.now(), // from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
+                    date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
                     walletId = walletId
                 )
             )
@@ -261,9 +272,10 @@ class AddExpenseHistoryFragment : Fragment() {
             val updatedBalance = wallet.balance - amountBinding
             walletViewModel.updateWallet(
                 Wallet(
-                    id = wallet.id,
+                    id = walletId,
                     name = wallet.name,
                     balance = updatedBalance,
+                    archivedDate = wallet.archivedDate,
                     input = wallet.input,
                     output = wallet.output + amountBinding,
                     description = wallet.description
@@ -275,10 +287,13 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    fun updateDate(calendar: Calendar){
-        val dateFormat = "yyyy-MM-dd HH:mm:ss"
-        val sdf = SimpleDateFormat(dateFormat, Locale.US)
-        binding.dateEditText.setText(sdf.format(calendar.time))
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateDate(calendar: Calendar) {
+//        val dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+//        binding.dateEditText.setText(sdf.format(calendar.time))
+        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
     }
 
 

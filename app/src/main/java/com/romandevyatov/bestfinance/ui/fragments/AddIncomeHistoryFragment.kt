@@ -24,7 +24,6 @@ import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
@@ -38,7 +37,6 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var binding: FragmentAddIncomeHistoryBinding
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
-    private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
 
@@ -85,19 +83,20 @@ class AddIncomeHistoryFragment : Fragment() {
     val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private fun initIncomeGroupSpinner() {
-        val spinnerAdapter = getArraySpinner()
-        binding.incomeGroupSpinner.adapter = spinnerAdapter
+        val incomeGroupSpinnerAdapter = getArraySpinner()
+        binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
+
         incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
-            spinnerAdapter.clear()
-            spinnerAdapter.add("Income group")
+            incomeGroupSpinnerAdapter.clear()
+            incomeGroupSpinnerAdapter.add("Income group")
             incomeGroupList?.forEach { it ->
-                spinnerAdapter.add(it.name)
+                incomeGroupSpinnerAdapter.add(it.name)
             }
 
-            spinnerAdapter.add("Add new income group")
+            incomeGroupSpinnerAdapter.add("Add new income group")
 
             if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
-                val spinnerPosition = spinnerAdapter.getPosition(args.incomeGroupName)
+                val spinnerPosition = incomeGroupSpinnerAdapter.getPosition(args.incomeGroupName)
 
                 binding.incomeGroupSpinner.setSelection(spinnerPosition)
             }
@@ -248,7 +247,6 @@ class AddIncomeHistoryFragment : Fragment() {
             val wallet = walletViewModel.walletsLiveData.value?.filter { wallet ->
                 wallet.name == walletNameBinding
             }!!.single()
-            val walletName = wallet.name
             val walletId = wallet.id!!.toLong()
 
 //            val str = binding.dateEditText.text.toString()
@@ -271,10 +269,10 @@ class AddIncomeHistoryFragment : Fragment() {
             walletViewModel.updateWallet(
                 Wallet(
                     id = walletId,
-                    name = walletName,
+                    name = wallet.name,
                     balance = updatedBalance,
                     archivedDate = wallet.archivedDate,
-                    input = wallet.input,
+                    input = wallet.input + amountBinding,
                     output = wallet.output,
                     description = wallet.description
                 )
