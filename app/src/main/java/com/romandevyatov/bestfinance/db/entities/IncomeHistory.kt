@@ -45,7 +45,7 @@ data class IncomeHistory(
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,
 
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Int = 0
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
 
 )

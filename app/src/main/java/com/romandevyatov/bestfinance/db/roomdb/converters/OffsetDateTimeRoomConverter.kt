@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.db.roomdb.converters
 
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
@@ -15,14 +14,19 @@ class OffsetDateTimeRoomTypeConverter {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun iso8601DateStringToOffsetDateTime(iso8601DateString : String): OffsetDateTime {
+    fun iso8601DateStringToOffsetDateTime(iso8601DateString: String?): OffsetDateTime? {
+        if (iso8601DateString == null)
+            return null
         return OffsetDateTime.from(iso8601DateTimeFormatter.parse(iso8601DateString))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun offsetDateTimeToIso8601OffsetDateTimeString(date: OffsetDateTime): String {
-        return date.format(iso8601DateTimeFormatter)
+    fun offsetDateTimeToIso8601OffsetDateTimeString(date: OffsetDateTime?): String? {
+        if (date != null) {
+            return date.format(iso8601DateTimeFormatter)
+        }
+        return null
     }
 
 }

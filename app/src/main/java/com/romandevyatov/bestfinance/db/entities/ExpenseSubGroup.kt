@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
+import java.time.OffsetDateTime
+
 
 @Entity(tableName = "expense_sub_group",
     foreignKeys = [
@@ -28,7 +30,7 @@ data class ExpenseSubGroup(
     @ColumnInfo(name = "expense_group_id")
     val expenseGroupId: Long,
 
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Int = 0
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
 
 )

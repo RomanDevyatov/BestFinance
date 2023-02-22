@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
 
         }
 
-        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
         }
 

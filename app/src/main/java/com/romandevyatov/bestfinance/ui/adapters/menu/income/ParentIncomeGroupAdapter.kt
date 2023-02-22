@@ -1,11 +1,8 @@
 package com.romandevyatov.bestfinance.ui.adapters.menu.income
 
 
-import android.annotation.SuppressLint
 import android.os.Build
-import android.text.method.Touch.onTouchEvent
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -18,10 +15,12 @@ import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
 import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
+import java.time.OffsetDateTime
 
 
 class ParentIncomeGroupAdapter(
-    private val onClickListener: AddItemClickListener<IncomeGroup>
+    private val onClickListener: AddItemClickListener<IncomeGroup>,
+    private val archiveItemBySwipe: ArchiveItemBySwipe
 ) : RecyclerView.Adapter<ParentIncomeGroupAdapter.IncomeGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>() {
@@ -70,29 +69,32 @@ class ParentIncomeGroupAdapter(
                 ): Boolean {
                     return true
                 }
-
-                @SuppressLint("NotifyDataSetChanged")
+//
+//                @SuppressLint("NotifyDataSetChanged")
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
 
+                    val incomeSubGroupWithIncomeHistories = childAdapter.notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.currentList[pos]
+                    val swipedIncomeSubGroup = incomeSubGroupWithIncomeHistories.incomeSubGroup
 
-                val incomeSubGroupWithIncomeHistories = childAdapter.notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.currentList[pos]
+                    val archiveIncomeSubGroup = IncomeSubGroup(
+                        id = swipedIncomeSubGroup.id,
+                        name = swipedIncomeSubGroup.name,
+                        incomeGroupId = swipedIncomeSubGroup.incomeGroupId,
+                        archivedDate = OffsetDateTime.now()
+                    )
+//                        getUpdatedIncomeSubGroupWithIncomeHistories(incomeSubGroupWithIncomeHistories)
 
-                val updatedIncomeSubGroupWithIncomeHistories = getUpdatedIncomeSubGroupWithIncomeHistories(incomeSubGroupWithIncomeHistories)
-
-                updateIncomeSubGroupWithIncomeHistories(updatedIncomeSubGroupWithIncomeHistories)
+                    archiveItemBySwipe.updateInnerItem(archiveIncomeSubGroup)
 
                     Snackbar.make(itemView, "Income sub group archived", Snackbar.LENGTH_LONG).apply {
                         setAction("UNDO") {
-                            updateIncomeSubGroupWithIncomeHistories(incomeSubGroupWithIncomeHistories)
+                            archiveItemBySwipe.updateInnerItem(swipedIncomeSubGroup)
                         }
                         show()
                     }
-
                 }
-
-
             }
 
 
@@ -104,22 +106,13 @@ class ParentIncomeGroupAdapter(
         }
     }
 
-
-    private fun updateIncomeSubGroupWithIncomeHistories(updatedIncomeSubGroupWithIncomeHistories: IncomeSubGroupWithIncomeHistories) {
-//        incomeSubGroupViewModel.updateIncomeSubGroup(updatedIncomeSubGroupWithIncomeHistories.incomeSubGroup)
-//        updatedIncomeSubGroupWithIncomeHistories.incomeHistories.forEach {
-//            incomeHistoryViewModel.updateIncomeHistory(it)
-//        }
-    }
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUpdatedIncomeSubGroupWithIncomeHistories(groupWithSubGroupsIncludingHistories: IncomeSubGroupWithIncomeHistories): IncomeSubGroupWithIncomeHistories {
         val updatedSubGroup = IncomeSubGroup(
             id = groupWithSubGroupsIncludingHistories.incomeSubGroup.id,
             incomeGroupId = groupWithSubGroupsIncludingHistories.incomeSubGroup.incomeGroupId,
             name = groupWithSubGroupsIncludingHistories.incomeSubGroup.name,
-            isArchived = 1
+            archivedDate = OffsetDateTime.now()
         )
 
         val updatedHistories: ArrayList<IncomeHistory> = ArrayList()
@@ -133,7 +126,7 @@ class ParentIncomeGroupAdapter(
                     date = it.date,
                     comment = it.comment,
                     walletId = it.walletId,
-                    isArchived = 1
+                    archivedDate = OffsetDateTime.now()
                 )
             )
         }

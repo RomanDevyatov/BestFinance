@@ -1,12 +1,9 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -22,16 +19,18 @@ import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
+import com.romandevyatov.bestfinance.ui.adapters.menu.income.ArchiveItemBySwipe
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.ParentIncomeGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.OffsetDateTime
 
 
 @AndroidEntryPoint
-class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
+class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveItemBySwipe {
 
     private lateinit var binding: FragmentIncomeBinding
 
@@ -39,10 +38,10 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
     private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
 
-    private val parentIncomeGroupAdapter: ParentIncomeGroupAdapter = ParentIncomeGroupAdapter(this)
+    private val parentIncomeGroupAdapter: ParentIncomeGroupAdapter = ParentIncomeGroupAdapter(this, this)
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentIncomeBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -72,7 +71,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
         val updatedIncomeGroup = IncomeGroup(
             id = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeGroup.id,
             name = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeGroup.name,
-            isArchived = 1
+            archivedDate = OffsetDateTime.now()
         )
 
         val updatedIncomeSubGroupWithIncomeHistoriesList: ArrayList<IncomeSubGroupWithIncomeHistories> = ArrayList()
@@ -82,7 +81,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
                 id = groupWithSubGroupsIncludingHistories.incomeSubGroup.id,
                 incomeGroupId = groupWithSubGroupsIncludingHistories.incomeSubGroup.incomeGroupId,
                 name = groupWithSubGroupsIncludingHistories.incomeSubGroup.name,
-                isArchived = 1
+                archivedDate = OffsetDateTime.now()
             )
 
             val historyList: ArrayList<IncomeHistory> = ArrayList()
@@ -95,7 +94,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
                         date = history.date,
                         comment = history.comment,
                         walletId = history.walletId,
-                        isArchived = 1
+                        archivedDate = OffsetDateTime.now()
                     )
                 )
             }
@@ -177,9 +176,9 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
         findNavController().navigate(action)
     }
 
-
-
-
+    override fun updateInnerItem(incomeSubGroup: IncomeSubGroup) {
+        incomeSubGroupViewModel.updateIncomeSubGroup(incomeSubGroup)
+    }
 
 
 }

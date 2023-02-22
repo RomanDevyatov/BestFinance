@@ -3,6 +3,8 @@ package com.romandevyatov.bestfinance.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.OffsetDateTime
+
 
 @Entity(tableName = "income_group")
 data class IncomeGroup(
@@ -14,7 +16,7 @@ data class IncomeGroup(
     @ColumnInfo(name = "name")
     val name: String,
 
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Int = 0
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
 
 )

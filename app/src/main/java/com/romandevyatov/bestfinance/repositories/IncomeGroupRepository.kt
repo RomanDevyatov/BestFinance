@@ -3,9 +3,9 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,12 +36,12 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
     }
 
-    fun getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesByArchivedDate(archivedDate: OffsetDateTime?): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
+        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesWhereArchivedDateIsNull()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String, isArchived: Int): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(incomeGroupName, isArchived)
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName)
     }
 
     fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup> {

@@ -5,7 +5,7 @@ import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
+import java.time.OffsetDateTime
 
 
 @Dao
@@ -34,12 +34,12 @@ interface IncomeGroupDao {
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
-    @Query("SELECT * FROM income_group WHERE is_archived = 0")
-    fun getAllNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+    @Query("SELECT * FROM income_group WHERE archived_date IS NULL")
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesWhereArchivedDateIsNull(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
-    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND is_archived = :isArchived")
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(incomeGroupName: String, isArchived: Int): LiveData<IncomeGroupWithIncomeSubGroups>
+    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL")
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName")
     fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup>

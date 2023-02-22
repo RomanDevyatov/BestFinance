@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.db.entities
 
-
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -47,7 +46,7 @@ class ExpenseHistory (
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,
 
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Int = 0
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
 
 )

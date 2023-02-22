@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Delete
 import androidx.room.Query
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import java.time.OffsetDateTime
 
 
 @Dao
@@ -31,7 +32,7 @@ interface WalletDao {
     @Query("DELETE FROM wallet WHERE id = :id")
     suspend fun deleteById(id: Long)
 
-    @Query("SELECT * FROM wallet WHERE is_archived = :isArchived ORDER BY id ASC")
-    fun getAllByIsArchived(isArchived: Int): LiveData<List<Wallet>>
+    @Query("SELECT * FROM wallet WHERE archived_date IS NULL")
+    fun getAllWithArchivedDate(): LiveData<List<Wallet>>
 
 }

@@ -191,7 +191,7 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    val args: AddExpenseHistoryFragmentArgs by navArgs()
+    private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
 //    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
@@ -263,7 +263,10 @@ class AddExpenseHistoryFragment : Fragment() {
                 Wallet(
                     id = wallet.id,
                     name = wallet.name,
-                    balance = updatedBalance
+                    balance = updatedBalance,
+                    input = wallet.input,
+                    output = wallet.output + amountBinding,
+                    description = wallet.description
                 )
             )
 

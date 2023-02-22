@@ -24,9 +24,9 @@ import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -38,6 +38,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var binding: FragmentAddIncomeHistoryBinding
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
+    private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
 
@@ -138,26 +139,23 @@ class AddIncomeHistoryFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                val item = binding.incomeGroupSpinner.getItemAtPosition(position).toString()
-                if (item == "Add new income group") {
+                val selectedIncomeGroupName = binding.incomeGroupSpinner.getItemAtPosition(position).toString()
+                if (selectedIncomeGroupName == "Add new income group") {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewIncomeGroup()
                     findNavController().navigate(action)
                 }
 
-                incomeGroupViewModel.getIncomeGroupWithIncomeSubGroupByIncomeGroupNameLiveData(item, isArchived = 0).observe(viewLifecycleOwner) { list ->
+                incomeGroupViewModel.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(selectedIncomeGroupName).observe(viewLifecycleOwner) { list ->
+                    incomeSubGroupArraySpinner.clear()
+                    incomeSubGroupArraySpinner.add("Income sub group")
                     if (list != null) {
                         val subGroups = list.incomeSubGroups
-
-                        incomeSubGroupArraySpinner.clear()
-                        incomeSubGroupArraySpinner.add("Income sub group")
 
                         subGroups.forEach {
                             incomeSubGroupArraySpinner.add(it.name)
                         }
-
-                        incomeSubGroupArraySpinner.add("Add new sub income group")
                     }
-
+                    incomeSubGroupArraySpinner.add("Add new sub income group")
                 }
             }
 
@@ -182,25 +180,25 @@ class AddIncomeHistoryFragment : Fragment() {
         val walletSpinner = binding.walletSpinner
         walletSpinner.adapter = spinnerAdapter
 
-        walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val item = binding.walletSpinner.getItemAtPosition(position).toString()
-                Toast.makeText(
-                    requireContext(),
-                    item,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
-            }
-        }
+//        walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val item = binding.walletSpinner.getItemAtPosition(position).toString()
+//                Toast.makeText(
+//                    requireContext(),
+//                    item,
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {
+//                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
+//            }
+//        }
     }
 
     override fun onAttach(context: Context) {
@@ -269,12 +267,13 @@ class AddIncomeHistoryFragment : Fragment() {
 //            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 //            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
 
+            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             incomeHistoryViewModel.insertIncomeHistory(
                 IncomeHistory(
                     incomeSubGroupId = incomeGroupId,
                     amount = amountBinding,
                     comment = binding.commentEditText.text.toString(),
-                    date = OffsetDateTime.now(), //OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())), //Date(binding.dateEditText.text.toString()),
+                    date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
                     walletId = walletId
                 )
             )
@@ -285,7 +284,12 @@ class AddIncomeHistoryFragment : Fragment() {
                 Wallet(
                     id = walletId,
                     name = walletName,
-                    balance = updatedBalance)
+                    balance = updatedBalance,
+                    archivedDate = wallet.archivedDate,
+                    input = wallet.input,
+                    output = wallet.output,
+                    description = wallet.description
+                )
             )
 
             findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
@@ -300,6 +304,8 @@ class AddIncomeHistoryFragment : Fragment() {
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
     }
+
+
 
 
 }

@@ -1,13 +1,16 @@
 package com.romandevyatov.bestfinance.ui.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.IncomeHistoryCardBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeHistoryItemViewHolder
+
 
 class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>() {
 
@@ -30,6 +33,7 @@ class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>()
         return IncomeHistoryItemViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: IncomeHistoryItemViewHolder, position: Int) {
         holder.bindItem(differ.currentList[position])
     }

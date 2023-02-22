@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.menu.income.DeleteItemClickList
 import com.romandevyatov.bestfinance.ui.adapters.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.OffsetDateTime
 
 
 @AndroidEntryPoint
@@ -45,12 +46,16 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
             walletViewModel.insertWallet(
                 Wallet(
                     name = nameOfNewWallet,
-                    balance = balanceOfNewWallet.toDouble()
+                    balance = balanceOfNewWallet.toDouble(),
+                    input = 0.0,
+                    output = 0.0,
+                    description = "",
+                    archivedDate = null
                 )
             )
         }
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) {
+        walletViewModel.notArchivedWalletsLiveData?.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
 
@@ -78,20 +83,23 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
 
-                val notArchivedWallet = walletAdapter.walletDiffer.currentList[pos]
+                val selectedWallet = walletAdapter.walletDiffer.currentList[pos]
 
-                val updatedWallet = Wallet(
-                    id = notArchivedWallet.id,
-                    name = notArchivedWallet.name,
-                    balance = notArchivedWallet.balance,
-                    isArchived = 1
+                val archivedWallet = Wallet(
+                    id = selectedWallet.id,
+                    name = selectedWallet.name,
+                    balance = selectedWallet.balance,
+                    archivedDate = OffsetDateTime.now(),
+                    input = selectedWallet.input,
+                    output = selectedWallet.output,
+                    description = selectedWallet.description
                 )
 
-                walletViewModel.updateWallet(updatedWallet)
+                walletViewModel.updateWallet(archivedWallet)
 
                 Snackbar.make(viewHolder.itemView, "Wallet archived", Snackbar.LENGTH_LONG).apply {
                     setAction("UNDO") {
-                        walletViewModel.updateWallet(notArchivedWallet)
+                        walletViewModel.updateWallet(selectedWallet)
                     }
                     show()
                 }

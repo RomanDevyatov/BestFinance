@@ -5,6 +5,7 @@ import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
+import java.time.OffsetDateTime
 
 
 @Dao
@@ -39,5 +40,10 @@ interface ExpenseGroupDao {
     @Transaction
     @Query("SELECT * FROM expense_group")
     fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistories(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
+
+    @Transaction
+    @Query("SELECT * FROM expense_group WHERE archived_date = :date")
+    fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesWithArchivedDate(date: OffsetDateTime?): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
+
 
 }

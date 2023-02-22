@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.time.OffsetDateTime
+
 
 @Entity(tableName = "income_sub_group",
     foreignKeys = [
@@ -27,7 +29,7 @@ data class IncomeSubGroup (
     @ColumnInfo(name = "income_group_id")
     val incomeGroupId: Long,
 
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Int = 0
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
 
 )

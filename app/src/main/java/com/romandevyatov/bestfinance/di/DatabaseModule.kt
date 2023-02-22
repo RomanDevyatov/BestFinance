@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.di
 
-
 import android.content.Context
 import androidx.room.Room
 import com.romandevyatov.bestfinance.db.roomdb.BestFinanceDatabase
@@ -25,8 +24,9 @@ object DatabaseModule {
             context,
             BestFinanceDatabase::class.java,
             DATABASE_NAME)
-        .createFromAsset("database/bestfinance_database_pre.db")
         .build()
+//        .fallbackToDestructiveMigration()
+//        .createFromAsset("database/bestfinance_database_pre.db")
 
     @Provides
     @Singleton
@@ -48,10 +48,6 @@ object DatabaseModule {
     @Singleton
     fun providesWalletDao(db: BestFinanceDatabase) = db.getWalletDao()
 
-//    @Provides
-//    @Singleton
-//    fun providesIncomeHistoryWithIncomeGroupAndWalletDao(db: BestFinanceDatabase) = db.getIncomeHistoryWithIncomeGroupAndWalletDao()
-
     @Provides
     @Singleton
     fun providesIncomeHistoryDao(db: BestFinanceDatabase) = db.getIncomeHistoryDao()
@@ -60,6 +56,4 @@ object DatabaseModule {
     @Singleton
     fun providesExpenseHistoryDao(db: BestFinanceDatabase) = db.getExpenseHistoryDao()
 
-
-//        .fallbackToDestructiveMigration()
 }

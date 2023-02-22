@@ -91,22 +91,22 @@ class AddNewIncomeSubGroupFragment : Fragment() {
 
         val incomeGroupSpinner = binding.toIncomeGroupSpinner
         incomeGroupSpinner.adapter = spinnerAdapter
-
-        incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val item = binding.toIncomeGroupSpinner.getItemAtPosition(position).toString()
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
-            }
-        }
+//
+//        incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val item = binding.toIncomeGroupSpinner.getItemAtPosition(position).toString()
+//
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {
+//                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
+//            }
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
