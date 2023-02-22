@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.romandevyatov.bestfinance.db.dao.*
 import com.romandevyatov.bestfinance.db.entities.*
 import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
+import com.romandevyatov.bestfinance.db.roomdb.converters.OffsetDateTimeRoomTypeConverter
 
 
 @Database(
@@ -18,10 +19,10 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
         IncomeHistory::class,
         ExpenseHistory::class
     ],
-    version = 11,
+    version = 13,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
+@TypeConverters(OffsetDateTimeRoomTypeConverter::class)
 abstract class BestFinanceDatabase : RoomDatabase() {
 
     abstract fun getIncomeGroupDao(): IncomeGroupDao

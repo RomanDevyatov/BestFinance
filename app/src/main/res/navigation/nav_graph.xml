@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_home" >
 
     <fragment
         android:id="@+id/navigation_home"
@@ -55,15 +55,21 @@
         <action
             android:id="@+id/action_navigation_add_income_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_income_group"
+            app:destination="@id/navigation_add_new_income_group" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_sub_income_group"
+            app:destination="@id/navigation_add_new_income_sub_group" />
+
         <argument
             android:name="incomeGroupName"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
-        <action
-            android:id="@+id/action_navigation_add_income_to_navigation_add_new_income_group"
-            app:destination="@id/navigation_add_new_income_group" />
+
     </fragment>
+
     <fragment
         android:id="@+id/navigation_add_expense"
         android:name="com.romandevyatov.bestfinance.ui.fragments.AddExpenseHistoryFragment"
@@ -94,6 +100,23 @@
         <action
             android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_new_income_sub_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeSubGroupFragment"
+        android:label="fragment_add_new_income_sub_group"
+        tools:layout="@layout/fragment_add_new_income_sub_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_income_sub_group_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+
+        <argument
+            android:name="incomeGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
 

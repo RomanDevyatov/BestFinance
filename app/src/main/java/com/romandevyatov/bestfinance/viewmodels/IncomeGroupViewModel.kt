@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
+import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.repositories.IncomeGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +41,14 @@ class IncomeGroupViewModel @Inject constructor(
 
     fun deleteAllIncomeGroup() = viewModelScope.launch(Dispatchers.IO) {
             incomeGroupRepository.deleteAllIncomeGroups()
+    }
+
+    fun getIncomeGroupWithIncomeSubGroupByIncomeGroupNameLiveData(name: String, isArchived: Int): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(name, isArchived)
+    }
+
+    fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup> {
+        return incomeGroupRepository.getIncomeGroupNameByName(incomeGroupName)
     }
 
     val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.time.OffsetDateTime
 import java.util.Date
 
 
@@ -39,7 +40,7 @@ data class IncomeHistory(
     val comment: String?,
 
     @ColumnInfo(name = "date_tmstmp")
-    val date: Date,
+    val date: OffsetDateTime? = null,
 
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,

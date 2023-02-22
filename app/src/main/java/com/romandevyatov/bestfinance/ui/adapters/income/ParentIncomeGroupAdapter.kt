@@ -1,9 +1,13 @@
 package com.romandevyatov.bestfinance.ui.adapters.income
 
 
+import android.os.Build
+import android.text.method.Touch.onTouchEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.*
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.ItemRowParentBinding
@@ -29,6 +33,8 @@ class ParentIncomeGroupAdapter(
             return oldItem == newItem
         }
     }
+
+
 
     val incomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedDiffer = AsyncListDiffer(this, differentCallback)
 
@@ -103,6 +109,7 @@ class ParentIncomeGroupAdapter(
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getUpdatedIncomeSubGroupWithIncomeHistories(groupWithSubGroupsIncludingHistories: IncomeSubGroupWithIncomeHistories): IncomeSubGroupWithIncomeHistories {
         val updatedSubGroup = IncomeSubGroup(
             id = groupWithSubGroupsIncludingHistories.incomeSubGroup.id,
@@ -144,6 +151,10 @@ class ParentIncomeGroupAdapter(
     override fun onBindViewHolder(holder: IncomeGroupItemViewHolder, position: Int) {
         val groupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchived = incomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedDiffer.currentList[position]
         holder.bind(groupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchived)
+
+        holder.itemView.setOnClickListener {
+            Toast.makeText(it.context, "Res $groupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchived", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun getItemCount(): Int {

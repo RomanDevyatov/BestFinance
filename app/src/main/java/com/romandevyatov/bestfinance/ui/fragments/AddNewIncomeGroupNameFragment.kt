@@ -35,7 +35,7 @@ class AddNewIncomeGroupNameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.button.setOnClickListener {
+        binding.addNewIncomeGroupNameButton.setOnClickListener {
             incomeGroupViewModel.insertIncomeGroup(
                 IncomeGroup(
                     name = binding.newIncomeGroupName.text.toString()

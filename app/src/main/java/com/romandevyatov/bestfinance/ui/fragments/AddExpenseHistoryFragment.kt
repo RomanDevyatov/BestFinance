@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -43,8 +44,6 @@ class AddExpenseHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
-
-
 
         initExpenseGroupSpinner()
         initWalletSpinner()
@@ -194,6 +193,9 @@ class AddExpenseHistoryFragment : Fragment() {
 
     val args: AddExpenseHistoryFragmentArgs by navArgs()
 
+//    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddExpenseHistoryBinding.bind(view)
@@ -226,6 +228,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
         }
 
+
         binding.addExpenseButton.setOnClickListener {
             val expenseSubGroupNameBinding = binding.expenseSubGroupSpinner.selectedItem.toString()
 
@@ -250,7 +253,7 @@ class AddExpenseHistoryFragment : Fragment() {
                     expenseSubGroupId = id,
                     amount = amountBinding,
                     comment = binding.commentEditText.text.toString(),
-                    date = Date(binding.dateEditText.text.toString()),
+                    date = OffsetDateTime.now(), // from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
                     walletId = walletId
                 )
             )

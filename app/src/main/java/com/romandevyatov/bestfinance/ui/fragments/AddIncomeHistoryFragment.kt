@@ -3,8 +3,8 @@ package com.romandevyatov.bestfinance.ui.fragments
 import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +13,11 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
@@ -26,6 +27,8 @@ import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -45,19 +48,13 @@ class AddIncomeHistoryFragment : Fragment() {
     ): View? {
         binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
 
-        initIncomeGroupSpinner()
-        initWalletSpinner()
-
         return binding.root
     }
 
-    private fun getArraySpinner() {
-
-    }
-
-    private fun initIncomeGroupSpinner() {
+    private fun getArraySpinner(): ArrayAdapter<String> {
         val spinnerAdapter: ArrayAdapter<String> =
             object : ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item) {
+
                 override fun isEnabled(position: Int): Boolean {
                     return position != 0
                 }
@@ -72,31 +69,69 @@ class AddIncomeHistoryFragment : Fragment() {
                     parent: ViewGroup
                 ): View {
                     val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                    //set the color of first item in the drop down list to gray
                     if (position == 0) {
                         view.setTextColor(Color.GRAY)
                     } else {
-                        //here it is possible to define color for other items by
-                        //view.setTextColor(Color.RED)
+
                     }
 
                     return view
                 }
             }
 
+        return spinnerAdapter
+    }
+
+    val args: AddIncomeHistoryFragmentArgs by navArgs()
+
+    private fun initIncomeGroupSpinner() {
+        val spinnerAdapter = getArraySpinner()
+        binding.incomeGroupSpinner.adapter = spinnerAdapter
         incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
             spinnerAdapter.clear()
             spinnerAdapter.add("Income group")
             incomeGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }
+
             spinnerAdapter.add("Add new income group")
+
+            if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
+                val spinnerPosition = spinnerAdapter.getPosition(args.incomeGroupName)
+
+                binding.incomeGroupSpinner.setSelection(spinnerPosition)
+            }
         }
 
-        val incomeGroupSpinner = binding.incomeGroupSpinner
-        incomeGroupSpinner.adapter = spinnerAdapter
+        val incomeSubGroupArraySpinner = getArraySpinner()
+        incomeSubGroupArraySpinner.add("Income sub group")
+        binding.incomeSubGroupSpinner.adapter = incomeSubGroupArraySpinner
+        binding.incomeSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
-        incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val selectedIncomeSubGroupName = binding.incomeSubGroupSpinner.getItemAtPosition(position).toString()
+
+                if (selectedIncomeSubGroupName == "Add new sub income group") {
+                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
+                    action.incomeGroupName = binding.incomeGroupSpinner.selectedItem.toString()
+                    findNavController().navigate(action)
+                }
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
+        binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -109,17 +144,30 @@ class AddIncomeHistoryFragment : Fragment() {
                     findNavController().navigate(action)
                 }
 
-                Toast.makeText(
-                    requireContext(),
-                    item,
-                    Toast.LENGTH_SHORT
-                ).show()
+                incomeGroupViewModel.getIncomeGroupWithIncomeSubGroupByIncomeGroupNameLiveData(item, isArchived = 0).observe(viewLifecycleOwner) { list ->
+                    if (list != null) {
+                        val subGroups = list.incomeSubGroups
+
+                        incomeSubGroupArraySpinner.clear()
+                        incomeSubGroupArraySpinner.add("Income sub group")
+
+                        subGroups.forEach {
+                            incomeSubGroupArraySpinner.add(it.name)
+                        }
+
+                        incomeSubGroupArraySpinner.add("Add new sub income group")
+                    }
+
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
             }
+
         }
+
+
     }
 
     private fun initWalletSpinner() {
@@ -167,12 +215,15 @@ class AddIncomeHistoryFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
+//    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddIncomeHistoryBinding.bind(view)
 
-
-
+        initIncomeGroupSpinner()
+        initWalletSpinner()
 
         val dateET = binding.dateEditText
 
@@ -223,7 +274,7 @@ class AddIncomeHistoryFragment : Fragment() {
                     incomeSubGroupId = incomeGroupId,
                     amount = amountBinding,
                     comment = binding.commentEditText.text.toString(),
-                    date = Date(binding.dateEditText.text.toString()),
+                    date = OffsetDateTime.now(), //OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())), //Date(binding.dateEditText.text.toString()),
                     walletId = walletId
                 )
             )
@@ -239,13 +290,15 @@ class AddIncomeHistoryFragment : Fragment() {
 
             findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
         }
-
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateDate(calendar: Calendar) {
-        val dateFormat = "yyyy-MM-dd HH:mm:ss"
-        val sdf = SimpleDateFormat(dateFormat, Locale.US)
-        binding.dateEditText.setText(sdf.format(calendar.time))
+//        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
+//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+//        binding.dateEditText.setText(sdf.format(calendar.time))
+        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
     }
 
 

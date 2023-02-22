@@ -1,10 +1,14 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -44,11 +48,12 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentIncomeBinding.bind(view)
 
-        setGroupSwipeListener(view)
+//        setGroupSwipeListener(view)
 
         initRecyclerView()
 
@@ -63,6 +68,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getUpdatedIncomeGroupWithIncomeSubGroupIncludingIncomeHistories(incomeGroupWithIncomeSubGroupsIncludingIncomeHistories: IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories {
         val updatedIncomeGroup = IncomeGroup(
             id = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories.incomeGroup.id,
@@ -125,6 +131,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
                 return true
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
 
@@ -164,6 +171,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
         binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
             LinearLayoutManager.VERTICAL, false)
         binding.parentRecyclerView.adapter = parentIncomeGroupAdapter
+
     }
 
     override fun addItem(item: IncomeGroup) {
@@ -171,5 +179,10 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
         action.incomeGroupName = item.name
         findNavController().navigate(action)
     }
+
+
+
+
+
 
 }
