@@ -72,6 +72,7 @@ class ParentIncomeGroupAdapter(
                     return true
                 }
 
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
 
