@@ -13,7 +13,7 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 @Dao
 interface WalletDao {
 
-    @Query("SELECT * FROM wallet order by id ASC")
+    @Query("SELECT * FROM wallet ORDER BY id ASC")
     fun getAll(): LiveData<List<Wallet>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,5 +30,8 @@ interface WalletDao {
 
     @Query("DELETE FROM wallet WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM wallet WHERE is_archived = :isArchived ORDER BY id ASC")
+    fun getAllByIsArchived(isArchived: Int): LiveData<List<Wallet>>
 
 }

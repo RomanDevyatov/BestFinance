@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.income
+package com.romandevyatov.bestfinance.ui.adapters.menu.income
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

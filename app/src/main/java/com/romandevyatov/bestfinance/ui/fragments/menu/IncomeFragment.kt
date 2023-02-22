@@ -22,7 +22,7 @@ import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
-import com.romandevyatov.bestfinance.ui.adapters.income.ParentIncomeGroupAdapter
+import com.romandevyatov.bestfinance.ui.adapters.menu.income.ParentIncomeGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
@@ -44,10 +44,9 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentIncomeBinding.inflate(inflater, container, false)
-
-        return binding.root
+        val view = binding.root
+        return view
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -168,10 +167,8 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup> {
 
 
     private fun initRecyclerView() {
-        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
-            LinearLayoutManager.VERTICAL, false)
+        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.parentRecyclerView.adapter = parentIncomeGroupAdapter
-
     }
 
     override fun addItem(item: IncomeGroup) {

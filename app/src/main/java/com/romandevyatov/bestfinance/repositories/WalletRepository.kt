@@ -13,6 +13,8 @@ class WalletRepository @Inject constructor(
 
     fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAll()
 
+    fun getAllWalletsByIsArchived(isArchived: Int): LiveData<List<Wallet>> = walletDao.getAllByIsArchived(0)
+
     suspend fun insertWallet(wallet: Wallet) {
         walletDao.insert(wallet)
     }

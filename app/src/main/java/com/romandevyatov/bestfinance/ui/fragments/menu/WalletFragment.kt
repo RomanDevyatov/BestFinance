@@ -1,15 +1,21 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
+
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.income.DeleteItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.menu.income.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,21 +48,60 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
                     balance = balanceOfNewWallet.toDouble()
                 )
             )
-
-//            Snackbar.make(binding.root, "Wallet $nameOfNewWallet was added", Snackbar.LENGTH_SHORT).show()
         }
 
-        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) {
+        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
 
-        initRecyclerView()
+        initWalletRecyclerView()
     }
 
-    private fun initRecyclerView() {
-        walletAdapter = WalletAdapter(this)
+    private fun initWalletRecyclerView() {
+        walletAdapter = WalletAdapter()
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletAdapter
+
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val pos = viewHolder.adapterPosition
+
+                val notArchivedWallet = walletAdapter.walletDiffer.currentList[pos]
+
+                val updatedWallet = Wallet(
+                    id = notArchivedWallet.id,
+                    name = notArchivedWallet.name,
+                    balance = notArchivedWallet.balance,
+                    isArchived = 1
+                )
+
+                walletViewModel.updateWallet(updatedWallet)
+
+                Snackbar.make(viewHolder.itemView, "Wallet archived", Snackbar.LENGTH_LONG).apply {
+                    setAction("UNDO") {
+                        walletViewModel.updateWallet(notArchivedWallet)
+                    }
+                    show()
+                }
+
+            }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(binding.walletRecyclerView)
+        }
     }
 
     override fun deleteItem(item: Wallet) {

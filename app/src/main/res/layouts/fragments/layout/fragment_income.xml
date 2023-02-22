@@ -16,7 +16,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.romandevyatov.bestfinance.ui.adapters.income.CustomRecyclerView
+<!--        <com.romandevyatov.bestfinance.ui.adapters.income.CustomRecyclerView-->
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/parent_recycler_view"
             android:layout_width="396dp"
             android:layout_height="650dp"

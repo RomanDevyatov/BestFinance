@@ -1,6 +1,7 @@
-package com.romandevyatov.bestfinance.ui.adapters.income
+package com.romandevyatov.bestfinance.ui.adapters.menu.income
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.method.Touch.onTouchEvent
 import android.view.LayoutInflater
@@ -33,8 +34,6 @@ class ParentIncomeGroupAdapter(
             return oldItem == newItem
         }
     }
-
-
 
     val incomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedDiffer = AsyncListDiffer(this, differentCallback)
 
@@ -72,9 +71,11 @@ class ParentIncomeGroupAdapter(
                     return true
                 }
 
+                @SuppressLint("NotifyDataSetChanged")
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
+
 
                 val incomeSubGroupWithIncomeHistories = childAdapter.notArchivedIncomeSubGroupWithIncomeHistoriesDiffer.currentList[pos]
 
@@ -88,14 +89,16 @@ class ParentIncomeGroupAdapter(
                         }
                         show()
                     }
+
                 }
+
+
             }
 
 
             ItemTouchHelper(itemTouchHelperCallback).apply {
                 attachToRecyclerView(binding.childRecyclerView)
             }
-
 
 
         }

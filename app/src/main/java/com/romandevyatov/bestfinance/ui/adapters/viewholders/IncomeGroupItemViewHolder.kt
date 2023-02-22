@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.ui.adapters.viewholders
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.IncomeGroupCardBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.ui.adapters.income.DeleteItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.menu.income.DeleteItemClickListener
 
 
 class IncomeGroupItemViewHolder(
