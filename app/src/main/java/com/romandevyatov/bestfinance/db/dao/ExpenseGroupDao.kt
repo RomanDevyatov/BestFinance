@@ -45,5 +45,7 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE archived_date = :date")
     fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesWithArchivedDate(date: OffsetDateTime?): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
 
+    @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
+    fun getExpenseGroupByNameAndArchivedDateIsNull(expenseGroupName: String): LiveData<ExpenseGroup>
 
 }

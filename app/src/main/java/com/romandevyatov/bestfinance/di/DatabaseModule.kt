@@ -24,6 +24,7 @@ object DatabaseModule {
             context,
             BestFinanceDatabase::class.java,
             DATABASE_NAME)
+        .fallbackToDestructiveMigration()
         .build()
 //        .fallbackToDestructiveMigration()
 //        .createFromAsset("database/bestfinance_database_pre.db")
@@ -55,5 +56,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesExpenseHistoryDao(db: BestFinanceDatabase) = db.getExpenseHistoryDao()
+
+    @Provides
+    @Singleton
+    fun providesTransferHistoryDao(db: BestFinanceDatabase) = db.getTransferHistoryDao()
 
 }

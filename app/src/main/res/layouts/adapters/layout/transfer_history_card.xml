@@ -13,14 +13,13 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/walletNameTextView"
+            android:id="@+id/transferHistoryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="4dp"
             android:layout_marginStart="4dp"
-            android:text="Wallet Name"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
-            android:text="TextView"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

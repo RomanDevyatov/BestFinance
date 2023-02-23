@@ -5,28 +5,21 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
 
-
-@Entity(tableName = "wallet")
-data class Wallet(
+@Entity(tableName = "transfer_history")
+data class TransferHistory (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
-    @ColumnInfo(name = "name")
-    val name: String,
-
-    @ColumnInfo(name = "balance")
+    @ColumnInfo(name = "amount")
     val balance: Double,
 
-    @ColumnInfo(name = "in")
-    val input: Double = 0.0,
+    @ColumnInfo(name = "from_wallet_id")
+    val fromWalletId: Long,
 
-    @ColumnInfo(name = "out")
-    val output: Double = 0.0,
-
-    @ColumnInfo(name = "description")
-    val description: String? = null,
+    @ColumnInfo(name = "to_wallet_id")
+    val toWalletId: Long,
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: OffsetDateTime? = null

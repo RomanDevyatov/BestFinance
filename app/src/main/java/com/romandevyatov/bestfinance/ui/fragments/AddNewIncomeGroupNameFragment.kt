@@ -14,6 +14,7 @@ import com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class AddNewIncomeGroupNameFragment : Fragment() {
 

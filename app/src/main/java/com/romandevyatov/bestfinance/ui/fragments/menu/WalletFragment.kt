@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,21 +42,19 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
         binding = FragmentWalletBinding.bind(view)
 
         binding.addExpenseButton.setOnClickListener {
-            val nameOfNewWallet = binding.walletNameEditText.text.toString()
-            val balanceOfNewWallet = binding.amountEditText.text.toString()
-            walletViewModel.insertWallet(
-                Wallet(
-                    name = nameOfNewWallet,
-                    balance = balanceOfNewWallet.toDouble(),
-                    input = 0.0,
-                    output = 0.0,
-                    description = "",
-                    archivedDate = null
-                )
-            )
+            val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddNewWallet()
+            findNavController().navigate(action)
+//            val nameOfNewWallet = binding.walletNameEditText.text.toString()
+//            val balanceOfNewWallet = binding.amountEditText.text.toString()
+//            walletViewModel.insertWallet(
+//                Wallet(
+//                    name = nameOfNewWallet,
+//                    balance = balanceOfNewWallet.toDouble()
+//                )
+//            )
         }
 
-        walletViewModel.notArchivedWalletsLiveData?.observe(viewLifecycleOwner) {
+        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
 

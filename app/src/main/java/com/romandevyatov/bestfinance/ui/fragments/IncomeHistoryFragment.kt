@@ -46,10 +46,6 @@ class IncomeHistoryFragment : Fragment() {
             incomeHistoryAdapter.submitList(it)
         }
 
-//        incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) {
-//            incomeHistoryAdapter.submitList(it)
-//        }
-
     }
 
 

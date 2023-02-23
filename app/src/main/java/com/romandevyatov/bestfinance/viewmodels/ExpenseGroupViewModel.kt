@@ -44,10 +44,12 @@ class ExpenseGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
     }
 
+    fun getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+        return expenseGroupRepository.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName)
+    }
+
     val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroup()
 
     val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories()
-
-
 
 }

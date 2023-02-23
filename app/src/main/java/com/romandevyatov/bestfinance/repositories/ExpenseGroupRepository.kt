@@ -44,4 +44,8 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistories()
     }
 
+    fun getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+        return expenseGroupDao.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName)
+    }
+
 }

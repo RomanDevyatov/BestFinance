@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HistoryFragment : Fragment() {
 
-    private val animalsArray = arrayOf(
+    private val historyTypeArray = arrayOf(
         "Income",
         "Expense",
         "Transfer"
@@ -42,7 +42,7 @@ class HistoryFragment : Fragment() {
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = animalsArray[position]
+            tab.text = historyTypeArray[position]
         }.attach()
     }
 

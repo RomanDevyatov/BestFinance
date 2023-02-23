@@ -17,9 +17,10 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.OffsetDateTimeRoomType
         ExpenseSubGroup::class,
         Wallet::class,
         IncomeHistory::class,
-        ExpenseHistory::class
+        ExpenseHistory::class,
+        TransferHistory::class
     ],
-    version = 14,
+    version = 16,
     exportSchema = true
 )
 @TypeConverters(OffsetDateTimeRoomTypeConverter::class)
@@ -39,6 +40,6 @@ abstract class BestFinanceDatabase : RoomDatabase() {
 
     abstract fun getExpenseHistoryDao(): ExpenseHistoryDao
 
-//    abstract fun getIncomeHistoryWithIncomeGroupAndWalletDao(): IncomeHistoryWithIncomeGroupAndWalletDao
+    abstract fun getTransferHistoryDao(): TransferHistoryDao
 
 }

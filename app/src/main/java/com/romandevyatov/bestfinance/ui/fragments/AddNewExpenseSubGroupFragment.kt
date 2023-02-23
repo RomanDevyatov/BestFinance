@@ -12,28 +12,28 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeSubGroupBinding
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.databinding.FragmentAddNewExpenseSubGroupBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.ExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewIncomeSubGroupFragment : Fragment() {
+class AddNewExpenseSubGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddNewIncomeSubGroupBinding? = null
+    private var _binding: FragmentAddNewExpenseSubGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
+    private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
+    private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddNewIncomeSubGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddNewExpenseSubGroupBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -69,52 +69,50 @@ class AddNewIncomeSubGroupFragment : Fragment() {
         return spinnerAdapter
     }
 
-    private fun initIncomeGroupSpinner() {
+    private fun initExpenseGroupSpinner() {
         val spinnerAdapter = getArraySpinner()
 
-        incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
+        expenseGroupViewModel.expenseGroupsLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             spinnerAdapter.clear()
-            spinnerAdapter.add("Income group")
-            incomeGroupList?.forEach { it ->
+            spinnerAdapter.add("Expense group")
+            expenseGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }
 
-            if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
-                val spinnerPosition = spinnerAdapter.getPosition(args.incomeGroupName.toString())
-                binding.toIncomeGroupSpinner.setSelection(spinnerPosition)
+            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
+                val spinnerPosition = spinnerAdapter.getPosition(args.expenseGroupName.toString())
+                binding.toExpenseGroupSpinner.setSelection(spinnerPosition)
             }
         }
 
-        val incomeGroupSpinner = binding.toIncomeGroupSpinner
-        incomeGroupSpinner.adapter = spinnerAdapter
+        val expenseGroupSpinner = binding.toExpenseGroupSpinner
+        expenseGroupSpinner.adapter = spinnerAdapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initIncomeGroupSpinner()
+        initExpenseGroupSpinner()
 
-
-        binding.addNewIncomeSubGroupNameButton.setOnClickListener {
-            val selectedIncomeGroupName = binding.toIncomeGroupSpinner.selectedItem.toString()
-            incomeGroupViewModel.getIncomeGroupNameByName(selectedIncomeGroupName).observe(viewLifecycleOwner) {
-                incomeSubGroupViewModel.insertIncomeSubGroup(
-                    IncomeSubGroup(
-                        name = binding.newIncomeSubGroupName.text.toString(),
-                        incomeGroupId = it.id!!
+        binding.addNewExpenseSubGroupNameButton.setOnClickListener {
+            val selectedExpenseGroupName = binding.toExpenseGroupSpinner.selectedItem.toString()
+            expenseGroupViewModel.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName).observe(viewLifecycleOwner) {
+                expenseSubGroupViewModel.insertExpenseSubGroup(
+                    ExpenseSubGroup(
+                        name = binding.newExpenseSubGroupName.text.toString(),
+                        expenseGroupId = it.id!!
                     )
                 )
             }
 
-
-            val action = AddNewIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
-            action.incomeGroupName = selectedIncomeGroupName
-            action.incomeSubGroupName = binding.newIncomeSubGroupName.text.toString()
+            val action = AddNewExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
+            action.expenseGroupName = selectedExpenseGroupName
+            action.expenseSubGroupName = binding.newExpenseSubGroupName.text.toString()
             findNavController().navigate(action)
         }
     }
 
-    val args: AddNewIncomeSubGroupFragmentArgs by navArgs()
+    val args: AddNewExpenseSubGroupFragmentArgs by navArgs()
 
 
     override fun onDestroyView() {

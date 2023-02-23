@@ -29,15 +29,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/walletRecyclerView">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/walletNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Wallet name" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/walletRecyclerView"/>
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -46,15 +38,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newWalletNameLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amountEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Balance" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/newWalletNameLayout"/>
 
 
         <com.google.android.material.button.MaterialButton

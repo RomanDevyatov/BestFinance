@@ -19,7 +19,6 @@ import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -43,7 +42,8 @@ class AddExpenseHistoryFragment : Fragment() {
     ): View {
         binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
 
-        initExpenseGroupSpinner()
+        initGroupSpinners()
+
         initWalletSpinner()
 
         return binding.root
@@ -82,7 +82,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
-    private fun initExpenseGroupSpinner() {
+    private fun initGroupSpinners() {
         val expenseGroupSpinnerAdapter = getSpinnerAdapter()
         binding.expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
 
@@ -115,8 +115,8 @@ class AddExpenseHistoryFragment : Fragment() {
                 val selectedExpenseGroupName = binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
                 if (selectedExpenseGroupName == "Add new expense group") {
-//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
-//                    findNavController().navigate(action)
+                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
+                    findNavController().navigate(action)
                 }
 
                 expenseGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameAndArchivedDateIsNullLiveData(selectedExpenseGroupName).observe(viewLifecycleOwner) { list ->
@@ -151,12 +151,12 @@ class AddExpenseHistoryFragment : Fragment() {
                 val selectedIncomeSubGroupName = binding.expenseSubGroupSpinner.getItemAtPosition(position).toString()
 
                 if (selectedIncomeSubGroupName == "Add new sub expense group") {
-//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewSubExpenseGroup()
-//                    val selectedExpenseGroup = binding.expenseGroupSpinner.selectedItem
-//                    if (selectedExpenseGroup != null) {
-//                        action.expenseGroupName = selectedExpenseGroup.toString()
-//                    }
-//                    findNavController().navigate(action)
+                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseSubGroup()
+                    val selectedExpenseGroup = binding.expenseGroupSpinner.selectedItem
+                    if (selectedExpenseGroup != null) {
+                        action.expenseGroupName = selectedExpenseGroup.toString()
+                    }
+                    findNavController().navigate(action)
                 }
             }
 
@@ -203,9 +203,6 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-
-
-//    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
