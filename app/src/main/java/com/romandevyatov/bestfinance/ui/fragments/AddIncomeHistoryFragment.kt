@@ -130,7 +130,15 @@ class AddIncomeHistoryFragment : Fragment() {
                         }
                     }
                     incomeSubGroupArraySpinner.add("Add new sub income group")
+
+                    if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
+                        val spinnerPosition = incomeSubGroupArraySpinner.getPosition(args.incomeSubGroupName)
+
+                        binding.incomeSubGroupSpinner.setSelection(spinnerPosition)
+                    }
                 }
+
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -172,7 +180,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun initWalletSpinner() {
         val spinnerAdapter = getArraySpinner()
 
-        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             spinnerAdapter.clear()
             spinnerAdapter.add("Wallet")
 
@@ -183,8 +191,29 @@ class AddIncomeHistoryFragment : Fragment() {
             spinnerAdapter.add("Add new wallet")
         }
 
-        val walletSpinner = binding.walletSpinner
-        walletSpinner.adapter = spinnerAdapter
+        binding.walletSpinner.adapter = spinnerAdapter
+        binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
+
+                if (selectedIncomeSubGroupName == "Add new wallet") {
+//                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet()
+//                    findNavController().navigate(action)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+        }
+
 
     }
 
@@ -199,8 +228,6 @@ class AddIncomeHistoryFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
-
-//    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

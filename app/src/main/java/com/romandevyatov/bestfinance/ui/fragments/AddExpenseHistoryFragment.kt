@@ -181,25 +181,26 @@ class AddExpenseHistoryFragment : Fragment() {
         val walletSpinner = binding.walletSpinner
         walletSpinner.adapter = spinnerAdapter
 
-        walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
-                val item = binding.walletSpinner.getItemAtPosition(position).toString()
+                val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                Toast.makeText(
-                    requireContext(),
-                    item,
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (selectedIncomeSubGroupName == "Add new wallet") {
+//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
+//                    findNavController().navigate(action)
+                }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Toast.makeText(activity, "Nothing Selected", Toast.LENGTH_LONG).show()
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
             }
+
         }
     }
 
