@@ -1,0 +1,39 @@
+package com.romandevyatov.bestfinance.db.entities
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.PrimaryKey
+import java.time.OffsetDateTime
+
+
+@Entity(tableName = "expense_sub_group",
+    foreignKeys = [
+        ForeignKey(
+            entity = ExpenseGroup::class,
+            parentColumns = ["id"], // ExpenseGroup
+            childColumns = ["expense_group_id"], // ExpenseSubGroup
+            onDelete = CASCADE
+        )
+    ]
+)
+data class ExpenseSubGroup(
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long? = null,
+
+    @ColumnInfo(name = "name")
+    val name: String,
+
+    @ColumnInfo(name = "description")
+    val description: String? = null,
+
+    @ColumnInfo(name = "expense_group_id")
+    val expenseGroupId: Long,
+
+    @ColumnInfo(name = "archived_date")
+    val archivedDate: OffsetDateTime? = null
+
+)

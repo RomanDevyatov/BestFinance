@@ -3,18 +3,184 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_home" >
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.romandevyatov.bestfinance.HomeFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_add_expense"
+            app:destination="@id/navigation_add_expense" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_history"
+            app:destination="@id/navigation_history" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_expense"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragment"
+        android:label="Expense"
+        tools:layout="@layout/fragment_expense" >
+        <action
+            android:id="@+id/action_navigation_expense_to_navigation_add_expense"
+            app:destination="@id/navigation_add_expense" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_income"
-        android:name="com.romandevyatov.bestfinance.IncomeFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.IncomeFragment"
         android:label="Income"
-        tools:layout="@layout/fragment_income" />
+        tools:layout="@layout/fragment_income" >
+        <action
+            android:id="@+id/action_navigation_income_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_wallet"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.WalletFragment"
+        android:label="Wallet"
+        tools:layout="@layout/fragment_wallet" >
+        <action
+            android:id="@+id/action_navigation_wallet_to_navigation_add_new_wallet"
+            app:destination="@id/navigation_add_new_wallet" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_income"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddIncomeHistoryFragment"
+        android:label="AddIncome"
+        tools:layout="@layout/fragment_add_income_history" >
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_income_group"
+            app:destination="@id/navigation_add_new_income_group" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_sub_income_group"
+            app:destination="@id/navigation_add_new_income_sub_group" />
+
+        <argument
+            android:name="incomeGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="incomeSubGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_expense"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddExpenseHistoryFragment"
+        android:label="fragment_add_expense_history"
+        tools:layout="@layout/fragment_add_expense_history" >
+        <action
+            android:id="@+id/action_navigation_add_expense_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_add_expense_to_navigation_add_new_expense_group"
+            app:destination="@id/navigation_add_new_expense_group" />
+        <action
+            android:id="@+id/action_navigation_add_expense_to_navigation_add_new_expense_sub_group"
+            app:destination="@id/navigation_add_new_expense_sub_group" />
+        <argument
+            android:name="expenseGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="expenseSubGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/navigation_add_new_income_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeGroupNameFragment"
+        android:label="fragment_add_new_income_group"
+        tools:layout="@layout/fragment_add_new_income_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_new_income_sub_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeSubGroupFragment"
+        android:label="fragment_add_new_income_sub_group"
+        tools:layout="@layout/fragment_add_new_income_sub_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_income_sub_group_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
+
+        <argument
+            android:name="incomeGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_add_new_expense_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewExpenseGroupNameFragment"
+        android:label="fragment_add_new_expense_group"
+        tools:layout="@layout/fragment_add_new_expense_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_expense_group_to_navigation_add_expense"
+            app:destination="@id/navigation_add_expense" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_new_expense_sub_group"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewExpenseSubGroupFragment"
+        android:label="fragment_add_new_expense_sub_group"
+        tools:layout="@layout/fragment_add_new_expense_sub_group" >
+
+        <action
+            android:id="@+id/action_navigation_add_new_expense_sub_group_to_navigation_add_expense"
+            app:destination="@id/navigation_add_expense" />
+
+        <argument
+            android:name="expenseGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_new_wallet"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewWalletFragment"
+        android:label="Add New Wallet"
+        tools:layout="@layout/fragment_add_new_wallet" >
+
+
+        <action
+            android:id="@+id/action_navigation_add_new_wallet_to_navigation_wallet"
+            app:destination="@id/navigation_wallet" />
+    </fragment>
+
+
 
 </navigation>

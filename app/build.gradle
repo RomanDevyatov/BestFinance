@@ -1,20 +1,40 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id "com.google.devtools.ksp" version "1.6.21-1.0.6"
+    id 'androidx.navigation.safeargs'
 }
 
 android {
     namespace 'com.romandevyatov.bestfinance'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.romandevyatov.bestfinance"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        }
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    '/src/main/res/layouts/activities',
+                    '/src/main/res/layouts/fragments',
+                    '/src/main/res/layouts/adapters',
+                    '/src/main/res/layouts',
+                    '/src/main/res'
+            ]
+        }
     }
 
     buildTypes {
@@ -36,16 +56,72 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    // material
+    implementation 'com.google.android.material:material:1.8.0'
+    // layouts
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    // viewModel and livedata
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.5.1"
+    // junit
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+
+    // kotlin annotation processing tool (kapt)
+    kapt 'androidx.room:room-compiler:2.5.0'
+
+    // room
+    implementation 'androidx.room:room-runtime:2.5.0'
+    // Kotlin Extensions and Coroutines support for Room
+    implementation 'androidx.room:room-ktx:2.5.0'
+    annotationProcessor 'androidx.room:room-compiler:2.5.0'
+    // To use Kotlin Symbol Processing (KSP)
+    ksp 'androidx.room:room-compiler:2.5.0'
+    // optional - Test helpers
+    testImplementation 'androidx.room:room-testing:2.5.0'
+
+    // room optional
+    // kapt 'androidx.room:room-compiler:2.5.0'
+    // optional - RxJava2 support for Room
+    // implementation 'androidx.room:room-rxjava2:2.5.0'
+    // optional - RxJava3 support for Room
+    // implementation 'androidx.room:room-rxjava3:2.5.0'
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    // implementation 'androidx.room:room-guava:2.5.0'
+    // optional - Paging 3 Integration
+    // implementation 'androidx.room:room-paging:2.5.0'
+
+    // kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.5.0"
+
+    // HILT
+    implementation 'com.google.dagger:hilt-android:2.44.2'
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
+    kapt 'com.google.dagger:hilt-android-compiler:2.44.2'
+
+    // KSP
+    implementation "com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6"
+
+    // For instrumentation tests
+    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.44.2'
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
+
+    // For local unit tests
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
+
+//    implementation("it.czerwinski.android.hilt:hilt-extensions:1.1.0")
+//    kapt("it.czerwinski.android.hilt:hilt-processor:1.1.0")
+
 }
+
+
+
