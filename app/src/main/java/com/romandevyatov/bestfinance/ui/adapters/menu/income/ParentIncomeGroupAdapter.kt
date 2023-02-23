@@ -123,8 +123,8 @@ class ParentIncomeGroupAdapter(
                     id = it.id,
                     incomeSubGroupId = it.incomeSubGroupId,
                     amount = it.amount,
-                    date = it.date,
-                    comment = it.comment,
+                    createdDate = it.createdDate,
+                    description = it.description,
                     walletId = it.walletId,
                     archivedDate = OffsetDateTime.now()
                 )

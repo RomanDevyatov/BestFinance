@@ -26,6 +26,9 @@ data class IncomeSubGroup (
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "description")
+    val description: String? = null,
+
     @ColumnInfo(name = "income_group_id")
     val incomeGroupId: Long,
 

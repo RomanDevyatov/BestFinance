@@ -260,8 +260,8 @@ class AddExpenseHistoryFragment : Fragment() {
                 ExpenseHistory(
                     expenseSubGroupId = id,
                     amount = amountBinding,
-                    comment = binding.commentEditText.text.toString(),
-                    date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
+                    description = binding.commentEditText.text.toString(),
+                    createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
                     walletId = walletId
                 )
             )

@@ -92,8 +92,8 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
                         id = history.id,
                         incomeSubGroupId = history.incomeSubGroupId,
                         amount = history.amount,
-                        date = history.date,
-                        comment = history.comment,
+                        createdDate = history.createdDate,
+                        description = history.description,
                         walletId = history.walletId,
                         archivedDate = OffsetDateTime.now()
                     )

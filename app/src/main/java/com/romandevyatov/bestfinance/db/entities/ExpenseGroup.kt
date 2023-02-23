@@ -16,6 +16,9 @@ data class ExpenseGroup(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "description")
+    val description: String? = null,
+
     @ColumnInfo(name = "archived_date")
     val archivedDate: OffsetDateTime? = null
 

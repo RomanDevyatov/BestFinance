@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
-import java.util.*
 
 
 @Entity(
@@ -37,11 +36,11 @@ class ExpenseHistory (
     @ColumnInfo(name = "amount")
     val amount: Double,
 
-    @ColumnInfo(name = "comment")
-    val comment: String?,
+    @ColumnInfo(name = "description")
+    val description: String? = null,
 
-    @ColumnInfo(name = "date_tmstmp")
-    val date: OffsetDateTime? = null,
+    @ColumnInfo(name = "created_date")
+    val createdDate: OffsetDateTime? = null,
 
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,
