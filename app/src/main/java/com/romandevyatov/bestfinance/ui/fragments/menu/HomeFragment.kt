@@ -77,6 +77,11 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.addTransferButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionNavigationHomeToTransferFragment()
+            findNavController().navigate(action)
+        }
+
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
         }

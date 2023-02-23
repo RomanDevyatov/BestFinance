@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui
 
-
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -85,7 +84,8 @@ class MainActivity() : AppCompatActivity() {
         val bottomNavViewExcludedArray = arrayOf(
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
-            R.id.navigation_history
+            R.id.navigation_history,
+            R.id.navigation_transfer
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

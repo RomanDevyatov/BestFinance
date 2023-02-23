@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_history"
             app:destination="@id/navigation_history" />
+        <action
+            android:id="@+id/action_navigation_home_to_transferFragment"
+            app:destination="@id/navigation_transfer" />
     </fragment>
 
     <fragment
@@ -180,7 +183,15 @@
             android:id="@+id/action_navigation_add_new_wallet_to_navigation_wallet"
             app:destination="@id/navigation_wallet" />
     </fragment>
-
+    <fragment
+        android:id="@+id/navigation_transfer"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.history.TransferFragment"
+        android:label="fragment_transfer"
+        tools:layout="@layout/fragment_transfer" >
+        <action
+            android:id="@+id/action_transferFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
 
 </navigation>
