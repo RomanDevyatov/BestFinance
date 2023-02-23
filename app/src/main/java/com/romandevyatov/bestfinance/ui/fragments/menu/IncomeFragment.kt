@@ -65,6 +65,11 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
             binding.sumOfIncomeHistoryAmountTextView.text = sumOfExpenseHistoryAmount.toString()
         }
 
+        binding.goToAddNewIncomeGroupButton.setOnClickListener {
+            val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddNewIncomeGroup()
+            findNavController().navigate(action)
+        }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -52,6 +52,11 @@ class ExpenseFragment : Fragment(),
             binding.sumOfExpenseHistoryAmountTextView.text = sumOfExpenseHistoryAmount.toString()
         }
 
+        binding.addExpenseGroupButton.setOnClickListener {
+            val action = ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddNewExpenseGroup()
+            findNavController().navigate(action)
+        }
+
     }
 
 

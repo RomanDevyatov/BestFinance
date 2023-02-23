@@ -62,27 +62,27 @@
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
 
     <Button
-        android:id="@+id/goToHistoryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="History"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/analyzeButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
-
-    <Button
         android:id="@+id/analyzeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="44dp"
         android:text="Analyze"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/goToHistoryButton"
+        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
+
+    <Button
+        android:id="@+id/goToHistoryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="History"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/analyzeButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
 
     <TextView
