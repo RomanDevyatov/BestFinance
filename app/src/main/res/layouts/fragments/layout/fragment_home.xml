@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:fitsSystemWindows="true"
     android:id="@+id/HomeFragment"
     tools:context=".ui.fragments.menu.HomeFragment">
 
@@ -27,7 +30,6 @@
         app:layout_constraintEnd_toEndOf="@+id/capitalTextView"
         app:layout_constraintStart_toStartOf="@+id/capitalTextView"
         app:layout_constraintTop_toBottomOf="@+id/capitalTextView" />
-
 
     <TextView
         android:id="@+id/totalIncomeTextView"
@@ -59,13 +61,13 @@
         app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
 
-
     <Button
         android:id="@+id/analyzeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Analyze"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/goToHistoryButton"
@@ -76,7 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="-"
+        android:textSize="12sp"
+        android:text="Add Expense"
         app:layout_constraintEnd_toStartOf="@+id/goToHistoryButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/goToAddIncomeButton"
@@ -87,6 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:textSize="12sp"
         android:text="History"
         app:layout_constraintEnd_toStartOf="@+id/analyzeButton"
         app:layout_constraintHorizontal_bias="0.5"
@@ -98,7 +102,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="+"
+        android:text="Add Income"
+        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/goToAddExpenseButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -110,7 +115,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toEndOf="@+id/passiveIncomeTextView"
@@ -121,7 +125,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/totalExpensesValueTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/totalExpensesValueTextView"
@@ -132,7 +135,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/totalIncomeValueTextView"
         app:layout_constraintStart_toStartOf="@+id/totalIncomeValueTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalIncomeValueTextView" />
@@ -142,10 +144,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/passiveIncomeValueTextView"
         app:layout_constraintStart_toStartOf="@+id/passiveIncomeValueTextView"
         app:layout_constraintTop_toBottomOf="@+id/passiveIncomeValueTextView" />
+
+    <Button
+        android:id="@+id/addTransferButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="ADD TRANSFER"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goToAddIncomeButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

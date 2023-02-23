@@ -2,9 +2,10 @@ package com.romandevyatov.bestfinance.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.romandevyatov.bestfinance.ui.fragments.ExpenseHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.IncomeHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.TransferFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.ExpenseHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.IncomeHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.TransferFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.TransferHistoryFragment
 
 
 private const val NUM_TABS = 3
@@ -22,6 +23,6 @@ class ViewPagerAdapter(fragment: Fragment) :
             0 -> return IncomeHistoryFragment()
             1 -> return ExpenseHistoryFragment()
         }
-        return TransferFragment()
+        return TransferHistoryFragment()
     }
 }

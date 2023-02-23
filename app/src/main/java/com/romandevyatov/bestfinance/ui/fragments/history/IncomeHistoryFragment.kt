@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.history
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

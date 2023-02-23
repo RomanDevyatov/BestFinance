@@ -108,7 +108,7 @@
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.HistoryFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
 
