@@ -44,6 +44,15 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentIncomeBinding.inflate(inflater, container, false)
+
+        //        setGroupSwipeListener
+        initRecyclerView()
+
+        binding.goToAddNewIncomeGroupButton.setOnClickListener {
+            val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddNewIncomeGroup()
+            findNavController().navigate(action)
+        }
+
         val view = binding.root
         return view
     }
@@ -52,9 +61,6 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentIncomeBinding.bind(view)
 
-//        setGroupSwipeListener(view)
-
-        initRecyclerView()
 
         incomeGroupViewModel.allNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData.observe(viewLifecycleOwner) {
             parentIncomeGroupAdapter.submitList(it)
@@ -65,10 +71,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
             binding.sumOfIncomeHistoryAmountTextView.text = sumOfExpenseHistoryAmount.toString()
         }
 
-        binding.goToAddNewIncomeGroupButton.setOnClickListener {
-            val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddNewIncomeGroup()
-            findNavController().navigate(action)
-        }
+
 
     }
 

@@ -23,11 +23,12 @@ class AddNewIncomeGroupNameFragment : Fragment() {
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddNewIncomeGroupBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -39,7 +40,8 @@ class AddNewIncomeGroupNameFragment : Fragment() {
         binding.addNewIncomeGroupNameButton.setOnClickListener {
             incomeGroupViewModel.insertIncomeGroup(
                 IncomeGroup(
-                    name = binding.newIncomeGroupName.text.toString()
+                    name = binding.newIncomeGroupName.text.toString(),
+                    description = binding.newIncomeGroupDescription.text.toString()
                 )
             )
 

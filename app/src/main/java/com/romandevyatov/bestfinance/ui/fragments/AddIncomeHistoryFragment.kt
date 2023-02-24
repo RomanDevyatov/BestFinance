@@ -2,18 +2,18 @@ package com.romandevyatov.bestfinance.ui.fragments
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -205,6 +205,8 @@ class AddIncomeHistoryFragment : Fragment() {
                 if (selectedIncomeSubGroupName == "Add new wallet") {
 //                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet()
 //                    findNavController().navigate(action)
+                    showdialog()
+
                 }
             }
 
@@ -215,6 +217,24 @@ class AddIncomeHistoryFragment : Fragment() {
         }
 
 
+    }
+
+    fun showdialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Title")
+
+        val input = EditText(requireContext())
+        input.hint = "Enter Text"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+            // Here you get get input text from the Edittext
+            var m_Text = input.text.toString()
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+        builder.show()
     }
 
     override fun onAttach(context: Context) {
@@ -263,49 +283,55 @@ class AddIncomeHistoryFragment : Fragment() {
 
         binding.addIncomeHistoryButton.setOnClickListener {
             val incomeGroupName =  binding.incomeGroupSpinner.selectedItem.toString()
-            val incomeGroup = incomeGroupViewModel.incomeGroupsLiveData.value?.filter { incomeGroup ->
-                incomeGroup.name == incomeGroupName
-            }!!.single()
-            val incomeGroupId = incomeGroup.id!!.toLong()
+            incomeGroupViewModel.getIncomeGroupNameByName(incomeGroupName).observe(viewLifecycleOwner) { incomeGroup ->
+                val incomeGroupId = incomeGroup.id!!.toLong()
 
-            val amountBinding = binding.amountEditText.text.toString().toDouble()
+                val selectedWalletName = binding.walletSpinner.selectedItem.toString()
+                walletViewModel.getNotArchivedWalletByNameLiveData(selectedWalletName).observe(viewLifecycleOwner) { wallet ->
+                    val walletId = wallet.id!!
 
-            val walletNameBinding = binding.walletSpinner.selectedItem.toString()
-            val wallet = walletViewModel.walletsLiveData.value?.filter { wallet ->
-                wallet.name == walletNameBinding
-            }!!.single()
-            val walletId = wallet.id!!.toLong()
+                    val amountBinding = binding.amountEditText.text.toString().toDouble()
+                    val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+                    incomeHistoryViewModel.insertIncomeHistory(
+                        IncomeHistory(
+                            incomeSubGroupId = incomeGroupId,
+                            amount = amountBinding,
+                            description = binding.commentEditText.text.toString(),
+                            createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
+                            walletId = walletId
+                        )
+                    )
+
+                    val updatedBalance = wallet.balance + amountBinding
+
+                    walletViewModel.updateWallet(
+                        Wallet(
+                            id = walletId,
+                            name = wallet.name,
+                            balance = updatedBalance,
+                            archivedDate = wallet.archivedDate,
+                            input = wallet.input + amountBinding,
+                            output = wallet.output,
+                            description = wallet.description
+                        )
+                    )
+
+                    findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+                }
+
+            }
+
+
+
+
+
 
 //            val str = binding.dateEditText.text.toString()
 //            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 //            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
 
-            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-            incomeHistoryViewModel.insertIncomeHistory(
-                IncomeHistory(
-                    incomeSubGroupId = incomeGroupId,
-                    amount = amountBinding,
-                    description = binding.commentEditText.text.toString(),
-                    createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
-                    walletId = walletId
-                )
-            )
 
-            val updatedBalance = wallet.balance + amountBinding
-
-            walletViewModel.updateWallet(
-                Wallet(
-                    id = walletId,
-                    name = wallet.name,
-                    balance = updatedBalance,
-                    archivedDate = wallet.archivedDate,
-                    input = wallet.input + amountBinding,
-                    output = wallet.output,
-                    description = wallet.description
-                )
-            )
-
-            findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
         }
     }
 
