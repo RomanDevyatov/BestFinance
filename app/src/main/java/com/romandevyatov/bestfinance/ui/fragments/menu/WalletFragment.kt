@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.DeleteItemClickListener
-import com.romandevyatov.bestfinance.ui.adapters.WalletAdapter
+import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime

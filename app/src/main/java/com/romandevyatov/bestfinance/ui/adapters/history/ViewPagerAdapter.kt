@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters
+package com.romandevyatov.bestfinance.ui.adapters.history
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

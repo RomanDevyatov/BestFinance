@@ -31,8 +31,4 @@ interface ExpenseSubGroupDao {
     @Query("SELECT * FROM expense_sub_group WHERE name = :name")
     fun getExpenseSubGroupByName(name: String?): LiveData<ExpenseSubGroup>
 
-//    @Transaction
-//    @Query("SELECT * FROM expense_sub_group")
-//    fun getAllExpenseSubGroupWithExpenseHistories(): LiveData<List<ExpenseSubGroupWithExpenseHistories>>
-
 }

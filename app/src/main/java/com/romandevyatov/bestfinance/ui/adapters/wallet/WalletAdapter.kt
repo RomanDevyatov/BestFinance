@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters
+package com.romandevyatov.bestfinance.ui.adapters.wallet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.WalletCardBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.menu.income.DeleteItemClickListener
 
 
 class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {

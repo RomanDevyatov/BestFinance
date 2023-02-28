@@ -10,24 +10,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.db.entities.mediator.ChildData
-import com.romandevyatov.bestfinance.db.entities.mediator.SubParentData
+import com.romandevyatov.bestfinance.ui.fragments.analyze.ParentData
+import com.romandevyatov.bestfinance.ui.fragments.analyze.SubParentData
 import com.romandevyatov.bestfinance.utils.Constants
 
-class ExpandableSubParentAdapter (private val mList: List<SubParentData>) :
-    RecyclerView.Adapter<ExpandableSubParentAdapter.ItemViewHolder2>() {
+class ExpandableGroupAdapter(val parents: ArrayList<ParentData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder2 {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.expandable_parent_card, parent, false)
-        return ItemViewHolder2(view)
+        return ItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return parents.size
     }
 
-    inner class ItemViewHolder2(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val linearLayout: LinearLayout
         val expandableLayout: RelativeLayout
         val mTextView: TextView
@@ -43,14 +42,14 @@ class ExpandableSubParentAdapter (private val mList: List<SubParentData>) :
         }
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder2, position: Int) {
-        val model: SubParentData = mList[position]
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val subParentModel: ParentData = parents[position]
 
-        holder as ItemViewHolder2
+        holder as ItemViewHolder
 
-        holder.mTextView.text = model.parentTitle
+        holder.mTextView.text = subParentModel.analyzeParentTitle
 
-        if (model.isExpanded) {
+        if (subParentModel.isExpanded) {
             holder.expandableLayout.visibility = View.VISIBLE
             holder.mArrowImage.setImageResource(R.drawable.ic_arrow_up)
         } else {
@@ -58,31 +57,44 @@ class ExpandableSubParentAdapter (private val mList: List<SubParentData>) :
             holder.mArrowImage.setImageResource(R.drawable.ic_arrow_down)
         }
 
-        val adapter: NestedIncomeSubGroupAdapter
-        when (model.type) {
+        val adapter: ExpandableSubGroupAdapter
+        when (subParentModel.type) {
             Constants.INCOMINGS_PARENT_TYPE -> {
-                adapter = NestedIncomeSubGroupAdapter(model.childNestedList?.map {
-                    ChildData(it, null, Constants.INCOMINGS_PARENT_TYPE)
+                adapter = ExpandableSubGroupAdapter(subParentModel.subParentNestedList?.map {
+                    SubParentData(
+                        parentTitle = it.incomeGroup.name,
+                        childNestedList = it.incomeSubGroupWithIncomeHistories,
+                        type = Constants.INCOMINGS_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
             }
 
             Constants.EXPENSES_PARENT_TYPE -> {
-                adapter = NestedIncomeSubGroupAdapter(model.childNestedListExpenses?.map {
-                    ChildData(null, it, Constants.EXPENSES_PARENT_TYPE)
+                adapter = ExpandableSubGroupAdapter(subParentModel.subParentNestedListExpenses?.map {
+                    SubParentData(parentTitle = it.expenseGroup.name,
+                    childNestedListExpenses = it.expenseSubGroupWithExpenseHistories,
+                    type = Constants.EXPENSES_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
             }
         }
 
-        holder.nestedRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+        val tr = subParentModel.subParentNestedList?.map {
+            SubParentData(
+                parentTitle = it.incomeGroup.name,
+                childNestedList = it.incomeSubGroupWithIncomeHistories,
+                type = Constants.INCOMINGS_PARENT_TYPE
+            )
+        }?.toList()
 
+//        val adapter = ExpandableSubParentAdapter(tr!!)
+        holder.nestedRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+//        holder.nestedRecyclerView.setHasFixedSize(true)
 
         holder.linearLayout.setOnClickListener {
-            model.isExpanded = !model.isExpanded
+            subParentModel.isExpanded = !subParentModel.isExpanded
             notifyItemChanged(holder.adapterPosition)
         }
     }
-
 
 }

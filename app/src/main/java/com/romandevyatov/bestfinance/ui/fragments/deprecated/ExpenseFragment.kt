@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.ui.adapters.menu.expense.ParentExpenseGroupAdapter
-import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint

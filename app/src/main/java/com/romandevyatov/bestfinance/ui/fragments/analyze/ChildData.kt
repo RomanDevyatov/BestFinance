@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.db.entities.mediator
+package com.romandevyatov.bestfinance.ui.fragments.analyze
 
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseSubGroupWithExpenseHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories

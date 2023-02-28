@@ -14,7 +14,7 @@ import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
-import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
 import java.time.OffsetDateTime
 
 

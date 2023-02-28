@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +20,7 @@ import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncome
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithIncomeHistories
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.ArchiveItemBySwipe
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.ParentIncomeGroupAdapter
-import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel

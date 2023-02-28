@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters
+package com.romandevyatov.bestfinance.ui.adapters.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

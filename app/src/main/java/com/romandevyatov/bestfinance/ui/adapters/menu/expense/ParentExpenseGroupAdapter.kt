@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemRowParentBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
-import com.romandevyatov.bestfinance.ui.adapters.utilities.AddItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
 
 
 class ParentExpenseGroupAdapter(

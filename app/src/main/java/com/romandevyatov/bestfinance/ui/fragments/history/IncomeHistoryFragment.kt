@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.IncomeHistoryAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

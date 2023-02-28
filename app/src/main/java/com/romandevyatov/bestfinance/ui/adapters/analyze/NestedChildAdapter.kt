@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.db.entities.mediator.ChildData
+import com.romandevyatov.bestfinance.ui.fragments.analyze.ChildData
 import com.romandevyatov.bestfinance.utils.Constants
 
-class NestedIncomeSubGroupAdapter(private val mList: List<ChildData>) :
-    RecyclerView.Adapter<NestedIncomeSubGroupAdapter.NestedViewHolder>() {
+class NestedChildAdapter(private val mList: List<ChildData>) :
+    RecyclerView.Adapter<NestedChildAdapter.NestedViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NestedViewHolder {
         val view: View =

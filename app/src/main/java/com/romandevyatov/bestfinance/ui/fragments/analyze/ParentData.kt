@@ -1,9 +1,9 @@
-package com.romandevyatov.bestfinance.db.entities.mediator
+package com.romandevyatov.bestfinance.ui.fragments.analyze
 
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 
-data class AnalyzeParentData(
+data class ParentData(
     val analyzeParentTitle: String? = null, // Incomes
     var type: String,
     var subParentNestedList: List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>? = null,
