@@ -79,17 +79,7 @@ class ExpandableGroupAdapter(val parents: ArrayList<ParentData>) : RecyclerView.
             }
         }
 
-        val tr = subParentModel.subParentNestedList?.map {
-            SubParentData(
-                parentTitle = it.incomeGroup.name,
-                childNestedList = it.incomeSubGroupWithIncomeHistories,
-                type = Constants.INCOMINGS_PARENT_TYPE
-            )
-        }?.toList()
-
-//        val adapter = ExpandableSubParentAdapter(tr!!)
         holder.nestedRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-//        holder.nestedRecyclerView.setHasFixedSize(true)
 
         holder.linearLayout.setOnClickListener {
             subParentModel.isExpanded = !subParentModel.isExpanded
