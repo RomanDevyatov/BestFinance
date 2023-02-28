@@ -11,8 +11,11 @@ import com.romandevyatov.bestfinance.databinding.FragmentAnalyzeBinding
 import com.romandevyatov.bestfinance.ui.adapters.analyze.ExpandableGroupAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class AnalyzeFragment : Fragment() {
@@ -22,6 +25,8 @@ class AnalyzeFragment : Fragment() {
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
+    private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
+    private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
     private lateinit var expandableGroupAdapter: ExpandableGroupAdapter
 
     override fun onCreateView(
@@ -40,34 +45,39 @@ class AnalyzeFragment : Fragment() {
         val mList: ArrayList<ParentData> = ArrayList()
 
         incomeGroupViewModel.allNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData.observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroupsIncludingIncomeHistories ->
-            val apd = ParentData(
-                analyzeParentTitle = "Incomings",
-                type = Constants.INCOMINGS_PARENT_TYPE,
-                subParentNestedList = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-            )
+            expenseGroupViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(
+                viewLifecycleOwner
+            ) { expenses ->
+                val apd = ParentData(
+                    analyzeParentTitle = "Incomings",
+                    type = Constants.INCOMINGS_PARENT_TYPE,
+                    subParentNestedList = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+                )
+                mList.add(apd)
 
-            mList.add(apd)
-            expandableGroupAdapter = ExpandableGroupAdapter(mList)
-            binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
-            binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
+                val apdr = ParentData(
+                    analyzeParentTitle = "Expenses",
+                    type = Constants.EXPENSES_PARENT_TYPE,
+                    subParentNestedListExpenses = expenses
+                )
+                mList.add(apdr)
+
+                expandableGroupAdapter = ExpandableGroupAdapter(mList)
+                binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
+                binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
+            }
+
+
+            incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
+                val totalIncomeValue = history.sumOf { it.amount }
+                expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
+                    val totalExpensesValue = expenseHistory.sumOf { it.amount }
+                    binding.analyzeGroupTextView.text =
+                        ((totalIncomeValue.minus(totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
+                }
+
+            }
         }
-
-        expenseGroupViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(viewLifecycleOwner) { expenses ->
-            val apdr = ParentData(
-                analyzeParentTitle = "Expenses",
-                type = Constants.EXPENSES_PARENT_TYPE,
-                subParentNestedListExpenses = expenses
-            )
-
-            mList.add(apdr)
-            expandableGroupAdapter = ExpandableGroupAdapter(mList)
-            binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
-            binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
-        }
-
-
-
-
     }
 
     override fun onDestroy() {
