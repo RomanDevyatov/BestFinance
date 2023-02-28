@@ -22,6 +22,7 @@ class IncomeGroupAdapter(
         override fun areContentsTheSame(oldItem: IncomeGroup, newItem: IncomeGroup): Boolean {
             return oldItem == newItem
         }
+
     }
 
     val differ = AsyncListDiffer(this, differentCallback)

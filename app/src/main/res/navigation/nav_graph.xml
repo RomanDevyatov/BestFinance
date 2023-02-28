@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_navigation_home_to_transferFragment"
             app:destination="@id/navigation_transfer" />
+        <action
+            android:id="@+id/action_navigation_home_to_analyzeFragment"
+            app:destination="@id/navigation_analyze" />
     </fragment>
 
     <fragment
@@ -189,8 +192,6 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewWalletFragment"
         android:label="Add New Wallet"
         tools:layout="@layout/fragment_add_new_wallet" >
-
-
         <action
             android:id="@+id/action_navigation_add_new_wallet_to_navigation_wallet"
             app:destination="@id/navigation_wallet" />
@@ -202,6 +203,15 @@
         tools:layout="@layout/fragment_transfer" >
         <action
             android:id="@+id/action_transferFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_analyze"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.analyze.AnalyzeFragment"
+        android:label="AnalyzeFragment"
+        tools:layout="@layout/fragment_analyze" >
+        <action
+            android:id="@+id/action_navigation_analyze_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
 

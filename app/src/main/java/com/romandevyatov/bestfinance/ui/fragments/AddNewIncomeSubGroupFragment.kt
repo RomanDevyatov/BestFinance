@@ -94,17 +94,13 @@ class AddNewIncomeSubGroupFragment : Fragment() {
 
         initIncomeGroupSpinner()
 
+        incomeSubGroupFocusListener()
 
         binding.addNewIncomeSubGroupNameButton.setOnClickListener {
             val selectedIncomeGroupName = binding.toIncomeGroupSpinner.selectedItem.toString()
-            incomeGroupViewModel.getIncomeGroupNameByName(selectedIncomeGroupName).observe(viewLifecycleOwner) {
-                incomeSubGroupViewModel.insertIncomeSubGroup(
-                    IncomeSubGroup(
-                        name = binding.newIncomeSubGroupName.text.toString(),
-                        incomeGroupId = it.id!!
-                    )
-                )
-            }
+
+//            if (validNewIncomeSubGroup)
+            submitNewIncomeSubGroup(selectedIncomeGroupName)
 
 
             val action = AddNewIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
@@ -112,6 +108,34 @@ class AddNewIncomeSubGroupFragment : Fragment() {
             action.incomeSubGroupName = binding.newIncomeSubGroupName.text.toString()
             findNavController().navigate(action)
         }
+    }
+
+    private fun submitNewIncomeSubGroup(selectedIncomeGroupName: String) {
+        incomeGroupViewModel.getIncomeGroupNameByName(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+            incomeSubGroupViewModel.insertIncomeSubGroup(
+                IncomeSubGroup(
+                    name = binding.newIncomeSubGroupName.text.toString(),
+                    description = binding.newIncomeSubGroupDescription.text.toString(),
+                    incomeGroupId = it.id!!
+                )
+            )
+        }
+    }
+
+    private fun incomeSubGroupFocusListener() {
+        binding.newIncomeSubGroupName.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                binding.newIncomeSubGroupNameContainer.helperText = validIncomeSubGroup()
+            }
+        }
+    }
+
+    private fun validIncomeSubGroup(): String? {
+        val incomeSubGroupNameEditText = binding.newIncomeSubGroupName.text.toString()
+        if (incomeSubGroupNameEditText.isBlank()) {
+            return "Invalid Income Sub Group Name"
+        }
+        return null
     }
 
     val args: AddNewIncomeSubGroupFragmentArgs by navArgs()

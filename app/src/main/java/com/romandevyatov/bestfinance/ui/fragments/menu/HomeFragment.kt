@@ -74,7 +74,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(
                 R.id.action_navigation_home_to_navigation_history
             )
+        }
 
+        binding.goToAnalyzeButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAnalyzeFragment())
         }
 
         binding.addTransferButton.setOnClickListener {

@@ -160,12 +160,9 @@ class AddExpenseHistoryFragment : Fragment() {
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
 
         }
-
 
     }
 
@@ -238,7 +235,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
         }
 
-
         binding.addExpenseButton.setOnClickListener {
             val expenseSubGroupNameBinding = binding.expenseSubGroupSpinner.selectedItem.toString()
             val expenseSubGroup = expenseSubGroupViewModel.getExpenseSubGroupByName(expenseSubGroupNameBinding)
@@ -253,10 +249,8 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val id = expenseSubGroup.id!!
 
-//            val str = binding.dateEditText.text.toString()
-//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
             val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
             expenseHistoryViewModel.insertExpenseHistory(
                 ExpenseHistory(
                     expenseSubGroupId = id,
@@ -279,7 +273,6 @@ class AddExpenseHistoryFragment : Fragment() {
                     description = wallet.description
                 )
             )
-
 
             findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
         }
