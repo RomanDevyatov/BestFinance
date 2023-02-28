@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

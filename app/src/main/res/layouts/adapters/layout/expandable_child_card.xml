@@ -9,10 +9,10 @@
     android:layout_margin="8dp">
 
     <TextView
+        android:id="@+id/expandable_child_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/nestedItemTv"
-        android:text="Grocery and Stationary"
+        android:text="Example"
         android:textColor="#8c8c8c"
         android:textSize="16sp"
         android:layout_gravity="center"

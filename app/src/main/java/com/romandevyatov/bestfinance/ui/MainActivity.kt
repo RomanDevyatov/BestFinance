@@ -60,10 +60,10 @@ class MainActivity() : AppCompatActivity() {
         setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
 
-    // for default app bar
+    // for default app bar, navigate up fixing
     override fun onSupportNavigateUp(): Boolean {
         return when(navController.currentDestination?.id) {
-            R.id.navigation_add_income -> {
+            R.id.navigation_add_income, R.id.navigation_add_expense -> {
                 navController.navigate(R.id.navigation_home)
                 true
             }
@@ -84,7 +84,8 @@ class MainActivity() : AppCompatActivity() {
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
             R.id.navigation_history,
-            R.id.navigation_transfer
+            R.id.navigation_transfer,
+            R.id.navigation_analyze
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

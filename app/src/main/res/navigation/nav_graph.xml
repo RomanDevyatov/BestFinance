@@ -28,32 +28,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_expense"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.ExpenseFragment"
-        android:label="Expense"
-        tools:layout="@layout/fragment_expense" >
-        <action
-            android:id="@+id/action_navigation_expense_to_navigation_add_expense"
-            app:destination="@id/navigation_add_expense" />
-        <action
-            android:id="@+id/action_navigation_expense_to_navigation_add_new_expense_group"
-            app:destination="@id/navigation_add_new_expense_group" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_income"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.IncomeFragment"
-        android:label="Income"
-        tools:layout="@layout/fragment_income" >
-        <action
-            android:id="@+id/action_navigation_income_to_navigation_add_income"
-            app:destination="@id/navigation_add_income" />
-        <action
-            android:id="@+id/action_navigation_income_to_navigation_add_new_income_group"
-            app:destination="@id/navigation_add_new_income_group" />
-    </fragment>
-
-    <fragment
         android:id="@+id/navigation_wallet"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.WalletFragment"
         android:label="Wallet"
@@ -133,9 +107,6 @@
         <action
             android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
-        <action
-            android:id="@+id/action_navigation_add_new_income_group_to_navigation_income"
-            app:destination="@id/navigation_income" />
     </fragment>
 
     <fragment
@@ -165,9 +136,6 @@
         <action
             android:id="@+id/action_navigation_add_new_expense_group_to_navigation_add_expense"
             app:destination="@id/navigation_add_expense" />
-        <action
-            android:id="@+id/action_navigation_add_new_expense_group_to_navigation_expense"
-            app:destination="@id/navigation_expense" />
     </fragment>
 
     <fragment

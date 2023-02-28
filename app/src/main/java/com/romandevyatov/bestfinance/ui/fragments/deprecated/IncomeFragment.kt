@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.menu
+package com.romandevyatov.bestfinance.ui.fragments.deprecated
 
 import android.os.Build
 import android.os.Bundle
@@ -49,8 +49,9 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
         initRecyclerView()
 
         binding.goToAddNewIncomeGroupButton.setOnClickListener {
-            val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddNewIncomeGroup()
-            findNavController().navigate(action)
+//            val action =
+//                IncomeFragmentDirections.actionNavigationIncomeToNavigationAddNewIncomeGroup()
+//            findNavController().navigate(action)
         }
 
         val view = binding.root
@@ -140,9 +141,10 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
     }
 
     override fun addItem(item: IncomeGroup) {
-        val action = IncomeFragmentDirections.actionNavigationIncomeToNavigationAddIncome()
-        action.incomeGroupName = item.name
-        findNavController().navigate(action)
+//        val action =
+//            IncomeFragmentDirections.actionNavigationIncomeToNavigationAddIncome()
+//        action.incomeGroupName = item.name
+//        findNavController().navigate(action)
     }
 
     override fun updateInnerItem(incomeSubGroup: IncomeSubGroup) {

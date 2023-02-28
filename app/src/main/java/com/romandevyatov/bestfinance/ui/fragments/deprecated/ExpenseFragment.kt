@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.menu
+package com.romandevyatov.bestfinance.ui.fragments.deprecated
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -53,8 +53,9 @@ class ExpenseFragment : Fragment(),
         }
 
         binding.addExpenseGroupButton.setOnClickListener {
-            val action = ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddNewExpenseGroup()
-            findNavController().navigate(action)
+//            val action =
+//                ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddNewExpenseGroup()
+//            findNavController().navigate(action)
         }
 
     }
@@ -68,9 +69,10 @@ class ExpenseFragment : Fragment(),
     }
 
     override fun addItem(item: ExpenseGroup) {
-        val action = ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddExpense()
-        action.expenseGroupName = item.name
-        findNavController().navigate(action)
+//        val action =
+//            ExpenseFragmentDirections.actionNavigationExpenseToNavigationAddExpense()
+//        action.expenseGroupName = item.name
+//        findNavController().navigate(action)
     }
 
 }
