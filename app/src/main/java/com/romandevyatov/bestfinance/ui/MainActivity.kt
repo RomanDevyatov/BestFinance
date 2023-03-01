@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
@@ -84,7 +83,7 @@ class MainActivity() : AppCompatActivity() {
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
             R.id.navigation_history,
-            R.id.navigation_transfer,
+            R.id.navigation_add_new_transfer,
             R.id.navigation_analyze
         )
 

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.history
+package com.romandevyatov.bestfinance.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,13 +13,14 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.viewmodels.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class TransferFragment : Fragment() {
+class AddNewTransferFragment : Fragment() {
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
@@ -82,7 +83,8 @@ class TransferFragment : Fragment() {
                                 )
                             )
 
-                            val action = TransferFragmentDirections.actionTransferFragmentToNavigationHome()
+                            val action =
+                                AddNewTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
                             findNavController().navigate(action)
                     }
             }
@@ -92,7 +94,7 @@ class TransferFragment : Fragment() {
     }
 
     private fun initWalletFromSpinner() {
-        val spinnerAdapter = getSpinnerAdapter()
+        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
         spinnerAdapter.add("Wallet from")
 
@@ -106,7 +108,7 @@ class TransferFragment : Fragment() {
     }
 
     private fun initWalletToSpinner() {
-        val spinnerAdapter = getSpinnerAdapter()
+        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
         spinnerAdapter.add("Wallet to")
 
@@ -119,35 +121,6 @@ class TransferFragment : Fragment() {
         binding.walletNameToSpinner.adapter = spinnerAdapter
     }
 
-    private fun getSpinnerAdapter(): ArrayAdapter<String> {
-        val spinnerAdapter: ArrayAdapter<String> =
-            object : ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item) {
 
-                override fun isEnabled(position: Int): Boolean {
-                    return position != 0
-                }
-
-                override fun areAllItemsEnabled(): Boolean {
-                    return false
-                }
-
-                override fun getDropDownView(
-                    position: Int,
-                    convertView: View?,
-                    parent: ViewGroup
-                ): View {
-                    val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                    if (position == 0) {
-                        view.setTextColor(Color.GRAY)
-                    } else {
-
-                    }
-
-                    return view
-                }
-            }
-
-        return spinnerAdapter
-    }
 
 }

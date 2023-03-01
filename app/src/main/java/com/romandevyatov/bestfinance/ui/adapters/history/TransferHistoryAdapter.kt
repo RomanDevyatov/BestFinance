@@ -24,13 +24,16 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
 
     val transferDiffer = AsyncListDiffer(this, differentCallback)
 
-
     inner class TransferItemViewHolder(
         private val binding: TransferHistoryCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(transferHistory: TransferHistory) {
-            binding.transferHistoryTextView.text = transferHistory.fromWalletId.toString()
+            binding.transferHistoryTextView.text = StringBuilder()
+                                                        .append(transferHistory.fromWalletId.toString())
+                                                        .append(" -> ")
+                                                        .append(transferHistory.toWalletId.toString())
+
             binding.balanceTextView.text = transferHistory.balance.toString()
         }
 
