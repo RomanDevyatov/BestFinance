@@ -16,6 +16,7 @@ class IncomeSubGroupViewModel @Inject constructor(
     private val incomeSubGroupRepository: IncomeSubGroupRepository
 ) : ViewModel() {
 
+    // GENERAL
     val incomeSubGroupsLiveData: LiveData<List<IncomeSubGroup>> = incomeSubGroupRepository.getAllIncomeSubGroups()
 
     fun insertIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
@@ -38,28 +39,11 @@ class IncomeSubGroupViewModel @Inject constructor(
         incomeSubGroupRepository.deleteAllIncomeSubGroups()
     }
 
-    // val allIncomeHistoryWithIncomeGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> = expenseHistoryRepository.getAllIncomeHistoryWithIncomeGroupAndWallet()
+    // WHERE ARCHIVED DATE IS NULL
+    val incomeSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<IncomeSubGroup>> = incomeSubGroupRepository.getAllIncomeSubGroupsWhereArchivedDateIsNull()
 
-//    fun getIncomeSubGroupByName(expenseSubGroupName: String) : IncomeSubGroup? {
-//        expenseSubGroupsLiveData.value?.forEach { it ->
-//            if (it.name == expenseSubGroupName) {
-//                return it
-//            }
-//        }
-//
-//        return null
-//    }
-
-    fun getIncomeSubGroupByName(name: String): IncomeSubGroup {
-//        return expenseSubGroupRepository.getIncomeSubGroupByName(name)
-        return incomeSubGroupsLiveData.value!!.single{
-            it.name == name
-        }
-//        expenseSubGroupsLiveData.value?.forEach{ it ->
-//            if (it.name == name) {
-//                return it
-//            }
-//        }
+    fun getIncomeSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<IncomeSubGroup> {
+        return incomeSubGroupRepository.getIncomeSubGroupByNameWhereArchivedDateIsNull(name)
     }
 
 

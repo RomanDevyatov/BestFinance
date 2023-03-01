@@ -13,6 +13,8 @@ class IncomeSubGroupRepository @Inject constructor(
 
     fun getAllIncomeSubGroups(): LiveData<List<IncomeSubGroup>> = incomeSubGroupDao.getAll()
 
+    fun getAllIncomeSubGroupsWhereArchivedDateIsNull(): LiveData<List<IncomeSubGroup>> = incomeSubGroupDao.getAllWhereArchivedDateIsNull()
+
     suspend fun insertIncomeSubGroup(incomeGroup: IncomeSubGroup) {
         incomeSubGroupDao.insert(incomeGroup)
     }
@@ -29,6 +31,7 @@ class IncomeSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllIncomeSubGroups() = incomeSubGroupDao.deleteAll()
 
-    fun getIncomeSubGroupByName(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getIncomeSubGroupByName(name)
+    fun getIncomeSubGroupByName(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getByName(name)
 
+    fun getIncomeSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getByNameWhereArchivedDateIsNull(name)
 }

@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.ExpenseSubGroupDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +13,9 @@ class ExpenseSubGroupRepository @Inject constructor(
 ) {
 
     fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAll()
+
+    fun getAllExpenseSubGroupsWhereArchivedDateIsNull(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllWhereArchivedDateIsNull()
+
 
     suspend fun insertExpenseSubGroup(expenseGroup: ExpenseSubGroup) {
         expenseSubGroupDao.insert(expenseGroup)
@@ -30,5 +34,7 @@ class ExpenseSubGroupRepository @Inject constructor(
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
     fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getExpenseSubGroupByName(name)
+
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameWhereArchivedDateIsNull(name)
 
 }

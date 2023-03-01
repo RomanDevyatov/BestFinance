@@ -16,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
+import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -236,45 +237,59 @@ class AddExpenseHistoryFragment : Fragment() {
         }
 
         binding.addExpenseButton.setOnClickListener {
-            val expenseSubGroupNameBinding = binding.expenseSubGroupSpinner.selectedItem.toString()
-            val expenseSubGroup = expenseSubGroupViewModel.getExpenseSubGroupByName(expenseSubGroupNameBinding)
+            val expenseSubGroupName = binding.expenseSubGroupSpinner.selectedItem.toString()
+            expenseSubGroupViewModel.getExpenseSubGroupByNameWhereArchivedDateIsNull(
+                expenseSubGroupName
+            ).observe(viewLifecycleOwner) { incomeSubGroup ->
+                val incomeGroupId = incomeSubGroup.id!!.toLong()
 
-            val walletNameBinding = binding.walletSpinner.selectedItem.toString()
-            val wallet = walletViewModel.walletsLiveData.value?.filter { wallet ->
-                wallet.name == walletNameBinding
-            }!!.single()
-            val walletId = wallet.id!!.toLong()
+                val selectedWalletName = binding.walletSpinner.selectedItem.toString()
+                walletViewModel.getNotArchivedWalletByNameLiveData(selectedWalletName)
+                    .observe(viewLifecycleOwner) { wallet ->
+                        val walletId = wallet.id!!
 
-            val amountBinding = binding.amountEditText.text.toString().toDouble()
+                        val amountBinding = binding.amountEditText.text.toString().toDouble()
+                        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
-            val id = expenseSubGroup.id!!
+                        expenseHistoryViewModel.insertExpenseHistory(
+                            ExpenseHistory(
+                                expenseSubGroupId = incomeGroupId,
+                                amount = amountBinding,
+                                description = binding.commentEditText.text.toString(),
+                                createdDate = OffsetDateTime.from(
+                                    iso8601DateTimeFormatter.parse(
+                                        binding.dateEditText.text.toString()
+                                    )
+                                ),
+                                walletId = walletId
+                            )
+                        )
 
-            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                        val updatedBalance = wallet.balance - amountBinding
 
-            expenseHistoryViewModel.insertExpenseHistory(
-                ExpenseHistory(
-                    expenseSubGroupId = id,
-                    amount = amountBinding,
-                    description = binding.commentEditText.text.toString(),
-                    createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(binding.dateEditText.text.toString())),
-                    walletId = walletId
-                )
-            )
+                        walletViewModel.updateWallet(
+                            Wallet(
+                                id = walletId,
+                                name = wallet.name,
+                                balance = updatedBalance,
+                                archivedDate = wallet.archivedDate,
+                                input = wallet.input + amountBinding,
+                                output = wallet.output,
+                                description = wallet.description
+                            )
+                        )
 
-            val updatedBalance = wallet.balance - amountBinding
-            walletViewModel.updateWallet(
-                Wallet(
-                    id = walletId,
-                    name = wallet.name,
-                    balance = updatedBalance,
-                    archivedDate = wallet.archivedDate,
-                    input = wallet.input,
-                    output = wallet.output + amountBinding,
-                    description = wallet.description
-                )
-            )
+                        findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+                    }
 
-            findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+            }
+
+
+//            val str = binding.dateEditText.text.toString()
+//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
+
+
         }
     }
 

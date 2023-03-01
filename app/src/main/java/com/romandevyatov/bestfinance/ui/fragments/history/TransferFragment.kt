@@ -41,13 +41,15 @@ class TransferFragment : Fragment() {
             walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameFromSpinner.selectedItem.toString())
                 .observe(viewLifecycleOwner) { walletFrom ->
 
+                    val output = walletFrom.output.plus(binding.amount.toString().trim().toDouble())
+
                     walletViewModel.updateWallet(
                         Wallet(
                             id = walletFrom.id,
                             name = walletFrom.name,
                             balance = walletFrom.balance,
                             input = walletFrom.input,
-                            output = walletFrom.output + binding.amount.toString().toDouble(),
+                            output = output,
                             description = walletFrom.description,
                             archivedDate = walletFrom.archivedDate
                         )
@@ -55,12 +57,15 @@ class TransferFragment : Fragment() {
 
                     walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameToSpinner.selectedItem.toString())
                         .observe(viewLifecycleOwner) { walletTo ->
+
+                            val input = walletTo.input.plus(binding.amount.toString().trim().toDouble())
+
                             walletViewModel.updateWallet(
                                 Wallet(
                                     id = walletTo.id,
                                     name = walletTo.name,
                                     balance = walletTo.balance,
-                                    input = walletTo.input + binding.amount.toString().toDouble(),
+                                    input = input,
                                     output = walletTo.output,
                                     description = walletTo.description,
                                     archivedDate = walletTo.archivedDate

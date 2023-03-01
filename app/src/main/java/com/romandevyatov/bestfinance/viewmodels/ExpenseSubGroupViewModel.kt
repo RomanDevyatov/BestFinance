@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,17 +52,11 @@ class ExpenseSubGroupViewModel @Inject constructor(
 //
 //        return null
 //    }
+    val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseSubGroupsWhereArchivedDateIsNull()
 
-    fun getExpenseSubGroupByName(name: String): ExpenseSubGroup {
-//        return expenseSubGroupRepository.getExpenseSubGroupByName(name)
-        return expenseSubGroupsLiveData.value!!.single{
-            it.name == name
-        }
-//        expenseSubGroupsLiveData.value?.forEach{ it ->
-//            if (it.name == name) {
-//                return it
-//            }
-//        }
+
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> {
+        return expenseSubGroupRepository.getExpenseSubGroupByNameWhereArchivedDateIsNull(name)
     }
 
 

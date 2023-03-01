@@ -8,18 +8,18 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.IncomeHistoryCardBinding
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeGroupAndWallet
+import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeHistoryItemViewHolder
 
 
 class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>() {
 
-    private val differentCallback = object: DiffUtil.ItemCallback<IncomeHistoryWithIncomeGroupAndWallet>() {
-        override fun areItemsTheSame(oldItem: IncomeHistoryWithIncomeGroupAndWallet, newItem: IncomeHistoryWithIncomeGroupAndWallet): Boolean {
+    private val differentCallback = object: DiffUtil.ItemCallback<IncomeHistoryWithIncomeSubGroupAndWallet>() {
+        override fun areItemsTheSame(oldItem: IncomeHistoryWithIncomeSubGroupAndWallet, newItem: IncomeHistoryWithIncomeSubGroupAndWallet): Boolean {
             return oldItem.incomeHistory.id == newItem.incomeHistory.id
         }
 
-        override fun areContentsTheSame(oldItem: IncomeHistoryWithIncomeGroupAndWallet, newItem: IncomeHistoryWithIncomeGroupAndWallet): Boolean {
+        override fun areContentsTheSame(oldItem: IncomeHistoryWithIncomeSubGroupAndWallet, newItem: IncomeHistoryWithIncomeSubGroupAndWallet): Boolean {
             return oldItem == newItem
         }
     }
@@ -42,7 +42,7 @@ class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>()
         return differ.currentList.size
     }
 
-    fun submitList(list: List<IncomeHistoryWithIncomeGroupAndWallet>) {
+    fun submitList(list: List<IncomeHistoryWithIncomeSubGroupAndWallet>) {
         differ.submitList(list)
     }
 }
