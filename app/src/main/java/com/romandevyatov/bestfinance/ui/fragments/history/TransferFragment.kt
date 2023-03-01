@@ -41,7 +41,9 @@ class TransferFragment : Fragment() {
             walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameFromSpinner.selectedItem.toString())
                 .observe(viewLifecycleOwner) { walletFrom ->
 
-                    val output = walletFrom.output.plus(binding.amount.toString().trim().toDouble())
+                    val amount = binding.amount.text.toString().trim().toDouble()
+
+                    val updatedOutput = walletFrom.output.plus(amount)
 
                     walletViewModel.updateWallet(
                         Wallet(
@@ -49,7 +51,7 @@ class TransferFragment : Fragment() {
                             name = walletFrom.name,
                             balance = walletFrom.balance,
                             input = walletFrom.input,
-                            output = output,
+                            output = updatedOutput,
                             description = walletFrom.description,
                             archivedDate = walletFrom.archivedDate
                         )
@@ -58,14 +60,14 @@ class TransferFragment : Fragment() {
                     walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameToSpinner.selectedItem.toString())
                         .observe(viewLifecycleOwner) { walletTo ->
 
-                            val input = walletTo.input.plus(binding.amount.toString().trim().toDouble())
+                            val updatedInput = walletTo.input.plus(amount)
 
                             walletViewModel.updateWallet(
                                 Wallet(
                                     id = walletTo.id,
                                     name = walletTo.name,
                                     balance = walletTo.balance,
-                                    input = input,
+                                    input = updatedInput,
                                     output = walletTo.output,
                                     description = walletTo.description,
                                     archivedDate = walletTo.archivedDate
@@ -74,7 +76,7 @@ class TransferFragment : Fragment() {
 
                             transferHistoryViewModel.insertTransferHistory(
                                 TransferHistory(
-                                    balance = binding.amount.toString().toDouble(),
+                                    balance = amount,
                                     fromWalletId = walletFrom.id!!,
                                     toWalletId = walletTo.id!!
                                 )
