@@ -37,7 +37,7 @@ class ChildIncomeSubGroupsAdapter (
 
         fun bindItem(incomeSubGroup: IncomeSubGroupWithIncomeHistories) {
             itemRowChildBinding.subGroupNameTextView.text = incomeSubGroup.incomeSubGroup.name
-            itemRowChildBinding.summaTextView.text =  incomeSubGroup.incomeHistories.sumOf { it.amount }.toString()
+            itemRowChildBinding.summaTextView.text = incomeSubGroup.incomeHistories.sumOf { it.amount }.toString()
         }
 
     }

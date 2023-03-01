@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,7 +27,6 @@ class HomeFragment : Fragment() {
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -35,24 +35,23 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var passiveIncomeValue: Double? = null
-//        binding.passiveIncomeValueTextView.text = passiveIncomeValue
+        var passiveIncomeValue: Double?
 
-        var totalIncomeValue: Double? = null
-//        binding.totalIncomeValueTextView.text = totalIncomeValue
+        var totalIncomeValue: Double?
 
-        var totalExpensesValue: Double? = null
-//        binding.totalExpensesValueTextView.text = totalExpensesValue
+        var totalExpensesValue: Double?
 
-        val moneyFlowValue: Double? = null
-//        binding.moneyFlowValueTextView.text = moneyFlowValue
+        var moneyFlowValue: Double?
 
 
         binding.goToAddIncomeButton.setOnClickListener {
@@ -99,12 +98,12 @@ class HomeFragment : Fragment() {
             expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
                 totalExpensesValue = expenseHistory.sumOf { it.amount }
                 binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
-                
-                binding.moneyFlowValueTextView.text = ((totalIncomeValue!!.minus(totalExpensesValue!!) * 100.0).roundToInt() / 100.0).toString()
+
+                moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!)
+                binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
