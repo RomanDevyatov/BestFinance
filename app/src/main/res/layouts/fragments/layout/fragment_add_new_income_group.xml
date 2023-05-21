@@ -4,21 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/newIncomeGroupName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newIncomeGroupNameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group name"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/newIncomeGroupDescription"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newIncomeGroupNameInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Income group name"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newIncomeGroupDescriptionInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group description"
-        app:layout_constraintEnd_toEndOf="@+id/newIncomeGroupName"
-        app:layout_constraintStart_toStartOf="@+id/newIncomeGroupName"
-        app:layout_constraintTop_toBottomOf="@+id/newIncomeGroupName" />
+        app:layout_constraintEnd_toEndOf="@+id/newIncomeGroupNameInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/newIncomeGroupNameInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/newIncomeGroupNameInputLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newIncomeGroupDescriptionInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Income group description"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addNewIncomeGroupNameButton"

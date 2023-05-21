@@ -44,15 +44,16 @@ class AddNewTransferFragment : Fragment() {
 
                     val amount = binding.amount.text.toString().trim().toDouble()
 
-                    val updatedOutput = walletFrom.output.plus(amount)
+                    val updatedWalletFromOutput = walletFrom.output.plus(amount)
+                    val updatedWalletFromBalance = walletFrom.balance.minus(amount)
 
                     walletViewModel.updateWallet(
                         Wallet(
                             id = walletFrom.id,
                             name = walletFrom.name,
-                            balance = walletFrom.balance,
+                            balance = updatedWalletFromBalance,
                             input = walletFrom.input,
-                            output = updatedOutput,
+                            output = updatedWalletFromOutput,
                             description = walletFrom.description,
                             archivedDate = walletFrom.archivedDate
                         )
@@ -61,14 +62,15 @@ class AddNewTransferFragment : Fragment() {
                     walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameToSpinner.selectedItem.toString())
                         .observe(viewLifecycleOwner) { walletTo ->
 
-                            val updatedInput = walletTo.input.plus(amount)
+                            val updatedWalletToInput = walletTo.input.plus(amount)
+                            val updatedWalletToBalance = walletTo.balance.plus(amount)
 
                             walletViewModel.updateWallet(
                                 Wallet(
                                     id = walletTo.id,
                                     name = walletTo.name,
-                                    balance = walletTo.balance,
-                                    input = updatedInput,
+                                    balance = updatedWalletToBalance,
+                                    input = updatedWalletToInput,
                                     output = walletTo.output,
                                     description = walletTo.description,
                                     archivedDate = walletTo.archivedDate

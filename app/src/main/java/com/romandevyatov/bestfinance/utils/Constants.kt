@@ -9,4 +9,7 @@ object Constants {
     const val INCOMINGS_PARENT_TYPE = "INCOMINGS_PARENT_TYPE"
     const val EXPENSES_PARENT_TYPE = "EXPENSES_PARENT_TYPE"
 
+    const val FIELD_IS_EMPTY_MESSAGE = "Please enter some text!"
+
+
 }

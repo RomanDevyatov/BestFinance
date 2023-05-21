@@ -99,9 +99,15 @@ class AddNewIncomeSubGroupFragment : Fragment() {
         binding.addNewIncomeSubGroupNameButton.setOnClickListener {
             val selectedIncomeGroupName = binding.toIncomeGroupSpinner.selectedItem.toString()
 
-//            if (validNewIncomeSubGroup)
-            submitNewIncomeSubGroup(selectedIncomeGroupName)
-
+            incomeGroupViewModel.getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+                incomeSubGroupViewModel.insertIncomeSubGroup(
+                    IncomeSubGroup(
+                        name = binding.newIncomeSubGroupName.text.toString(),
+                        description = binding.newIncomeSubGroupDescription.text.toString(),
+                        incomeGroupId = it.id!!
+                    )
+                )
+            }
 
             val action = AddNewIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
             action.incomeGroupName = selectedIncomeGroupName

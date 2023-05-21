@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
@@ -48,6 +49,10 @@ class IncomeGroupViewModel @Inject constructor(
 
     fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup> {
         return incomeGroupRepository.getIncomeGroupNameByName(incomeGroupName)
+    }
+
+    fun getIncomeGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<IncomeGroup> {
+        return incomeGroupRepository.getIncomeGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName)
     }
 
     val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()

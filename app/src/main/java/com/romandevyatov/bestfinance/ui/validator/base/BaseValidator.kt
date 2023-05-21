@@ -1,5 +1,7 @@
 package com.romandevyatov.bestfinance.ui.validator.base
 
+import com.romandevyatov.bestfinance.R
+
 
 abstract class BaseValidator : IValidator {
     companion object {
@@ -10,7 +12,7 @@ abstract class BaseValidator : IValidator {
                     return result
                 }
             }
-            return ValidateResult(true, 0)
+            return ValidateResult(true, R.string.text_validation_success)
         }
     }
 }

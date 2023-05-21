@@ -48,5 +48,9 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getIncomeGroupNameByName(incomeGroupName)
     }
 
+    fun getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
+        return incomeGroupDao.getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName)
+    }
+
 
 }
