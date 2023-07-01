@@ -40,8 +40,8 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesWhereArchivedDateIsNull()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName)
+    fun getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName)
     }
 
     fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup> {
@@ -50,6 +50,10 @@ class IncomeGroupRepository @Inject constructor(
 
     fun getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
         return incomeGroupDao.getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName)
+    }
+
+    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
+        return incomeGroupDao.getAllWhereArchivedDateIsNull()
     }
 
 

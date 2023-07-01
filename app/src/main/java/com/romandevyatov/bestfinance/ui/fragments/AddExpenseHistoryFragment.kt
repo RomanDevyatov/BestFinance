@@ -16,7 +16,6 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -244,7 +243,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 val incomeGroupId = incomeSubGroup.id!!.toLong()
 
                 val selectedWalletName = binding.walletSpinner.selectedItem.toString()
-                walletViewModel.getNotArchivedWalletByNameLiveData(selectedWalletName)
+                walletViewModel.getWalletByNameNotArchivedLiveData(selectedWalletName)
                     .observe(viewLifecycleOwner) { wallet ->
                         val walletId = wallet.id!!
 

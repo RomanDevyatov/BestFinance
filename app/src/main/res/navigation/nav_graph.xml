@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_navigation_add_income_to_navigation_add_new_sub_income_group"
             app:destination="@id/navigation_add_new_income_sub_group" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_wallet"
+            app:destination="@id/navigation_add_new_wallet" />
 
         <argument
             android:name="incomeGroupName"

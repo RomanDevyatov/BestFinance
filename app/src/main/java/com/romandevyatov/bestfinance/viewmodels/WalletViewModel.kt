@@ -18,7 +18,7 @@ class WalletViewModel @Inject constructor(
 
     val walletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWallets()
 
-    val notArchivedWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllNotArchivedWalletsLiveData()
+    val notArchivedWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.insertWallet(wallet)
@@ -32,8 +32,8 @@ class WalletViewModel @Inject constructor(
         walletRepository.deleteWallet(wallet)
     }
 
-    fun getNotArchivedWalletByNameLiveData(walletName: String): LiveData<Wallet> {
-        return walletRepository.getNotArchivedWalletByNameLiveData(walletName)
+    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
+        return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 
 }

@@ -1,13 +1,10 @@
 package com.romandevyatov.bestfinance.ui.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentTransferBinding
@@ -39,7 +36,7 @@ class AddNewTransferFragment : Fragment() {
         initWalletToSpinner()
 
         binding.transferButton.setOnClickListener {
-            walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameFromSpinner.selectedItem.toString())
+            walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameFromSpinner.selectedItem.toString())
                 .observe(viewLifecycleOwner) { walletFrom ->
 
                     val amount = binding.amount.text.toString().trim().toDouble()
@@ -59,7 +56,7 @@ class AddNewTransferFragment : Fragment() {
                         )
                     )
 
-                    walletViewModel.getNotArchivedWalletByNameLiveData(binding.walletNameToSpinner.selectedItem.toString())
+                    walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameToSpinner.selectedItem.toString())
                         .observe(viewLifecycleOwner) { walletTo ->
 
                             val updatedWalletToInput = walletTo.input.plus(amount)

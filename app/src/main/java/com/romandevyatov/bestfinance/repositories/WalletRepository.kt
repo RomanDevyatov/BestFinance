@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.WalletDao
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +14,7 @@ class WalletRepository @Inject constructor(
 
     fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAll()
 
-    fun getAllNotArchivedWalletsLiveData(): LiveData<List<Wallet>> = walletDao.getAllWhereArchivedDateIsNull()
+    fun getAllWalletsNotArchivedLiveData(): LiveData<List<Wallet>> = walletDao.getAllWhereArchivedDateIsNull()
 
     suspend fun insertWallet(wallet: Wallet) {
         walletDao.insert(wallet)
@@ -29,8 +28,8 @@ class WalletRepository @Inject constructor(
         walletDao.update(wallet)
     }
 
-    fun getNotArchivedWalletByNameLiveData(walletName: String): LiveData<Wallet> {
-        return walletDao.getNotArchivedWalletByName(walletName)
+    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
+        return walletDao.getWalletByNameNotArchivedLiveData(walletName)
     }
 
 }
