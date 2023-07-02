@@ -28,15 +28,18 @@ interface IncomeSubGroupDao {
     suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByName(name: String?): LiveData<IncomeSubGroup>
+    fun getByName(name: String?): IncomeSubGroup
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name")
+    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date = :archivedDate")
-    fun getAllWithArchivedDate(archivedDate: OffsetDateTime?): LiveData<List<IncomeSubGroup>>
+    fun getAllWithArchivedDateLiveData(archivedDate: OffsetDateTime?): LiveData<List<IncomeSubGroup>>
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
-    fun getAllWhereArchivedDateIsNull(): LiveData<List<IncomeSubGroup>>
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameWhereArchivedDateIsNull(name: String): LiveData<IncomeSubGroup>
+    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>
 
 }

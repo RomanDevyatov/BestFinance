@@ -22,7 +22,6 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
@@ -38,12 +37,11 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentAddIncomeHistoryBinding
 
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
 
-    private val addIncomeSubGroupViewModelGeneral: AddIncomeHistoryViewModel by viewModels()
+    private val addIncomeHistoryViewModelGeneral: AddIncomeHistoryViewModel by viewModels()
 
     companion object {
         const val addNewWalletString: String = "Add new wallet"
@@ -93,17 +91,113 @@ class AddIncomeHistoryFragment : Fragment() {
 
     val args: AddIncomeHistoryFragmentArgs by navArgs()
 
+    fun showWalletDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Title")
+
+        val input = EditText(requireContext())
+        input.hint = "Enter Text"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+            // Here you get get input text from the Edittext
+            var m_Text = input.text.toString()
+        })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+        builder.show()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAddIncomeHistoryBinding.bind(view)
+
+        initIncomeGroupSpinner()
+        initWalletSpinner()
+
+
+
+        val myCalendar = Calendar.getInstance()
+        val datePicker = DatePickerDialog.OnDateSetListener() {
+                view, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH,month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateDate(myCalendar)
+        }
+
+        val dateET = binding.dateEditText
+        dateET.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                datePicker,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        updateDate(myCalendar)
+
+        binding.addIncomeHistoryButton.setOnClickListener {
+
+            if (true) {// if (isFormValid()) {
+                val incomeSubGroupNamBinding = binding.incomeSubGroupSpinner.selectedItem.toString()
+                val amountBinding = binding.amountEditText.text.toString().toDouble()
+                val commentBinding = binding.commentEditText.text.toString()
+                val dateBinding = binding.dateEditText.text.toString()
+                val walletNameBinding = binding.walletSpinner.selectedItem.toString()
+                addIncomeHistoryViewModelGeneral.addIncomeHistory(incomeSubGroupNamBinding, amountBinding, commentBinding, dateBinding, walletNameBinding)
+
+                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+
+
+//            val str = binding.dateEditText.text.toString()
+//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
+            }
+
+        }
+    }
+
+    private fun isFormValid(): Boolean {
+        return true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateDate(calendar: Calendar) {
+//        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
+//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+//        binding.dateEditText.setText(sdf.format(calendar.time))
+        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
+    }
+
+
     private fun initIncomeGroupSpinner() {
         val incomeGroupSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
         binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
-
-        addIncomeSubGroupViewModelGeneral.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { incomeGroupList ->
+        addIncomeHistoryViewModelGeneral.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { incomeGroupList ->
             incomeGroupSpinnerAdapter.clear()
+
             incomeGroupSpinnerAdapter.add("Income group")
             incomeGroupList?.forEach { it ->
                 incomeGroupSpinnerAdapter.add(it.name)
             }
-
             incomeGroupSpinnerAdapter.add("Add new income group")
 
             if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
@@ -130,24 +224,25 @@ class AddIncomeHistoryFragment : Fragment() {
                     findNavController().navigate(action)
                 }
 
-                addIncomeSubGroupViewModelGeneral.getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(selectedIncomeGroupName).observe(viewLifecycleOwner) { list ->
-                    incomeSubGroupArraySpinner.clear()
-                    incomeSubGroupArraySpinner.add("Income sub group")
-                    if (list != null) {
-                        val subGroups = list.incomeSubGroups
+                addIncomeHistoryViewModelGeneral.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(selectedIncomeGroupName)
+                    .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
+                        incomeSubGroupArraySpinner.clear()
+                        incomeSubGroupArraySpinner.add("Income sub group")
+                        if (incomeGroupWithIncomeSubGroups != null) {
+                            val subGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
 
-                        subGroups.forEach {
-                            incomeSubGroupArraySpinner.add(it.name)
+                            subGroups.forEach {
+                                incomeSubGroupArraySpinner.add(it.name)
+                            }
+                        }
+                        incomeSubGroupArraySpinner.add("Add new sub income group")
+
+                        if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
+                            val spinnerPosition = incomeSubGroupArraySpinner.getPosition(args.incomeSubGroupName)
+
+                            binding.incomeSubGroupSpinner.setSelection(spinnerPosition)
                         }
                     }
-                    incomeSubGroupArraySpinner.add("Add new sub income group")
-
-                    if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
-                        val spinnerPosition = incomeSubGroupArraySpinner.getPosition(args.incomeSubGroupName)
-
-                        binding.incomeSubGroupSpinner.setSelection(spinnerPosition)
-                    }
-                }
 
 
             }
@@ -189,7 +284,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun initWalletSpinner() {
         val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-        addIncomeSubGroupViewModelGeneral.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        addIncomeHistoryViewModelGeneral.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             spinnerAdapter.clear()
             spinnerAdapter.add("Wallet")
 
@@ -223,142 +318,6 @@ class AddIncomeHistoryFragment : Fragment() {
 
         }
     }
-
-    fun showWalletDialog(){
-        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Title")
-
-        val input = EditText(requireContext())
-        input.hint = "Enter Text"
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
-
-        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-            // Here you get get input text from the Edittext
-            var m_Text = input.text.toString()
-        })
-        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-
-        builder.show()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddIncomeHistoryBinding.bind(view)
-
-        initIncomeGroupSpinner()
-        initWalletSpinner()
-
-        val dateET = binding.dateEditText
-
-        val myCalendar = Calendar.getInstance()
-
-        val datePicker = DatePickerDialog.OnDateSetListener() {
-                view, year, month, dayOfMonth ->
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH,month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateDate(myCalendar)
-        }
-
-        dateET.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                datePicker,
-                myCalendar.get(Calendar.YEAR),
-                myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        updateDate(myCalendar)
-
-        binding.addIncomeHistoryButton.setOnClickListener {
-
-            if (isFormValid()) {
-                val incomeSubGroupName = binding.incomeSubGroupSpinner.selectedItem.toString()
-                incomeSubGroupViewModel.getIncomeSubGroupByNameWhereArchivedDateIsNull(
-                    incomeSubGroupName
-                ).observe(viewLifecycleOwner) { incomeSubGroup ->
-                    val incomeGroupId = incomeSubGroup.id!!.toLong()
-
-                    val selectedWalletName = binding.walletSpinner.selectedItem.toString()
-                    walletViewModel.getWalletByNameNotArchivedLiveData(selectedWalletName)
-                        .observe(viewLifecycleOwner) { wallet ->
-                            val walletId = wallet.id!!
-
-                            val amountBinding = binding.amountEditText.text.toString().toDouble()
-                            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-
-                            incomeHistoryViewModel.insertIncomeHistory(
-                                IncomeHistory(
-                                    incomeSubGroupId = incomeGroupId,
-                                    amount = amountBinding,
-                                    description = binding.commentEditText.text.toString(),
-                                    createdDate = OffsetDateTime.from(
-                                        iso8601DateTimeFormatter.parse(
-                                            binding.dateEditText.text.toString()
-                                        )
-                                    ),
-                                    walletId = walletId
-                                )
-                            )
-
-                            val updatedBalance = wallet.balance + amountBinding
-
-                            walletViewModel.updateWallet(
-                                Wallet(
-                                    id = walletId,
-                                    name = wallet.name,
-                                    balance = updatedBalance,
-                                    archivedDate = wallet.archivedDate,
-                                    input = wallet.input + amountBinding,
-                                    output = wallet.output,
-                                    description = wallet.description
-                                )
-                            )
-
-                            findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
-                        }
-
-                }
-
-
-//            val str = binding.dateEditText.text.toString()
-//            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-//            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
-            }
-
-        }
-    }
-
-    private fun isFormValid(): Boolean {
-        return true
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun updateDate(calendar: Calendar) {
-//        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
-//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
-//        binding.dateEditText.setText(sdf.format(calendar.time))
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
-    }
-
-
 
 
 }

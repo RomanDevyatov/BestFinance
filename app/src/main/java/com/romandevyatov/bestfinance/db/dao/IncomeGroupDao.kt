@@ -38,13 +38,13 @@ interface IncomeGroupDao {
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL")
-    fun getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName")
     fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup>
 
     @Query("SELECT * FROM income_group WHERE name = :selectedIncomeGroupName AND archived_date IS NULL")
-    fun getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName: String): LiveData<IncomeGroup>
+    fun getIncomeGroupByNameAndNotArchived(selectedIncomeGroupName: String): LiveData<IncomeGroup>
 
     @Query("SELECT * FROM income_group WHERE archived_date IS NULL ORDER BY id ASC")
     fun getAllWhereArchivedDateIsNull(): LiveData<List<IncomeGroup>>

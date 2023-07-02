@@ -32,4 +32,8 @@ class WalletRepository @Inject constructor(
         return walletDao.getWalletByNameNotArchivedLiveData(walletName)
     }
 
+    fun getWalletByNameNotArchived(walletName: String): Wallet {
+        return walletDao.getWalletByNameNotArchived(walletName)
+    }
+
 }
