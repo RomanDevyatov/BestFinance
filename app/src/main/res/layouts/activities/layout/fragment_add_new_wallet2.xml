@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/newWalletNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wallet name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/newWalletDescriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wallet description"
+        app:layout_constraintEnd_toEndOf="@+id/newWalletNameEditText"
+        app:layout_constraintStart_toStartOf="@+id/newWalletNameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/newWalletNameEditText" />
+
+    <EditText
+        android:id="@+id/newWalletInitialBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wallet balance"
+        app:layout_constraintEnd_toEndOf="@+id/newWalletDescriptionEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newWalletDescriptionEditText" />
+
+    <Button
+        android:id="@+id/addNewWalletButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.865" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

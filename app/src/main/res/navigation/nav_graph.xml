@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_navigation_add_income_to_navigation_add_new_wallet"
             app:destination="@id/navigation_add_new_wallet" />
+        <action
+            android:id="@+id/action_navigation_add_income_to_navigation_add_new_wallet2"
+            app:destination="@id/navigation_add_new_wallet2" />
 
         <argument
             android:name="incomeGroupName"
@@ -166,6 +169,15 @@
         <action
             android:id="@+id/action_navigation_add_new_wallet_to_navigation_wallet"
             app:destination="@id/navigation_wallet" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_add_new_wallet2"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewWalletFragment2"
+        android:label="Add New Wallet 2"
+        tools:layout="@layout/fragment_add_new_wallet2" >
+        <action
+            android:id="@+id/action_navigation_add_new_wallet2_to_navigation_add_income"
+            app:destination="@id/navigation_add_income" />
     </fragment>
     <fragment
         android:id="@+id/navigation_add_new_transfer"
