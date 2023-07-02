@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentAnalyzeBinding
 import com.romandevyatov.bestfinance.ui.adapters.analyze.ExpandableGroupAdapter
 import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -44,7 +44,7 @@ class AnalyzeFragment : Fragment() {
 
         val mList: ArrayList<ParentData> = ArrayList()
 
-        incomeGroupViewModel.allNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData.observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroupsIncludingIncomeHistories ->
+        incomeGroupViewModel.allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData.observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroupsIncludingIncomeHistories ->
             expenseGroupViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(
                 viewLifecycleOwner
             ) { expenses ->

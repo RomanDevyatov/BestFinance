@@ -14,7 +14,7 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 interface WalletDao {
 
     @Query("SELECT * FROM wallet ORDER BY id ASC")
-    fun getAll(): LiveData<List<Wallet>>
+    fun getAllLiveData(): LiveData<List<Wallet>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(wallet: Wallet)
@@ -32,12 +32,12 @@ interface WalletDao {
     suspend fun deleteById(id: Long)
 
     @Query("SELECT * FROM wallet WHERE archived_date IS NULL")
-    fun getAllWhereArchivedDateIsNull(): LiveData<List<Wallet>>
+    fun getAllNotArchivedLiveData(): LiveData<List<Wallet>>
 
     @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
-    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet>
+    fun getWalletByNameAndNotArchivedLiveData(walletName: String): LiveData<Wallet>
 
     @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
-    fun getWalletByNameNotArchived(walletName: String): Wallet
+    fun getWalletByNameAndNotArchived(walletName: String): Wallet
 
 }

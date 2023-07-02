@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.viewmodels.newapproach
+package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -7,12 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.repositories.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
@@ -28,32 +26,17 @@ class AddIncomeHistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     // income group zone
-    val incomeHistoryLiveData: LiveData<List<IncomeHistory>> = incomeHistoryRepository.getAllIncomeHistory()
-
     fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
-        return incomeGroupRepository.getAllIncomeGroupNotArchived()
+        return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(name)
-    }
-
-    // income sub group zone
-    fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> {
-        return incomeSubGroupRepository.getIncomeSubGroupByNameNotArchivedLiveData(name)
+        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name)
     }
 
     // income history zone
     fun insertIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
         incomeHistoryRepository.insertIncomeHistory(incomeHistory)
-    }
-
-    fun fetchWalletByNameNotArchivedLiveData(name: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val data = incomeSubGroupRepository.getByName(name)
-
-
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -65,7 +48,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertHistory(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }
@@ -73,7 +56,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertHistory(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
+    private fun insertHistoryRecord(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         insertIncomeHistory(
             IncomeHistory(
@@ -101,14 +84,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
         )
     }
 
-
-    // wallet zone
-    val walletsLiveData:            LiveData<List<Wallet>> = walletRepository.getAllWallets()
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
-
-    private fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
-        return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
-    }
 
     private fun getWalletByNameNotArchived(walletName: String): Wallet {
         return walletRepository.getWalletByNameNotArchived(walletName)

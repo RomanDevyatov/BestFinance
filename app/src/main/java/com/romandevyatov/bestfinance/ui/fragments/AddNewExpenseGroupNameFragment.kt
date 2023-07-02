@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddNewExpenseGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

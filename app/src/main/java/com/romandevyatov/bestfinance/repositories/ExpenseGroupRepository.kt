@@ -14,11 +14,11 @@ class ExpenseGroupRepository @Inject constructor(
     private val expenseGroupDao: ExpenseGroupDao
 ) {
 
-    fun getAllExpenseGroupWithExpenseSubGroup() : LiveData<List<ExpenseGroupWithExpenseSubGroups>> {
-        return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroups()
+    fun getAllExpenseGroupWithExpenseSubGroupLiveData() : LiveData<List<ExpenseGroupWithExpenseSubGroups>> {
+        return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsLiveData()
     }
 
-    fun getAllExpenseGroups(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAll()
+    fun getAllExpenseGroups(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllLiveData()
 
     suspend fun insertExpenseGroup(expenseGroup: ExpenseGroup) {
         expenseGroupDao.insert(expenseGroup)
@@ -36,16 +36,16 @@ class ExpenseGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseGroups() = expenseGroupDao.deleteAll()
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
-        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(expenseGroupName)
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
+        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName)
     }
 
-    fun getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> {
-        return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistories()
+    fun getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> {
+        return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesLiveData()
     }
 
-    fun getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
-        return expenseGroupDao.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName)
+    fun getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+        return expenseGroupDao.getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
     }
 
 }

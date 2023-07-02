@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.ExpenseHistoryAdapter
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

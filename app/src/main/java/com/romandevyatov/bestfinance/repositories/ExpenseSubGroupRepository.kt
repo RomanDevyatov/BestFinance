@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.ExpenseSubGroupDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,9 +11,9 @@ class ExpenseSubGroupRepository @Inject constructor(
     private val expenseSubGroupDao: ExpenseSubGroupDao
 ) {
 
-    fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAll()
+    fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllLiveData()
 
-    fun getAllExpenseSubGroupsWhereArchivedDateIsNull(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllWhereArchivedDateIsNull()
+    fun getAllExpenseSubGroupsWhereArchivedDateIsNull(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllNotArchivedLiveData()
 
 
     suspend fun insertExpenseSubGroup(expenseGroup: ExpenseSubGroup) {
@@ -33,8 +32,8 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
-    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getExpenseSubGroupByName(name)
+    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameLiveData(name)
 
-    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameWhereArchivedDateIsNull(name)
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameNotArchivedLiveData(name)
 
 }

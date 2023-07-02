@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
-import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

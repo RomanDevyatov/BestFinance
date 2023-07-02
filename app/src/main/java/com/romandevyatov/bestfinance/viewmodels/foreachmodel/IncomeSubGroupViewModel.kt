@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.viewmodels
+package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

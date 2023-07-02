@@ -10,12 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint

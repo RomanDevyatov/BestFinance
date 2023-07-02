@@ -14,8 +14,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -99,7 +99,7 @@ class AddNewIncomeSubGroupFragment : Fragment() {
         binding.addNewIncomeSubGroupNameButton.setOnClickListener {
             val selectedIncomeGroupName = binding.toIncomeGroupSpinner.selectedItem.toString()
 
-            incomeGroupViewModel.getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+            incomeGroupViewModel.getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
                 incomeSubGroupViewModel.insertIncomeSubGroup(
                     IncomeSubGroup(
                         name = binding.newIncomeSubGroupName.text.toString(),
@@ -117,7 +117,7 @@ class AddNewIncomeSubGroupFragment : Fragment() {
     }
 
     private fun submitNewIncomeSubGroup(selectedIncomeGroupName: String) {
-        incomeGroupViewModel.getIncomeGroupNameByName(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+        incomeGroupViewModel.getIncomeGroupNameByNameLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
             incomeSubGroupViewModel.insertIncomeSubGroup(
                 IncomeSubGroup(
                     name = binding.newIncomeSubGroupName.text.toString(),

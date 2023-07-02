@@ -11,8 +11,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
-import com.romandevyatov.bestfinance.viewmodels.TransferHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

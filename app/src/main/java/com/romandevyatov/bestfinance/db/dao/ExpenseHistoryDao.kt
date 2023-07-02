@@ -9,7 +9,7 @@ import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExp
 interface ExpenseHistoryDao {
 
     @Query("SELECT * FROM expense_history order by id ASC")
-    fun getAll(): LiveData<List<ExpenseHistory>>
+    fun getAllLiveData(): LiveData<List<ExpenseHistory>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(expenseHistory: ExpenseHistory)
@@ -28,6 +28,6 @@ interface ExpenseHistoryDao {
 
     @Transaction
     @Query("SELECT * FROM expense_history")
-    fun getAllExpenseHistoryWithExpenseGroupAndWallet(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>>
+    fun getAllExpenseHistoryWithExpenseGroupAndWalletLiveData(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>>
 
 }

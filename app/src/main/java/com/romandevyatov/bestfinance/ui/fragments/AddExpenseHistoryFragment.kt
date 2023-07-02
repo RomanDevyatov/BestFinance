@@ -18,6 +18,10 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBindin
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.*
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter

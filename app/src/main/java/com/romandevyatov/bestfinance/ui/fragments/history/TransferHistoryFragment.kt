@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.TransferHistoryAdapter
-import com.romandevyatov.bestfinance.viewmodels.TransferHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

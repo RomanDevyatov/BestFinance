@@ -11,8 +11,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.ui.adapters.menu.expense.ParentExpenseGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

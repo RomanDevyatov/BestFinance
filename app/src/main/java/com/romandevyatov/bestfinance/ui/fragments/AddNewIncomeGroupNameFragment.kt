@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.validator.EmptyValidator
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

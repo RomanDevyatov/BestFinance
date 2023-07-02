@@ -14,11 +14,11 @@ class ExpenseHistoryRepository @Inject constructor(
 ) {
 
     fun getAllExpenseHistoryWithExpenseGroupAndWallet(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> {
-        return expenseHistoryDao.getAllExpenseHistoryWithExpenseGroupAndWallet()
+        return expenseHistoryDao.getAllExpenseHistoryWithExpenseGroupAndWalletLiveData()
     }
 
     fun getAllExpenseHistory(): LiveData<List<ExpenseHistory>> {
-        return expenseHistoryDao.getAll()
+        return expenseHistoryDao.getAllLiveData()
     }
 
     suspend fun insertExpenseHistory(expenseHistory: ExpenseHistory) {

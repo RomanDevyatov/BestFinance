@@ -5,7 +5,6 @@ import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +13,7 @@ class IncomeGroupRepository @Inject constructor(
     private val incomeGroupDao: IncomeGroupDao
 ) {
 
-    fun getAllIncomeGroups(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAll()
+    fun getAllLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
 
     suspend fun insertIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupDao.insert(incomeGroup)
@@ -33,27 +32,27 @@ class IncomeGroupRepository @Inject constructor(
     suspend fun deleteAllIncomeGroups() = incomeGroupDao.deleteAll()
 
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
+        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesLiveData()
     }
 
-    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesByArchivedDate(archivedDate: OffsetDateTime?): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesWhereArchivedDateIsNull()
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
+        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(incomeGroupName)
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(incomeGroupName)
     }
 
-    fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupDao.getIncomeGroupNameByName(incomeGroupName)
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
+        return incomeGroupDao.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 
-    fun getIncomeGroupByNameAndArchivedDateIsNull(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupDao.getIncomeGroupByNameAndNotArchived(selectedIncomeGroupName)
+    fun getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
+        return incomeGroupDao.getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName)
     }
 
-    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
-        return incomeGroupDao.getAllWhereArchivedDateIsNull()
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
+        return incomeGroupDao.getAllNotArchivedLiveData()
     }
 
 

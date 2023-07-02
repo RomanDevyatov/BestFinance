@@ -20,7 +20,7 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
-import com.romandevyatov.bestfinance.viewmodels.newapproach.AddIncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -35,7 +35,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private val addIncomeHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
 
     companion object {
-        const val addNewWalletString: String = "Add new wallet"
+        const val ADD_NEW_WALLET_STRING: String = "Add new wallet"
     }
 
     override fun onCreateView(
@@ -46,39 +46,6 @@ class AddIncomeHistoryFragment : Fragment() {
         binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    /*
-    private fun getArraySpinner(): ArrayAdapter<String> {
-        val spinnerAdapter: ArrayAdapter<String> =
-            object : ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item) {
-
-                override fun isEnabled(position: Int): Boolean {
-                    return position != 0
-                }
-
-                override fun areAllItemsEnabled(): Boolean {
-                    return false
-                }
-
-                override fun getDropDownView(
-                    position: Int,
-                    convertView: View?,
-                    parent: ViewGroup
-                ): View {
-                    val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                    if (position == 0) {
-                        view.setTextColor(Color.GRAY)
-                    } else {
-
-                    }
-
-                    return view
-                }
-            }
-
-        return spinnerAdapter
-    }
-     */
 
     val args: AddIncomeHistoryFragmentArgs by navArgs()
 
@@ -175,11 +142,11 @@ class AddIncomeHistoryFragment : Fragment() {
         binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
     }
 
-
     private fun initIncomeGroupAndIncomeSubGroupSpinner() {
-        val incomeGroupSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
-        binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
         addIncomeHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { incomeGroupList ->
+            val incomeGroupSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
+            binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
+
             incomeGroupSpinnerAdapter.clear()
 
             incomeGroupSpinnerAdapter.add("Income group")
@@ -266,24 +233,25 @@ class AddIncomeHistoryFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         }
-
     }
 
     private fun initWalletSpinner() {
-        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
-
         addIncomeHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            spinnerAdapter.clear()
-            spinnerAdapter.add("Wallet")
+            val walletSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-            walletList?.forEach { it ->
-                spinnerAdapter.add(it.name)
-            }
+            walletSpinnerAdapter.clear()
+            walletSpinnerAdapter.add("Wallet")
 
-            spinnerAdapter.add(addNewWalletString)
+            val names = walletList.map { it.name }
+            walletSpinnerAdapter.addAll(names)
+
+            walletSpinnerAdapter.add(ADD_NEW_WALLET_STRING)
+
+            // Populate the spinner with the names
+            binding.walletSpinner.adapter = walletSpinnerAdapter
         }
 
-        binding.walletSpinner.adapter = spinnerAdapter
+
         binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
@@ -294,7 +262,7 @@ class AddIncomeHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == addNewWalletString) {
+                if (selectedIncomeSubGroupName == ADD_NEW_WALLET_STRING) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet2()
                     findNavController().navigate(action)
                 }

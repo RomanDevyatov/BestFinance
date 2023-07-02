@@ -14,8 +14,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddNewExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.viewmodels.ExpenseGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.ExpenseSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

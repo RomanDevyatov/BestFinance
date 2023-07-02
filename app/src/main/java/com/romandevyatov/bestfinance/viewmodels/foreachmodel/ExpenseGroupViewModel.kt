@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.viewmodels
+package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -41,15 +41,15 @@ class ExpenseGroupViewModel @Inject constructor(
     }
 
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameAndArchivedDateIsNullLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
-        return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
+        return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name)
     }
 
     fun getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
-        return expenseGroupRepository.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName)
+        return expenseGroupRepository.getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
     }
 
-    val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroup()
+    val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupLiveData()
 
-    val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories()
+    val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData()
 
 }

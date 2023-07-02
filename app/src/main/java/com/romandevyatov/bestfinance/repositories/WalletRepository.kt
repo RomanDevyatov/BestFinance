@@ -12,9 +12,9 @@ class WalletRepository @Inject constructor(
     private val walletDao: WalletDao
 ) {
 
-    fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAll()
+    fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAllLiveData()
 
-    fun getAllWalletsNotArchivedLiveData(): LiveData<List<Wallet>> = walletDao.getAllWhereArchivedDateIsNull()
+    fun getAllWalletsNotArchivedLiveData(): LiveData<List<Wallet>> = walletDao.getAllNotArchivedLiveData()
 
     suspend fun insertWallet(wallet: Wallet) {
         walletDao.insert(wallet)
@@ -29,11 +29,11 @@ class WalletRepository @Inject constructor(
     }
 
     fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
-        return walletDao.getWalletByNameNotArchivedLiveData(walletName)
+        return walletDao.getWalletByNameAndNotArchivedLiveData(walletName)
     }
 
     fun getWalletByNameNotArchived(walletName: String): Wallet {
-        return walletDao.getWalletByNameNotArchived(walletName)
+        return walletDao.getWalletByNameAndNotArchived(walletName)
     }
 
 }

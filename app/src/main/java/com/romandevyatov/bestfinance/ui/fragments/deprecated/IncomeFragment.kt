@@ -21,9 +21,9 @@ import com.romandevyatov.bestfinance.db.entities.relations.IncomeSubGroupWithInc
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.ArchiveItemBySwipe
 import com.romandevyatov.bestfinance.ui.adapters.menu.income.ParentIncomeGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 
@@ -62,7 +62,7 @@ class IncomeFragment : Fragment(), AddItemClickListener<IncomeGroup>, ArchiveIte
         _binding = FragmentIncomeBinding.bind(view)
 
 
-        incomeGroupViewModel.allNotArchivedIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData.observe(viewLifecycleOwner) {
+        incomeGroupViewModel.allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData.observe(viewLifecycleOwner) {
             parentIncomeGroupAdapter.submitList(it)
         }
 
