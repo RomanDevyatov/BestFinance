@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.menu.expense
+package com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.expense
 
 
 import android.view.LayoutInflater

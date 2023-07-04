@@ -12,7 +12,6 @@ import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class IncomeHistoryFragment : Fragment() {
 

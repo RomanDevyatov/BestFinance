@@ -12,7 +12,6 @@ import com.romandevyatov.bestfinance.ui.adapters.history.TransferHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class TransferHistoryFragment : Fragment() {
 

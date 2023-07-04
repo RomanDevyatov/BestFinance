@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.ui.adapters.menu.expense.ParentExpenseGroupAdapter
+import com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.expense.ParentExpenseGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.clicklisteners.AddItemClickListener
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel

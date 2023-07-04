@@ -34,7 +34,6 @@ class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>
             binding.balanceTextView.text = wallet.balance.toString()
         }
 
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletItemViewHolder {

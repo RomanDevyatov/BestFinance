@@ -11,6 +11,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
+import com.romandevyatov.bestfinance.utils.Constants.WALLET_FROM
+import com.romandevyatov.bestfinance.utils.Constants.WALLET_TO
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,7 +94,7 @@ class AddTransferFragment : Fragment() {
     private fun initWalletFromSpinner() {
         val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-        spinnerAdapter.add("Wallet from")
+        spinnerAdapter.add(WALLET_FROM)
 
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             walletList?.forEach { it ->
@@ -106,7 +108,7 @@ class AddTransferFragment : Fragment() {
     private fun initWalletToSpinner() {
         val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-        spinnerAdapter.add("Wallet to")
+        spinnerAdapter.add(WALLET_TO)
 
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             walletList?.forEach { it ->

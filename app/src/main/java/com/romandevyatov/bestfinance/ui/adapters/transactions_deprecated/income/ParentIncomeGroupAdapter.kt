@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.menu.income
+package com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.income
 
 
 import android.os.Build
