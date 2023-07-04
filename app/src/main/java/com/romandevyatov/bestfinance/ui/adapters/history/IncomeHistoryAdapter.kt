@@ -11,7 +11,6 @@ import com.romandevyatov.bestfinance.databinding.CardIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeHistoryItemViewHolder
 
-
 class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeHistoryWithIncomeSubGroupAndWallet>() {

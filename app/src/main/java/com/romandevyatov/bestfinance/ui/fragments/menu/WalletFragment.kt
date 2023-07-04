@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
-
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,9 +19,8 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.income.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
-
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
@@ -32,8 +30,7 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentWalletBinding.inflate(inflater, container, false)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { }

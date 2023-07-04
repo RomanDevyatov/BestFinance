@@ -6,7 +6,6 @@ import com.romandevyatov.bestfinance.ui.fragments.history.ExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.history.IncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.history.TransferHistoryFragment
 
-
 class ViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
 

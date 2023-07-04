@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
 
-
 class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<Wallet>() {

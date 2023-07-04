@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardTransferHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 
-
 class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.TransferItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<TransferHistory>() {

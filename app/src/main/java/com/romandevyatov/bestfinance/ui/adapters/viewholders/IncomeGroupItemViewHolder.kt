@@ -5,7 +5,6 @@ import com.romandevyatov.bestfinance.databinding.CardIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.income.DeleteItemClickListener
 
-
 class IncomeGroupItemViewHolder(
     private val binding: CardIncomeGroupBinding,
     private val clickListener: DeleteItemClickListener<IncomeGroup>

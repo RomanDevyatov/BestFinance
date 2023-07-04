@@ -37,7 +37,7 @@ class ExpandableGroupAdapter(val parents: ArrayList<ParentData>) : RecyclerView.
             linearLayout = itemView.findViewById(R.id.linear_layout)
             expandableLayout = itemView.findViewById(R.id.expandable_layout)
             mTextView = itemView.findViewById(R.id.itemTv)
-            mArrowImage = itemView.findViewById(R.id.arro_imageview)
+            mArrowImage = itemView.findViewById(R.id.arrow_imageview)
             nestedRecyclerView = itemView.findViewById(R.id.child_rv)
         }
     }

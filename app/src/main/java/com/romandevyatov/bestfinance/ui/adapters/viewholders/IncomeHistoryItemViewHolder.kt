@@ -7,7 +7,6 @@ import com.romandevyatov.bestfinance.databinding.CardIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import java.time.format.DateTimeFormatter
 
-
 class IncomeHistoryItemViewHolder(
     private val binding: CardIncomeHistoryBinding
 ) : RecyclerView.ViewHolder(binding.root) {
