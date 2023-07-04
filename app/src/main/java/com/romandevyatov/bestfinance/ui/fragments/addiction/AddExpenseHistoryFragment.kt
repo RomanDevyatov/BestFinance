@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.addiction
 
 import android.app.DatePickerDialog
 import android.graphics.Color
@@ -29,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-
 
 @AndroidEntryPoint
 class AddExpenseHistoryFragment : Fragment() {

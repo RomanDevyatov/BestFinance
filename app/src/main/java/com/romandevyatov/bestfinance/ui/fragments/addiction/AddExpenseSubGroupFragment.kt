@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.addiction
 
 import android.graphics.Color
 import android.os.Bundle
@@ -17,7 +17,6 @@ import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class AddExpenseSubGroupFragment : Fragment() {

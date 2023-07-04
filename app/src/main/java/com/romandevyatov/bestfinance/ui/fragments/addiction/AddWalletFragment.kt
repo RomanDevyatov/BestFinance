@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.addiction
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,6 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class AddWalletFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.validator
+package com.romandevyatov.bestfinance.ui.validators
 
 object ValidationCodeConstants {
 

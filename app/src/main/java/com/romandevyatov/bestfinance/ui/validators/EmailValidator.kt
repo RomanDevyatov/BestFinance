@@ -1,8 +1,8 @@
-package com.romandevyatov.bestfinance.ui.validator
+package com.romandevyatov.bestfinance.ui.validators
 
 import android.text.TextUtils
-import com.romandevyatov.bestfinance.ui.validator.base.BaseValidator
-import com.romandevyatov.bestfinance.ui.validator.base.ValidateResult
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
+import com.romandevyatov.bestfinance.ui.validators.base.ValidateResult
 
 class EmailValidator(val email: String) : BaseValidator() {
 

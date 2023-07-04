@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.addiction
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,7 +14,6 @@ import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class AddTransferFragment : Fragment() {
@@ -81,8 +80,7 @@ class AddTransferFragment : Fragment() {
                                 )
                             )
 
-                            val action =
-                                AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
+                            val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
                             findNavController().navigate(action)
                     }
             }

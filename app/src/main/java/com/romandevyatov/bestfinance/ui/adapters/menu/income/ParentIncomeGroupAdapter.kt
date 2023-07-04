@@ -21,7 +21,7 @@ import java.time.OffsetDateTime
 class ParentIncomeGroupAdapter(
     private val onClickListener: AddItemClickListener<IncomeGroup>,
     private val archiveItemBySwipe: ArchiveItemBySwipe
-) : RecyclerView.Adapter<ParentIncomeGroupAdapter.IncomeGroupItemViewHolder>() {
+    ) : RecyclerView.Adapter<ParentIncomeGroupAdapter.IncomeGroupItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>() {
 

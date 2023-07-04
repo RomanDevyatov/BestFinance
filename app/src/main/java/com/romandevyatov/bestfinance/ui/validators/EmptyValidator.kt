@@ -1,8 +1,8 @@
-package com.romandevyatov.bestfinance.ui.validator
+package com.romandevyatov.bestfinance.ui.validators
 
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.ui.validator.base.BaseValidator
-import com.romandevyatov.bestfinance.ui.validator.base.ValidateResult
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
+import com.romandevyatov.bestfinance.ui.validators.base.ValidateResult
 
 class EmptyValidator(val input: String) : BaseValidator() {
 

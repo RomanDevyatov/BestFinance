@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments
+package com.romandevyatov.bestfinance.ui.fragments.addiction
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,6 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class AddExpenseGroupNameFragment : Fragment() {

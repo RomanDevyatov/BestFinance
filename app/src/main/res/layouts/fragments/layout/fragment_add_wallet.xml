@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/addWalletFragment"
-    tools:context=".ui.fragments.AddWalletFragment" >
+    tools:context=".ui.fragments.addiction.AddWalletFragment" >
 
     <EditText
         android:id="@+id/newWalletNameEditText"

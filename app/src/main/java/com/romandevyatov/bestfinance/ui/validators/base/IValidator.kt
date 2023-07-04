@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.validator.base
+package com.romandevyatov.bestfinance.ui.validators.base
 
 interface IValidator {
     fun validate(): ValidateResult
