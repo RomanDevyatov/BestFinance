@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/AddExpenseFragment"
-    tools:context=".ui.fragments.AddExpenseHistoryFragment">
-
+    android:id="@+id/addExpenseHistoryFragment"
+    tools:context=".ui.fragments.AddExpenseHistoryFragment" >
 
     <Spinner
         android:id="@+id/expenseGroupSpinner"

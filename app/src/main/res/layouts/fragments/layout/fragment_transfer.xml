@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    tools:context=".ui.fragments.AddNewTransferFragment">
+    android:id="@+id/addTransferFragment"
+    tools:context=".ui.fragments.AddTransferFragment">
 
 
     <Spinner

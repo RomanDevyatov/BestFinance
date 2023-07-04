@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeGroupBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.validator.EmptyValidator
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
@@ -15,9 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewIncomeGroupNameFragment : Fragment() {
+class AddIncomeGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddNewIncomeGroupBinding? = null
+    private var _binding: FragmentAddIncomeGroupBinding? = null
     private val binding get() = _binding!!
 
     private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
@@ -28,7 +28,7 @@ class AddNewIncomeGroupNameFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddNewIncomeGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -53,7 +53,7 @@ class AddNewIncomeGroupNameFragment : Fragment() {
                 )
             )
 
-            val action = AddNewIncomeGroupNameFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
+            val action = AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
             action.incomeGroupName = newIncomeGroupName
             findNavController().navigate(action)
         }

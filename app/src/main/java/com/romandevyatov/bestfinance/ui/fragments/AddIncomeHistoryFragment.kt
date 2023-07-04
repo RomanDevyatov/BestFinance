@@ -21,6 +21,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET_STRING
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
@@ -150,7 +151,7 @@ class AddIncomeHistoryFragment : Fragment() {
             incomeGroupList?.forEach { it ->
                 incomeGroupSpinnerAdapter.add(it.name)
             }
-            incomeGroupSpinnerAdapter.add("Add new income group")
+            incomeGroupSpinnerAdapter.add(Constants.ADD_NEW_INCOME_GROUP)
 
             if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
                 val spinnerPosition = incomeGroupSpinnerAdapter.getPosition(args.incomeGroupName)
@@ -160,7 +161,7 @@ class AddIncomeHistoryFragment : Fragment() {
         }
 
         val incomeSubGroupArraySpinner = SpinnerUtils.getArraySpinner(requireContext())
-        incomeSubGroupArraySpinner.add("Income sub group")
+        incomeSubGroupArraySpinner.add(Constants.INCOME_SUB_GROUP)
 
         binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
@@ -171,7 +172,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 id: Long
             ) {
                 val selectedIncomeGroupName = binding.incomeGroupSpinner.getItemAtPosition(position).toString()
-                if (selectedIncomeGroupName == "Add new income group") {
+                if (selectedIncomeGroupName == Constants.ADD_NEW_INCOME_GROUP) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewIncomeGroup()
                     findNavController().navigate(action)
                 }
@@ -179,7 +180,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 addIncomeHistoryViewModel.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(selectedIncomeGroupName)
                     .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
                         incomeSubGroupArraySpinner.clear()
-                        incomeSubGroupArraySpinner.add("Income sub group")
+                        incomeSubGroupArraySpinner.add(Constants.INCOME_SUB_GROUP)
                         if (incomeGroupWithIncomeSubGroups != null) {
                             val subGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
 
@@ -187,7 +188,7 @@ class AddIncomeHistoryFragment : Fragment() {
                                 incomeSubGroupArraySpinner.add(it.name)
                             }
                         }
-                        incomeSubGroupArraySpinner.add("Add new sub income group")
+                        incomeSubGroupArraySpinner.add(Constants.ADD_NEW_SUB_INCOME_GROUP)
 
                         if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
                             val spinnerPosition = incomeSubGroupArraySpinner.getPosition(args.incomeSubGroupName)
@@ -216,7 +217,7 @@ class AddIncomeHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.incomeSubGroupSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == "Add new sub income group") {
+                if (selectedIncomeSubGroupName == Constants.ADD_NEW_SUB_INCOME_GROUP) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
                     val selectedIncomeGroup = binding.incomeGroupSpinner.selectedItem
                     if (selectedIncomeGroup != null) {
@@ -242,7 +243,7 @@ class AddIncomeHistoryFragment : Fragment() {
             val names = walletList.map { it.name }
             walletSpinnerAdapter.addAll(names)
 
-            walletSpinnerAdapter.add(Constants.ADD_NEW_WALLET_STRING)
+            walletSpinnerAdapter.add(ADD_NEW_WALLET_STRING)
 
             // Populate the spinner with the names
             binding.walletSpinner.adapter = walletSpinnerAdapter
@@ -265,9 +266,9 @@ class AddIncomeHistoryFragment : Fragment() {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
 
-                if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET_STRING) {
-                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet()
-                    action.source = "add_income_history_fragment"
+                if (selectedIncomeSubGroupName == ADD_NEW_WALLET_STRING) {
+                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
+                    action.source = Constants.ADD_INCOME_HISTORY_FRAGMENT
                     findNavController().navigate(action)
                 }
             }

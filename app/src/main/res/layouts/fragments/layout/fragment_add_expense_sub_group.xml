@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="15dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addExpenseSubGroupFragment"
+    tools:context=".ui.fragments.AddExpenseSubGroupFragment">
 
     <EditText
-        android:id="@+id/newWalletNameEditText"
+        android:id="@+id/newExpenseSubGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet name"
+        android:hint="Income sub group name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/newWalletDescriptionEditText"
+        android:id="@+id/newExpenseSubGroupDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet description"
-        app:layout_constraintEnd_toEndOf="@+id/newWalletNameEditText"
-        app:layout_constraintStart_toStartOf="@+id/newWalletNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/newWalletNameEditText" />
+        android:hint="Income sub group description"
+        app:layout_constraintEnd_toEndOf="@+id/newExpenseSubGroupName"
+        app:layout_constraintStart_toStartOf="@+id/newExpenseSubGroupName"
+        app:layout_constraintTop_toBottomOf="@+id/newExpenseSubGroupName" />
 
-    <EditText
-        android:id="@+id/newWalletInitialBalance"
+    <Spinner
+        android:id="@+id/toExpenseGroupSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet balance"
-        app:layout_constraintEnd_toEndOf="@+id/newWalletDescriptionEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newWalletDescriptionEditText" />
+        android:hint="Income group"
+        app:layout_constraintEnd_toEndOf="@+id/newExpenseSubGroupDescription"
+        app:layout_constraintStart_toStartOf="@+id/newExpenseSubGroupDescription"
+        app:layout_constraintTop_toBottomOf="@+id/newExpenseSubGroupDescription" />
 
     <Button
-        android:id="@+id/addNewWalletButton"
+        android:id="@+id/addNewExpenseSubGroupNameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"

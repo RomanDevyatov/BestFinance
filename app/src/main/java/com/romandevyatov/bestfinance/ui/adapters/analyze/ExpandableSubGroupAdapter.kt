@@ -19,7 +19,7 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder2 {
         val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.expandable_parent_card, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_parent, parent, false)
         return ItemViewHolder2(view)
     }
 

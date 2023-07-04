@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddNewIncomeSubGroupBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeSubGroupViewModel
@@ -20,9 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewIncomeSubGroupFragment : Fragment() {
+class AddIncomeSubGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddNewIncomeSubGroupBinding? = null
+    private var _binding: FragmentAddIncomeSubGroupBinding? = null
     private val binding get() = _binding!!
 
     private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
@@ -33,7 +33,7 @@ class AddNewIncomeSubGroupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddNewIncomeSubGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddIncomeSubGroupBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -109,7 +109,7 @@ class AddNewIncomeSubGroupFragment : Fragment() {
                 )
             }
 
-            val action = AddNewIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
+            val action = AddIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
             action.incomeGroupName = selectedIncomeGroupName
             action.incomeSubGroupName = binding.newIncomeSubGroupName.text.toString()
             findNavController().navigate(action)
@@ -144,7 +144,7 @@ class AddNewIncomeSubGroupFragment : Fragment() {
         return null
     }
 
-    val args: AddNewIncomeSubGroupFragmentArgs by navArgs()
+    val args: AddIncomeSubGroupFragmentArgs by navArgs()
 
 
     override fun onDestroyView() {

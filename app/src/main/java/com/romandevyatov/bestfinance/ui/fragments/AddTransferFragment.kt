@@ -17,14 +17,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewTransferFragment : Fragment() {
+class AddTransferFragment : Fragment() {
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
     private val transferHistoryViewModel: TransferHistoryViewModel by viewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +82,7 @@ class AddNewTransferFragment : Fragment() {
                             )
 
                             val action =
-                                AddNewTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
+                                AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
                             findNavController().navigate(action)
                     }
             }

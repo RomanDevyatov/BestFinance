@@ -14,7 +14,7 @@ class NestedChildAdapter(private val mList: List<ChildData>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NestedViewHolder {
         val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.expandable_child_card, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_child, parent, false)
         return NestedViewHolder(view)
     }
 

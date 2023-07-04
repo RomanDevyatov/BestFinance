@@ -47,7 +47,7 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
         binding = FragmentWalletBinding.bind(view)
 
         binding.addExpenseButton.setOnClickListener {
-            val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddNewWallet()
+            val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
             findNavController().navigate(action)
 //            val nameOfNewWallet = binding.walletNameEditText.text.toString()
 //            val balanceOfNewWallet = binding.amountEditText.text.toString()

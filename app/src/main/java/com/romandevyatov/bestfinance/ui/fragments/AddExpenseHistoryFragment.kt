@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_SUB_EXPENSE_GROUP
 import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
@@ -136,7 +137,7 @@ class AddExpenseHistoryFragment : Fragment() {
                             expenseSubGroupSpinnerAdapter.add(it.name)
                         }
                     }
-                    expenseSubGroupSpinnerAdapter.add("Add new sub expense group")
+                    expenseSubGroupSpinnerAdapter.add(ADD_NEW_SUB_EXPENSE_GROUP)
                 }
             }
 
@@ -156,7 +157,7 @@ class AddExpenseHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.expenseSubGroupSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == "Add new sub expense group") {
+                if (selectedIncomeSubGroupName == ADD_NEW_SUB_EXPENSE_GROUP) {
                     val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseSubGroup()
                     val selectedExpenseGroup = binding.expenseGroupSpinner.selectedItem
                     if (selectedExpenseGroup != null) {
@@ -205,8 +206,8 @@ class AddExpenseHistoryFragment : Fragment() {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
                 if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET_STRING) {
-                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
-                    action.source = "add_expense_history_fragment"
+                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddWallet()
+                    action.source = Constants.ADD_EXPENSE_HISTORY_FRAGMENT
                     findNavController().navigate(action)
                 }
             }
@@ -217,7 +218,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -267,14 +267,17 @@ class AddExpenseHistoryFragment : Fragment() {
                         val amountBinding = binding.amountEditText.text.toString().toDouble()
                         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
+                        val commentBinding = binding.commentEditText.text.toString()
+                        val dateBinding = binding.dateEditText.text.toString()
+
                         expenseHistoryViewModel.insertExpenseHistory(
                             ExpenseHistory(
                                 expenseSubGroupId = incomeGroupId,
                                 amount = amountBinding,
-                                description = binding.commentEditText.text.toString(),
+                                description = commentBinding,
                                 createdDate = OffsetDateTime.from(
                                     iso8601DateTimeFormatter.parse(
-                                        binding.dateEditText.text.toString()
+                                        dateBinding
                                     )
                                 ),
                                 walletId = walletId

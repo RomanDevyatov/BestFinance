@@ -33,8 +33,8 @@
         android:label="Wallet"
         tools:layout="@layout/fragment_wallet" >
         <action
-            android:id="@+id/action_navigation_wallet_to_navigation_add_new_wallet"
-            app:destination="@id/navigation_add_new_wallet" />
+            android:id="@+id/action_navigation_wallet_to_navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet" />
     </fragment>
 
     <fragment
@@ -52,8 +52,8 @@
             android:id="@+id/action_navigation_add_income_to_navigation_add_new_sub_income_group"
             app:destination="@id/navigation_add_new_income_sub_group" />
         <action
-            android:id="@+id/action_navigation_add_income_to_navigation_add_new_wallet"
-            app:destination="@id/navigation_add_new_wallet" />
+            android:id="@+id/action_navigation_add_income_to_navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet" />
 
         <argument
             android:name="incomeGroupName"
@@ -88,8 +88,8 @@
             android:id="@+id/action_navigation_add_expense_to_navigation_add_new_expense_sub_group"
             app:destination="@id/navigation_add_new_expense_sub_group" />
         <action
-            android:id="@+id/action_navigation_add_expense_to_navigation_add_new_wallet"
-            app:destination="@id/navigation_add_new_wallet" />
+            android:id="@+id/action_navigation_add_expense_to_navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet" />
         <argument
             android:name="expenseGroupName"
             app:argType="string"
@@ -114,9 +114,9 @@
         tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/navigation_add_new_income_group"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeGroupNameFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddIncomeGroupFragment"
         android:label="fragment_add_new_income_group"
-        tools:layout="@layout/fragment_add_new_income_group" >
+        tools:layout="@layout/fragment_add_income_group" >
 
         <action
             android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
@@ -124,9 +124,9 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_add_new_income_sub_group"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewIncomeSubGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddIncomeSubGroupFragment"
         android:label="fragment_add_new_income_sub_group"
-        tools:layout="@layout/fragment_add_new_income_sub_group" >
+        tools:layout="@layout/fragment_add_income_sub_group" >
 
         <action
             android:id="@+id/action_navigation_add_new_income_sub_group_to_navigation_add_income"
@@ -140,9 +140,9 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_add_new_expense_group"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewExpenseGroupNameFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddExpenseGroupNameFragment"
         android:label="fragment_add_new_expense_group"
-        tools:layout="@layout/fragment_add_new_expense_group" >
+        tools:layout="@layout/fragment_add_expense_group" >
 
         <action
             android:id="@+id/action_navigation_add_new_expense_group_to_navigation_add_expense"
@@ -151,9 +151,9 @@
 
     <fragment
         android:id="@+id/navigation_add_new_expense_sub_group"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewExpenseSubGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddExpenseSubGroupFragment"
         android:label="fragment_add_new_expense_sub_group"
-        tools:layout="@layout/fragment_add_new_expense_sub_group" >
+        tools:layout="@layout/fragment_add_expense_sub_group" >
 
         <action
             android:id="@+id/action_navigation_add_new_expense_sub_group_to_navigation_add_expense"
@@ -167,18 +167,18 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_add_new_wallet"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewWalletFragment"
-        android:label="Add New Wallet"
-        tools:layout="@layout/fragment_add_new_wallet" >
+        android:id="@+id/navigation_add_wallet"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddWalletFragment"
+        android:label="Add Wallet"
+        tools:layout="@layout/fragment_add_wallet" >
         <action
-            android:id="@+id/action_navigation_add_new_wallet_to_navigation_wallet"
+            android:id="@+id/action_navigation_add_wallet_to_navigation_wallet"
             app:destination="@id/navigation_wallet" />
         <action
-            android:id="@+id/action_navigation_add_new_wallet_to_navigation_add_income"
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
         <action
-            android:id="@+id/action_navigation_add_new_wallet_to_navigation_add_expense"
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_expense"
             app:destination="@id/navigation_add_expense" />
 
         <argument
@@ -189,7 +189,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_add_new_transfer"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.AddNewTransferFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.AddTransferFragment"
         android:label="fragment_transfer"
         tools:layout="@layout/fragment_transfer" >
         <action

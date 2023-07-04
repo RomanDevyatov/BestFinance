@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.TransferHistoryCardBinding
+import com.romandevyatov.bestfinance.databinding.CardTransferHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 
 
@@ -25,7 +25,7 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
     val transferDiffer = AsyncListDiffer(this, differentCallback)
 
     inner class TransferItemViewHolder(
-        private val binding: TransferHistoryCardBinding
+        private val binding: CardTransferHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(transferHistory: TransferHistory) {
@@ -41,7 +41,7 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferItemViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = TransferHistoryCardBinding.inflate(from, parent, false)
+        val binding = CardTransferHistoryBinding.inflate(from, parent, false)
         return TransferItemViewHolder(binding)
     }
 

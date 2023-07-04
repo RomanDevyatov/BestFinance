@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddNewExpenseSubGroupBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
@@ -20,22 +20,22 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewExpenseSubGroupFragment : Fragment() {
+class AddExpenseSubGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddNewExpenseSubGroupBinding? = null
+    private var _binding: FragmentAddExpenseSubGroupBinding? = null
     private val binding get() = _binding!!
 
     private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
     private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
 
-    val args: AddNewExpenseSubGroupFragmentArgs by navArgs()
+    val args: AddExpenseSubGroupFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddNewExpenseSubGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddExpenseSubGroupBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -107,15 +107,12 @@ class AddNewExpenseSubGroupFragment : Fragment() {
                 )
             }
 
-            val action = AddNewExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
+            val action = AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
             action.expenseGroupName = selectedExpenseGroupName
             action.expenseSubGroupName = binding.newExpenseSubGroupName.text.toString()
             findNavController().navigate(action)
         }
     }
-
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

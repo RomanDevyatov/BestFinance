@@ -1,11 +1,13 @@
 package com.romandevyatov.bestfinance.ui.adapters.history
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.ExpenseHistoryCardBinding
+import com.romandevyatov.bestfinance.databinding.CardExpenseHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.ExpenseHistoryItemViewHolder
 
@@ -26,10 +28,11 @@ class ExpenseHistoryAdapter : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseHistoryItemViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = ExpenseHistoryCardBinding.inflate(from, parent, false)
+        val binding = CardExpenseHistoryBinding.inflate(from, parent, false)
         return ExpenseHistoryItemViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ExpenseHistoryItemViewHolder, position: Int) {
         holder.bindItem(differ.currentList[position])
     }

@@ -6,31 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.romandevyatov.bestfinance.databinding.FragmentAddNewWalletBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewWalletFragment : Fragment() {
+class AddWalletFragment : Fragment() {
 
-    private var _binding: FragmentAddNewWalletBinding? = null
+    private var _binding: FragmentAddWalletBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
 
-    private val args: AddNewWalletFragmentArgs by navArgs()
+    private val args: AddWalletFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddNewWalletBinding.inflate(inflater, container, false)
+        _binding = FragmentAddWalletBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -56,18 +56,18 @@ class AddNewWalletFragment : Fragment() {
 
     fun performAction(prevFragmentString: String?, walletName: String) {
         when (prevFragmentString) {
-            "add_income_history_fragment" -> {
-                val action = AddNewWalletFragmentDirections.actionNavigationAddNewWalletToNavigationAddIncome()
+            Constants.ADD_INCOME_HISTORY_FRAGMENT -> {
+                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
                 action.walletName = walletName
                 findNavController().navigate(action)
             }
-            "add_expense_history_fragment" -> {
-                val action = AddNewWalletFragmentDirections.actionNavigationAddNewWalletToNavigationAddExpense()
+            Constants.ADD_EXPENSE_HISTORY_FRAGMENT -> {
+                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
                 action.walletName = walletName
                 findNavController().navigate(action)
             }
             else -> {
-                AddNewWalletFragmentDirections.actionNavigationAddNewWalletToNavigationWallet()
+                AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
             }
         }
 
