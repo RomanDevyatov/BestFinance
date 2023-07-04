@@ -216,39 +216,6 @@ class AddExpenseHistoryFragment : Fragment() {
             }
 
         }
-//        val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
-//
-//        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
-//            walletList?.forEach { it ->
-//                spinnerAdapter.add(it.name)
-//            }
-//        }
-//
-//        val walletSpinner = binding.walletSpinner
-//        walletSpinner.adapter = spinnerAdapter
-//
-//        binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//
-//            override fun onItemSelected(
-//                parent: AdapterView<*>,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
-//
-//                if (selectedIncomeSubGroupName == "Add new wallet") {
-//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
-//                    action.source = "add_expense_history_fragment"
-//                    findNavController().navigate(action)
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//            }
-//
-//        }
     }
 
 
