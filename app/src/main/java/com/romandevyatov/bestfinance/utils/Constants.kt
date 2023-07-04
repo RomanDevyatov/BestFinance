@@ -10,6 +10,7 @@ object Constants {
     const val EXPENSES_PARENT_TYPE = "EXPENSES_PARENT_TYPE"
 
     const val FIELD_IS_EMPTY_MESSAGE = "Please enter some text!"
+    const val ADD_NEW_WALLET_STRING: String = "Add new wallet"
 
 
 }

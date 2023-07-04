@@ -17,6 +17,8 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
@@ -171,16 +173,26 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     private fun initWalletSpinner() {
-        val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
-
         walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.forEach { it ->
-                spinnerAdapter.add(it.name)
+            val walletSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
+
+            walletSpinnerAdapter.clear()
+            walletSpinnerAdapter.add("Wallet")
+
+            val names = walletList.map { it.name }
+            walletSpinnerAdapter.addAll(names)
+
+            walletSpinnerAdapter.add(Constants.ADD_NEW_WALLET_STRING)
+
+            // Populate the spinner with the names
+            binding.walletSpinner.adapter = walletSpinnerAdapter
+
+            if (args.walletName != null && args.walletName!!.isNotBlank()) {
+                val spinnerPosition = walletSpinnerAdapter.getPosition(args.walletName)
+
+                binding.walletSpinner.setSelection(spinnerPosition)
             }
         }
-
-        val walletSpinner = binding.walletSpinner
-        walletSpinner.adapter = spinnerAdapter
 
         binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
@@ -192,17 +204,51 @@ class AddExpenseHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == "Add new wallet") {
-//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
-//                    findNavController().navigate(action)
+                if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET_STRING) {
+                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
+                    action.source = "add_expense_history_fragment"
+                    findNavController().navigate(action)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
+                TODO("Not yet implemented")
             }
 
         }
+//        val spinnerAdapter = ArrayAdapter<String>(requireContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item)
+//
+//        walletViewModel.walletsLiveData.observe(viewLifecycleOwner) { walletList ->
+//            walletList?.forEach { it ->
+//                spinnerAdapter.add(it.name)
+//            }
+//        }
+//
+//        val walletSpinner = binding.walletSpinner
+//        walletSpinner.adapter = spinnerAdapter
+//
+//        binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
+//
+//                if (selectedIncomeSubGroupName == "Add new wallet") {
+//                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewWallet()
+//                    action.source = "add_expense_history_fragment"
+//                    findNavController().navigate(action)
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//            }
+//
+//        }
     }
 
 

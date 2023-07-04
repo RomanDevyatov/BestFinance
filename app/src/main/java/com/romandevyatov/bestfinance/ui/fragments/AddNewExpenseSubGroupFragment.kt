@@ -28,6 +28,8 @@ class AddNewExpenseSubGroupFragment : Fragment() {
     private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
     private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
 
+    val args: AddNewExpenseSubGroupFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -112,7 +114,7 @@ class AddNewExpenseSubGroupFragment : Fragment() {
         }
     }
 
-    val args: AddNewExpenseSubGroupFragmentArgs by navArgs()
+
 
 
     override fun onDestroyView() {

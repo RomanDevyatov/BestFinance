@@ -20,6 +20,7 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
@@ -33,10 +34,6 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var binding: FragmentAddIncomeHistoryBinding
 
     private val addIncomeHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
-
-    companion object {
-        const val ADD_NEW_WALLET_STRING: String = "Add new wallet"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -245,12 +242,17 @@ class AddIncomeHistoryFragment : Fragment() {
             val names = walletList.map { it.name }
             walletSpinnerAdapter.addAll(names)
 
-            walletSpinnerAdapter.add(ADD_NEW_WALLET_STRING)
+            walletSpinnerAdapter.add(Constants.ADD_NEW_WALLET_STRING)
 
             // Populate the spinner with the names
             binding.walletSpinner.adapter = walletSpinnerAdapter
-        }
 
+            if (args.walletName != null && args.walletName!!.isNotBlank()) {
+                val spinnerPosition = walletSpinnerAdapter.getPosition(args.walletName)
+
+                binding.walletSpinner.setSelection(spinnerPosition)
+            }
+        }
 
         binding.walletSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
@@ -262,8 +264,10 @@ class AddIncomeHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == ADD_NEW_WALLET_STRING) {
-                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet2()
+
+                if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET_STRING) {
+                    val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewWallet()
+                    action.source = "add_income_history_fragment"
                     findNavController().navigate(action)
                 }
             }
