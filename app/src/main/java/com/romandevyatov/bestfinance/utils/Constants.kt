@@ -2,6 +2,8 @@ package com.romandevyatov.bestfinance.utils
 
 object Constants {
 
+    const val EXPENSE = "Expenses"
+    const val INCOMES = "Incomes"
     const val INCOME_SUB_GROUP = "Income sub group"
     const val ADD_NEW_SUB_EXPENSE_GROUP = "Add new sub expense group"
     const val ADD_INCOME_HISTORY_FRAGMENT = "add_income_history_fragment"

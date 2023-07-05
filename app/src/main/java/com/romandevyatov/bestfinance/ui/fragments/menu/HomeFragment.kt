@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
+import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentMenuHomeBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
@@ -31,8 +30,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentMenuHomeBinding.inflate(inflater, container, false)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { }
         }
@@ -44,46 +43,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var passiveIncomeValue: Double?
-
         var totalIncomeValue: Double?
-
         var totalExpensesValue: Double?
-
         var moneyFlowValue: Double?
 
-
-        binding.goToAddIncomeButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_add_income
-            )
-        }
-
-        binding.goToAddExpenseButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_add_expense
-            )
-        }
-
-        binding.goToHistoryButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_history
-            )
-        }
-
-        binding.goToAnalyzeButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAnalyzeFragment())
-        }
-
-        binding.addTransferButton.setOnClickListener {
-            val action = HomeFragmentDirections.actionNavigationHomeToTransferFragment()
-            findNavController().navigate(action)
-        }
+        setButtonListeners()
 
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
-            binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
+            val balanceValue = walletList.sumOf { it.balance }
+            binding.capitalTextView.text = balanceValue.toString()
         }
 
         incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
@@ -101,6 +69,32 @@ class HomeFragment : Fragment() {
                 binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
             }
         }
+    }
+
+    private fun setButtonListeners() {
+        binding.goToAddIncomeButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationAddIncome())
+        }
+
+        binding.goToAddExpenseButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationAddExpense())
+        }
+
+        binding.goToHistoryButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationHistory())
+        }
+
+        binding.goToAnalyzeButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToAnalyzeFragment())
+        }
+
+        binding.addTransferButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToTransferFragment())
+        }
+    }
+
+    private fun navigateTo(action: NavDirections) {
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

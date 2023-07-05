@@ -31,6 +31,17 @@ class MainActivity() : AppCompatActivity() {
         setNavigationBottomBar()
     }
 
+    // for default app bar, navigate up fixing
+    override fun onSupportNavigateUp(): Boolean {
+        return when(navController.currentDestination?.id) {
+            R.id.navigation_add_income, R.id.navigation_add_expense, R.id.navigation_add_transfer -> {
+                navController.navigate(R.id.navigation_home)
+                true
+            }
+            else -> navController.navigateUp()
+        }
+    }
+
     private fun setNavigationTopBar() {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -51,21 +62,10 @@ class MainActivity() : AppCompatActivity() {
             setOf(
                 R.id.navigation_home,
                 R.id.navigation_wallet,
-                R.id.navigation_profile
+                R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(this, navController, appBarConfiguration)
-    }
-
-    // for default app bar, navigate up fixing
-    override fun onSupportNavigateUp(): Boolean {
-        return when(navController.currentDestination?.id) {
-            R.id.navigation_add_income, R.id.navigation_add_expense -> {
-                navController.navigate(R.id.navigation_home)
-                true
-            }
-            else -> navController.navigateUp()
-        }
     }
 
     private fun setNavigationBottomBar() {
@@ -81,7 +81,7 @@ class MainActivity() : AppCompatActivity() {
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
             R.id.navigation_history,
-            R.id.navigation_add_new_transfer,
+            R.id.navigation_add_transfer,
             R.id.navigation_analyze
         )
 

@@ -15,19 +15,19 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubParentData
 import com.romandevyatov.bestfinance.utils.Constants
 
 class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
-    RecyclerView.Adapter<ExpandableSubGroupAdapter.ItemViewHolder2>() {
+    RecyclerView.Adapter<ExpandableSubGroupAdapter.SubParentItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder2 {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubParentItemViewHolder {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.card_expandable_parent, parent, false)
-        return ItemViewHolder2(view)
+        return SubParentItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return mList.size
     }
 
-    inner class ItemViewHolder2(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class SubParentItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val linearLayout: LinearLayout
         val expandableLayout: RelativeLayout
         val mTextView: TextView
@@ -45,14 +45,14 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
         }
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder2, position: Int) {
-        val model: SubParentData = mList[position]
+    override fun onBindViewHolder(holder: SubParentItemViewHolder, position: Int) {
+        val subParentData: SubParentData = mList[position]
 
-        holder as ItemViewHolder2
+        holder as SubParentItemViewHolder
 
-        holder.mTextView.text = model.parentTitle
+        holder.mTextView.text = subParentData.parentTitle
 
-        if (model.isExpanded) {
+        if (subParentData.isExpanded) {
             holder.expandableLayout.visibility = View.VISIBLE
             holder.mArrowImage.setImageResource(R.drawable.ic_arrow_up)
         } else {
@@ -61,26 +61,26 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
         }
 
         val adapter: NestedChildAdapter
-        when (model.type) {
+        when (subParentData.type) {
             Constants.INCOMINGS_PARENT_TYPE -> {
-                adapter = NestedChildAdapter(model.childNestedListOfIncomeSubGroup?.map {
+                adapter = NestedChildAdapter(subParentData.childNestedListOfIncomeSubGroup?.map {
                     ChildData(it, null, Constants.INCOMINGS_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
 
-                val subGroupSumma = model.childNestedListOfIncomeSubGroup?.sumOf { incomeSubGroupWithIncomeHistories ->
+                val subGroupSumma = subParentData.childNestedListOfIncomeSubGroup?.sumOf { incomeSubGroupWithIncomeHistories ->
                     incomeSubGroupWithIncomeHistories.incomeHistories.sumOf { it.amount }
                 }
                 holder.summaTextView.text = subGroupSumma.toString()
             }
 
             Constants.EXPENSES_PARENT_TYPE -> {
-                adapter = NestedChildAdapter(model.childNestedListOfExpenseSubGroup?.map {
+                adapter = NestedChildAdapter(subParentData.childNestedListOfExpenseSubGroup?.map {
                     ChildData(null, it, Constants.EXPENSES_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
 
-                val subGroupSumma = model.childNestedListOfExpenseSubGroup?.sumOf { expenseSubGroupWithExpenseHistories ->
+                val subGroupSumma = subParentData.childNestedListOfExpenseSubGroup?.sumOf { expenseSubGroupWithExpenseHistories ->
                     expenseSubGroupWithExpenseHistories.expenseHistory.sumOf { it.amount }
                 }
                 holder.summaTextView.text = subGroupSumma.toString()
@@ -91,7 +91,7 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
 
 
         holder.linearLayout.setOnClickListener {
-            model.isExpanded = !model.isExpanded
+            subParentData.isExpanded = !subParentData.isExpanded
             notifyItemChanged(holder.adapterPosition)
         }
     }

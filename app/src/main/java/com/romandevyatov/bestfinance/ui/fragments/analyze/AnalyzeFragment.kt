@@ -50,14 +50,14 @@ class AnalyzeFragment : Fragment() {
                 viewLifecycleOwner
             ) { expenses ->
                 val apd = ParentData(
-                    analyzeParentTitle = "Incomings",
+                    analyzeParentTitle = Constants.INCOMES,
                     type = Constants.INCOMINGS_PARENT_TYPE,
                     subParentNestedListIncomings = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
                 )
                 mList.add(apd)
 
                 val apdr = ParentData(
-                    analyzeParentTitle = "Expenses",
+                    analyzeParentTitle = Constants.EXPENSE,
                     type = Constants.EXPENSES_PARENT_TYPE,
                     subParentNestedListExpenses = expenses
                 )
@@ -67,7 +67,6 @@ class AnalyzeFragment : Fragment() {
                 binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
                 binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
             }
-
 
             incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
                 val totalIncomeValue = history.sumOf { it.amount }

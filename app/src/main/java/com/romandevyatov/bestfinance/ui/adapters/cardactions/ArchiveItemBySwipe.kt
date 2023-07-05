@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.income
+package com.romandevyatov.bestfinance.ui.adapters.cardactions
 
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 

@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.romandevyatov.bestfinance.databinding.FragmentWalletBinding
+import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.transactions_deprecated.income.DeleteItemClickListener
+import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import java.time.OffsetDateTime
@@ -25,13 +25,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
 
-    private lateinit var binding: FragmentWalletBinding
+    private lateinit var binding: FragmentMenuWalletBinding
 
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentWalletBinding.inflate(inflater, container, false)
+        binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { }
         }
@@ -41,7 +41,7 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentWalletBinding.bind(view)
+        binding = FragmentMenuWalletBinding.bind(view)
 
         binding.addExpenseButton.setOnClickListener {
             val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()

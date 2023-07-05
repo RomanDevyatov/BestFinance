@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.databinding.FragmentTransferBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AddTransferFragment : Fragment() {
 
-    private var _binding: FragmentTransferBinding? = null
+    private var _binding: FragmentAddTransferBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
@@ -30,7 +30,7 @@ class AddTransferFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentTransferBinding.inflate(inflater, container, false)
+        _binding = FragmentAddTransferBinding.inflate(inflater, container, false)
 
         initWalletFromSpinner()
         initWalletToSpinner()
