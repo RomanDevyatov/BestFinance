@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.ui.fragments.analyze.ChildData
-import com.romandevyatov.bestfinance.ui.fragments.analyze.SubParentData
+import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ChildData
+import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubParentData
 import com.romandevyatov.bestfinance.utils.Constants
 
 class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
@@ -31,13 +31,15 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
         val linearLayout: LinearLayout
         val expandableLayout: RelativeLayout
         val mTextView: TextView
+        val summaTextView: TextView
         val mArrowImage: ImageView
         val nestedRecyclerView: RecyclerView
 
         init {
             linearLayout = itemView.findViewById(R.id.linear_layout)
             expandableLayout = itemView.findViewById(R.id.expandable_layout)
-            mTextView = itemView.findViewById(R.id.itemTv)
+            mTextView = itemView.findViewById(R.id.label_global_group)
+            summaTextView = itemView.findViewById(R.id.global_summa_text_view)
             mArrowImage = itemView.findViewById(R.id.arrow_imageview)
             nestedRecyclerView = itemView.findViewById(R.id.child_rv)
         }
@@ -61,17 +63,27 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
         val adapter: NestedChildAdapter
         when (model.type) {
             Constants.INCOMINGS_PARENT_TYPE -> {
-                adapter = NestedChildAdapter(model.childNestedList?.map {
+                adapter = NestedChildAdapter(model.childNestedListOfIncomeSubGroup?.map {
                     ChildData(it, null, Constants.INCOMINGS_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
+
+                val subGroupSumma = model.childNestedListOfIncomeSubGroup?.sumOf { incomeSubGroupWithIncomeHistories ->
+                    incomeSubGroupWithIncomeHistories.incomeHistories.sumOf { it.amount }
+                }
+                holder.summaTextView.text = subGroupSumma.toString()
             }
 
             Constants.EXPENSES_PARENT_TYPE -> {
-                adapter = NestedChildAdapter(model.childNestedListExpenses?.map {
+                adapter = NestedChildAdapter(model.childNestedListOfExpenseSubGroup?.map {
                     ChildData(null, it, Constants.EXPENSES_PARENT_TYPE)
                 }!!.toList())
                 holder.nestedRecyclerView.adapter = adapter
+
+                val subGroupSumma = model.childNestedListOfExpenseSubGroup?.sumOf { expenseSubGroupWithExpenseHistories ->
+                    expenseSubGroupWithExpenseHistories.expenseHistory.sumOf { it.amount }
+                }
+                holder.summaTextView.text = subGroupSumma.toString()
             }
         }
 

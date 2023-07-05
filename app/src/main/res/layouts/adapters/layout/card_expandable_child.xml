@@ -18,4 +18,12 @@
         android:layout_gravity="left"
         android:textStyle="bold"/>
 
+    <TextView
+        android:id="@+id/category_summa_of_expandable_child"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="15dp"
+        android:text="2222" />
+
 </androidx.cardview.widget.CardView>

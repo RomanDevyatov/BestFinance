@@ -69,7 +69,6 @@ class AddIncomeHistoryViewModel @Inject constructor(
         )
     }
 
-
     private fun updateWallet(walletId: Long, wallet: Wallet, amountBinding: Double) {
         updateWallet(
             Wallet(

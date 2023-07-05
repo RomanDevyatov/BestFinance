@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentAnalyzeBinding
 import com.romandevyatov.bestfinance.ui.adapters.analyze.ExpandableGroupAdapter
+import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ParentData
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
@@ -51,7 +52,7 @@ class AnalyzeFragment : Fragment() {
                 val apd = ParentData(
                     analyzeParentTitle = "Incomings",
                     type = Constants.INCOMINGS_PARENT_TYPE,
-                    subParentNestedList = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+                    subParentNestedListIncomings = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
                 )
                 mList.add(apd)
 
