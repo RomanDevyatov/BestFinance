@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addiction.expense
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,7 +39,8 @@ class AddExpenseGroupNameFragment : Fragment() {
                     name = binding.newExpenseGroupName.text.toString()
                 )
             )
-            val action = AddExpenseGroupNameFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
+            val action =
+                AddExpenseGroupNameFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
             action.expenseGroupName = binding.newExpenseGroupName.text.toString()
             findNavController().navigate(action)
         }

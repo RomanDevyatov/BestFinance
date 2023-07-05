@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addIncomeGroupFragment"
-    tools:context=".ui.fragments.addiction.AddIncomeGroupFragment">
+    tools:context=".ui.fragments.addiction.income.AddIncomeGroupFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/newIncomeGroupNameInputLayout"

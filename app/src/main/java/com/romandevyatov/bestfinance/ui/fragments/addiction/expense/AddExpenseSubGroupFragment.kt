@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addiction.expense
 
 import android.graphics.Color
 import android.os.Bundle

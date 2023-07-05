@@ -7,7 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     android:id="@+id/addTransferFragment"
-    tools:context=".ui.fragments.addiction.AddTransferFragment">
+    tools:context=".ui.fragments.addiction.transfer.AddTransferFragment">
 
 
     <Spinner

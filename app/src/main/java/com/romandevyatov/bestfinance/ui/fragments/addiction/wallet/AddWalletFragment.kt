@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addiction.wallet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -56,12 +56,14 @@ class AddWalletFragment : Fragment() {
     fun performAction(prevFragmentString: String?, walletName: String) {
         when (prevFragmentString) {
             Constants.ADD_INCOME_HISTORY_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
+                val action =
+                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
                 action.walletName = walletName
                 findNavController().navigate(action)
             }
             Constants.ADD_EXPENSE_HISTORY_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
+                val action =
+                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
                 action.walletName = walletName
                 findNavController().navigate(action)
             }

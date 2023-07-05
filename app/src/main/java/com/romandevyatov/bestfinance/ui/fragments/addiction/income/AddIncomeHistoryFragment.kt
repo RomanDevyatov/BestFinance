@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addiction.income
 
 import android.app.DatePickerDialog
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addiction.expense
 
 import android.app.DatePickerDialog
 import android.graphics.Color
@@ -39,7 +39,6 @@ class AddExpenseHistoryFragment : Fragment() {
     private val walletViewModel: WalletViewModel by viewModels()
     private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
     private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
