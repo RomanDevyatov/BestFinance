@@ -4,81 +4,54 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentHomeBinding
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.IncomeHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.WalletViewModel
+import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.roundToInt
-
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentMenuHomeBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+    ): View {
+        _binding = FragmentMenuHomeBinding.inflate(inflater, container, false)
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var passiveIncomeValue: Double? = null
-//        binding.passiveIncomeValueTextView.text = passiveIncomeValue
+        var passiveIncomeValue: Double?
+        var totalIncomeValue: Double?
+        var totalExpensesValue: Double?
+        var moneyFlowValue: Double?
 
-        var totalIncomeValue: Double? = null
-//        binding.totalIncomeValueTextView.text = totalIncomeValue
-
-        var totalExpensesValue: Double? = null
-//        binding.totalExpensesValueTextView.text = totalExpensesValue
-
-        val moneyFlowValue: Double? = null
-//        binding.moneyFlowValueTextView.text = moneyFlowValue
-
-
-        binding.goToAddIncomeButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_add_income
-            )
-        }
-
-        binding.goToAddExpenseButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_add_expense
-            )
-        }
-
-        binding.goToHistoryButton.setOnClickListener {
-
-            findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_history
-            )
-
-        }
+        setButtonListeners()
 
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
-            binding.capitalTextView.text = walletList.sumOf { it.balance }.toString()
+            val balanceValue = walletList.sumOf { it.balance }
+            binding.capitalTextView.text = balanceValue.toString()
         }
 
         incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
@@ -91,12 +64,38 @@ class HomeFragment : Fragment() {
             expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
                 totalExpensesValue = expenseHistory.sumOf { it.amount }
                 binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
-                
-                binding.moneyFlowValueTextView.text = ((totalIncomeValue!!.minus(totalExpensesValue!!) * 100.0).roundToInt() / 100.0).toString()
+
+                moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!)
+                binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
             }
         }
     }
 
+    private fun setButtonListeners() {
+        binding.goToAddIncomeButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationAddIncome())
+        }
+
+        binding.goToAddExpenseButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationAddExpense())
+        }
+
+        binding.goToHistoryButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationHistory())
+        }
+
+        binding.goToAnalyzeButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToAnalyzeFragment())
+        }
+
+        binding.addTransferButton.setOnClickListener {
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToTransferFragment())
+        }
+    }
+
+    private fun navigateTo(action: NavDirections) {
+        findNavController().navigate(action)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

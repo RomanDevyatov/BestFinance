@@ -11,7 +11,10 @@ class ExpenseSubGroupRepository @Inject constructor(
     private val expenseSubGroupDao: ExpenseSubGroupDao
 ) {
 
-    fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAll()
+    fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllLiveData()
+
+    fun getAllExpenseSubGroupsWhereArchivedDateIsNull(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllNotArchivedLiveData()
+
 
     suspend fun insertExpenseSubGroup(expenseGroup: ExpenseSubGroup) {
         expenseSubGroupDao.insert(expenseGroup)
@@ -29,6 +32,8 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
-    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getExpenseSubGroupByName(name)
+    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameLiveData(name)
+
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameNotArchivedLiveData(name)
 
 }

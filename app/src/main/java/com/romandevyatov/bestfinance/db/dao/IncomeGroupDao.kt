@@ -5,14 +5,13 @@ import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import java.time.OffsetDateTime
 
 
 @Dao
 interface IncomeGroupDao {
 
-    @Query("SELECT * FROM income_group order by id ASC")
-    fun getAll(): LiveData<List<IncomeGroup>>
+    @Query("SELECT * FROM income_group ORDER BY id ASC")
+    fun getAllLiveData(): LiveData<List<IncomeGroup>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(incomeGroup: IncomeGroup)
@@ -31,17 +30,23 @@ interface IncomeGroupDao {
 
     @Transaction
     @Query("SELECT * FROM income_group")
-    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE archived_date IS NULL")
-    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesWhereArchivedDateIsNull(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL")
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndArchivedDateIsNull(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName")
-    fun getIncomeGroupNameByName(incomeGroupName: String): LiveData<IncomeGroup>
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>
+
+    @Query("SELECT * FROM income_group WHERE name = :selectedIncomeGroupName AND archived_date IS NULL")
+    fun getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup>
+
+    @Query("SELECT * FROM income_group WHERE archived_date IS NULL ORDER BY id ASC")
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeGroup>>
 
 }

@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/AddExpenseFragment"
-    tools:context=".ui.fragments.AddExpenseHistoryFragment">
-
+    android:id="@+id/addExpenseHistoryFragment"
+    tools:context=".ui.fragments.addiction.AddExpenseHistoryFragment" >
 
     <Spinner
         android:id="@+id/expenseGroupSpinner"
@@ -74,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Add expense"
+        android:text="Add"
         app:layout_constraintEnd_toEndOf="@+id/commentEditText"
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="@+id/commentEditText"

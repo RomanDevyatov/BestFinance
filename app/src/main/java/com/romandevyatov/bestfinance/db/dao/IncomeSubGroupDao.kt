@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.db.entities.Wallet
 import java.time.OffsetDateTime
 
 
@@ -29,9 +28,18 @@ interface IncomeSubGroupDao {
     suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getIncomeSubGroupByName(name: String?): LiveData<IncomeSubGroup>
+    fun getByName(name: String?): IncomeSubGroup
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name")
+    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date = :archivedDate")
-    fun getAllWithArchivedDate(archivedDate: OffsetDateTime?): LiveData<List<IncomeSubGroup>>
+    fun getAllWithArchivedDateLiveData(archivedDate: OffsetDateTime?): LiveData<List<IncomeSubGroup>>
+
+    @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
+    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>
 
 }

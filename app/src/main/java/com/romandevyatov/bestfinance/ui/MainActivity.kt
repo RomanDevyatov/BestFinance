@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui
 
-
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,13 +8,11 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity() : AppCompatActivity() {
@@ -25,7 +22,6 @@ class MainActivity() : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,6 +29,17 @@ class MainActivity() : AppCompatActivity() {
 
         setNavigationTopBar()
         setNavigationBottomBar()
+    }
+
+    // for default app bar, navigate up fixing
+    override fun onSupportNavigateUp(): Boolean {
+        return when(navController.currentDestination?.id) {
+            R.id.navigation_add_income, R.id.navigation_add_expense, R.id.navigation_add_transfer -> {
+                navController.navigate(R.id.navigation_home)
+                true
+            }
+            else -> navController.navigateUp()
+        }
     }
 
     private fun setNavigationTopBar() {
@@ -54,23 +61,11 @@ class MainActivity() : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
-                R.id.navigation_income,
-                R.id.navigation_expense,
-                R.id.navigation_wallet
+                R.id.navigation_wallet,
+                R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(this, navController, appBarConfiguration)
-    }
-
-    // for default app bar
-    override fun onSupportNavigateUp(): Boolean {
-        return when(navController.currentDestination?.id) {
-            R.id.navigation_add_income -> {
-                navController.navigate(R.id.navigation_home)
-                true
-            }
-            else -> navController.navigateUp()
-        }
     }
 
     private fun setNavigationBottomBar() {
@@ -85,7 +80,9 @@ class MainActivity() : AppCompatActivity() {
         val bottomNavViewExcludedArray = arrayOf(
             R.id.navigation_add_income,
             R.id.navigation_add_expense,
-            R.id.navigation_history
+            R.id.navigation_history,
+            R.id.navigation_add_transfer,
+            R.id.navigation_analyze
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.history
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,10 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.ExpenseHistoryAdapter
-import com.romandevyatov.bestfinance.viewmodels.ExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.ui.adapters.history.ExpenseHistoryAdapter
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class ExpenseHistoryFragment : Fragment() {
