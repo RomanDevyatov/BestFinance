@@ -69,11 +69,11 @@
         app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
 
     <Button
-        android:id="@+id/addExpenseButton"
+        android:id="@+id/addWalletButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Add"
+        android:text="Add expense"
         app:layout_constraintEnd_toEndOf="@+id/commentEditText"
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="@+id/commentEditText"

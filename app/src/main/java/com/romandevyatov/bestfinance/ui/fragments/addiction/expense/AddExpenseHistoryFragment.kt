@@ -250,7 +250,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
         }
 
-        binding.addExpenseButton.setOnClickListener {
+        binding.addWalletButton.setOnClickListener {
             val expenseSubGroupName = binding.expenseSubGroupSpinner.selectedItem.toString()
             expenseSubGroupViewModel.getExpenseSubGroupByNameWhereArchivedDateIsNull(
                 expenseSubGroupName

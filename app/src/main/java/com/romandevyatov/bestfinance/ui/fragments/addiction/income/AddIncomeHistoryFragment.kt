@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET_STRING
@@ -141,16 +142,20 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun initIncomeGroupAndIncomeSubGroupSpinner() {
         addIncomeHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { incomeGroupList ->
-            val incomeGroupSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
+            val spinnerItems = ArrayList<String>()
+            spinnerItems.add("Income group")
+            incomeGroupList?.forEach { it ->
+//                incomeGroupSpinnerAdapter.add(it.name)
+                spinnerItems.add(it.name)
+            }
+            spinnerItems.add(Constants.ADD_NEW_INCOME_GROUP)
+
+            val incomeGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems)
             binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
 
-            incomeGroupSpinnerAdapter.clear()
-
-            incomeGroupSpinnerAdapter.add("Income group")
-            incomeGroupList?.forEach { it ->
-                incomeGroupSpinnerAdapter.add(it.name)
-            }
-            incomeGroupSpinnerAdapter.add(Constants.ADD_NEW_INCOME_GROUP)
+//            incomeGroupSpinnerAdapter.clear()
+//            incomeGroupSpinnerAdapter.add("Income group")
+//            incomeGroupSpinnerAdapter.add(Constants.ADD_NEW_INCOME_GROUP)
 
             if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
                 val spinnerPosition = incomeGroupSpinnerAdapter.getPosition(args.incomeGroupName)
