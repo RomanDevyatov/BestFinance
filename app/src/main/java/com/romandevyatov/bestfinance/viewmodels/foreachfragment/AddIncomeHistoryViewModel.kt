@@ -34,6 +34,11 @@ class AddIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name)
     }
 
+    fun anarchiveIncomeGroup(incomeGroupName: String) = viewModelScope.launch(Dispatchers.IO) {
+        // get incomeGroup with subGroup
+        // anarchive together it
+    }
+
     // income history zone
     fun insertIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
         incomeHistoryRepository.insertIncomeHistory(incomeHistory)

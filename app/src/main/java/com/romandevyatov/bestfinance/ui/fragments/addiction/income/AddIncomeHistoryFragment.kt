@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
@@ -145,17 +147,19 @@ class AddIncomeHistoryFragment : Fragment() {
             val spinnerItems = ArrayList<String>()
             spinnerItems.add("Income group")
             incomeGroupList?.forEach { it ->
-//                incomeGroupSpinnerAdapter.add(it.name)
                 spinnerItems.add(it.name)
             }
             spinnerItems.add(Constants.ADD_NEW_INCOME_GROUP)
 
-            val incomeGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems)
-            binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
+            val deleteButtonListener = object : DeleteItemClickListener<String> {
 
-//            incomeGroupSpinnerAdapter.clear()
-//            incomeGroupSpinnerAdapter.add("Income group")
-//            incomeGroupSpinnerAdapter.add(Constants.ADD_NEW_INCOME_GROUP)
+                override fun deleteIncomeGroupItem(item: String) {
+                    Log.d(item, item)
+                }
+
+            }
+            val incomeGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, deleteButtonListener)
+            binding.incomeGroupSpinner.adapter = incomeGroupSpinnerAdapter
 
             if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
                 val spinnerPosition = incomeGroupSpinnerAdapter.getPosition(args.incomeGroupName)
@@ -235,6 +239,10 @@ class AddIncomeHistoryFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         }
+    }
+
+    private fun handleButtonClick(itemName: Unit) {
+
     }
 
     private fun initWalletSpinner() {

@@ -14,7 +14,7 @@ class IncomeGroupItemViewHolder(
         binding.textView.text = incomeGroup.name
 
         binding.removeIncomeGroupIcon.setOnClickListener{
-            clickListener.deleteItem(incomeGroup)
+            clickListener.deleteIncomeGroupItem(incomeGroup)
         }
     }
 }

@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
+import com.romandevyatov.bestfinance.utils.Constants
 
 class CustomSpinnerAdapter(
     context: Context,
-    private val items: List<String>
+    private val items: List<String>,
+    var listener: (DeleteItemClickListener<String>)? = null
 ) : ArrayAdapter<String>(context, 0, items) {
 
 //    override fun isEnabled(position: Int): Boolean {
@@ -22,6 +26,11 @@ class CustomSpinnerAdapter(
 //    override fun areAllItemsEnabled(): Boolean {
 //        return false
 //    }
+
+    fun setOnClickListener(onClickListener: DeleteItemClickListener<String>) {
+        this.listener = onClickListener
+    }
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return myView(position, convertView, parent)
@@ -44,13 +53,18 @@ class CustomSpinnerAdapter(
 
         if (position == 0) {
             itemText.setTextColor(Color.RED)
+            deleteButton.isVisible = false
+        } else if (itemText.text == Constants.ADD_NEW_INCOME_GROUP) {
+            deleteButton.isVisible = false
         } else {
 
         }
 
         deleteButton.setOnClickListener {
-            remove(items[position])
-            notifyDataSetChanged()
+            if (listener != null ) {
+                listener?.deleteIncomeGroupItem(items[position])
+                notifyDataSetChanged()
+            }
         }
 
         return view
