@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,9 +72,9 @@ class AddIncomeSubGroupFragment : Fragment() {
     private fun initIncomeGroupSpinner() {
         val spinnerAdapter = getArraySpinner()
 
-        incomeGroupViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
+        incomeGroupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { incomeGroupList ->
             spinnerAdapter.clear()
-            spinnerAdapter.add("Income group")
+            spinnerAdapter.add(Constants.INCOME_GROUP)
             incomeGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }

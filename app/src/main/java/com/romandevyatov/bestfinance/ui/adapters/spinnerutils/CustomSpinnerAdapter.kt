@@ -6,67 +6,88 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
-import com.romandevyatov.bestfinance.utils.Constants
 
 class CustomSpinnerAdapter(
     context: Context,
-    private val items: List<String>,
-    var listener: (DeleteItemClickListener<String>)? = null
+    private var items: ArrayList<String>,
+    private var listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, 0, items) {
 
-//    override fun isEnabled(position: Int): Boolean {
-//        return position != 0
-//    }
+    interface DeleteItemClickListener {
 
-//    override fun areAllItemsEnabled(): Boolean {
-//        return false
-//    }
-
-    fun setOnClickListener(onClickListener: DeleteItemClickListener<String>) {
-        this.listener = onClickListener
+        fun archive(name: String)
     }
 
+    private var selectedItemIndex: Int = -1
+
+    override fun isEnabled(position: Int): Boolean {
+        return position != 0
+    }
+
+    override fun areAllItemsEnabled(): Boolean {
+        return true
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return items.size
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return myView(position, convertView, parent)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return getView(position, convertView, parent)
+        val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
+            R.layout.spinner_item_with_del,
+            parent,
+            false
+        )
+
+        val itemNameTextView = spinnerView.findViewById(R.id.itemNameTextView) as TextView
+        val itemDelTextView = spinnerView.findViewById(R.id.itemDelTextView) as TextView
+
+        val itemText = items[position]
+        itemNameTextView.text = itemText
+
+        if (position == 0 || position == count - 1) {
+            itemDelTextView.isVisible = false
+        }
+
+        if (position == selectedItemIndex) {
+            spinnerView.setBackgroundColor(Color.rgb(56,184,226));
+        } else {
+            spinnerView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        itemDelTextView.setOnClickListener {
+            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+            listener?.archive(itemText)
+        }
+
+        return spinnerView
     }
 
     private fun myView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(
-            R.layout.spinner_item_with_button,
-            parent, false
+        val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
+            R.layout.spinner_item_with_del,
+            parent,
+            false
         )
 
-        val itemText = view.findViewById<TextView>(R.id.item_text9)
-        val deleteButton = view.findViewById<Button>(R.id.delete_button9)
+        val spnItemName = spinnerView.findViewById(R.id.itemNameTextView) as TextView
+        val spnItemDel = spinnerView.findViewById(R.id.itemDelTextView) as TextView
 
-        itemText.text = items[position]
+        spnItemName.text = items[position]
+        spnItemDel.isVisible = false
 
-        if (position == 0) {
-            itemText.setTextColor(Color.RED)
-            deleteButton.isVisible = false
-        } else if (itemText.text == Constants.ADD_NEW_INCOME_GROUP) {
-            deleteButton.isVisible = false
-        } else {
-
-        }
-
-        deleteButton.setOnClickListener {
-            if (listener != null ) {
-                listener?.deleteIncomeGroupItem(items[position])
-                notifyDataSetChanged()
-            }
-        }
-
-        return view
+        return spinnerView
     }
 }

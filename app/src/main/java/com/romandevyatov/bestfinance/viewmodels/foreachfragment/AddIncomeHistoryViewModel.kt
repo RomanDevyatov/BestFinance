@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
+import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.repositories.*
@@ -30,13 +31,40 @@ class AddIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchived(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name)
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name)
     }
 
-    fun anarchiveIncomeGroup(incomeGroupName: String) = viewModelScope.launch(Dispatchers.IO) {
-        // get incomeGroup with subGroup
-        // anarchive together it
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun archiveIncomeGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        val incomeGroupWithIncomeSubGroups = getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(name)
+
+        val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
+        val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
+
+        val incomeGroupArchived = IncomeGroup(
+            id = incomeGroup.id,
+            name = incomeGroup.name,
+            description = incomeGroup.description,
+            archivedDate = OffsetDateTime.now()
+        )
+        updateIncomeGroup(incomeGroupArchived)
+
+        incomeSubGroups.forEach { subGroup ->
+            val incomeSubGroupArchived = IncomeSubGroup(
+                id = subGroup.id,
+                name = subGroup.name,
+                description = subGroup.description,
+                incomeGroupId = subGroup.incomeGroupId,
+                archivedDate = OffsetDateTime.now()
+            )
+
+            updateIncomeSubGroup(incomeSubGroupArchived)
+        }
+    }
+
+    private fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(name: String): IncomeGroupWithIncomeSubGroups {
+        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(name)
     }
 
     // income history zone
@@ -47,7 +75,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun addIncomeHistory(incomeSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, dateBinding: String, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val incomeSubGroup = incomeSubGroupRepository.getByName(incomeSubGroupNameBinding)
+            val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(incomeSubGroupNameBinding)
             val incomeGroupId = incomeSubGroup.id!!.toLong()
 
             val wallet = getWalletByNameNotArchived(walletNameBinding)
@@ -96,6 +124,49 @@ class AddIncomeHistoryViewModel @Inject constructor(
 
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun archive(incomeSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, dateBinding: String, walletNameBinding: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(incomeSubGroupNameBinding)
+            val incomeGroupId = incomeSubGroup.id!!.toLong()
+
+            val wallet = getWalletByNameNotArchived(walletNameBinding)
+            val walletId = wallet.id!!
+
+            insertHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
+
+            updateWallet(walletId, wallet, amountBinding)
+        }
+
+    }
+
+    fun updateIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
+        viewModelScope.launch(Dispatchers.IO) {
+            incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroup)
+        }
+    }
+
+    fun updateIncomeGroup(incomeGroupArchived: IncomeGroup) {
+        viewModelScope.launch(Dispatchers.IO) {
+            incomeGroupRepository.updateIncomeGroup(incomeGroupArchived)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun archiveIncomeSubGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(name)
+
+        val incomeSubGroupArchived = IncomeSubGroup(
+            id = incomeSubGroup.id,
+            name = incomeSubGroup.name,
+            description = incomeSubGroup.description,
+            incomeGroupId = incomeSubGroup.incomeGroupId,
+            archivedDate = OffsetDateTime.now()
+        )
+
+        incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroupArchived)
     }
 
 }
