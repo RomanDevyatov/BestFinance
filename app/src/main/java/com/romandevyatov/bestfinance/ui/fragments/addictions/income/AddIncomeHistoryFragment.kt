@@ -13,6 +13,8 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -41,6 +43,7 @@ class AddIncomeHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
+//        markButtonDisable(binding.addIncomeHistoryButton)
         return binding.root
     }
 
@@ -181,6 +184,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 binding.incomeGroupSpinner.setSelection(spinnerPosition)
             }
 
+            binding.incomeGroupSpinner.setSelection(0,false)
             binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
                     override fun onItemSelected(
@@ -189,12 +193,14 @@ class AddIncomeHistoryFragment : Fragment() {
                         position: Int,
                         id: Long
                     ) {
+                        binding.incomeSubGroupSpinner.isVisible = true
+
                         val selectedIncomeGroupName =
                             binding.incomeGroupSpinner.getItemAtPosition(position).toString()
 
                         Toast.makeText(
                             context,
-                            "" + binding.incomeGroupSpinner.selectedItemPosition.toString(),
+                            "" + selectedIncomeGroupName,
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -251,6 +257,12 @@ class AddIncomeHistoryFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         }
+    }
+
+    private fun markButtonDisable(button: Button) {
+        button.isEnabled = false
+        button.setTextColor(ContextCompat.getColor(binding.addIncomeHistoryButton.context, R.color.white))
+        button.setBackgroundColor(ContextCompat.getColor(binding.addIncomeHistoryButton.context, R.color.black))
     }
 
     private fun getSpinnerSubItems(incomeSubGroups: List<IncomeSubGroup>): ArrayList<String> {

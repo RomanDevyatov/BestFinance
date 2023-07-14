@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -59,7 +60,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun initExpenseGroupAndSubGroupSpinners() {
         var spinnerSubItems = ArrayList<String>()
-        spinnerSubItems.add(Constants.INCOME_SUB_GROUP)
+        spinnerSubItems.add(Constants.EXPENSE_SUB_GROUP)
 
         val archiveIncomeSubGroupOnLongPressListener =
             object : CustomSpinnerAdapter.DeleteItemClickListener {
@@ -73,11 +74,11 @@ class AddExpenseHistoryFragment : Fragment() {
 
         addExpenseHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { expenseGroupList ->
             val spinnerItems = ArrayList<String>()
-            spinnerItems.add(Constants.INCOME_GROUP)
+            spinnerItems.add(Constants.EXPENSE_GROUP)
             expenseGroupList?.forEach { it ->
                 spinnerItems.add(it.name)
             }
-            spinnerItems.add(Constants.ADD_NEW_INCOME_GROUP)
+            spinnerItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
 
             val archiveExpenseGroupListener =
                 object : CustomSpinnerAdapter.DeleteItemClickListener {
@@ -98,6 +99,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 binding.expenseGroupSpinner.setSelection(spinnerPosition)
             }
 
+            binding.expenseGroupSpinner.setSelection(0,false)
             binding.expenseGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(
@@ -106,6 +108,8 @@ class AddExpenseHistoryFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
+                    binding.expenseSubGroupSpinner.isVisible = true
+
                     val selectedIncomeGroupName =
                         binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
@@ -153,7 +157,7 @@ class AddExpenseHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.expenseSubGroupSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == Constants.ADD_NEW_INCOME_SUB_GROUP) {
+                if (selectedIncomeSubGroupName == Constants.ADD_NEW_EXPENSE_SUB_GROUP) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
                     val selectedIncomeGroup = binding.expenseGroupSpinner.selectedItem
                     if (selectedIncomeGroup != null) {
