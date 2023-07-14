@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
@@ -46,6 +45,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
         val incomeGroupArchived = IncomeGroup(
             id = incomeGroup.id,
             name = incomeGroup.name,
+            isPassive = incomeGroup.isPassive,
             description = incomeGroup.description,
             archivedDate = OffsetDateTime.now()
         )
@@ -82,7 +82,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertIncomeHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }
@@ -90,15 +90,16 @@ class AddIncomeHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertHistoryRecord(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
+    private fun insertIncomeHistoryRecord(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         insertIncomeHistory(
             IncomeHistory(
                 incomeSubGroupId = incomeGroupId,
                 amount = amountBinding,
                 description = commentBinding,
-                createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
-                walletId = walletId
+                date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
+                walletId = walletId,
+                createdDate = OffsetDateTime.now()
             )
         )
     }
@@ -136,7 +137,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertIncomeHistoryRecord(incomeGroupId, amountBinding, commentBinding, dateBinding, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }

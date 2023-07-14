@@ -2,6 +2,7 @@ package com.romandevyatov.bestfinance.utils
 
 object Constants {
 
+    const val WALLETS_FRAGMENT: String = "WalletsFragment"
     const val EXPENSE_GROUP: String = "Expense group"
     const val ADD_NEW_EXPENSE_GROUP: String = "Add new expense group"
     const val ADD_NEW_EXPENSE_SUB_GROUP: String = "Add new sub expense group"

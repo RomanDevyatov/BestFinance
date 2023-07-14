@@ -83,7 +83,8 @@ class ExpandableGroupAdapter(val parents: ArrayList<ParentData>) : RecyclerView.
 
             Constants.EXPENSES_PARENT_TYPE -> {
                 adapter = ExpandableSubGroupAdapter(subParentModel.subParentNestedListExpenses?.map {
-                    SubParentData(parentTitle = it.expenseGroup.name,
+                    SubParentData(
+                        parentTitle = it.expenseGroup.name,
                     childNestedListOfExpenseSubGroup = it.expenseSubGroupWithExpenseHistories,
                     type = Constants.EXPENSES_PARENT_TYPE)
                 }!!.toList())

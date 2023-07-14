@@ -20,7 +20,7 @@ class ExpenseHistoryItemViewHolder (private val binding: CardExpenseHistoryBindi
 //        val dateFormat = "yyyy-MM-dd HH:mm:ss"
 //        binding.dateTextView.text = SimpleDateFormat(dateFormat).format(expenseHistory.expenseHistory.date)
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        binding.dateTextView.text = expenseHistory.expenseHistory.createdDate?.format(iso8601DateTimeFormatter)
+        binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(iso8601DateTimeFormatter)
 
     }
 }

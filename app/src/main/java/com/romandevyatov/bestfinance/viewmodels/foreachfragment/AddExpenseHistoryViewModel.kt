@@ -84,7 +84,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }
@@ -92,15 +92,16 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
+    private fun insertExpenseHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         insertExpenseHistory(
             ExpenseHistory(
                 expenseSubGroupId = expenseGroupId,
                 amount = amountBinding,
                 description = commentBinding,
-                createdDate = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
-                walletId = walletId
+                date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
+                walletId = walletId,
+                createdDate = OffsetDateTime.now()
             )
         )
     }
@@ -138,7 +139,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }

@@ -53,4 +53,7 @@ interface IncomeGroupDao {
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL")
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName: String): IncomeGroupWithIncomeSubGroups
 
+    @Query("SELECT * FROM income_group WHERE id = :incomeGroupId AND archived_date IS NULL")
+    fun getByIdNotArchived(incomeGroupId: Long): IncomeGroup
+
 }

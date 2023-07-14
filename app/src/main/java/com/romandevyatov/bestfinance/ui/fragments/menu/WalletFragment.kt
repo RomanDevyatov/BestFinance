@@ -44,6 +44,7 @@ class WalletFragment : Fragment() {
 
         binding.addWalletButton.setOnClickListener {
             val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
+            action.source = "WalletFragment"
             findNavController().navigate(action)
         }
 

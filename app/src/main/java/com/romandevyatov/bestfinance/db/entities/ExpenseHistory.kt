@@ -39,13 +39,16 @@ class ExpenseHistory (
     @ColumnInfo(name = "description")
     val description: String? = null,
 
-    @ColumnInfo(name = "created_date")
-    val createdDate: OffsetDateTime? = null,
+    @ColumnInfo(name = "date")
+    val date: OffsetDateTime? = null,
 
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: OffsetDateTime? = null
+    val archivedDate: OffsetDateTime? = null,
+
+    @ColumnInfo(name = "created_date")
+    val createdDate: OffsetDateTime? = null
 
 )

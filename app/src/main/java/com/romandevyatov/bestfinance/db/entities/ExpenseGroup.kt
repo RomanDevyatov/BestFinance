@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
 
-
 @Entity(tableName = "expense_group")
 data class ExpenseGroup(
 
@@ -21,5 +20,4 @@ data class ExpenseGroup(
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: OffsetDateTime? = null
-
 )

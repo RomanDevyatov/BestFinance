@@ -8,7 +8,6 @@ import com.romandevyatov.bestfinance.db.entities.*
 import com.romandevyatov.bestfinance.db.roomdb.converters.Converters
 import com.romandevyatov.bestfinance.db.roomdb.converters.OffsetDateTimeRoomTypeConverter
 
-
 @Database(
     entities = [
         IncomeGroup::class,
@@ -20,7 +19,7 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.OffsetDateTimeRoomType
         ExpenseHistory::class,
         TransferHistory::class
     ],
-    version = 18,
+    version = 21,
     exportSchema = true
 )
 @TypeConverters(OffsetDateTimeRoomTypeConverter::class)

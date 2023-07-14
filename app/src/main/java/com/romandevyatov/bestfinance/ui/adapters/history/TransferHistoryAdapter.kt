@@ -33,7 +33,7 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
                                                         .append(" -> ")
                                                         .append(transferHistory.toWalletId.toString())
 
-            binding.balanceTextView.text = transferHistory.balance.toString()
+            binding.balanceTextView.text = transferHistory.amount.toString()
         }
 
     }

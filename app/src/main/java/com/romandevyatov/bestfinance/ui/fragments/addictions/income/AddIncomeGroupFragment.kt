@@ -38,6 +38,7 @@ class AddIncomeGroupFragment : Fragment() {
         binding.addNewIncomeGroupNameButton.setOnClickListener {
             val newIncomeGroupName = binding.newIncomeGroupNameInputEditText.text.toString()
             val newIncomeGroupDescriptionInput = binding.newIncomeGroupDescriptionInputEditText.text.toString()
+            val newIncomeGroupIsPassive = binding.isPassiveCheckBox.isChecked
 
             val newIncomeGroupNameEmptyValidation = EmptyValidator(newIncomeGroupName).validate()
             binding.newIncomeGroupNameInputLayout.error = if (!newIncomeGroupNameEmptyValidation.isSuccess) getString(newIncomeGroupNameEmptyValidation.message) else null
@@ -48,7 +49,8 @@ class AddIncomeGroupFragment : Fragment() {
             incomeGroupViewModel.insertIncomeGroup(
                 IncomeGroup(
                     name = newIncomeGroupName,
-                    description = newIncomeGroupDescriptionInput
+                    description = newIncomeGroupDescriptionInput,
+                    isPassive = newIncomeGroupIsPassive
                 )
             )
 
