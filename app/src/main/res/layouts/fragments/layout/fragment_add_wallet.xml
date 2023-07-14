@@ -12,14 +12,14 @@
         android:id="@+id/newWalletNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/wallet_hint_name"
+        android:hint="@string/wallet_name_hint"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/newWalletDescriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet description"
+        android:hint="@string/wallet_description_hint"
         app:layout_constraintEnd_toEndOf="@+id/newWalletNameEditText"
         app:layout_constraintStart_toStartOf="@+id/newWalletNameEditText"
         app:layout_constraintTop_toBottomOf="@+id/newWalletNameEditText" />
@@ -28,7 +28,7 @@
         android:id="@+id/newWalletInitialBalance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet balance"
+        android:hint="@string/wallet_balance_hint"
         app:layout_constraintEnd_toEndOf="@+id/newWalletDescriptionEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newWalletDescriptionEditText" />
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Add"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

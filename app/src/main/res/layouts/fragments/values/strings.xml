@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="wallet_hint_name">Name</string>
+    <string name="wallet_name_hint">Name</string>
+    <string name="wallet_description_hint">Wallet description</string>
+    <string name="wallet_balance_hint">Wallet balance</string>
+    <string name="add">Add</string>
 </resources>
