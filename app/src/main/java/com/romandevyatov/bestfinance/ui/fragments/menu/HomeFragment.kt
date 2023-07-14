@@ -61,7 +61,6 @@ class HomeFragment : Fragment() {
 
         incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { history ->
 
-
             passiveIncomeValue = history
                 .filter { incomeGroupViewModel.getIncomeGroupByIdNotArchived(it.incomeSubGroup.incomeGroupId).isPassive }
                 .sumOf { it.incomeHistory.amount }
