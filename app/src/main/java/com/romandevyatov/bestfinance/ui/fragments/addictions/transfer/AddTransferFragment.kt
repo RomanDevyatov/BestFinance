@@ -80,19 +80,22 @@ class AddTransferFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTransferButtonListener() {
         binding.transferButton.setOnClickListener {
-            walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { wallets ->
+            walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.transferAmountEditText.text.toString().trim().toDouble()
 
                 val walletFromNameBinding = binding.walletNameFromSpinner.selectedItem.toString()
-                val walletFrom = wallets.find { it.name == walletFromNameBinding}
-                updateWalletFrom(walletFrom!!, amountBinding)
-
                 val walletToNameBinding = binding.walletNameToSpinner.selectedItem.toString()
-                val walletTo = wallets.find { it.name == walletToNameBinding}
-                updateWalletTo(walletTo!!, amountBinding)
 
-                val comment = binding.commentEditText.text.toString().trim()
-                insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding)
+                if (walletFromNameBinding != walletToNameBinding) {
+                    val walletFrom = wallets.find { it.name == walletFromNameBinding }
+                    updateWalletFrom(walletFrom!!, amountBinding)
+
+                    val walletTo = wallets.find { it.name == walletToNameBinding }
+                    updateWalletTo(walletTo!!, amountBinding)
+
+                    val comment = binding.commentEditText.text.toString().trim()
+                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding)
+                }
             }
 
             val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
@@ -174,7 +177,7 @@ class AddTransferFragment : Fragment() {
         spinnerItems.add(firstLine)
         var walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
 
             walletList?.forEach { it ->
                 spinnerItems.add(it.name)
@@ -198,7 +201,7 @@ class AddTransferFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        walletViewModel.notArchivedWalletsLiveData.removeObservers(viewLifecycleOwner)
+        walletViewModel.allWalletsNotArchivedLiveData.removeObservers(viewLifecycleOwner)
     }
 
 }

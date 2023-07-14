@@ -49,7 +49,7 @@ class WalletFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) {
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
 

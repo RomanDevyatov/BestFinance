@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +52,7 @@ class HomeFragment : Fragment() {
 
         setButtonListeners()
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             val balanceValue = walletList.sumOf { it.balance }
             binding.totalCapitalTextView.text = balanceValue.toString()
         }
