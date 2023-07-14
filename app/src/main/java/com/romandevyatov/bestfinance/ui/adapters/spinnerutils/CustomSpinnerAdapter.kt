@@ -13,8 +13,8 @@ import com.romandevyatov.bestfinance.R
 
 class CustomSpinnerAdapter(
     context: Context,
-    private var items: ArrayList<String>,
-    private var listener: DeleteItemClickListener? = null
+    private val items: ArrayList<String>,
+    private val listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, 0, items) {
 
     interface DeleteItemClickListener {
@@ -22,22 +22,8 @@ class CustomSpinnerAdapter(
         fun archive(name: String)
     }
 
-    private var selectedItemIndex: Int = -1
-
     override fun isEnabled(position: Int): Boolean {
         return position != 0
-    }
-
-    override fun areAllItemsEnabled(): Boolean {
-        return true
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getCount(): Int {
-        return items.size
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -51,20 +37,14 @@ class CustomSpinnerAdapter(
             false
         )
 
-        val itemNameTextView = spinnerView.findViewById(R.id.itemNameTextView) as TextView
-        val itemDelTextView = spinnerView.findViewById(R.id.itemDelTextView) as TextView
+        val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
+        val itemDelTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
 
         val itemText = items[position]
-        itemNameTextView.text = itemText
+        itemNameTextView.text = itemText ?: "N/A"
 
         if (position == 0 || position == count - 1) {
             itemDelTextView.isVisible = false
-        }
-
-        if (position == selectedItemIndex) {
-            spinnerView.setBackgroundColor(Color.rgb(56,184,226));
-        } else {
-            spinnerView.setBackgroundColor(Color.TRANSPARENT);
         }
 
         itemDelTextView.setOnClickListener {
@@ -82,11 +62,12 @@ class CustomSpinnerAdapter(
             false
         )
 
-        val spnItemName = spinnerView.findViewById(R.id.itemNameTextView) as TextView
-        val spnItemDel = spinnerView.findViewById(R.id.itemDelTextView) as TextView
+        val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
+        val itemDelTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
 
-        spnItemName.text = items[position]
-        spnItemDel.isVisible = false
+        val itemText = items[position]
+        itemNameTextView.text = itemText ?: "N/A"
+        itemDelTextView.isVisible = false
 
         return spinnerView
     }

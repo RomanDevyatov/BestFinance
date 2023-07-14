@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
@@ -33,7 +34,8 @@ import java.util.*
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
 
-    private lateinit var binding: FragmentAddIncomeHistoryBinding
+    private var _binding: FragmentAddIncomeHistoryBinding? = null
+    private val binding get() = _binding!!
 
     private val addIncomeHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
 
@@ -42,9 +44,14 @@ class AddIncomeHistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
+        _binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
 //        markButtonDisable(binding.addIncomeHistoryButton)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     val args: AddIncomeHistoryFragmentArgs by navArgs()
@@ -82,7 +89,6 @@ class AddIncomeHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddIncomeHistoryBinding.bind(view)
 
         initIncomeGroupAndIncomeSubGroupSpinner()
         initWalletSpinner()
@@ -184,7 +190,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 binding.incomeGroupSpinner.setSelection(spinnerPosition)
             }
 
-            binding.incomeGroupSpinner.setSelection(0,false)
+//            binding.incomeGroupSpinner.setSelection(0,false)
             binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
                     override fun onItemSelected(

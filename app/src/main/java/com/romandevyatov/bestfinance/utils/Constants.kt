@@ -12,7 +12,6 @@ object Constants {
     const val INCOMES = "Incomes"
     const val INCOME_SUB_GROUP = "Income sub group"
     const val INCOME_GROUP = "Income group"
-    const val ADD_NEW_SUB_EXPENSE_GROUP = "Add new sub expense group"
     const val ADD_INCOME_HISTORY_FRAGMENT = "add_income_history_fragment"
     const val ADD_EXPENSE_HISTORY_FRAGMENT = "add_expense_history_fragment"
     const val ADD_NEW_INCOME_SUB_GROUP = "Add new income sub group"

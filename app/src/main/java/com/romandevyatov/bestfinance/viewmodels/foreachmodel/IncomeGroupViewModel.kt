@@ -52,7 +52,7 @@ class IncomeGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 
-    fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
+    suspend fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
         return incomeGroupRepository.getIncomeGroupByIdNotArchived(incomeGroupId)
     }
 

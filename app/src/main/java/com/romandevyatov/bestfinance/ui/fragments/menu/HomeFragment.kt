@@ -25,7 +25,6 @@ class HomeFragment : Fragment() {
 
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels()
@@ -56,18 +55,22 @@ class HomeFragment : Fragment() {
 
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
             val balanceValue = walletList.sumOf { it.balance }
-            binding.capitalTextView.text = balanceValue.toString()
+            binding.totalCapitalTextView.text = balanceValue.toString()
         }
 
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { history ->
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
+            homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
+                passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
+                    .filter { i ->
+                        incomeGroups.find {
+                            it.id == i.incomeSubGroup.incomeGroupId
+                        }?.isPassive ?: false
+                    }
+                    .sumOf { it.incomeHistory.amount }
+                binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
+            }
 
-            passiveIncomeValue = history
-                .filter { incomeGroupViewModel.getIncomeGroupByIdNotArchived(it.incomeSubGroup.incomeGroupId).isPassive }
-                .sumOf { it.incomeHistory.amount }
-
-            binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
-
-            totalIncomeValue = history.sumOf { it.incomeHistory.amount }
+            totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
             binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
 
             expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->

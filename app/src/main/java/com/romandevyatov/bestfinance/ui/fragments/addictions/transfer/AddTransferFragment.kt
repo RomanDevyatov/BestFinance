@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.addictions.transfer
 
+import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,13 +13,14 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
-import com.romandevyatov.bestfinance.utils.Constants.WALLET_FROM
-import com.romandevyatov.bestfinance.utils.Constants.WALLET_TO
+import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @AndroidEntryPoint
 class AddTransferFragment : Fragment() {
@@ -38,6 +40,28 @@ class AddTransferFragment : Fragment() {
 
         initWalletFromSpinner()
         initWalletToSpinner()
+
+        val myCalendar = Calendar.getInstance()
+        val datePicker = DatePickerDialog.OnDateSetListener() {
+                view, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH,month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateDate(myCalendar)
+        }
+
+        val dateET = binding.dateEditText
+        dateET.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                datePicker,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        updateDate(myCalendar)
 
         binding.transferButton.setOnClickListener {
             walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameFromSpinner.selectedItem.toString())
@@ -96,32 +120,63 @@ class AddTransferFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateDate(calendar: Calendar) {
+//        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
+//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
+//        binding.dateEditText.setText(sdf.format(calendar.time))
+        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
+    }
+
     private fun initWalletFromSpinner() {
-        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
-
-        spinnerAdapter.add(WALLET_FROM)
-
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+            val spinnerFromItems = ArrayList<String>()
+            spinnerFromItems.add(Constants.WALLET_FROM)
             walletList?.forEach { it ->
-                spinnerAdapter.add(it.name)
+                spinnerFromItems.add(it.name)
             }
-        }
 
-        binding.walletNameFromSpinner.adapter = spinnerAdapter
+            val archiveListener =
+                object : CustomSpinnerAdapter.DeleteItemClickListener {
+
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    override fun archive(name: String) {
+
+                    }
+                }
+            val walletFromSpinnerAdapter =
+                CustomSpinnerAdapter(requireContext(), spinnerFromItems, archiveListener)
+            binding.walletNameFromSpinner.adapter = walletFromSpinnerAdapter
+        }
     }
 
     private fun initWalletToSpinner() {
-        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
-
-        spinnerAdapter.add(WALLET_TO)
-
         walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+            val spinnerToItems = ArrayList<String>()
+            spinnerToItems.add(Constants.WALLET_TO)
             walletList?.forEach { it ->
-                spinnerAdapter.add(it.name)
+                spinnerToItems.add(it.name)
             }
-        }
 
-        binding.walletNameToSpinner.adapter = spinnerAdapter
+            val archiveListener =
+                object : CustomSpinnerAdapter.DeleteItemClickListener {
+
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    override fun archive(name: String) {
+
+                    }
+                }
+            val walletToSpinnerAdapter =
+                CustomSpinnerAdapter(requireContext(), spinnerToItems, archiveListener)
+            binding.walletNameToSpinner.adapter = walletToSpinnerAdapter
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        walletViewModel.notArchivedWalletsLiveData.removeObservers(viewLifecycleOwner)
     }
 
 }

@@ -119,7 +119,7 @@
     <fragment
         android:id="@+id/navigation_add_new_income_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeGroupFragment"
-        android:label="fragment_add_new_income_group"
+        android:label="New income group"
         tools:layout="@layout/fragment_add_income_group" >
 
         <action
@@ -129,7 +129,7 @@
     <fragment
         android:id="@+id/navigation_add_new_income_sub_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeSubGroupFragment"
-        android:label="fragment_add_new_income_sub_group"
+        android:label="New income sub group"
         tools:layout="@layout/fragment_add_income_sub_group" >
 
         <action
@@ -145,7 +145,7 @@
     <fragment
         android:id="@+id/navigation_add_new_expense_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseGroupNameFragment"
-        android:label="fragment_add_new_expense_group"
+        android:label="New expense group"
         tools:layout="@layout/fragment_add_expense_group" >
 
         <action
@@ -155,7 +155,7 @@
     <fragment
         android:id="@+id/navigation_add_new_expense_sub_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseSubGroupFragment"
-        android:label="fragment_add_new_expense_sub_group"
+        android:label="New expense sub group"
         tools:layout="@layout/fragment_add_expense_sub_group" >
 
         <action
