@@ -12,7 +12,7 @@
         android:id="@+id/newWalletNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet name"
+        android:hint="@string/wallet_hint_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
