@@ -204,12 +204,6 @@ class AddIncomeHistoryFragment : Fragment() {
                         val selectedIncomeGroupName =
                             binding.incomeGroupSpinner.getItemAtPosition(position).toString()
 
-                        Toast.makeText(
-                            context,
-                            "" + selectedIncomeGroupName,
-                            Toast.LENGTH_SHORT
-                        ).show()
-
                         if (selectedIncomeGroupName == Constants.ADD_NEW_INCOME_GROUP) {
                             val action =
                                 AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewIncomeGroup()

@@ -130,12 +130,6 @@ class AddExpenseHistoryFragment : Fragment() {
                     val selectedExpenseGroupName =
                         binding.expenseGroupSpinner.getItemAtPosition(position).toString()
 
-                    Toast.makeText(
-                        context,
-                        "" + binding.expenseGroupSpinner.selectedItemPosition.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-
                     if (selectedExpenseGroupName == Constants.ADD_NEW_EXPENSE_GROUP) {
                         val action =
                             AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
