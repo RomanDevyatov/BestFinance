@@ -80,27 +80,23 @@ class AddTransferFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTransferButtonListener() {
         binding.transferButton.setOnClickListener {
-            walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameFromSpinner.selectedItem.toString())
-                .observe(viewLifecycleOwner) { walletFrom ->
-                    val amount = binding.transferAmountEditText.text.toString().trim().toDouble()
+            walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { wallets ->
+                val amountBinding = binding.transferAmountEditText.text.toString().trim().toDouble()
 
-                    val updatedWalletFromOutput = walletFrom.output.plus(amount)
-                    val updatedWalletFromBalance = walletFrom.balance.minus(amount)
+                val walletFromNameBinding = binding.walletNameFromSpinner.selectedItem.toString()
+                val walletFrom = wallets.find { it.name == walletFromNameBinding}
+                updateWalletFrom(walletFrom!!, amountBinding)
 
-                    updateWalletFrom(walletFrom, updatedWalletFromOutput, updatedWalletFromBalance)
+                val walletToNameBinding = binding.walletNameToSpinner.selectedItem.toString()
+                val walletTo = wallets.find { it.name == walletToNameBinding}
+                updateWalletTo(walletTo!!, amountBinding)
 
-                    val selectedWalletNameBinding = binding.walletNameToSpinner.selectedItem.toString()
-                    walletViewModel.getWalletByNameNotArchivedLiveData(selectedWalletNameBinding)
-                        .observe(viewLifecycleOwner) { walletTo ->
-                            updateWalletTo(walletTo, amount)
+                val comment = binding.commentEditText.text.toString().trim()
+                insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding)
+            }
 
-                            val comment = binding.commentEditText.text.toString().trim()
-                            insertTransferHistoryRecord(comment, walletFrom, walletTo, amount)
-                        }
-
-                    val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
-                    findNavController().navigate(action)
-                }
+            val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
+            findNavController().navigate(action)
         }
     }
 
@@ -139,8 +135,10 @@ class AddTransferFragment : Fragment() {
 
     private fun updateWalletFrom(
         walletFrom: Wallet,
-        updatedWalletFromOutput: Double,
-        updatedWalletFromBalance: Double, ) {
+        amount: Double) {
+        val updatedWalletFromOutput = walletFrom.output.plus(amount)
+        val updatedWalletFromBalance = walletFrom.balance.minus(amount)
+
         val updatedWalletFrom = Wallet(
             id = walletFrom.id,
             name = walletFrom.name,
