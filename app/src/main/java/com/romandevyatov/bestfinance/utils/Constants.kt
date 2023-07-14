@@ -2,6 +2,10 @@ package com.romandevyatov.bestfinance.utils
 
 object Constants {
 
+    const val ADD_NEW_EXPENSE_GROUP: String = "Add new expense group"
+    const val ADD_NEW_EXPENSE_SUB_GROUP: String = "Add new sub expense group"
+    const val EXPENSE_SUB_GROUP: String = "Expense sub group"
+    const val WALLET: String = "Wallet"
     const val EXPENSE = "Expenses"
     const val INCOMES = "Incomes"
     const val INCOME_SUB_GROUP = "Income sub group"
@@ -22,6 +26,6 @@ object Constants {
     const val EXPENSES_PARENT_TYPE = "EXPENSES_PARENT_TYPE"
 
     const val FIELD_IS_EMPTY_MESSAGE = "Please enter some text!"
-    const val ADD_NEW_WALLET_STRING: String = "Add new wallet"
+    const val ADD_NEW_WALLET: String = "Add new wallet"
 
 }

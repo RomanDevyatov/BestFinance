@@ -35,4 +35,7 @@ interface ExpenseSubGroupDao {
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
     fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup>
 
+    @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
+    abstract fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup
+
 }

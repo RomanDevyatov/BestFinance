@@ -54,7 +54,7 @@ class ExpenseSubGroupViewModel @Inject constructor(
 
 
     fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> {
-        return expenseSubGroupRepository.getExpenseSubGroupByNameWhereArchivedDateIsNull(name)
+        return expenseSubGroupRepository.getExpenseSubGroupByNameNotArchivedLiveData(name)
     }
 
 

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction.wallet
+package com.romandevyatov.bestfinance.ui.fragments.addictions.wallet
 
 import android.os.Bundle
 import android.view.LayoutInflater

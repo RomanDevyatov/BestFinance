@@ -46,7 +46,7 @@ class CustomSpinnerAdapter(
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
-            R.layout.spinner_item_with_del,
+            R.layout.item_with_del,
             parent,
             false
         )
@@ -77,7 +77,7 @@ class CustomSpinnerAdapter(
 
     private fun myView(position: Int, convertView: View?, parent: ViewGroup): View {
         val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
-            R.layout.spinner_item_with_del,
+            R.layout.item_with_del,
             parent,
             false
         )

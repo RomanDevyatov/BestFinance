@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeHistory
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
@@ -167,6 +168,31 @@ class AddIncomeHistoryViewModel @Inject constructor(
         )
 
         incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroupArchived)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun archiveWallet(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        val selectedWallet = walletRepository.getWalletByNameNotArchived(name)
+
+        val selectedWalletArchived = Wallet(
+            id = selectedWallet.id,
+            name = selectedWallet.name,
+            balance = selectedWallet.balance,
+            archivedDate = OffsetDateTime.now(),
+            input = selectedWallet.input,
+            output = selectedWallet.output,
+            description = selectedWallet.description
+        )
+
+        walletRepository.updateWallet(selectedWalletArchived)
+
+//        Snackbar.make(viewHolder.itemView, "Wallet with name ${selectedWallet.name} is archived", Snackbar.LENGTH_LONG).apply {
+//            setAction("UNDO") {
+//                walletRepository.updateWallet(selectedWallet)
+//            }
+//            show()
+//        }
+
     }
 
 }

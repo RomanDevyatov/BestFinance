@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction.transfer
+package com.romandevyatov.bestfinance.ui.fragments.addictions.transfer
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction.income
+package com.romandevyatov.bestfinance.ui.fragments.addictions.income
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -21,9 +21,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET_STRING
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
@@ -154,8 +152,7 @@ class AddIncomeHistoryFragment : Fragment() {
                     addIncomeHistoryViewModel.archiveIncomeSubGroup(name)
                 }
             }
-        var customIncomeSubGroupAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
-
+        var customIncomeSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
 
         addIncomeHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { incomeGroupList ->
             val spinnerItems = ArrayList<String>()
@@ -211,13 +208,13 @@ class AddIncomeHistoryFragment : Fragment() {
                             .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
                                 if (incomeGroupWithIncomeSubGroups != null) {
                                     spinnerSubItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups.incomeSubGroups)
-                                    customIncomeSubGroupAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
-                                    binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupAdapter
+                                    customIncomeSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
+                                    binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupSpinnerAdapter
                                 }
 
 
                                 if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
-                                    val spinnerPosition = customIncomeSubGroupAdapter.getPosition(args.incomeSubGroupName)
+                                    val spinnerPosition = customIncomeSubGroupSpinnerAdapter.getPosition(args.incomeSubGroupName)
                                     binding.incomeSubGroupSpinner.setSelection(spinnerPosition)
                                 }
                             }
@@ -229,7 +226,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 }
         }
 
-        binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupAdapter
+        binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupSpinnerAdapter
         binding.incomeSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
@@ -270,21 +267,30 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun initWalletSpinner() {
         addIncomeHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            val walletSpinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-            walletSpinnerAdapter.clear()
-            walletSpinnerAdapter.add("Wallet")
+            val spinnerWalletItems = ArrayList<String>()
+            spinnerWalletItems.add(Constants.WALLET)
+            walletList.forEach {
+                spinnerWalletItems.add(it.name)
+            }
+            spinnerWalletItems.add(Constants.ADD_NEW_WALLET)
 
-            val names = walletList.map { it.name }
-            walletSpinnerAdapter.addAll(names)
+            val archiveWalletListener =
+                object : CustomSpinnerAdapter.DeleteItemClickListener {
 
-            walletSpinnerAdapter.add(ADD_NEW_WALLET_STRING)
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    override fun archive(name: String) {
+                        addIncomeHistoryViewModel.archiveWallet(name)
+                    }
+                }
+
+            var customWalletAdapter = CustomSpinnerAdapter(requireContext(), spinnerWalletItems, archiveWalletListener)
 
             // Populate the spinner with the names
-            binding.walletSpinner.adapter = walletSpinnerAdapter
+            binding.walletSpinner.adapter = customWalletAdapter
 
             if (args.walletName != null && args.walletName!!.isNotBlank()) {
-                val spinnerPosition = walletSpinnerAdapter.getPosition(args.walletName)
+                val spinnerPosition = customWalletAdapter.getPosition(args.walletName)
 
                 binding.walletSpinner.setSelection(spinnerPosition)
             }
@@ -300,7 +306,7 @@ class AddIncomeHistoryFragment : Fragment() {
             ) {
                 val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == ADD_NEW_WALLET_STRING) {
+                if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
                     action.source = Constants.ADD_INCOME_HISTORY_FRAGMENT
                     findNavController().navigate(action)
