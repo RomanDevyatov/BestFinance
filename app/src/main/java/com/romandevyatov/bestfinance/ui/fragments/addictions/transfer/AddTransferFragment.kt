@@ -22,6 +22,8 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+// TODO: validate if the same wallets are chosen
+
 @AndroidEntryPoint
 class AddTransferFragment : Fragment() {
 
@@ -38,9 +40,20 @@ class AddTransferFragment : Fragment() {
     ): View {
         _binding = FragmentAddTransferBinding.inflate(inflater, container, false)
 
-        initWalletFromSpinner()
-        initWalletToSpinner()
+        setSpinners()
+        setDateEditText()
+        setTransferButtonListener()
 
+        return binding.root
+    }
+
+    private fun setSpinners() {
+        binding.walletNameFromSpinner.adapter = getAdapterForWalletSpinnerFrom()
+        binding.walletNameToSpinner.adapter = getAdapterForWalletSpinnerTo()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDateEditText() {
         val myCalendar = Calendar.getInstance()
         val datePicker = DatePickerDialog.OnDateSetListener() {
                 view, year, month, dayOfMonth ->
@@ -62,62 +75,117 @@ class AddTransferFragment : Fragment() {
         }
 
         updateDate(myCalendar)
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setTransferButtonListener() {
         binding.transferButton.setOnClickListener {
             walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameFromSpinner.selectedItem.toString())
                 .observe(viewLifecycleOwner) { walletFrom ->
-
                     val amount = binding.transferAmountEditText.text.toString().trim().toDouble()
 
                     val updatedWalletFromOutput = walletFrom.output.plus(amount)
                     val updatedWalletFromBalance = walletFrom.balance.minus(amount)
 
-                    val updatedWalletFrom = Wallet(
-                        id = walletFrom.id,
-                        name = walletFrom.name,
-                        balance = updatedWalletFromBalance,
-                        input = walletFrom.input,
-                        output = updatedWalletFromOutput,
-                        description = walletFrom.description,
-                        archivedDate = walletFrom.archivedDate
-                    )
+                    updateWalletFrom(walletFrom, updatedWalletFromOutput, updatedWalletFromBalance)
 
-                    walletViewModel.updateWallet(updatedWalletFrom)
-
-                    walletViewModel.getWalletByNameNotArchivedLiveData(binding.walletNameToSpinner.selectedItem.toString())
+                    val selectedWalletNameBinding = binding.walletNameToSpinner.selectedItem.toString()
+                    walletViewModel.getWalletByNameNotArchivedLiveData(selectedWalletNameBinding)
                         .observe(viewLifecycleOwner) { walletTo ->
-
-                            val updatedWalletToInput = walletTo.input.plus(amount)
-                            val updatedWalletToBalance = walletTo.balance.plus(amount)
-
-                            val updatedWalletTo = Wallet(
-                                id = walletTo.id,
-                                name = walletTo.name,
-                                balance = updatedWalletToBalance,
-                                input = updatedWalletToInput,
-                                output = walletTo.output,
-                                description = walletTo.description,
-                                archivedDate = walletTo.archivedDate
-                            )
-                            walletViewModel.updateWallet(updatedWalletTo)
+                            updateWalletTo(walletTo, amount)
 
                             val comment = binding.commentEditText.text.toString().trim()
-                            val transferHistory = TransferHistory(
-                                amount = amount,
-                                fromWalletId = walletFrom.id!!,
-                                toWalletId = walletTo.id!!,
-                                comment = comment,
-                                createdDate = OffsetDateTime.now()
-                            )
-                            transferHistoryViewModel.insertTransferHistory(transferHistory)
+                            insertTransferHistoryRecord(comment, walletFrom, walletTo, amount)
+                        }
 
-                            val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
-                            findNavController().navigate(action)
-                    }
+                    val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
+                    findNavController().navigate(action)
+                }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun insertTransferHistoryRecord(
+        comment: String,
+        walletFrom: Wallet,
+        walletTo: Wallet,
+        amount: Double
+    ) {
+        val transferHistory = TransferHistory(
+            amount = amount,
+            fromWalletId = walletFrom.id!!,
+            toWalletId = walletTo.id!!,
+            comment = comment,
+            createdDate = OffsetDateTime.now()
+        )
+        transferHistoryViewModel.insertTransferHistory(transferHistory)
+    }
+
+    private fun updateWalletTo(walletTo: Wallet, amount: Double) {
+        val updatedWalletToInput = walletTo.input.plus(amount)
+        val updatedWalletToBalance = walletTo.balance.plus(amount)
+
+        val updatedWalletTo = Wallet(
+            id = walletTo.id,
+            name = walletTo.name,
+            balance = updatedWalletToBalance,
+            input = updatedWalletToInput,
+            output = walletTo.output,
+            description = walletTo.description,
+            archivedDate = walletTo.archivedDate
+        )
+        walletViewModel.updateWallet(updatedWalletTo)
+    }
+
+    private fun updateWalletFrom(
+        walletFrom: Wallet,
+        updatedWalletFromOutput: Double,
+        updatedWalletFromBalance: Double, ) {
+        val updatedWalletFrom = Wallet(
+            id = walletFrom.id,
+            name = walletFrom.name,
+            balance = updatedWalletFromBalance,
+            input = walletFrom.input,
+            output = updatedWalletFromOutput,
+            description = walletFrom.description,
+            archivedDate = walletFrom.archivedDate
+        )
+
+        walletViewModel.updateWallet(updatedWalletFrom)
+    }
+
+    private fun getAdapterForWalletSpinnerFrom(): CustomSpinnerAdapter {
+        return getAdapterForWalletSpinner(Constants.WALLET_FROM)
+    }
+
+    private fun getAdapterForWalletSpinnerTo(): CustomSpinnerAdapter {
+        return getAdapterForWalletSpinner(Constants.WALLET_TO)
+    }
+
+    private fun getAdapterForWalletSpinner(firstLine: String): CustomSpinnerAdapter {
+        val archiveListener =
+            object : CustomSpinnerAdapter.DeleteItemClickListener {
+
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun archive(name: String) {
+
+                }
             }
+
+        val spinnerItems = ArrayList<String>()
+        spinnerItems.add(firstLine)
+        var walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
+
+        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+
+            walletList?.forEach { it ->
+                spinnerItems.add(it.name)
+            }
+
+            walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
         }
 
-        return binding.root
+        return walletSpinnerAdapter
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -127,50 +195,6 @@ class AddTransferFragment : Fragment() {
 //        binding.dateEditText.setText(sdf.format(calendar.time))
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
-    }
-
-    private fun initWalletFromSpinner() {
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
-            val spinnerFromItems = ArrayList<String>()
-            spinnerFromItems.add(Constants.WALLET_FROM)
-            walletList?.forEach { it ->
-                spinnerFromItems.add(it.name)
-            }
-
-            val archiveListener =
-                object : CustomSpinnerAdapter.DeleteItemClickListener {
-
-                    @RequiresApi(Build.VERSION_CODES.O)
-                    override fun archive(name: String) {
-
-                    }
-                }
-            val walletFromSpinnerAdapter =
-                CustomSpinnerAdapter(requireContext(), spinnerFromItems, archiveListener)
-            binding.walletNameFromSpinner.adapter = walletFromSpinnerAdapter
-        }
-    }
-
-    private fun initWalletToSpinner() {
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
-            val spinnerToItems = ArrayList<String>()
-            spinnerToItems.add(Constants.WALLET_TO)
-            walletList?.forEach { it ->
-                spinnerToItems.add(it.name)
-            }
-
-            val archiveListener =
-                object : CustomSpinnerAdapter.DeleteItemClickListener {
-
-                    @RequiresApi(Build.VERSION_CODES.O)
-                    override fun archive(name: String) {
-
-                    }
-                }
-            val walletToSpinnerAdapter =
-                CustomSpinnerAdapter(requireContext(), spinnerToItems, archiveListener)
-            binding.walletNameToSpinner.adapter = walletToSpinnerAdapter
-        }
     }
 
     override fun onDestroyView() {
