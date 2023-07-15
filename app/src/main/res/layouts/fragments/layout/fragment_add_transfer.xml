@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinner" />
 
     <EditText
-        android:id="@+id/transferAmountEditText"
+        android:id="@+id/amountEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="Comment"
-        app:layout_constraintTop_toBottomOf="@+id/transferAmountEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
     <Button
         android:id="@+id/transferButton"
