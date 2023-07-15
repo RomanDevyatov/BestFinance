@@ -31,7 +31,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
 
     // expense group zone
     fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>> {
-        return expenseGroupRepository.getAllExpenseGroupsLiveData()
+        return expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
     }
 
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups> {

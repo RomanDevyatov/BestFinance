@@ -18,7 +18,7 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsLiveData()
     }
 
-    fun getAllExpenseGroupsLiveData(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllLiveData()
+    fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllExpenseGroupsNotArchivedLiveData()
 
     suspend fun insertExpenseGroup(expenseGroup: ExpenseGroup) {
         expenseGroupDao.insert(expenseGroup)

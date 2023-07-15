@@ -38,21 +38,21 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <EditText
-        android:id="@+id/commentEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:hint="Comment"
-        app:layout_constraintTop_toBottomOf="@+id/transferAmountEditText"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <EditText
         android:id="@+id/dateEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="Date"
-        app:layout_constraintTop_toBottomOf="@+id/commentEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/commentEditText"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/commentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Comment"
+        app:layout_constraintTop_toBottomOf="@+id/transferAmountEditText" />
 
     <Button
         android:id="@+id/transferButton"

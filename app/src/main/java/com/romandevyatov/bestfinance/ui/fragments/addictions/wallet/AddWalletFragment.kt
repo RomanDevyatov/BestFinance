@@ -72,6 +72,12 @@ class AddWalletFragment : Fragment() {
                 action.walletName = walletName
                 findNavController().navigate(action)
             }
+            Constants.ADD_TRANSFER_HISTORY_FRAGMENT -> {
+                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddTransfer()
+                action.walletName = walletName
+                action.spinnerType = args.spinnerType
+                findNavController().navigate(action)
+            }
             Constants.WALLETS_FRAGMENT -> {
                 val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
                 findNavController().navigate(action)

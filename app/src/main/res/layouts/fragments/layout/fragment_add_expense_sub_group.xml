@@ -8,29 +8,29 @@
     tools:context=".ui.fragments.addictions.expense.AddExpenseSubGroupFragment">
 
     <EditText
-        android:id="@+id/newExpenseSubGroupName"
+        android:id="@+id/subGroupNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Income sub group name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/newExpenseSubGroupDescription"
+        android:id="@+id/subGroupDescriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Income sub group description"
-        app:layout_constraintEnd_toEndOf="@+id/newExpenseSubGroupName"
-        app:layout_constraintStart_toStartOf="@+id/newExpenseSubGroupName"
-        app:layout_constraintTop_toBottomOf="@+id/newExpenseSubGroupName" />
+        app:layout_constraintEnd_toEndOf="@+id/subGroupNameEditText"
+        app:layout_constraintStart_toStartOf="@+id/subGroupNameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupNameEditText" />
 
     <Spinner
-        android:id="@+id/toExpenseGroupSpinner"
+        android:id="@+id/groupSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group"
-        app:layout_constraintEnd_toEndOf="@+id/newExpenseSubGroupDescription"
-        app:layout_constraintStart_toStartOf="@+id/newExpenseSubGroupDescription"
-        app:layout_constraintTop_toBottomOf="@+id/newExpenseSubGroupDescription" />
+        android:hint="Expense group"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupDescriptionEditText"
+        app:layout_constraintStart_toStartOf="@+id/subGroupDescriptionEditText"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupDescriptionEditText" />
 
     <Button
         android:id="@+id/addNewExpenseSubGroupNameButton"

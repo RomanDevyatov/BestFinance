@@ -2,7 +2,6 @@ package com.romandevyatov.bestfinance.ui.fragments.addictions.expense
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
@@ -34,11 +33,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private var _binding: FragmentAddExpenseHistoryBinding? = null
     private val binding get() = _binding!!
-
-//    private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
-//    private val walletViewModel: WalletViewModel by viewModels()
-//    private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
-//    private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
 
     private val addExpenseHistoryViewModel: AddExpenseHistoryViewModel by viewModels()
 
@@ -76,8 +70,8 @@ class AddExpenseHistoryFragment : Fragment() {
     private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     private fun initExpenseGroupAndSubGroupSpinners() {
-        var spinnerSubItems = ArrayList<String>()
-        spinnerSubItems.add(Constants.EXPENSE_SUB_GROUP)
+        var subGroupItems = ArrayList<String>()
+        subGroupItems.add(Constants.EXPENSE_SUB_GROUP)
 
         val archiveExpenseSubGroupOnLongPressListener =
             object : CustomSpinnerAdapter.DeleteItemClickListener {
@@ -87,15 +81,11 @@ class AddExpenseHistoryFragment : Fragment() {
                     addExpenseHistoryViewModel.archiveExpenseSubGroup(name)
                 }
             }
-        var customExpenseSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveExpenseSubGroupOnLongPressListener)
+
+        var expenseSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), subGroupItems, archiveExpenseSubGroupOnLongPressListener)
 
         addExpenseHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { expenseGroupList ->
-            val spinnerItems = ArrayList<String>()
-            spinnerItems.add(Constants.EXPENSE_GROUP)
-            expenseGroupList?.forEach { it ->
-                spinnerItems.add(it.name)
-            }
-            spinnerItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
+            val groupItems = getExpenseGroupItems(expenseGroupList)
 
             val archiveExpenseGroupListener =
                 object : CustomSpinnerAdapter.DeleteItemClickListener {
@@ -106,8 +96,7 @@ class AddExpenseHistoryFragment : Fragment() {
                     }
                 }
 
-            val expenseGroupSpinnerAdapter =
-                CustomSpinnerAdapter(requireContext(), spinnerItems, archiveExpenseGroupListener)
+            val expenseGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), groupItems, archiveExpenseGroupListener)
             binding.expenseGroupSpinner.adapter = expenseGroupSpinnerAdapter
 
             if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
@@ -125,7 +114,7 @@ class AddExpenseHistoryFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-//                    binding.expenseSubGroupSpinner.isVisible = true
+                    binding.expenseSubGroupSpinner.isVisible = true
 
                     val selectedExpenseGroupName =
                         binding.expenseGroupSpinner.getItemAtPosition(position).toString()
@@ -139,13 +128,13 @@ class AddExpenseHistoryFragment : Fragment() {
                     addExpenseHistoryViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(selectedExpenseGroupName)
                         .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
                             if (expenseGroupWithExpenseSubGroups != null) {
-                                spinnerSubItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups.expenseSubGroups)
-                                customExpenseSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveExpenseSubGroupOnLongPressListener)
-                                binding.expenseSubGroupSpinner.adapter = customExpenseSubGroupSpinnerAdapter
+                                subGroupItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups.expenseSubGroups)
+                                expenseSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), subGroupItems, archiveExpenseSubGroupOnLongPressListener)
+                                binding.expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
                             }
 
                             if (args.expenseSubGroupName != null && args.expenseSubGroupName!!.isNotBlank()) {
-                                val spinnerPosition = customExpenseSubGroupSpinnerAdapter.getPosition(args.expenseSubGroupName)
+                                val spinnerPosition = expenseSubGroupSpinnerAdapter.getPosition(args.expenseSubGroupName)
                                 binding.expenseSubGroupSpinner.setSelection(spinnerPosition)
                             }
                         }
@@ -157,7 +146,7 @@ class AddExpenseHistoryFragment : Fragment() {
             }
         }
 
-        binding.expenseSubGroupSpinner.adapter = customExpenseSubGroupSpinnerAdapter
+        binding.expenseSubGroupSpinner.adapter = expenseSubGroupSpinnerAdapter
         binding.expenseSubGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
@@ -183,6 +172,17 @@ class AddExpenseHistoryFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         }
+    }
+
+    private fun getExpenseGroupItems(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
+        val groupItems = ArrayList<String>()
+        groupItems.add(Constants.EXPENSE_GROUP)
+        expenseGroupList?.forEach { it ->
+            groupItems.add(it.name)
+        }
+        groupItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
+
+        return groupItems
     }
 
     private fun getSpinnerSubItems(expenseSubGroups: List<ExpenseSubGroup>): ArrayList<String> {

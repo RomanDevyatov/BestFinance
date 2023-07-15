@@ -181,11 +181,19 @@
             android:id="@+id/action_navigation_add_wallet_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
         <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_transfer"
+            app:destination="@id/navigation_add_transfer" />
+        <action
             android:id="@+id/action_navigation_add_wallet_to_navigation_add_expense"
             app:destination="@id/navigation_add_expense" />
 
         <argument
             android:name="source"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="spinnerType"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
@@ -198,6 +206,21 @@
         <action
             android:id="@+id/action_add_new_transfer_fragment_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_add_new_transfer_fragment_to_navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet" />
+
+        <argument
+            android:name="walletName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="spinnerType"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
     </fragment>
     <fragment
         android:id="@+id/navigation_analyze"

@@ -21,7 +21,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
-import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
@@ -316,9 +315,9 @@ class AddIncomeHistoryFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                val selectedIncomeSubGroupName = binding.walletSpinner.getItemAtPosition(position).toString()
+                val selectedWalletName = binding.walletSpinner.getItemAtPosition(position).toString()
 
-                if (selectedIncomeSubGroupName == Constants.ADD_NEW_WALLET) {
+                if (selectedWalletName == Constants.ADD_NEW_WALLET) {
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
                     action.source = Constants.ADD_INCOME_HISTORY_FRAGMENT
                     findNavController().navigate(action)
