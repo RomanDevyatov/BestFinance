@@ -82,6 +82,8 @@ class AddTransferFragment : Fragment() {
         val spinnerToAdapter = getAdapterForWalletSpinnerTo()
         binding.walletNameToSpinner.adapter = spinnerToAdapter
 
+        checkArgs(spinnerToAdapter)
+
         binding.walletNameToSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -95,7 +97,6 @@ class AddTransferFragment : Fragment() {
                     setClickOnAddNewWallet(Constants.SPINNER_TO)
                 }
 
-                checkArgs(spinnerToAdapter)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
