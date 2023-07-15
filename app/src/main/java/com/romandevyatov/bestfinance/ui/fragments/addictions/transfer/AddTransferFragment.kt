@@ -11,8 +11,8 @@ import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
@@ -25,7 +25,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewM
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
-import com.romandevyatov.bestfinance.viewmodels.shared.TransferForm
+import com.romandevyatov.bestfinance.viewmodels.shared.models.TransferForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -48,7 +48,7 @@ class AddTransferFragment : Fragment() {
 
     private var savedCommentEditTextValue: String? = null
 
-    private lateinit var sharedViewModel: SharedViewModel
+    private val sharedViewModel: SharedViewModel<TransferForm> by activityViewModels()
 
     private var editTextValue: String? = null
 
@@ -70,7 +70,7 @@ class AddTransferFragment : Fragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                sharedViewModel.setTransferFormValue(null)
+                sharedViewModel.set(null)
                 findNavController().navigate(R.id.action_add_new_transfer_fragment_to_navigation_home)
             }
         }
@@ -84,8 +84,6 @@ class AddTransferFragment : Fragment() {
         setSpinners()
         setDateEditText()
         setTransferButtonListener()
-
-
     }
 
 
@@ -120,6 +118,7 @@ class AddTransferFragment : Fragment() {
             val walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
 
             binding.walletNameFromSpinner.adapter = walletSpinnerAdapter
+            restoreTransferForm()
 
             checkArgs(walletSpinnerAdapter)
         }
@@ -149,6 +148,7 @@ class AddTransferFragment : Fragment() {
 
             binding.walletNameToSpinner.adapter = walletSpinnerAdapter
 
+            restoreTransferForm()
             checkArgs(walletSpinnerAdapter)
         }
     }
@@ -178,7 +178,7 @@ class AddTransferFragment : Fragment() {
                         comment = commentBinding,
                         date = dateEditText
                     )
-                    sharedViewModel.setTransferFormValue(transferForm)
+                    sharedViewModel.set(transferForm)
 
                     setClickOnAddNewWallet(Constants.SPINNER_TO)
                 }
@@ -216,7 +216,7 @@ class AddTransferFragment : Fragment() {
                         comment = commentBinding,
                         date = dateEditText
                     )
-                    sharedViewModel.setTransferFormValue(transferForm)
+                    sharedViewModel.set(transferForm)
 
                     setClickOnAddNewWallet(Constants.SPINNER_FROM)
                 }
@@ -229,16 +229,6 @@ class AddTransferFragment : Fragment() {
     }
 
     private fun checkArgs(spinnerAdapter: CustomSpinnerAdapter) {
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        sharedViewModel.transferForm.observe(viewLifecycleOwner) { transferForm ->
-            if (transferForm != null) {
-                binding.walletNameFromSpinner.setSelection(transferForm.fromWalletSpinnerPosition)
-                binding.walletNameToSpinner.setSelection(transferForm.toWalletSpinnerPosition)
-                binding.amountEditText.setText(transferForm.amount)
-                binding.commentEditText.setText(transferForm.comment)
-                binding.dateEditText.setText(transferForm.date)
-            }
-        }
         val addedWalletName = args.walletName
         val spinnerType = args.spinnerType
         if (addedWalletName?.isNotBlank() == true && spinnerType?.isNotBlank() == true) {
@@ -247,6 +237,18 @@ class AddTransferFragment : Fragment() {
                 binding.walletNameFromSpinner.setSelection(spinnerPosition)
             } else if (spinnerType == Constants.SPINNER_TO) {
                 binding.walletNameToSpinner.setSelection(spinnerPosition)
+            }
+        }
+    }
+
+    private fun restoreTransferForm() {
+        sharedViewModel.modelForm.observe(viewLifecycleOwner) { transferForm ->
+            if (transferForm != null) {
+                binding.walletNameFromSpinner.setSelection(transferForm.fromWalletSpinnerPosition)
+                binding.walletNameToSpinner.setSelection(transferForm.toWalletSpinnerPosition)
+                binding.amountEditText.setText(transferForm.amount)
+                binding.commentEditText.setText(transferForm.comment)
+                binding.dateEditText.setText(transferForm.date)
             }
         }
     }
@@ -286,7 +288,7 @@ class AddTransferFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTransferButtonListener() {
         binding.transferButton.setOnClickListener {
-            sharedViewModel.setTransferFormValue(null)
+            sharedViewModel.set(null)
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.amountEditText.text.toString().trim().toDouble()
 

@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="Date"
-        app:layout_constraintTop_toBottomOf="@+id/commentEditText"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditText"
         tools:layout_editor_absoluteX="0dp" />
 
     <EditText
@@ -52,7 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="Comment"
-        app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/dateEditText"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/transferButton"
