@@ -27,7 +27,7 @@ import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapt
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
-import com.romandevyatov.bestfinance.viewmodels.shared.models.AddIncomeForm
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -41,7 +41,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val addIncomeHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
 
-    private val sharedViewModel: SharedViewModel<AddIncomeForm> by activityViewModels()
+    private val sharedViewModel: SharedViewModel<AddTransactionForm> by activityViewModels()
 
     private var incomeGroupSpinnerPosition = 0
     private var incomeSubGroupSpinnerPosition = 0
@@ -356,13 +356,13 @@ class AddIncomeHistoryFragment : Fragment() {
         val dateEditText = binding.dateEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        val addIncomeForm = AddIncomeForm(
+        val addTransactionForm = AddTransactionForm(
             walletSpinnerPosition = walletSpinnerPosition,
             amount = amountBinding,
             date = dateEditText,
             comment = commentBinding
         )
-        sharedViewModel.set(addIncomeForm)
+        sharedViewModel.set(addTransactionForm)
     }
 
     private fun setAddIncomeFormBeforeAddingIncomeSubGroup() {
@@ -370,14 +370,14 @@ class AddIncomeHistoryFragment : Fragment() {
         val dateEditText = binding.dateEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        val addIncomeForm = AddIncomeForm(
-            incomeGroupSpinnerPosition = incomeGroupSpinnerPosition,
+        val addTransactionForm = AddTransactionForm(
+            groupSpinnerPosition = incomeGroupSpinnerPosition,
             walletSpinnerPosition = walletSpinnerPosition,
             amount = amountBinding,
             date = dateEditText,
             comment = commentBinding
         )
-        sharedViewModel.set(addIncomeForm)
+        sharedViewModel.set(addTransactionForm)
     }
 
     private fun setAddIncomeFormBeforeAddingWallet() {
@@ -385,21 +385,21 @@ class AddIncomeHistoryFragment : Fragment() {
         val commentBinding = binding.commentEditText.text.toString().trim()
         val dateEditText = binding.dateEditText.text.toString().trim()
 
-        val addIncomeForm = AddIncomeForm(
-            incomeGroupSpinnerPosition = incomeGroupSpinnerPosition,
-            incomeSubGroupSpinnerPosition = incomeSubGroupSpinnerPosition,
+        val addTransactionForm = AddTransactionForm(
+            groupSpinnerPosition = incomeGroupSpinnerPosition,
+            subGroupSpinnerPosition = incomeSubGroupSpinnerPosition,
             amount = amountBinding,
             comment = commentBinding,
             date = dateEditText
         )
-        sharedViewModel.set(addIncomeForm)
+        sharedViewModel.set(addTransactionForm)
     }
 
     private fun restoreAddingIncomeForm() {
         sharedViewModel.modelForm.observe(viewLifecycleOwner) { transferForm ->
             if (transferForm != null) {
-                binding.incomeGroupSpinner.setSelection(transferForm.incomeGroupSpinnerPosition)
-                binding.incomeSubGroupSpinner.setSelection(transferForm.incomeSubGroupSpinnerPosition)
+                binding.incomeGroupSpinner.setSelection(transferForm.groupSpinnerPosition)
+                binding.incomeSubGroupSpinner.setSelection(transferForm.subGroupSpinnerPosition)
                 binding.walletSpinner.setSelection(transferForm.walletSpinnerPosition)
                 binding.amountEditText.setText(transferForm.amount)
                 binding.dateEditText.setText(transferForm.date)
