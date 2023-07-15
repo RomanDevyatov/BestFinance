@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addIncomeGroupFragment"
-    tools:context=".ui.fragments.addiction.AddIncomeGroupFragment">
+    tools:context=".ui.fragments.addictions.income.AddIncomeGroupFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newIncomeGroupNameInputLayout"
+        android:id="@+id/groupNameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/newIncomeGroupNameInputEditText"
+            android:id="@+id/groupNameInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Income group name"
@@ -24,26 +24,39 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newIncomeGroupDescriptionInputLayout"
+        android:id="@+id/groupDescriptionInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/newIncomeGroupNameInputLayout"
-        app:layout_constraintStart_toStartOf="@+id/newIncomeGroupNameInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/newIncomeGroupNameInputLayout" >
+        app:layout_constraintEnd_toEndOf="@+id/groupNameInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/groupNameInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/groupNameInputLayout" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/newIncomeGroupDescriptionInputEditText"
+            android:id="@+id/groupDescriptionInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Income group description"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/isPassiveCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:checked="false"
+        android:text="Passive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupDescriptionInputLayout" />
+
     <Button
-        android:id="@+id/addNewIncomeGroupNameButton"
+        android:id="@+id/addNewGroupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:textSize="20sp"
         android:text="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

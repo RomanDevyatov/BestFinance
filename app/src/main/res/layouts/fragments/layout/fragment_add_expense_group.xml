@@ -5,20 +5,20 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addExpenseGroupNameFragment"
-    tools:context=".ui.fragments.addiction.AddExpenseGroupNameFragment" >
+    tools:context=".ui.fragments.addictions.expense.AddExpenseGroupNameFragment" >
 
     <EditText
         android:id="@+id/newExpenseGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group name"
+        android:hint="Expense group name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/newWalletDescriptionEditText"
+        android:id="@+id/commentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group description"
+        android:hint="Expense group description"
         app:layout_constraintEnd_toEndOf="@+id/newExpenseGroupName"
         app:layout_constraintStart_toStartOf="@+id/newExpenseGroupName"
         app:layout_constraintTop_toBottomOf="@+id/newExpenseGroupName" />
@@ -28,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:textSize="20sp"
         android:text="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

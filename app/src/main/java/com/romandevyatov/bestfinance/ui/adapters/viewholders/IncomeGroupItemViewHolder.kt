@@ -1,12 +1,12 @@
 package com.romandevyatov.bestfinance.ui.adapters.viewholders
 
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardIncomeGroupBinding
+import com.romandevyatov.bestfinance.databinding.CardGroupIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
 
 class IncomeGroupItemViewHolder(
-    private val binding: CardIncomeGroupBinding,
+    private val binding: CardGroupIncomeBinding,
     private val clickListener: DeleteItemClickListener<IncomeGroup>
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -14,7 +14,7 @@ class IncomeGroupItemViewHolder(
         binding.textView.text = incomeGroup.name
 
         binding.removeIncomeGroupIcon.setOnClickListener{
-            clickListener.deleteItem(incomeGroup)
+            clickListener.deleteIncomeGroupItem(incomeGroup)
         }
     }
 }

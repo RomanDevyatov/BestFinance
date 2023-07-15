@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.cardactions.DeleteItemClickListener
 import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import java.time.OffsetDateTime
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
+class WalletFragment : Fragment() {
 
     private lateinit var binding: FragmentMenuWalletBinding
 
@@ -43,20 +43,13 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMenuWalletBinding.bind(view)
 
-        binding.addExpenseButton.setOnClickListener {
+        binding.addWalletButton.setOnClickListener {
             val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
+            action.source = Constants.WALLETS_FRAGMENT
             findNavController().navigate(action)
-//            val nameOfNewWallet = binding.walletNameEditText.text.toString()
-//            val balanceOfNewWallet = binding.amountEditText.text.toString()
-//            walletViewModel.insertWallet(
-//                Wallet(
-//                    name = nameOfNewWallet,
-//                    balance = balanceOfNewWallet.toDouble()
-//                )
-//            )
         }
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) {
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) {
             walletAdapter.submitList(it)
         }
 
@@ -102,7 +95,7 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
 
                 val selectedWallet = walletAdapter.walletDiffer.currentList[pos]
 
-                val archivedWallet = Wallet(
+                val selectedWalletArchived = Wallet(
                     id = selectedWallet.id,
                     name = selectedWallet.name,
                     balance = selectedWallet.balance,
@@ -112,9 +105,9 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
                     description = selectedWallet.description
                 )
 
-                walletViewModel.updateWallet(archivedWallet)
+                walletViewModel.updateWallet(selectedWalletArchived)
 
-                Snackbar.make(viewHolder.itemView, "Wallet archived", Snackbar.LENGTH_LONG).apply {
+                Snackbar.make(viewHolder.itemView, "Wallet with name ${selectedWallet.name} is archived", Snackbar.LENGTH_LONG).apply {
                     setAction("UNDO") {
                         walletViewModel.updateWallet(selectedWallet)
                     }
@@ -129,32 +122,4 @@ class WalletFragment : Fragment(), DeleteItemClickListener<Wallet> {
         }
     }
 
-    override fun deleteItem(item: Wallet) {
-        walletViewModel.deleteWallet(item)
-    }
-
-//    override fun deleteIncomeGroup(incomeGroup: IncomeGroup) {
-//        incomeGroupViewModel.deleteIncomeGroup(incomeGroup)
-//    }
-
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        addMenuProvider(object : MenuProvider {
-//            override fun onPrepareMenu(menu: Menu) {
-//                MenuInflater.inflate(R.menu.option_menu, menu)
-//            }
-//
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                menuInflater.inflate(R.menu.option_menu, menu)
-//            }
-//
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                return menuItem.onNavDestinationSelected(navController)
-//            }
-//        })
-//        return super.onCreateView(inflater, container, savedInstanceState)
-//    }
 }

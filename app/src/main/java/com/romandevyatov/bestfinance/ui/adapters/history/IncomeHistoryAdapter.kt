@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardIncomeHistoryBinding
+import com.romandevyatov.bestfinance.databinding.CardHistoryIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.IncomeHistoryItemViewHolder
 
@@ -28,7 +28,7 @@ class IncomeHistoryAdapter : RecyclerView.Adapter<IncomeHistoryItemViewHolder>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeHistoryItemViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = CardIncomeHistoryBinding.inflate(from, parent, false)
+        val binding = CardHistoryIncomeBinding.inflate(from, parent, false)
         return IncomeHistoryItemViewHolder(binding)
     }
 

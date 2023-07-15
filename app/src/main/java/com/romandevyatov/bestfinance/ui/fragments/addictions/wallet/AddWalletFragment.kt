@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addictions.wallet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,52 +30,59 @@ class AddWalletFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddWalletBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNewWalletButton.setOnClickListener {
-            val walletNameBinding = binding.newWalletNameEditText.text.toString()
-            val walletBalanceBinding = binding.newWalletInitialBalance.text.toString().toDouble()
-            val walletDescriptionBinding = binding.newWalletDescriptionEditText.text.toString()
-            walletViewModel.insertWallet(
-                Wallet(
-                    name = walletNameBinding,
-                    balance = walletBalanceBinding,
-                    description = walletDescriptionBinding
-                )
+            val walletNameBinding = binding.nameEditText.text.toString()
+            val walletBalanceBinding = binding.balanceEditText.text.toString().toDouble()
+            val walletDescriptionBinding = binding.descriptionEditText.text.toString()
+
+            val newWallet = Wallet(
+                name = walletNameBinding,
+                balance = walletBalanceBinding,
+                description = walletDescriptionBinding
             )
 
-            performAction(args.source, walletNameBinding)
+            walletViewModel.insertWallet(newWallet)
+
+            performNavigation(args.source, walletNameBinding)
         }
-    }
-
-    fun performAction(prevFragmentString: String?, walletName: String) {
-        when (prevFragmentString) {
-            Constants.ADD_INCOME_HISTORY_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
-                action.walletName = walletName
-                findNavController().navigate(action)
-            }
-            Constants.ADD_EXPENSE_HISTORY_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
-                action.walletName = walletName
-                findNavController().navigate(action)
-            }
-            else -> {
-                AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
-            }
-        }
-
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun performNavigation(prevFragmentString: String?, walletName: String) {
+        when (prevFragmentString) {
+            Constants.ADD_INCOME_HISTORY_FRAGMENT -> {
+                val action =
+                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
+                action.walletName = walletName
+                findNavController().navigate(action)
+            }
+            Constants.ADD_EXPENSE_HISTORY_FRAGMENT -> {
+                val action =
+                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
+                action.walletName = walletName
+                findNavController().navigate(action)
+            }
+            Constants.ADD_TRANSFER_HISTORY_FRAGMENT -> {
+                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddTransfer()
+                action.walletName = walletName
+                action.spinnerType = args.spinnerType
+                findNavController().navigate(action)
+            }
+            Constants.WALLETS_FRAGMENT -> {
+                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
+                findNavController().navigate(action)
+            }
+        }
     }
 
 }

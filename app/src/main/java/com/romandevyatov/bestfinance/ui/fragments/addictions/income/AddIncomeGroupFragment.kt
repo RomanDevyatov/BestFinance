@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addiction
+package com.romandevyatov.bestfinance.ui.fragments.addictions.income
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,20 +35,22 @@ class AddIncomeGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNewIncomeGroupNameButton.setOnClickListener {
-            val newIncomeGroupName = binding.newIncomeGroupNameInputEditText.text.toString()
-            val newIncomeGroupDescriptionInput = binding.newIncomeGroupDescriptionInputEditText.text.toString()
+        binding.addNewGroupButton.setOnClickListener {
+            val newIncomeGroupName = binding.groupNameInputEditText.text.toString()
+            val newIncomeGroupDescriptionInput = binding.groupDescriptionInputEditText.text.toString()
+            val newIncomeGroupIsPassive = binding.isPassiveCheckBox.isChecked
 
             val newIncomeGroupNameEmptyValidation = EmptyValidator(newIncomeGroupName).validate()
-            binding.newIncomeGroupNameInputLayout.error = if (!newIncomeGroupNameEmptyValidation.isSuccess) getString(newIncomeGroupNameEmptyValidation.message) else null
+            binding.groupNameInputLayout.error = if (!newIncomeGroupNameEmptyValidation.isSuccess) getString(newIncomeGroupNameEmptyValidation.message) else null
 
             val newIncomeGroupDescriptionEmptyValidation = EmptyValidator(newIncomeGroupDescriptionInput).validate()
-            binding.newIncomeGroupNameInputLayout.error = if (!newIncomeGroupDescriptionEmptyValidation.isSuccess) getString(newIncomeGroupDescriptionEmptyValidation.message) else null
+            binding.groupNameInputLayout.error = if (!newIncomeGroupDescriptionEmptyValidation.isSuccess) getString(newIncomeGroupDescriptionEmptyValidation.message) else null
 
             incomeGroupViewModel.insertIncomeGroup(
                 IncomeGroup(
                     name = newIncomeGroupName,
-                    description = newIncomeGroupDescriptionInput
+                    description = newIncomeGroupDescriptionInput,
+                    isPassive = newIncomeGroupIsPassive
                 )
             )
 

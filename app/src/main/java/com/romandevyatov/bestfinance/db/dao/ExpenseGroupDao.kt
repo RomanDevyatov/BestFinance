@@ -11,8 +11,8 @@ import java.time.OffsetDateTime
 @Dao
 interface ExpenseGroupDao {
 
-    @Query("SELECT * FROM expense_group order by id ASC")
-    fun getAllLiveData(): LiveData<List<ExpenseGroup>>
+    @Query("SELECT * FROM expense_group WHERE archived_date IS NULL ORDER BY id ASC")
+    fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseGroup>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(expenseSubGroup: ExpenseGroup)
@@ -38,6 +38,10 @@ interface ExpenseGroupDao {
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
 
     @Transaction
+    @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
+
+    @Transaction
     @Query("SELECT * FROM expense_group")
     fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
 
@@ -47,5 +51,9 @@ interface ExpenseGroupDao {
 
     @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
     fun getExpenseGroupByNameAndNotArchivedLiveData(expenseGroupName: String): LiveData<ExpenseGroup>
+
+    @Transaction
+    @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(expenseGroupName: String): ExpenseGroupWithExpenseSubGroups
 
 }

@@ -7,8 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     android:id="@+id/addTransferFragment"
-    tools:context=".ui.fragments.addiction.AddTransferFragment">
-
+    tools:context=".ui.fragments.addictions.transfer.AddTransferFragment">
 
     <Spinner
         android:id="@+id/walletNameFromSpinner"
@@ -30,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinner" />
 
     <EditText
-        android:id="@+id/amount"
+        android:id="@+id/amountEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -38,11 +37,30 @@
         app:layout_constraintTop_toBottomOf="@+id/walletNameToSpinner"
         tools:layout_editor_absoluteX="0dp" />
 
+    <EditText
+        android:id="@+id/dateEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Date"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditText"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/commentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Comment"
+        app:layout_constraintTop_toBottomOf="@+id/dateEditText"
+        tools:layout_editor_absoluteX="0dp" />
+
     <Button
         android:id="@+id/transferButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Transfer"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

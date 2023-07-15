@@ -6,39 +6,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/addWalletFragment"
-    tools:context=".ui.fragments.addiction.AddWalletFragment" >
+    tools:context=".ui.fragments.addictions.wallet.AddWalletFragment" >
 
     <EditText
-        android:id="@+id/newWalletNameEditText"
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet name"
+        android:hint="@string/wallet_name_hint"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/newWalletDescriptionEditText"
+        android:id="@+id/balanceEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet description"
-        app:layout_constraintEnd_toEndOf="@+id/newWalletNameEditText"
-        app:layout_constraintStart_toStartOf="@+id/newWalletNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/newWalletNameEditText" />
+        android:layout_marginTop="32dp"
+        android:hint="@string/wallet_balance_hint"
+        app:layout_constraintEnd_toEndOf="@+id/descriptionEditText"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
 
     <EditText
-        android:id="@+id/newWalletInitialBalance"
+        android:id="@+id/descriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wallet balance"
-        app:layout_constraintEnd_toEndOf="@+id/newWalletDescriptionEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newWalletDescriptionEditText" />
+        android:layout_marginTop="32dp"
+        android:hint="@string/wallet_description_hint"
+        app:layout_constraintEnd_toEndOf="@+id/nameEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/nameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/balanceEditText" />
 
     <Button
         android:id="@+id/addNewWalletButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Add"
+        android:textSize="20sp"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -16,6 +16,9 @@ data class IncomeGroup(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "is_passive")
+    val isPassive: Boolean,
+
     @ColumnInfo(name = "description")
     val description: String? = null,
 

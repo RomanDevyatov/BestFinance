@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -25,6 +26,7 @@ class HomeFragment : Fragment() {
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
 
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +38,7 @@ class HomeFragment : Fragment() {
             override fun handleOnBackPressed() { }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         return binding.root
     }
 
@@ -49,16 +52,24 @@ class HomeFragment : Fragment() {
 
         setButtonListeners()
 
-        walletViewModel.notArchivedWalletsLiveData.observe(viewLifecycleOwner) { walletList ->
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             val balanceValue = walletList.sumOf { it.balance }
-            binding.capitalTextView.text = balanceValue.toString()
+            binding.totalCapitalTextView.text = balanceValue.toString()
         }
 
-        incomeHistoryViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
-            passiveIncomeValue = (history.filter { it.incomeSubGroupId == 3L}).sumOf { it.amount }
-            binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
+            homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
+                passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
+                    .filter { i ->
+                        incomeGroups.find {
+                            it.id == i.incomeSubGroup.incomeGroupId
+                        }?.isPassive ?: false
+                    }
+                    .sumOf { it.incomeHistory.amount }
+                binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
+            }
 
-            totalIncomeValue = history.sumOf { it.amount }
+            totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
             binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
 
             expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->

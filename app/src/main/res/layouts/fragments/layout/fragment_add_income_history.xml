@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addIncomeHistoryFragment"
-    tools:context=".ui.fragments.addiction.AddIncomeHistoryFragment" >
+    tools:context=".ui.fragments.addictions.income.AddIncomeHistoryFragment" >
 
     <Spinner
         android:id="@+id/incomeGroupSpinner"
@@ -22,6 +22,7 @@
         android:layout_width="270dp"
         android:layout_height="46dp"
         android:layout_marginTop="32dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/incomeGroupSpinner"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/incomeGroupSpinner"
@@ -75,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:textSize="20sp"
         android:text="Add"
         app:layout_constraintEnd_toEndOf="@+id/commentEditText"
         app:layout_constraintHorizontal_bias="0.496"

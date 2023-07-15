@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addExpenseHistoryFragment"
-    tools:context=".ui.fragments.addiction.AddExpenseHistoryFragment" >
+    tools:context=".ui.fragments.addictions.expense.AddExpenseHistoryFragment" >
 
     <Spinner
         android:id="@+id/expenseGroupSpinner"
@@ -69,10 +69,11 @@
         app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
 
     <Button
-        android:id="@+id/addExpenseButton"
+        android:id="@+id/addExpenseHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:textSize="20sp"
         android:text="Add"
         app:layout_constraintEnd_toEndOf="@+id/commentEditText"
         app:layout_constraintHorizontal_bias="0.517"

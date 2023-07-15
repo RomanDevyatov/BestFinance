@@ -18,7 +18,7 @@ class ExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
 ) : ViewModel() {
 
-    val expenseGroupsLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroups()
+    val allExpenseGroupsNotArchivedLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
     fun insertExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.insertExpenseGroup(expenseGroup)
