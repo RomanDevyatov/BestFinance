@@ -16,7 +16,7 @@ class SharedViewModel @Inject constructor(): ViewModel() {
         _transferForm.value = null
     }
 
-    fun setTransferFormValue(transferForm: TransferForm) {
+    fun setTransferFormValue(transferForm: TransferForm?) {
         _transferForm.value = transferForm
     }
 
