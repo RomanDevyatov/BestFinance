@@ -237,7 +237,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
             var customWalletAdapter = CustomSpinnerAdapter(requireContext(), spinnerWalletItems, archiveWalletListener)
 
-            // Populate the spinner with the names
             binding.walletSpinner.adapter = customWalletAdapter
 
             if (args.walletName != null && args.walletName!!.isNotBlank()) {

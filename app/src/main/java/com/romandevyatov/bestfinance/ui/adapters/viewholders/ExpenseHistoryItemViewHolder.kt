@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardExpenseHistoryBinding
+import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class ExpenseHistoryItemViewHolder (private val binding: CardExpenseHistoryBinding
+class ExpenseHistoryItemViewHolder (private val binding: CardHistoryExpenseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.O)

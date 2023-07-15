@@ -3,12 +3,12 @@ package com.romandevyatov.bestfinance.ui.adapters.viewholders
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardIncomeHistoryBinding
+import com.romandevyatov.bestfinance.databinding.CardHistoryIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import java.time.format.DateTimeFormatter
 
 class IncomeHistoryItemViewHolder(
-    private val binding: CardIncomeHistoryBinding
+    private val binding: CardHistoryIncomeBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.O)

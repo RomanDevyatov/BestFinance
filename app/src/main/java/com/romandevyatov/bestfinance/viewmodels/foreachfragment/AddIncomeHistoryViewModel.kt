@@ -41,13 +41,14 @@ class AddIncomeHistoryViewModel @Inject constructor(
 
         val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
         val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
+        val archivedDate = OffsetDateTime.now()
 
         val incomeGroupArchived = IncomeGroup(
             id = incomeGroup.id,
             name = incomeGroup.name,
             isPassive = incomeGroup.isPassive,
             description = incomeGroup.description,
-            archivedDate = OffsetDateTime.now()
+            archivedDate = archivedDate
         )
         updateIncomeGroup(incomeGroupArchived)
 
@@ -57,7 +58,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 name = subGroup.name,
                 description = subGroup.description,
                 incomeGroupId = subGroup.incomeGroupId,
-                archivedDate = OffsetDateTime.now()
+                archivedDate = archivedDate
             )
 
             updateIncomeSubGroup(incomeSubGroupArchived)

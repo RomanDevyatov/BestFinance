@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardWalletBinding
+import com.romandevyatov.bestfinance.databinding.CardItemWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
 
 class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
@@ -25,7 +25,7 @@ class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>
 
 
     inner class WalletItemViewHolder(
-        private val binding: CardWalletBinding
+        private val binding: CardItemWalletBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(wallet: Wallet) {
@@ -37,7 +37,7 @@ class WalletAdapter() : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletItemViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = CardWalletBinding.inflate(from, parent, false)
+        val binding = CardItemWalletBinding.inflate(from, parent, false)
         return WalletItemViewHolder(binding)
     }
 

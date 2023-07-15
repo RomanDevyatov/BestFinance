@@ -201,7 +201,6 @@ class AddIncomeHistoryFragment : Fragment() {
                 binding.incomeGroupSpinner.setSelection(spinnerPosition)
             }
 
-//            binding.incomeGroupSpinner.setSelection(0,false)
             binding.incomeGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
                     override fun onItemSelected(

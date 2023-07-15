@@ -45,11 +45,12 @@ class AddExpenseHistoryViewModel @Inject constructor(
         val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
         val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
 
+        val archivedDate = OffsetDateTime.now()
         val expenseGroupArchived = ExpenseGroup(
             id = expenseGroup.id,
             name = expenseGroup.name,
             description = expenseGroup.description,
-            archivedDate = OffsetDateTime.now()
+            archivedDate = archivedDate
         )
         updateExpenseGroup(expenseGroupArchived)
 
@@ -59,7 +60,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 name = subGroup.name,
                 description = subGroup.description,
                 expenseGroupId = subGroup.expenseGroupId,
-                archivedDate = OffsetDateTime.now()
+                archivedDate = archivedDate
             )
 
             updateExpenseSubGroup(expenseSubGroupArchived)

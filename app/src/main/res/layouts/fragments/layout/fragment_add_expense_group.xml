@@ -11,14 +11,14 @@
         android:id="@+id/newExpenseGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group name"
+        android:hint="Expense group name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/commentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income group description"
+        android:hint="Expense group description"
         app:layout_constraintEnd_toEndOf="@+id/newExpenseGroupName"
         app:layout_constraintStart_toStartOf="@+id/newExpenseGroupName"
         app:layout_constraintTop_toBottomOf="@+id/newExpenseGroupName" />
