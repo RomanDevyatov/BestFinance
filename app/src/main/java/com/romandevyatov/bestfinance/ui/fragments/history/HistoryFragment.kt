@@ -14,9 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class HistoryFragment : Fragment() {
 
     private val historyTypeArray = arrayOf(
-        "Income",
-        "Expense",
-        "Transfer"
+        "Incomes",
+        "Expenses",
+        "Transfers"
     )
 
     private var _binding: FragmentHistoryBinding? = null
