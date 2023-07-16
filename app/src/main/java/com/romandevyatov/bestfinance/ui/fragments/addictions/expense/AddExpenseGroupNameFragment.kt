@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class AddExpenseGroupNameFragment : Fragment() {
     private var _binding: FragmentAddExpenseGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
+    private val expenseGroupViewModel: AddExpenseGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

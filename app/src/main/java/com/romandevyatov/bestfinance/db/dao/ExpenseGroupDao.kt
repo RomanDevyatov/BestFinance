@@ -56,4 +56,11 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(expenseGroupName: String): ExpenseGroupWithExpenseSubGroups
 
+    @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
+    fun getExpenseGroupByName(name: String): ExpenseGroup
+
+    @Transaction
+    @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name: String): ExpenseGroupWithExpenseSubGroups
+
 }

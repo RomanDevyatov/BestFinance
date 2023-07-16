@@ -38,4 +38,15 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup = expenseSubGroupDao.getExpenseSubGroupByNameNotArchived(name)
 
+    suspend fun unarchiveExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) {
+        val expenseSubGroupNotArchived = ExpenseSubGroup(
+            id = expenseSubGroup.id,
+            name = expenseSubGroup.name,
+            description = expenseSubGroup.description,
+            expenseGroupId = expenseSubGroup.expenseGroupId,
+            archivedDate = null
+        )
+        updateExpenseSubGroup(expenseSubGroupNotArchived)
+    }
+
 }

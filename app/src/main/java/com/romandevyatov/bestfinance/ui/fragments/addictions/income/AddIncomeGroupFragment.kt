@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
-import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +19,7 @@ class AddIncomeGroupFragment : Fragment() {
     private var _binding: FragmentAddIncomeGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
+    private val incomeGroupViewModel: AddIncomeGroupViewModel by viewModels()
 
 
     override fun onCreateView(

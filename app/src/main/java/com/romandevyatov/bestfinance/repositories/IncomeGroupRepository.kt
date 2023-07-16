@@ -1,10 +1,13 @@
 package com.romandevyatov.bestfinance.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,6 +17,10 @@ class IncomeGroupRepository @Inject constructor(
 ) {
 
     fun getAllLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
+
+    fun getIncomeGroupByName(name: String): IncomeGroup {
+        return incomeGroupDao.getByName(name)
+    }
 
     suspend fun insertIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupDao.insert(incomeGroup)
@@ -44,7 +51,7 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupDao.getIncomeGroupNameByNameLiveData(incomeGroupName)
+        return incomeGroupDao.getByNameLiveData(incomeGroupName)
     }
 
     fun getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
@@ -59,8 +66,23 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName)
     }
 
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName)
+    }
+
     suspend fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
         return incomeGroupDao.getByIdNotArchived(incomeGroupId)
+    }
+
+    suspend fun unarchiveIncomeGroup(incomeGroup: IncomeGroup) {
+        val incomeGroupNotArchived = IncomeGroup(
+            id = incomeGroup.id,
+            name = incomeGroup.name,
+            isPassive = incomeGroup.isPassive,
+            description = incomeGroup.description,
+            archivedDate = null
+        )
+        updateIncomeGroup(incomeGroupNotArchived)
     }
 
 
