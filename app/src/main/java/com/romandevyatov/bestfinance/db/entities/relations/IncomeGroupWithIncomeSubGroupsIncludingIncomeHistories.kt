@@ -5,7 +5,6 @@ import androidx.room.Relation
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 
-
 data class IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories (
 
     @Embedded

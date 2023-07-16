@@ -1,9 +1,6 @@
 package com.romandevyatov.bestfinance.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.time.OffsetDateTime
 
 
@@ -15,7 +12,8 @@ import java.time.OffsetDateTime
             childColumns = ["income_group_id"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["id", "name"], unique = true)]
 )
 data class IncomeSubGroup (
 

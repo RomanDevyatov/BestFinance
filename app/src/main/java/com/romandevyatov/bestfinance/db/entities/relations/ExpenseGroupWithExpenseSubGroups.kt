@@ -5,8 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-// and  - 1 to 1
-// with - 1 to 0 or many
+
 data class ExpenseGroupWithExpenseSubGroups(
 
     @Embedded

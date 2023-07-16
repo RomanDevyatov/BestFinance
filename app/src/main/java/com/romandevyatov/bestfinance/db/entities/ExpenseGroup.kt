@@ -2,10 +2,15 @@ package com.romandevyatov.bestfinance.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
 
-@Entity(tableName = "expense_group")
+@Entity(
+    tableName = "expense_group",
+    indices = [Index(value = ["id", "name"], unique = true)]
+)
+
 data class ExpenseGroup(
 
     @PrimaryKey(autoGenerate = true)

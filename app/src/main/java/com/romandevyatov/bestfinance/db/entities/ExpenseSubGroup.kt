@@ -1,10 +1,7 @@
 package com.romandevyatov.bestfinance.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.*
 import androidx.room.ForeignKey.Companion.CASCADE
-import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
 
 
@@ -16,7 +13,8 @@ import java.time.OffsetDateTime
             childColumns = ["expense_group_id"], // ExpenseSubGroup
             onDelete = CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["id", "name"], unique = true)]
 )
 data class ExpenseSubGroup(
 

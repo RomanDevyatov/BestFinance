@@ -2,11 +2,15 @@ package com.romandevyatov.bestfinance.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.OffsetDateTime
 
 
-@Entity(tableName = "wallet")
+@Entity(
+    tableName = "wallet",
+    indices = [Index(value = ["id", "name"], unique = true)]
+)
 data class Wallet(
 
     @PrimaryKey(autoGenerate = true)
