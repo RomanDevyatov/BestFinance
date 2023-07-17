@@ -198,6 +198,7 @@ class AddIncomeHistoryFragment : Fragment() {
                             findNavController().navigate(action)
                         }
 
+                        // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
                         addIncomeHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(selectedIncomeGroupName)
                             .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
                                 spinnerSubItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups)

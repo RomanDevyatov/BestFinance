@@ -197,7 +197,7 @@ class AddExpenseHistoryFragment : Fragment() {
                             AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
                         findNavController().navigate(action)
                     }
-
+                    // TODO: doesn't work as expected
                     addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
                         .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
                             subGroupItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups)
@@ -252,7 +252,7 @@ class AddExpenseHistoryFragment : Fragment() {
         val groupItems = ArrayList<String>()
         groupItems.add(Constants.EXPENSE_GROUP)
         expenseGroupList?.forEach { it ->
-            groupItems.add(it.name)
+                groupItems.add(it.name)
         }
         groupItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
 
