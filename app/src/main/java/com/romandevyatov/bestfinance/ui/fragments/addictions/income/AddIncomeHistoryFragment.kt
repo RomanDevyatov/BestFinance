@@ -22,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
+import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
@@ -226,12 +226,12 @@ class AddIncomeHistoryFragment : Fragment() {
 
                         addIncomeHistoryViewModel.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(selectedIncomeGroupName)
                             .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
-                                if (incomeGroupWithIncomeSubGroups != null) {
-                                    spinnerSubItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups.incomeSubGroups)
-                                    customIncomeSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
-                                    binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupSpinnerAdapter
-                                }
-
+                                val spinnerSubItems = ArrayList<String>()
+                                spinnerSubItems.add(Constants.INCOME_SUB_GROUP)
+                                setSpinnerSubItems(incomeGroupWithIncomeSubGroups, spinnerSubItems)
+                                spinnerSubItems.add(Constants.ADD_NEW_INCOME_SUB_GROUP)
+                                customIncomeSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
+                                binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupSpinnerAdapter
 
                                 if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
                                     val spinnerPosition = customIncomeSubGroupSpinnerAdapter.getPosition(args.incomeSubGroupName)
@@ -280,16 +280,12 @@ class AddIncomeHistoryFragment : Fragment() {
         button.setBackgroundColor(ContextCompat.getColor(binding.addIncomeHistoryButton.context, R.color.black))
     }
 
-    private fun getSpinnerSubItems(incomeSubGroups: List<IncomeSubGroup>): ArrayList<String> {
-        val spinnerSubItems = ArrayList<String>()
-        spinnerSubItems.add(Constants.INCOME_SUB_GROUP)
-
-        incomeSubGroups.forEach {
-            spinnerSubItems.add(it.name)
+    private fun setSpinnerSubItems(incomeGroupWithIncomeSubGroups: IncomeGroupWithIncomeSubGroups?, spinnerSubItems: ArrayList<String>) {
+        incomeGroupWithIncomeSubGroups?.incomeSubGroups?.forEach {
+            if (it.archivedDate == null) {
+                spinnerSubItems.add(it.name)
+            }
         }
-        spinnerSubItems.add(Constants.ADD_NEW_INCOME_SUB_GROUP)
-
-        return spinnerSubItems
     }
 
     private fun initWalletSpinner() {

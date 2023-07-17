@@ -17,7 +17,7 @@ import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
-import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,8 +26,7 @@ class AddIncomeSubGroupFragment : Fragment() {
     private var _binding: FragmentAddIncomeSubGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val incomeSubGroupViewModel: IncomeSubGroupViewModel by viewModels()
-    private val incomeGroupViewModel: IncomeGroupViewModel by viewModels()
+    private val addIncomeSubGroupViewModel: AddIncomeSubGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +50,7 @@ class AddIncomeSubGroupFragment : Fragment() {
 
             val incomeSubGroupNameBinding = binding.newIncomeSubGroupName.text.toString()
 
-            incomeGroupViewModel.getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+            addIncomeSubGroupViewModel.getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
                 val incomeGroupId = it.id!!
 
                 val descriptionBinding = binding.newIncomeSubGroupDescription.text.toString()
@@ -62,7 +61,7 @@ class AddIncomeSubGroupFragment : Fragment() {
                     incomeGroupId = incomeGroupId
                 )
 
-                incomeSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
+                addIncomeSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
 
                 val action = AddIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
                 action.incomeGroupName = selectedIncomeGroupName
@@ -75,7 +74,7 @@ class AddIncomeSubGroupFragment : Fragment() {
     private fun initIncomeGroupSpinner() {
         val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
 
-        incomeGroupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { incomeGroupList ->
+        addIncomeSubGroupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { incomeGroupList ->
             spinnerAdapter.clear()
             spinnerAdapter.add(Constants.INCOME_GROUP)
             incomeGroupList?.forEach { it ->
@@ -93,8 +92,8 @@ class AddIncomeSubGroupFragment : Fragment() {
     }
 
     private fun submitNewIncomeSubGroup(selectedIncomeGroupName: String) {
-        incomeGroupViewModel.getIncomeGroupNameByNameLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
-            incomeSubGroupViewModel.insertIncomeSubGroup(
+        addIncomeSubGroupViewModel.getIncomeGroupNameByNameLiveData(selectedIncomeGroupName).observe(viewLifecycleOwner) {
+            addIncomeSubGroupViewModel.insertIncomeSubGroup(
                 IncomeSubGroup(
                     name = binding.newIncomeSubGroupName.text.toString(),
                     description = binding.newIncomeSubGroupDescription.text.toString(),

@@ -28,7 +28,7 @@ interface IncomeSubGroupDao {
     suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByName(name: String?): IncomeSubGroup
+    fun getByName(name: String): IncomeSubGroup
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
     fun getByNameNotArchived(name: String?): IncomeSubGroup

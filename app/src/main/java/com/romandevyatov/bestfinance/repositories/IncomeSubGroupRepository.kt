@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.repositories
 
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.IncomeSubGroupDao
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import javax.inject.Inject
 
@@ -38,15 +37,19 @@ class IncomeSubGroupRepository @Inject constructor(
 
     fun getByNameNotArchived(name: String): IncomeSubGroup = incomeSubGroupDao.getByNameNotArchived(name)
 
-    suspend fun unarchiveIncomeSubGroup(it: IncomeSubGroup) {
+    suspend fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
         val incomeSubGroupNotArchived = IncomeSubGroup(
-            id = it.id,
-            name = it.name,
-            description = it.description,
-            incomeGroupId = it.incomeGroupId,
+            id = incomeSubGroup.id,
+            name = incomeSubGroup.name,
+            description = incomeSubGroup.description,
+            incomeGroupId = incomeSubGroup.incomeGroupId,
             archivedDate = null
         )
         updateIncomeSubGroup(incomeSubGroupNotArchived)
+    }
+
+    fun getIncomeSubGroupByName(name: String): IncomeSubGroup {
+        return incomeSubGroupDao.getByName(name)
     }
 
 }
