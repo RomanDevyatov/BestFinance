@@ -264,7 +264,9 @@ class AddExpenseHistoryFragment : Fragment() {
         spinnerSubItems.add(Constants.EXPENSE_SUB_GROUP)
 
         expenseGroupWithExpenseSubGroups?.expenseSubGroups?.forEach {
-            spinnerSubItems.add(it.name)
+            if (it.archivedDate != null) {
+                spinnerSubItems.add(it.name)
+            }
         }
         spinnerSubItems.add(Constants.ADD_NEW_EXPENSE_SUB_GROUP)
 

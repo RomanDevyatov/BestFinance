@@ -202,6 +202,7 @@ class AddIncomeHistoryFragment : Fragment() {
                             .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
                                 spinnerSubItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups)
                                 customIncomeSubGroupSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerSubItems, archiveIncomeSubGroupOnLongPressListener)
+
                                 binding.incomeSubGroupSpinner.adapter = customIncomeSubGroupSpinnerAdapter
 
                                 if (args.incomeSubGroupName != null && args.incomeSubGroupName!!.isNotBlank()) {
@@ -255,7 +256,9 @@ class AddIncomeHistoryFragment : Fragment() {
         val spinnerSubItems = ArrayList<String>()
         spinnerSubItems.add(Constants.INCOME_SUB_GROUP)
         incomeGroupWithIncomeSubGroups?.incomeSubGroups?.forEach {
-            spinnerSubItems.add(it.name)
+            if (it.archivedDate != null) {
+                spinnerSubItems.add(it.name)
+            }
         }
         spinnerSubItems.add(Constants.ADD_NEW_INCOME_SUB_GROUP)
         return spinnerSubItems

@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.db.entities
 import androidx.room.*
 import java.time.OffsetDateTime
 
-
 @Entity(tableName = "income_sub_group",
     foreignKeys = [
         ForeignKey(
