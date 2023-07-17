@@ -256,7 +256,7 @@ class AddIncomeHistoryFragment : Fragment() {
         val spinnerSubItems = ArrayList<String>()
         spinnerSubItems.add(Constants.INCOME_SUB_GROUP)
         incomeGroupWithIncomeSubGroups?.incomeSubGroups?.forEach {
-            if (it.archivedDate != null) {
+            if (it.archivedDate == null) {
                 spinnerSubItems.add(it.name)
             }
         }
