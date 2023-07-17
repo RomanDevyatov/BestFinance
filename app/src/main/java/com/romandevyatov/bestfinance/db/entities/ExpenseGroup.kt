@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 
 @Entity(
     tableName = "expense_group",
-    indices = [Index(value = ["id", "name"], unique = true)]
+    indices = [Index(value = ["name"], unique = true)]
 )
 
 data class ExpenseGroup(

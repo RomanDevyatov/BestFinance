@@ -4,7 +4,6 @@ package com.romandevyatov.bestfinance.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.db.dao.ExpenseGroupDao
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import javax.inject.Inject
@@ -41,8 +40,8 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName)
     }
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
-        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName)
+    fun getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
+        return expenseGroupDao.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(expenseGroupName)
     }
 
     fun getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> {

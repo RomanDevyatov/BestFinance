@@ -1,13 +1,10 @@
 package com.romandevyatov.bestfinance.repositories
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.dao.IncomeGroupDao
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,11 +40,11 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
+        return incomeGroupDao.getAllIncomeGroupNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName)
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName)
     }
 
     fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {

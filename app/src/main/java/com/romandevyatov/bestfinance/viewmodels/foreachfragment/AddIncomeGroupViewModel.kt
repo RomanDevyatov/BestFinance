@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.repositories.IncomeGroupRepository
@@ -58,7 +57,7 @@ class AddIncomeGroupViewModel @Inject constructor(
     }
 
     fun getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name)
+        return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
     fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {

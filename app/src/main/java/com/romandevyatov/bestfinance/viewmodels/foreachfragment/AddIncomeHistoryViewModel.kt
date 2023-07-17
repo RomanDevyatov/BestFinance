@@ -31,8 +31,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name)
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

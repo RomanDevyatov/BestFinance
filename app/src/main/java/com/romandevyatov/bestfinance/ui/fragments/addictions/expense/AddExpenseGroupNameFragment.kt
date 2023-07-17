@@ -36,7 +36,8 @@ class AddExpenseGroupNameFragment : Fragment() {
         binding.addNewExpenseGroupNameButton.setOnClickListener {
             expenseGroupViewModel.insertExpenseGroup(
                 ExpenseGroup(
-                    name = binding.newExpenseGroupName.text.toString()
+                    name = binding.newExpenseGroupName.text.toString(),
+                    description = binding.commentEditText.text.toString()
                 )
             )
             val action =

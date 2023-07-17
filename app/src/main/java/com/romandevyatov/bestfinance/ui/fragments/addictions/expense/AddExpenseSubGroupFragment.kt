@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ class AddExpenseSubGroupFragment : Fragment() {
     private val expenseSubGroupViewModel: ExpenseSubGroupViewModel by viewModels()
     private val expenseGroupViewModel: ExpenseGroupViewModel by viewModels()
 
-    val args: AddExpenseSubGroupFragmentArgs by navArgs()
+    private val args: AddExpenseSubGroupFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,23 +46,20 @@ class AddExpenseSubGroupFragment : Fragment() {
 
             val expenseSubGroupNameBinding = binding.subGroupNameEditText.text.toString()
 
-            expenseGroupViewModel.getExpenseGroupByNameAndArchivedDateIsNull(
-                selectedExpenseGroupName
-            ).observe(viewLifecycleOwner) {
+            expenseGroupViewModel.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName).observe(viewLifecycleOwner) {
                 val expenseGroupId = it.id!!
 
                 val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
 
-                val newIncomeSubGroup = ExpenseSubGroup(
+                val newExpenseSubGroup = ExpenseSubGroup(
                     name = expenseSubGroupNameBinding,
                     description = descriptionBinding,
                     expenseGroupId = expenseGroupId
                 )
 
-                expenseSubGroupViewModel.insertExpenseSubGroup(newIncomeSubGroup)
+                expenseSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
 
-                val action =
-                    AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
+                val action = AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
                 action.expenseGroupName = selectedExpenseGroupName
                 action.expenseSubGroupName = expenseSubGroupNameBinding
                 findNavController().navigate(action)
@@ -79,7 +77,7 @@ class AddExpenseSubGroupFragment : Fragment() {
 
         expenseGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             spinnerAdapter.clear()
-            spinnerAdapter.add("Expense group")
+            spinnerAdapter.add(Constants.EXPENSE_GROUP)
             expenseGroupList?.forEach { it ->
                 spinnerAdapter.add(it.name)
             }

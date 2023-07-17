@@ -20,7 +20,13 @@ class ExpenseSubGroupViewModel @Inject constructor(
     val expenseSubGroupsLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseSubGroups()
 
     fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroup.name, expenseSubGroup.expenseGroupId)
+
+        if (existingExpenseSubGroup == null) {
+            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+        } else if (existingExpenseSubGroup.archivedDate != null) {
+            expenseSubGroupRepository.unarchiveExpenseSubGroup(existingExpenseSubGroup)
+        }
     }
 
     fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {

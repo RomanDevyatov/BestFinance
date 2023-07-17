@@ -16,7 +16,7 @@ interface WalletDao {
     @Query("SELECT * FROM wallet ORDER BY id ASC")
     fun getAllLiveData(): LiveData<List<Wallet>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(wallet: Wallet)
 
     @Delete

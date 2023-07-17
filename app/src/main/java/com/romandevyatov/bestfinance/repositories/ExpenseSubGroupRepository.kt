@@ -32,7 +32,9 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
-    fun getExpenseSubGroupByName(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameLiveData(name)
+    fun getExpenseSubGroupByNameLiveData(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameLiveData(name)
+
+    fun getExpenseSubGroupByName(name: String): ExpenseSubGroup = expenseSubGroupDao.getByName(name)
 
     fun getExpenseSubGroupByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameNotArchivedLiveData(name)
 
@@ -48,5 +50,7 @@ class ExpenseSubGroupRepository @Inject constructor(
         )
         updateExpenseSubGroup(expenseSubGroupNotArchived)
     }
+
+    fun getExpenseSubGroupByNameAndExpenseGroupId(name: String, expenseGroupId: Long): ExpenseSubGroup = expenseSubGroupDao.getByNameAndGroupId(name, expenseGroupId)
 
 }

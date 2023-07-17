@@ -9,7 +9,7 @@ import java.time.OffsetDateTime
 
 @Entity(
     tableName = "wallet",
-    indices = [Index(value = ["id", "name"], unique = true)]
+    indices = [Index(value = ["name"], unique = true)]
 )
 data class Wallet(
 

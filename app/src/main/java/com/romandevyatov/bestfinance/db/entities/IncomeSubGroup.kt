@@ -12,8 +12,7 @@ import java.time.OffsetDateTime
             childColumns = ["income_group_id"],
             onDelete = ForeignKey.CASCADE
         )
-    ],
-    indices = [Index(value = ["id", "name"], unique = true)]
+    ]
 )
 data class IncomeSubGroup (
 

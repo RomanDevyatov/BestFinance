@@ -6,14 +6,13 @@ import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 
-
 @Dao
 interface IncomeGroupDao {
 
     @Query("SELECT * FROM income_group ORDER BY id ASC")
     fun getAllLiveData(): LiveData<List<IncomeGroup>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(incomeGroup: IncomeGroup)
 
     @Delete
@@ -34,19 +33,19 @@ interface IncomeGroupDao {
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE archived_date IS NULL LIMIT 1")
-    fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+    fun getAllIncomeGroupNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
-    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL LIMIT 1")
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
-
-    @Transaction
-    @Query("SELECT * " +
-            "FROM income_group " +
-            "JOIN income_sub_group ON income_group.id = income_sub_group.income_group_id " +
-            "WHERE income_group.name = :incomeGroupName " +
-            "AND income_group.archive IS NULL " +
-            "AND income_sub_group.archive IS NULL")
+    @Query("SELECT " +
+            "ig.id, ig.name, ig.is_passive, ig.description, ig.archived_date, " +
+            "isg.id, isg.name, isg.description, isg.income_group_id, isg.archived_date " +
+            "FROM income_group ig " +
+            "INNER JOIN income_sub_group isg " +
+            "ON ig.id = isg.income_group_id " +
+            "WHERE ig.name = :incomeGroupName " +
+            "AND ig.archived_date IS NULL " +
+            "AND isg.archived_date IS NULL " +
+            "LIMIT 1")
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName LIMIT 1")

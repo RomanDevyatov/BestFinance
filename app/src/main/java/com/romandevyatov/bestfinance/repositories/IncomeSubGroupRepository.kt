@@ -52,4 +52,8 @@ class IncomeSubGroupRepository @Inject constructor(
         return incomeSubGroupDao.getByName(name)
     }
 
+    fun getIncomeSubGroupByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup {
+        return incomeSubGroupDao.getByNameAndIncomeGroupId(name, incomeGroupId)
+    }
+
 }

@@ -14,7 +14,7 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE archived_date IS NULL ORDER BY id ASC")
     fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseGroup>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(expenseSubGroup: ExpenseGroup)
 
     @Delete
@@ -38,8 +38,17 @@ interface ExpenseGroupDao {
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
 
     @Transaction
-    @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName AND archived_date IS NULL")
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
+    @Query("SELECT " +
+            "eg.id, eg.name, eg.description, eg.archived_date, " +
+            "esg.id, esg.name, esg.description, esg.expense_group_id, esg.archived_date " +
+            "FROM expense_group eg " +
+            "INNER JOIN expense_sub_group esg " +
+            "ON eg.id = esg.expense_group_id " +
+            "WHERE eg.name = :expenseGroupName " +
+            "AND eg.archived_date IS NULL " +
+            "AND esg.archived_date IS NULL " +
+            "LIMIT 1")
+    fun getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups>
 
     @Transaction
     @Query("SELECT * FROM expense_group")

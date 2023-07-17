@@ -1,22 +1,17 @@
 package com.romandevyatov.bestfinance.ui.fragments.addictions.income
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
 import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,14 +23,15 @@ class AddIncomeSubGroupFragment : Fragment() {
 
     private val addIncomeSubGroupViewModel: AddIncomeSubGroupViewModel by viewModels()
 
+    private val args: AddIncomeSubGroupFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddIncomeSubGroupBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,6 +65,11 @@ class AddIncomeSubGroupFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun initIncomeGroupSpinner() {
@@ -117,14 +118,6 @@ class AddIncomeSubGroupFragment : Fragment() {
             return "Invalid Income Sub Group Name"
         }
         return null
-    }
-
-    val args: AddIncomeSubGroupFragmentArgs by navArgs()
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }
