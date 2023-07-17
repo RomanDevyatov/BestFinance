@@ -40,6 +40,15 @@ interface IncomeGroupDao {
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL LIMIT 1")
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
+    @Transaction
+    @Query("SELECT * " +
+            "FROM income_group " +
+            "JOIN income_sub_group ON income_group.id = income_sub_group.income_group_id " +
+            "WHERE income_group.name = :incomeGroupName " +
+            "AND income_group.archive IS NULL " +
+            "AND income_sub_group.archive IS NULL")
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
+
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName LIMIT 1")
     fun getByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>
 
