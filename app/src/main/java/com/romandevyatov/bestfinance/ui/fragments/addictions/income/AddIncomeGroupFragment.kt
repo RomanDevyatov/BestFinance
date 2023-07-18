@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,23 +41,25 @@ class AddIncomeGroupFragment : Fragment() {
             val newIncomeGroupDescriptionInput = binding.groupDescriptionInputEditText.text.toString()
             val newIncomeGroupIsPassive = binding.isPassiveCheckBox.isChecked
 
-            val newIncomeGroupNameEmptyValidation = EmptyValidator(newIncomeGroupName).validate()
-            binding.groupNameInputLayout.error = if (!newIncomeGroupNameEmptyValidation.isSuccess) getString(newIncomeGroupNameEmptyValidation.message) else null
 
-            val newIncomeGroupDescriptionEmptyValidation = EmptyValidator(newIncomeGroupDescriptionInput).validate()
-            binding.groupNameInputLayout.error = if (!newIncomeGroupDescriptionEmptyValidation.isSuccess) getString(newIncomeGroupDescriptionEmptyValidation.message) else null
+            val nameEmptyValidation = EmptyValidator(newIncomeGroupName).validate()
+            binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
-            incomeGroupViewModel.insertIncomeGroup(
-                IncomeGroup(
-                    name = newIncomeGroupName,
-                    description = newIncomeGroupDescriptionInput,
-                    isPassive = newIncomeGroupIsPassive
+            if (binding.groupNameInputLayout.error == null) {
+                incomeGroupViewModel.insertIncomeGroup(
+                    IncomeGroup(
+                        name = newIncomeGroupName,
+                        description = newIncomeGroupDescriptionInput,
+                        isPassive = newIncomeGroupIsPassive
+                    )
                 )
-            )
 
-            val action = AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
-            action.incomeGroupName = newIncomeGroupName
-            findNavController().navigate(action)
+
+                val action =
+                    AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
+                action.incomeGroupName = newIncomeGroupName
+                findNavController().navigate(action)
+            }
         }
     }
 

@@ -2,6 +2,7 @@
     <string name="app_name">BestFinance</string>
     <string name="hello_blank_fragment">20000 Deneg Amount</string>
     <string name="text_validation_success">Correct!</string>
-    <string name="text_validation_error_empty_field">Please enter some text!</string>
+    <string name="text_validation_error_empty_field">Please fill empty field!</string>
+    <string name="text_validation_error_wrong_email_field">Incorrect email address!</string>
 
 </resources>
