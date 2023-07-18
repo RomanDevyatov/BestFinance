@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,6 +20,7 @@ import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
 import java.time.OffsetDateTime
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +31,8 @@ class WalletFragment : Fragment() {
 
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
+
+    private val sharedViewModel: SharedViewModel<Wallet> by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
@@ -73,7 +77,16 @@ class WalletFragment : Fragment() {
     // посмотреть статьи с papers with code
 
     private fun initWalletRecyclerView() {
-        walletAdapter = WalletAdapter()
+        val clickOnWalletListener = object : WalletAdapter.ItemClickListener {
+
+            override fun navigate(name: String) {
+                val action = WalletFragmentDirections.actionNavigationWalletToUpdateWallet()
+                action.walletName = name
+                findNavController().navigate(action)
+            }
+        }
+        walletAdapter = WalletAdapter(clickOnWalletListener)
+
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletAdapter
 

@@ -36,4 +36,8 @@ class WalletRepository @Inject constructor(
         return walletDao.getWalletByNameAndNotArchived(walletName)
     }
 
+    fun getWalletById(id: Long?): Wallet {
+        return walletDao.getById(id)
+    }
+
 }

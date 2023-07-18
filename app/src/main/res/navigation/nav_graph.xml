@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_navigation_wallet_to_navigation_add_wallet"
             app:destination="@id/navigation_add_wallet" />
+        <action
+            android:id="@+id/action_navigation_wallet_to_update_wallet"
+            app:destination="@id/navigation_update_wallet" />
     </fragment>
     <fragment
         android:id="@+id/navigation_settings"
@@ -230,6 +233,21 @@
         <action
             android:id="@+id/action_navigation_analyze_to_navigation_home"
             app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_update_wallet"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateWalletFragment"
+        android:label="Update wallet"
+        tools:layout="@layout/fragment_update_wallet" >
+        <action
+            android:id="@+id/action_navigation_update_wallet_to_navigation_wallet"
+            app:destination="@id/navigation_wallet" />
+
+        <argument
+            android:name="walletName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
 </navigation>
