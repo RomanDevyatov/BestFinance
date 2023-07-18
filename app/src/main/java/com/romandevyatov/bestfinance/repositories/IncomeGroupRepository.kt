@@ -15,6 +15,10 @@ class IncomeGroupRepository @Inject constructor(
 
     fun getAllLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
 
+    fun getIncomeGroupByName(name: String): IncomeGroup {
+        return incomeGroupDao.getByName(name)
+    }
+
     suspend fun insertIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupDao.insert(incomeGroup)
     }
@@ -36,15 +40,15 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
+        return incomeGroupDao.getAllIncomeGroupNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(incomeGroupName)
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName)
     }
 
     fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupDao.getIncomeGroupNameByNameLiveData(incomeGroupName)
+        return incomeGroupDao.getByNameLiveData(incomeGroupName)
     }
 
     fun getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
@@ -59,8 +63,23 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName)
     }
 
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName)
+    }
+
     suspend fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
         return incomeGroupDao.getByIdNotArchived(incomeGroupId)
+    }
+
+    suspend fun unarchiveIncomeGroup(incomeGroup: IncomeGroup) {
+        val incomeGroupNotArchived = IncomeGroup(
+            id = incomeGroup.id,
+            name = incomeGroup.name,
+            isPassive = incomeGroup.isPassive,
+            description = incomeGroup.description,
+            archivedDate = null
+        )
+        updateIncomeGroup(incomeGroupNotArchived)
     }
 
 

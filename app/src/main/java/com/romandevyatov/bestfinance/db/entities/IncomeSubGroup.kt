@@ -1,11 +1,7 @@
 package com.romandevyatov.bestfinance.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.time.OffsetDateTime
-
 
 @Entity(tableName = "income_sub_group",
     foreignKeys = [

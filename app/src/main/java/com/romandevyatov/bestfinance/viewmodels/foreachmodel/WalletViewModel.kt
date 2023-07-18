@@ -36,4 +36,20 @@ class WalletViewModel @Inject constructor(
         return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 
+    fun updateWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+        val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
+
+        val updatedWallet = Wallet(
+            id = wallet.id,
+            name = updatedWalletBinding.name,
+            description = updatedWalletBinding.description,
+            balance = updatedWalletBinding.balance,
+            input = wallet.input,
+            output = wallet.output,
+            archivedDate = wallet.archivedDate
+        )
+
+        updateWallet(updatedWallet)
+    }
+
 }

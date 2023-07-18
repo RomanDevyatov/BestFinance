@@ -11,7 +11,7 @@ interface TransferHistoryDao {
     @Query("SELECT * FROM transfer_history ORDER BY id ASC")
     fun getAll(): LiveData<List<TransferHistory>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(transferHistory: TransferHistory)
 
     @Delete

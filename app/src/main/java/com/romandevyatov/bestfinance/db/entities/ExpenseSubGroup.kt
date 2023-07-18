@@ -1,12 +1,7 @@
 package com.romandevyatov.bestfinance.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.ForeignKey.Companion.CASCADE
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.time.OffsetDateTime
-
 
 @Entity(tableName = "expense_sub_group",
     foreignKeys = [
@@ -14,7 +9,7 @@ import java.time.OffsetDateTime
             entity = ExpenseGroup::class,
             parentColumns = ["id"], // ExpenseGroup
             childColumns = ["expense_group_id"], // ExpenseSubGroup
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

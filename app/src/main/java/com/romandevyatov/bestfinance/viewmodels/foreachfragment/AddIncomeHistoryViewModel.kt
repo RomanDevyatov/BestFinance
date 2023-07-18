@@ -31,8 +31,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchivedLiveData(name)
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -161,15 +161,17 @@ class AddIncomeHistoryViewModel @Inject constructor(
     fun archiveIncomeSubGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(name)
 
-        val incomeSubGroupArchived = IncomeSubGroup(
-            id = incomeSubGroup.id,
-            name = incomeSubGroup.name,
-            description = incomeSubGroup.description,
-            incomeGroupId = incomeSubGroup.incomeGroupId,
-            archivedDate = OffsetDateTime.now()
-        )
+        if (incomeSubGroup != null) {
+            val incomeSubGroupArchived = IncomeSubGroup(
+                id = incomeSubGroup.id,
+                name = incomeSubGroup.name,
+                description = incomeSubGroup.description,
+                incomeGroupId = incomeSubGroup.incomeGroupId,
+                archivedDate = OffsetDateTime.now()
+            )
 
-        incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroupArchived)
+            incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroupArchived)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -12,7 +12,7 @@ interface IncomeSubGroupDao {
     @Query("SELECT * FROM income_sub_group order by id ASC")
     fun getAll(): LiveData<List<IncomeSubGroup>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(incomeSubGroup: IncomeSubGroup)
 
     @Delete
@@ -28,7 +28,7 @@ interface IncomeSubGroupDao {
     suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByName(name: String?): IncomeSubGroup
+    fun getByName(name: String): IncomeSubGroup
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
     fun getByNameNotArchived(name: String?): IncomeSubGroup
@@ -44,5 +44,8 @@ interface IncomeSubGroupDao {
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
     fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :incomeGroupId")
+    fun getByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup
 
 }

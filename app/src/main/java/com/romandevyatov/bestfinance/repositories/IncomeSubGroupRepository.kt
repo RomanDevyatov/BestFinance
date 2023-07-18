@@ -36,4 +36,24 @@ class IncomeSubGroupRepository @Inject constructor(
     fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getByNameNotArchivedLiveData(name)
 
     fun getByNameNotArchived(name: String): IncomeSubGroup = incomeSubGroupDao.getByNameNotArchived(name)
+
+    suspend fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
+        val incomeSubGroupNotArchived = IncomeSubGroup(
+            id = incomeSubGroup.id,
+            name = incomeSubGroup.name,
+            description = incomeSubGroup.description,
+            incomeGroupId = incomeSubGroup.incomeGroupId,
+            archivedDate = null
+        )
+        updateIncomeSubGroup(incomeSubGroupNotArchived)
+    }
+
+    fun getIncomeSubGroupByName(name: String): IncomeSubGroup {
+        return incomeSubGroupDao.getByName(name)
+    }
+
+    fun getIncomeSubGroupByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup {
+        return incomeSubGroupDao.getByNameAndIncomeGroupId(name, incomeGroupId)
+    }
+
 }

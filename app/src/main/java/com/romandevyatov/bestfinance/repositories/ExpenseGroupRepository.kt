@@ -40,8 +40,8 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(expenseGroupName)
     }
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
-        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchivedLiveData(expenseGroupName)
+    fun getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupWithExpenseSubGroups> {
+        return expenseGroupDao.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(expenseGroupName)
     }
 
     fun getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> {
@@ -54,6 +54,24 @@ class ExpenseGroupRepository @Inject constructor(
 
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name: String): ExpenseGroupWithExpenseSubGroups {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name)
+    }
+
+    fun getExpenseGroupByName(name: String): ExpenseGroup {
+        return expenseGroupDao.getExpenseGroupByName(name)
+    }
+
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name: String): ExpenseGroupWithExpenseSubGroups {
+        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
+    }
+
+    suspend fun unarchiveExpenseGroup(expenseGroup: ExpenseGroup) {
+        val expenseGroupNotArchived = ExpenseGroup(
+            id = expenseGroup.id,
+            name = expenseGroup.name,
+            description = expenseGroup.description,
+            archivedDate = null
+        )
+        updateExpenseGroup(expenseGroupNotArchived)
     }
 
 }

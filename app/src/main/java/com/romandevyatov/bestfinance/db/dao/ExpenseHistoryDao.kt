@@ -11,7 +11,7 @@ interface ExpenseHistoryDao {
     @Query("SELECT * FROM expense_history order by id ASC")
     fun getAllLiveData(): LiveData<List<ExpenseHistory>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(expenseHistory: ExpenseHistory)
 
     @Delete

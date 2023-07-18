@@ -12,7 +12,7 @@ interface IncomeHistoryDao {
     @Query("SELECT * FROM income_history order by id ASC")
     fun getAll(): LiveData<List<IncomeHistory>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(incomeHistory: IncomeHistory)
 
     @Delete

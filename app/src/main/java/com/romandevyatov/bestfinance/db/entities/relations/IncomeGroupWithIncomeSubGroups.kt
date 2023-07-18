@@ -1,11 +1,9 @@
 package com.romandevyatov.bestfinance.db.entities.relations
 
-
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
-
 
 data class IncomeGroupWithIncomeSubGroups(
 

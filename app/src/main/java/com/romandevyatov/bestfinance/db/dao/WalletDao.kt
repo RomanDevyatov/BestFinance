@@ -16,7 +16,10 @@ interface WalletDao {
     @Query("SELECT * FROM wallet ORDER BY id ASC")
     fun getAllLiveData(): LiveData<List<Wallet>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * FROM wallet WHERE id = :id")
+    fun getById(id: Long?): Wallet
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(wallet: Wallet)
 
     @Delete
@@ -39,5 +42,6 @@ interface WalletDao {
 
     @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
     fun getWalletByNameAndNotArchived(walletName: String): Wallet
+
 
 }

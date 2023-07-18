@@ -19,7 +19,7 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.OffsetDateTimeRoomType
         ExpenseHistory::class,
         TransferHistory::class
     ],
-    version = 21,
+    version = 29,
     exportSchema = true
 )
 @TypeConverters(OffsetDateTimeRoomTypeConverter::class)

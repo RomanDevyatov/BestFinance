@@ -1,5 +1,4 @@
-package com.romandevyatov.bestfinance.viewmodels.foreachmodel
-
+package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -11,22 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class ExpenseSubGroupViewModel @Inject constructor(
+class AddExpenseSubGroupViewModel @Inject constructor(
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
     val expenseSubGroupsLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseSubGroups()
 
     fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroup.name, expenseSubGroup.expenseGroupId)
-
-        if (existingExpenseSubGroup == null) {
-            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
-        } else if (existingExpenseSubGroup.archivedDate != null) {
-            expenseSubGroupRepository.unarchiveExpenseSubGroup(existingExpenseSubGroup)
-        }
+        expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
     }
 
     fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
@@ -47,7 +39,7 @@ class ExpenseSubGroupViewModel @Inject constructor(
 
     // val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
 
-//    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
+    //    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
 //        expenseSubGroupsLiveData.value?.forEach { it ->
 //            if (it.name == expenseSubGroupName) {
 //                return it

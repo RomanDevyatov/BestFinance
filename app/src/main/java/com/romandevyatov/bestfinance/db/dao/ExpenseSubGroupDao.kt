@@ -11,7 +11,7 @@ interface ExpenseSubGroupDao {
     @Query("SELECT * FROM expense_sub_group order by id ASC")
     fun getAllLiveData(): LiveData<List<ExpenseSubGroup>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(expenseSubGroup: ExpenseSubGroup)
 
     @Delete
@@ -27,7 +27,10 @@ interface ExpenseSubGroupDao {
     suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name")
-    fun getByNameLiveData(name: String?): LiveData<ExpenseSubGroup>
+    fun getByNameLiveData(name: String): LiveData<ExpenseSubGroup>
+
+    @Query("SELECT * FROM expense_sub_group WHERE name = :name")
+    fun getByName(name: String): ExpenseSubGroup
 
     @Query("SELECT * FROM expense_sub_group WHERE archived_date IS NULL")
     fun getAllNotArchivedLiveData(): LiveData<List<ExpenseSubGroup>>
@@ -37,5 +40,8 @@ interface ExpenseSubGroupDao {
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
     abstract fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup
+
+    @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :expenseGroupId LIMIT 1")
+    fun getByNameAndGroupId(name: String, expenseGroupId: Long): ExpenseSubGroup
 
 }
