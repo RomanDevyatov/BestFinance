@@ -13,7 +13,6 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBindi
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
-import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +85,7 @@ class AddExpenseSubGroupFragment : Fragment() {
 
     private fun initExpenseGroupSpinner() {
         expenseGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
-            val spinnerItems = getCustomerList(expenseGroupList)
+            val spinnerItems = getExpenseGroupList(expenseGroupList)
 
             val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
 
@@ -98,7 +97,7 @@ class AddExpenseSubGroupFragment : Fragment() {
         }
     }
 
-    private fun getCustomerList(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
+    private fun getExpenseGroupList(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
         expenseGroupList?.forEach { it ->

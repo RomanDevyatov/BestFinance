@@ -8,9 +8,10 @@
     tools:context=".ui.fragments.addictions.income.AddIncomeSubGroupFragment" >
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newIncomeSubGroupNameContainer"
+        android:id="@+id/incomeSubGroupNameTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Income sub group name"
         app:helperText="Required"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="30dp"
@@ -19,42 +20,60 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/newIncomeSubGroupName"
+            android:id="@+id/incomeSubGroupName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Income sub group name"
             app:layout_constraintTop_toTopOf="parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newIncomeSubGroupDescriptionTextInputLayout"
+        android:id="@+id/incomeSubGroupDescriptionTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:helperText="Required"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/newIncomeSubGroupNameContainer"
-        app:layout_constraintStart_toStartOf="@+id/newIncomeSubGroupNameContainer"
-        app:layout_constraintTop_toBottomOf="@+id/newIncomeSubGroupNameContainer" >
+        android:hint="Income sub group description"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="@+id/incomeSubGroupNameTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/incomeSubGroupNameTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupNameTextInputLayout" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/newIncomeSubGroupDescription"
+            android:id="@+id/incomeSubGroupDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Income sub group description"
             app:layout_constraintTop_toTopOf="parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/toIncomeGroupSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Income group"
-        app:layout_constraintEnd_toEndOf="@+id/newIncomeSubGroupDescriptionTextInputLayout"
-        app:layout_constraintStart_toStartOf="@+id/newIncomeSubGroupDescriptionTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/newIncomeSubGroupDescriptionTextInputLayout" />
+<!--    <Spinner-->
+<!--        android:id="@+id/toIncomeGroupSpinner"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Income group"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/incomeSubGroupDescriptionTextInputLayout"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/incomeSubGroupDescriptionTextInputLayout"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupDescriptionTextInputLayout" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/groupSpinnerTextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="368dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="30dp"
+        android:hint="Income groups"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="@+id/incomeSubGroupDescriptionTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/incomeSubGroupDescriptionTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupDescriptionTextInputLayout" >
+
+        <AutoCompleteTextView
+            android:id="@+id/incomeGroupSpinnerAutoCompleteTextView"
+            android:layout_width="387dp"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addNewIncomeSubGroupNameButton"
