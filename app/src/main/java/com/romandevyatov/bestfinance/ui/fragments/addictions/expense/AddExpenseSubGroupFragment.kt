@@ -92,11 +92,9 @@ class AddExpenseSubGroupFragment : Fragment() {
 
             binding.groupSpinnerAutoCompleteTextView.setAdapter(spinnerAdapter)
 
-//            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
-//                val spinnerPosition = spinnerAdapter.getPosition(args.expenseGroupName.toString())
-//                binding.groupSpinnerAutoCompleteTextView.setText(args.expenseGroupName.toString(), false) //.setSelection(spinnerPosition)
-//            }
-
+            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
+                binding.groupSpinnerAutoCompleteTextView.setText(args.expenseGroupName.toString(), false) //.setSelection(spinnerPosition)
+            }
         }
     }
 
