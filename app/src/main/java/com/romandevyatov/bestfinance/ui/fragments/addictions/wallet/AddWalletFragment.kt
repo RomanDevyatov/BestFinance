@@ -10,6 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
+import com.romandevyatov.bestfinance.ui.validators.IsDigitValidator
+import com.romandevyatov.bestfinance.ui.validators.PositiveValidator
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,19 +41,29 @@ class AddWalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNewWalletButton.setOnClickListener {
-            val walletNameBinding = binding.nameEditText.text.toString()
-            val walletBalanceBinding = binding.balanceEditText.text.toString().toDouble()
-            val walletDescriptionBinding = binding.descriptionEditText.text.toString()
+            val walletNameBinding = binding.walletNameEditText.text.toString().trim()
+            val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
+            val walletDescriptionBinding = binding.walletDescriptionEditText.text.toString().trim()
 
-            val newWallet = Wallet(
-                name = walletNameBinding,
-                balance = walletBalanceBinding,
-                description = walletDescriptionBinding
-            )
+            val walletNameValidation = EmptyValidator(walletNameBinding).validate()
+            binding.walletNameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
 
-            walletViewModel.insertWallet(newWallet)
+            val walletBalanceValidation = BaseValidator.validate(EmptyValidator(walletBalanceBinding), IsDigitValidator(walletBalanceBinding))
+            binding.walletBalanceLayout.error = if (!walletBalanceValidation.isSuccess) getString(walletBalanceValidation.message) else null
 
-            performNavigation(args.source, walletNameBinding)
+            if (walletNameValidation.isSuccess
+                && walletBalanceValidation.isSuccess
+            ) {
+                val newWallet = Wallet(
+                    name = walletNameBinding,
+                    balance = walletBalanceBinding.toDouble(),
+                    description = walletDescriptionBinding
+                )
+
+                walletViewModel.insertWallet(newWallet)
+
+                performNavigation(args.source, walletNameBinding)
+            }
         }
     }
 
