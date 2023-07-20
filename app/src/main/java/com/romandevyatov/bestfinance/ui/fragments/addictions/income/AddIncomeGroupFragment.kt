@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
-import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +20,6 @@ class AddIncomeGroupFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val incomeGroupViewModel: AddIncomeGroupViewModel by viewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +43,7 @@ class AddIncomeGroupFragment : Fragment() {
             val nameEmptyValidation = EmptyValidator(newIncomeGroupName).validate()
             binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
-            if (binding.groupNameInputLayout.error == null) {
+            if (nameEmptyValidation.isSuccess) {
                 incomeGroupViewModel.insertIncomeGroup(
                     IncomeGroup(
                         name = newIncomeGroupName,
@@ -53,7 +51,6 @@ class AddIncomeGroupFragment : Fragment() {
                         isPassive = newIncomeGroupIsPassive
                     )
                 )
-
 
                 val action =
                     AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()

@@ -7,30 +7,62 @@
     android:id="@+id/addExpenseSubGroupFragment"
     tools:context=".ui.fragments.addictions.expense.AddExpenseSubGroupFragment">
 
-    <EditText
-        android:id="@+id/subGroupNameEditText"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/subGroupNameTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income sub group name"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:helperText="Required"
+        android:hint="Expense sub group name"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <EditText
-        android:id="@+id/subGroupDescriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Income sub group description"
-        app:layout_constraintEnd_toEndOf="@+id/subGroupNameEditText"
-        app:layout_constraintStart_toStartOf="@+id/subGroupNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/subGroupNameEditText" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/subGroupNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/groupSpinner"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/subGroupDescriptionTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Expense group"
-        app:layout_constraintEnd_toEndOf="@+id/subGroupDescriptionEditText"
-        app:layout_constraintStart_toStartOf="@+id/subGroupDescriptionEditText"
-        app:layout_constraintTop_toBottomOf="@+id/subGroupDescriptionEditText" />
+        app:helperText="Required"
+        android:hint="Expense sub group description"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupNameTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/subGroupNameTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupNameTextInputLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/subGroupDescriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/groupSpinnerTextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:helperText="Required"
+        android:hint="Expense groups"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupDescriptionTextInputLayout"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/subGroupDescriptionTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupDescriptionTextInputLayout" >
+
+        <AutoCompleteTextView
+            android:id="@+id/groupSpinnerAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addNewExpenseSubGroupNameButton"

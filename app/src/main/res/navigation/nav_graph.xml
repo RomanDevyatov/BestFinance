@@ -147,7 +147,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_add_new_expense_group"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseGroupNameFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseGroupFragment"
         android:label="New expense group"
         tools:layout="@layout/fragment_add_expense_group" >
 

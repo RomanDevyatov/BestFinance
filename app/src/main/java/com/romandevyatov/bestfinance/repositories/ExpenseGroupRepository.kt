@@ -48,8 +48,8 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesLiveData()
     }
 
-    fun getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
-        return expenseGroupDao.getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
+    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+        return expenseGroupDao.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name: String): ExpenseGroupWithExpenseSubGroups {

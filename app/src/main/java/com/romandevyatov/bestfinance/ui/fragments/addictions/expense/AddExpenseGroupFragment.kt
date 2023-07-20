@@ -13,7 +13,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupV
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddExpenseGroupNameFragment : Fragment() {
+class AddExpenseGroupFragment : Fragment() {
 
     private var _binding: FragmentAddExpenseGroupBinding? = null
     private val binding get() = _binding!!
@@ -40,8 +40,11 @@ class AddExpenseGroupNameFragment : Fragment() {
                     description = binding.commentEditText.text.toString()
                 )
             )
+
+
+
             val action =
-                AddExpenseGroupNameFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
+                AddExpenseGroupFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
             action.expenseGroupName = binding.newExpenseGroupName.text.toString()
             findNavController().navigate(action)
         }

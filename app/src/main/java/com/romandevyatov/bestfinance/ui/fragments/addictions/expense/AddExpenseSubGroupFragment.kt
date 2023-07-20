@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerUtils
+import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseSubGroupViewModel
@@ -42,27 +44,37 @@ class AddExpenseSubGroupFragment : Fragment() {
         initExpenseGroupSpinner()
 
         binding.addNewExpenseSubGroupNameButton.setOnClickListener {
-            val selectedExpenseGroupName = binding.groupSpinner.selectedItem.toString()
 
             val expenseSubGroupNameBinding = binding.subGroupNameEditText.text.toString()
+            val expenseSubGroupDescriptionBinding = binding.subGroupDescriptionEditText.text.toString()
+            val selectedExpenseGroupNameBinding = binding.groupSpinnerAutoCompleteTextView.text.toString()
 
-            expenseGroupViewModel.getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName).observe(viewLifecycleOwner) {
-                val expenseGroupId = it.id!!
+            val expenseSubGroupNameValidation = EmptyValidator(expenseSubGroupNameBinding).validate()
+            binding.subGroupNameTextInputLayout.error = if (!expenseSubGroupNameValidation.isSuccess) getString(expenseSubGroupNameValidation.message) else null
 
-                val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
+            val expenseGroupMaterialSpinnerValidation = EmptyValidator(selectedExpenseGroupNameBinding).validate()
+            binding.groupSpinnerAutoCompleteTextView.error = if (!expenseGroupMaterialSpinnerValidation.isSuccess) getString(expenseGroupMaterialSpinnerValidation.message) else null
 
-                val newExpenseSubGroup = ExpenseSubGroup(
-                    name = expenseSubGroupNameBinding,
-                    description = descriptionBinding,
-                    expenseGroupId = expenseGroupId
-                )
+            if (expenseSubGroupNameValidation.isSuccess
+                && expenseGroupMaterialSpinnerValidation.isSuccess
+            ) {
+                expenseGroupViewModel.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupNameBinding).observe(viewLifecycleOwner) {
+                    val expenseGroupId = it.id!!
 
-                expenseSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+                    val newExpenseSubGroup = ExpenseSubGroup(
+                        name = expenseSubGroupNameBinding,
+                        description = expenseSubGroupDescriptionBinding,
+                        expenseGroupId = expenseGroupId
+                    )
 
-                val action = AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
-                action.expenseGroupName = selectedExpenseGroupName
-                action.expenseSubGroupName = expenseSubGroupNameBinding
-                findNavController().navigate(action)
+                    expenseSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+
+                    val action =
+                        AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
+                    action.expenseGroupName = selectedExpenseGroupNameBinding
+                    action.expenseSubGroupName = expenseSubGroupNameBinding
+                    findNavController().navigate(action)
+                }
             }
         }
     }
@@ -73,24 +85,29 @@ class AddExpenseSubGroupFragment : Fragment() {
     }
 
     private fun initExpenseGroupSpinner() {
-        val spinnerAdapter = SpinnerUtils.getArraySpinner(requireContext())
-
         expenseGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
-            spinnerAdapter.clear()
-            spinnerAdapter.add(Constants.EXPENSE_GROUP)
-            expenseGroupList?.forEach { it ->
-                spinnerAdapter.add(it.name)
-            }
+            val spinnerItems = getCustomerList(expenseGroupList)
 
-            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
-                val spinnerPosition = spinnerAdapter.getPosition(args.expenseGroupName.toString())
-                binding.groupSpinner.setSelection(spinnerPosition)
-            }
+            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+
+            binding.groupSpinnerAutoCompleteTextView.setAdapter(spinnerAdapter)
+
+//            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
+//                val spinnerPosition = spinnerAdapter.getPosition(args.expenseGroupName.toString())
+//                binding.groupSpinnerAutoCompleteTextView.setText(args.expenseGroupName.toString(), false) //.setSelection(spinnerPosition)
+//            }
+
         }
-
-        val expenseGroupSpinner = binding.groupSpinner
-        expenseGroupSpinner.adapter = spinnerAdapter
     }
 
+    private fun getCustomerList(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
+        val spinnerItems = ArrayList<String>()
+
+        expenseGroupList?.forEach { it ->
+            spinnerItems.add(it.name)
+        }
+
+        return spinnerItems
+    }
 
 }
