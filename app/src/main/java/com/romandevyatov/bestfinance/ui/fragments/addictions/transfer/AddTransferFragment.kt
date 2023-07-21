@@ -276,6 +276,7 @@ class AddTransferFragment : Fragment() {
 
                 val isEqualSpinnerNamesValidation = IsEqualValidator(walletFromNameBinding, walletFromNameBinding).validate()
                 binding.fromWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
+                binding.toWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
 
                 val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
                 binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
@@ -291,12 +292,18 @@ class AddTransferFragment : Fragment() {
 
                     val comment = binding.commentEditText.text.toString().trim()
                     insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble())
+
+                    navigateToHome()
                 }
             }
 
-            val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
-            findNavController().navigate(action)
+
         }
+    }
+
+    private fun navigateToHome() {
+        val action = AddTransferFragmentDirections.actionAddNewTransferFragmentToNavigationHome()
+        findNavController().navigate(action)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
