@@ -1,34 +1,61 @@
 package com.romandevyatov.bestfinance.ui.adapters.spinnerutils
+
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Filter
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
+import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.utils.Constants
+import kotlin.collections.ArrayList
 
-/**
- * Almost unbelievably, if we want to create a Material Spinner,
- * we're forced to subclass ArrayAdapter.  That statement alone
- * is maddening.  The issue is that there's no such thing as a Material
- * Spinner. Instead, there's an Exposed Dropdown Menu, which is really
- * an AutoCompleteTextView wrapped in a TextInputLayout, which replaces a
- * Spinner. The reason we have to subclass ArrayAdapter is because we need
- * the AutoCompleteTextView to act like a proper Spinner.  Thus we have to
- * override the AutoCompleteTextView's Filter so that it NEVER performs
- * filtering of the dropdown menu items.
- */
-class SpinnerAdapter<String>(context: Context, layout: Int, var values: ArrayList<String>) :
-    ArrayAdapter<String>(context, layout, values) {
-    private val filter_that_does_nothing = object: Filter() {
-        override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val results = FilterResults()
-            results.values = values
-            results.count = values.size
-            return results
-        }
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            notifyDataSetChanged()
-        }
+class SpinnerAdapter(
+    context: Context,
+    private val resourceId: Int,
+    private val items: ArrayList<String>,
+    private val listener: DeleteItemClickListener? = null
+) : ArrayAdapter<String>(context, resourceId, items) {
+
+    interface DeleteItemClickListener {
+
+        fun archive(name: String)
     }
 
-    override fun getFilter(): Filter {
-        return filter_that_does_nothing
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
+            resourceId,
+            parent,
+            false
+        )
+
+        val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
+        val itemDelTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
+
+        val itemText = items[position]
+        itemNameTextView.text = itemText
+
+        itemDelTextView.isVisible = itemText != Constants.ADD_NEW_WALLET
+        itemDelTextView.setOnClickListener {
+            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+            listener?.archive(itemText)
+        }
+
+        return spinnerView
     }
+
+    override fun getItem(position: Int): String {
+        return items[position]
+    }
+
+    override fun getCount(): Int {
+        return items.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
 }

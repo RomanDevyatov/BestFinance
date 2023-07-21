@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.CustomSpinnerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
@@ -46,11 +48,7 @@ class AddTransferFragment : Fragment() {
 
     private val args: AddTransferFragmentArgs by navArgs()
 
-    private var savedCommentEditTextValue: String? = null
-
     private val sharedViewModel: SharedViewModel<TransferForm> by activityViewModels()
-
-    private var editTextValue: String? = null
 
     private var selectedSpinnerFromItemPosition = -1
     private var selectedSpinnerToItemPosition = -1
@@ -61,6 +59,7 @@ class AddTransferFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddTransferBinding.inflate(inflater, container, false)
+        setSpinners()
         return binding.root
     }
 
@@ -81,12 +80,10 @@ class AddTransferFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setSpinners()
+
         setDateEditText()
         setTransferButtonListener()
     }
-
-
 
     private fun setSpinners() {
         setAdapterForWalletSpinnerFrom()
@@ -99,7 +96,7 @@ class AddTransferFragment : Fragment() {
     private fun setAdapterForWalletSpinnerFrom() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             val archiveListener =
-                object : CustomSpinnerAdapter.DeleteItemClickListener {
+                object : SpinnerAdapter.DeleteItemClickListener {
 
                     @RequiresApi(Build.VERSION_CODES.O)
                     override fun archive(name: String) {
@@ -108,16 +105,15 @@ class AddTransferFragment : Fragment() {
                 }
 
             val spinnerItems = ArrayList<String>()
-            spinnerItems.add(Constants.WALLET_FROM)
 
             walletList?.forEach { it ->
                 spinnerItems.add(it.name)
             }
             spinnerItems.add(Constants.ADD_NEW_WALLET)
 
-            val walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
+            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, archiveListener)
 
-            binding.walletNameFromSpinner.adapter = walletSpinnerAdapter
+            binding.walletNameFromSpinnerAutoCompleteTextView.setAdapter(walletSpinnerAdapter)
             restoreTransferForm()
 
             checkArgs(walletSpinnerAdapter)
@@ -192,17 +188,12 @@ class AddTransferFragment : Fragment() {
     }
 
     private fun setItemSelectedListenerForFromSpinner() {
-        binding.walletNameFromSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+        binding.walletNameFromSpinnerAutoCompleteTextView.setOnItemClickListener {
+                parent, view, position, rowId ->
                 selectedSpinnerFromItemPosition = position
 
-                val selectedWalletNameFrom = binding.walletNameFromSpinner.getItemAtPosition(position).toString()
+                val selectedWalletNameFrom =
+                    binding.walletNameFromSpinnerAutoCompleteTextView.text.toString()
 
                 if (selectedWalletNameFrom == Constants.ADD_NEW_WALLET) {
                     val walletNameToBinding = selectedSpinnerToItemPosition
@@ -220,21 +211,19 @@ class AddTransferFragment : Fragment() {
 
                     setClickOnAddNewWallet(Constants.SPINNER_FROM)
                 }
-
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+
         }
-    }
 
-    private fun checkArgs(spinnerAdapter: CustomSpinnerAdapter) {
+
+    private fun checkArgs(spinnerAdapter: ArrayAdapter<String>) {
         val addedWalletName = args.walletName
         val spinnerType = args.spinnerType
         if (addedWalletName?.isNotBlank() == true && spinnerType?.isNotBlank() == true) {
             val spinnerPosition = spinnerAdapter.getPosition(args.walletName)
             if (spinnerType ==  Constants.SPINNER_FROM) {
-                binding.walletNameFromSpinner.setSelection(spinnerPosition)
+                binding.walletNameFromSpinnerAutoCompleteTextView.setText(spinnerAdapter.getItem(spinnerPosition))
             } else if (spinnerType == Constants.SPINNER_TO) {
                 binding.walletNameToSpinner.setSelection(spinnerPosition)
             }
@@ -244,7 +233,7 @@ class AddTransferFragment : Fragment() {
     private fun restoreTransferForm() {
         sharedViewModel.modelForm.observe(viewLifecycleOwner) { transferForm ->
             if (transferForm != null) {
-                binding.walletNameFromSpinner.setSelection(transferForm.fromWalletSpinnerPosition)
+                binding.walletNameFromSpinnerAutoCompleteTextView.setSelection(transferForm.fromWalletSpinnerPosition)
                 binding.walletNameToSpinner.setSelection(transferForm.toWalletSpinnerPosition)
                 binding.amountEditText.setText(transferForm.amount)
                 binding.commentEditText.setText(transferForm.comment)
@@ -292,7 +281,7 @@ class AddTransferFragment : Fragment() {
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.amountEditText.text.toString().trim().toDouble()
 
-                val walletFromNameBinding = binding.walletNameFromSpinner.selectedItem.toString()
+                val walletFromNameBinding = binding.walletNameFromSpinnerAutoCompleteTextView.text.toString()
                 val walletToNameBinding = binding.walletNameToSpinner.selectedItem.toString()
 
                 if (walletFromNameBinding != walletToNameBinding) {
@@ -362,40 +351,6 @@ class AddTransferFragment : Fragment() {
         )
 
         walletViewModel.updateWallet(updatedWalletFrom)
-    }
-
-    private fun getAdapterForWalletSpinnerFrom(): CustomSpinnerAdapter {
-        return getAdapterForWalletSpinner(Constants.WALLET_FROM)
-    }
-
-    private fun getAdapterForWalletSpinnerTo(): CustomSpinnerAdapter {
-        return getAdapterForWalletSpinner(Constants.WALLET_TO)
-    }
-
-    private fun getAdapterForWalletSpinner(firstLine: String): CustomSpinnerAdapter {
-        val archiveListener =
-            object : CustomSpinnerAdapter.DeleteItemClickListener {
-
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun archive(name: String) {
-                    addTransferViewModel.archiveWallet(name)
-                }
-            }
-
-        val spinnerItems = ArrayList<String>()
-        spinnerItems.add(firstLine)
-
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-
-            walletList?.forEach { it ->
-                spinnerItems.add(it.name)
-            }
-            spinnerItems.add(Constants.ADD_NEW_WALLET)
-        }
-
-        val walletSpinnerAdapter = CustomSpinnerAdapter(requireContext(), spinnerItems, archiveListener)
-
-        return walletSpinnerAdapter
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -9,14 +9,36 @@
     android:id="@+id/addTransferFragment"
     tools:context=".ui.fragments.addictions.transfer.AddTransferFragment">
 
-    <Spinner
-        android:id="@+id/walletNameFromSpinner"
+<!--    <Spinner-->
+<!--        android:id="@+id/walletNameFromSpinner"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:hint="From"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:layout_editor_absoluteX="0dp" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/walletNameFromSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
         android:hint="From"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <AutoCompleteTextView
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:id="@+id/walletNameFromSpinnerAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
         android:id="@+id/walletNameToSpinner"
@@ -24,9 +46,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="To"
-        app:layout_constraintEnd_toEndOf="@+id/walletNameFromSpinner"
-        app:layout_constraintStart_toStartOf="@+id/walletNameFromSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinner" />
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="@+id/walletNameFromSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/walletNameFromSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinnerLayout" />
 
     <EditText
         android:id="@+id/amountEditText"
