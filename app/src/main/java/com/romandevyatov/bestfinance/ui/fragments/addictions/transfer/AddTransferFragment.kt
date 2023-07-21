@@ -116,7 +116,7 @@ class AddTransferFragment : Fragment() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             val spinnerItems = getWalletItemsForSpinner(walletList)
 
-            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, archiveWalletListener)
+            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,Constants.ADD_NEW_WALLET, archiveWalletListener)
             fromWalletSpinnerAdapter = walletSpinnerAdapter
 
             binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
@@ -131,7 +131,7 @@ class AddTransferFragment : Fragment() {
 
             val spinnerItems = getWalletItemsForSpinner(walletList)
 
-            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, archiveWalletListener)
+            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, Constants.ADD_NEW_WALLET, archiveWalletListener)
             toWalletSpinnerAdapter = walletSpinnerAdapter
 
             binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)

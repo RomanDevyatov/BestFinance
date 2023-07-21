@@ -16,6 +16,7 @@ class SpinnerAdapter(
     context: Context,
     private val resourceId: Int,
     private val items: ArrayList<String>,
+    private val addItem: String,
     private val listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, resourceId, items) {
 
@@ -37,7 +38,7 @@ class SpinnerAdapter(
         val itemText = items[position]
         itemNameTextView.text = itemText
 
-        itemDelTextView.isVisible = itemText != Constants.ADD_NEW_WALLET
+        itemDelTextView.isVisible = itemText != addItem
         itemDelTextView.setOnClickListener {
             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
             listener?.archive(itemText)
