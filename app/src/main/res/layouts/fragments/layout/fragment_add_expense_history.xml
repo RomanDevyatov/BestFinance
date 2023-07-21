@@ -7,77 +7,142 @@
     android:id="@+id/addExpenseHistoryFragment"
     tools:context=".ui.fragments.addictions.expense.AddExpenseHistoryFragment" >
 
-    <Spinner
-        android:id="@+id/expenseGroupSpinner"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="24dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/expenseGroupSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
+        android:hint="Expense group"
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <AutoCompleteTextView
+            android:id="@+id/expenseGroupSpinner"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Spinner
         android:id="@+id/expenseSubGroupSpinner"
         android:layout_width="270dp"
         android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinner"
-        app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinner" />
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" />
 
-    <Spinner
-        android:id="@+id/walletSpinner"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
+<!--    <Spinner-->
+<!--        android:id="@+id/walletSpinner"-->
+<!--        android:layout_width="270dp"-->
+<!--        android:layout_height="46dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinner"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinner"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/walletSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
+        android:hint="Wallet"
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinner"
         app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" >
 
-    <EditText
-        android:id="@+id/amountEditText"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:hint="Amount"
-        app:layout_constraintEnd_toEndOf="@+id/walletSpinner"
-        app:layout_constraintStart_toStartOf="@+id/walletSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/walletSpinner" />
+        <AutoCompleteTextView
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:id="@+id/walletSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/dateEditText"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:focusable="false"
-        android:hint="Date"
-        app:layout_constraintEnd_toEndOf="@+id/amountEditText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/amountEditText"
-        app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
-
-    <EditText
-        android:id="@+id/commentEditText"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/commentTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:helperText="Required"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
         android:hint="Comment"
-        app:layout_constraintEnd_toEndOf="@+id/dateEditText"
+        app:layout_constraintEnd_toEndOf="@+id/dateTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/dateTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextInputLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/amountTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="@+id/walletSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/dateEditText"
-        app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
+        app:layout_constraintStart_toStartOf="@+id/walletSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/walletSpinnerLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/amountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amount" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dateTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="@+id/amountTextInputLayout"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/amountTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/amountTextInputLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addExpenseHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:text="Add"
-        app:layout_constraintEnd_toEndOf="@+id/commentEditText"
+        app:layout_constraintEnd_toEndOf="@+id/commentTextInputLayout"
         app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="@+id/commentEditText"
-        app:layout_constraintTop_toBottomOf="@+id/commentEditText" />
+        app:layout_constraintStart_toStartOf="@+id/commentTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
