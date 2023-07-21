@@ -37,11 +37,9 @@ class AddExpenseGroupFragment : Fragment() {
             expenseGroupViewModel.insertExpenseGroup(
                 ExpenseGroup(
                     name = binding.newExpenseGroupName.text.toString(),
-                    description = binding.commentEditText.text.toString()
+                    description = binding.descriptionEditText.text.toString()
                 )
             )
-
-
 
             val action =
                 AddExpenseGroupFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
