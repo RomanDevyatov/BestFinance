@@ -21,6 +21,10 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
+import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
+import com.romandevyatov.bestfinance.ui.validators.IsDigitValidator
+import com.romandevyatov.bestfinance.ui.validators.IsEqualValidator
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
@@ -265,20 +269,28 @@ class AddTransferFragment : Fragment() {
         binding.transferButton.setOnClickListener {
             sharedViewModel.set(null)
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-                val amountBinding = binding.amountEditText.text.toString().trim().toDouble()
+                val amountBinding = binding.amountEditText.text.toString().trim()
 
                 val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
                 val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
 
-                if (walletFromNameBinding != walletToNameBinding) {
+                val isEqualSpinnerNamesValidation = IsEqualValidator(walletFromNameBinding, walletFromNameBinding).validate()
+                binding.fromWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
+
+                val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
+                binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
+
+                if (isEqualSpinnerNamesValidation.isSuccess
+                    && amountValidation.isSuccess
+                ) {
                     val walletFrom = wallets.find { it.name == walletFromNameBinding }
-                    updateWalletFrom(walletFrom!!, amountBinding)
+                    updateWalletFrom(walletFrom!!, amountBinding.toDouble())
 
                     val walletTo = wallets.find { it.name == walletToNameBinding }
-                    updateWalletTo(walletTo!!, amountBinding)
+                    updateWalletTo(walletTo!!, amountBinding.toDouble())
 
                     val comment = binding.commentEditText.text.toString().trim()
-                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding)
+                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble())
                 }
             }
 
