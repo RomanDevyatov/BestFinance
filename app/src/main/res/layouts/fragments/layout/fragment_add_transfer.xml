@@ -19,7 +19,7 @@
 <!--        tools:layout_editor_absoluteX="0dp" />-->
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/walletNameFromSpinnerLayout"
+        android:id="@+id/fromWalletNameSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,22 +34,46 @@
         <AutoCompleteTextView
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:id="@+id/walletNameFromSpinnerAutoCompleteTextView"
+            android:id="@+id/fromWalletNameSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/walletNameToSpinner"
+<!--    <Spinner-->
+<!--        android:id="@+id/walletNameToSpinner"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:hint="To"-->
+<!--        app:helperText="Required"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/walletNameFromSpinnerLayout"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/walletNameFromSpinnerLayout"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinnerLayout" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/toWalletNameSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:hint="To"
+        android:layout_marginHorizontal="32dp"
+        android:hint="From"
         app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="@+id/walletNameFromSpinnerLayout"
-        app:layout_constraintStart_toStartOf="@+id/walletNameFromSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinnerLayout" />
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="@+id/fromWalletNameSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/fromWalletNameSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/fromWalletNameSpinnerLayout" >
+
+        <AutoCompleteTextView
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:id="@+id/toWalletNameSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
         android:id="@+id/amountEditText"
@@ -57,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="Amount"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameToSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout"
         tools:layout_editor_absoluteX="0dp" />
 
     <EditText
