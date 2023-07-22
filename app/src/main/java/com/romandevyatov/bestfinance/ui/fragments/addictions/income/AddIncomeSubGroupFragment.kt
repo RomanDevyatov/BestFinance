@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.addictions.income
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +50,7 @@ class AddIncomeSubGroupFragment : Fragment() {
             binding.incomeSubGroupNameTextInputLayout.error = if (!incomeSubGroupNameValidation.isSuccess) getString(incomeSubGroupNameValidation.message) else null
 
             val incomeGroupSpinnerValidation = EmptyValidator(selectedIncomeGroupName).validate()
-            binding.incomeGroupSpinnerAutoCompleteTextView.error = if (!incomeGroupSpinnerValidation.isSuccess) getString(incomeGroupSpinnerValidation.message) else null
+            binding.groupSpinnerTextInputLayout.error = if (!incomeGroupSpinnerValidation.isSuccess) getString(incomeGroupSpinnerValidation.message) else null
 
             if (incomeSubGroupNameValidation.isSuccess
                 && incomeGroupSpinnerValidation.isSuccess
@@ -88,7 +87,7 @@ class AddIncomeSubGroupFragment : Fragment() {
         addIncomeSubGroupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { incomeGroupList ->
             val spinnerItems = getIncomeGroupList(incomeGroupList)
 
-            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, spinnerItems)
+            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
 
             binding.incomeGroupSpinnerAutoCompleteTextView.setAdapter(spinnerAdapter)
 

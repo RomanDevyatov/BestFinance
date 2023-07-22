@@ -32,15 +32,38 @@
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <Spinner
-        android:id="@+id/expenseSubGroupSpinner"
-        android:layout_width="270dp"
-        android:layout_height="46dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/expenseSubGroupSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
+        android:hint="Expense sub group"
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinnerLayout"
         app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" >
+
+        <AutoCompleteTextView
+            android:id="@+id/expenseSubGroupSpinner"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--    <Spinner-->
+<!--        android:id="@+id/expenseSubGroupSpinner"-->
+<!--        android:layout_width="270dp"-->
+<!--        android:layout_height="46dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinnerLayout"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinnerLayout"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" />-->
 
 <!--    <Spinner-->
 <!--        android:id="@+id/walletSpinner"-->
@@ -62,14 +85,14 @@
         app:helperText="Required"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinner"
-        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" >
+        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinnerLayout" >
 
         <AutoCompleteTextView
+            android:id="@+id/walletSpinner"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:id="@+id/walletSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none" />
@@ -137,11 +160,12 @@
         android:id="@+id/addExpenseHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
+        android:layout_marginTop="20sp"
         android:text="Add"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/commentTextInputLayout"
-        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintHorizontal_bias="0.733"
         app:layout_constraintStart_toStartOf="@+id/commentTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
 

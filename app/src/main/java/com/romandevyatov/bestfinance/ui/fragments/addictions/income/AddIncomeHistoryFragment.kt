@@ -253,7 +253,6 @@ class AddIncomeHistoryFragment : Fragment() {
                     setAddIncomeFormBeforeAddingIncomeSubGroup()
 
                     val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewSubIncomeGroup()
-
                     action.incomeGroupName = binding.incomeGroupSpinner.text.toString()
                     findNavController().navigate(action)
                 }

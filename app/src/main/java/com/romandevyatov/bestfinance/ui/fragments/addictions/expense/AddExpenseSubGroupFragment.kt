@@ -52,7 +52,7 @@ class AddExpenseSubGroupFragment : Fragment() {
             binding.subGroupNameTextInputLayout.error = if (!expenseSubGroupNameValidation.isSuccess) getString(expenseSubGroupNameValidation.message) else null
 
             val expenseGroupMaterialSpinnerValidation = EmptyValidator(selectedExpenseGroupNameBinding).validate()
-            binding.groupSpinnerAutoCompleteTextView.error = if (!expenseGroupMaterialSpinnerValidation.isSuccess) getString(expenseGroupMaterialSpinnerValidation.message) else null
+            binding.groupSpinnerTextInputLayout.error = if (!expenseGroupMaterialSpinnerValidation.isSuccess) getString(expenseGroupMaterialSpinnerValidation.message) else null
 
             if (expenseSubGroupNameValidation.isSuccess
                 && expenseGroupMaterialSpinnerValidation.isSuccess
