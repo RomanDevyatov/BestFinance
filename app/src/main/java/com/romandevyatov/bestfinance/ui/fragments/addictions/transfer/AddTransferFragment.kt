@@ -270,6 +270,7 @@ class AddTransferFragment : Fragment() {
             sharedViewModel.set(null)
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.amountEditText.text.toString().trim()
+                val dateBinding = binding.dateEditText.text.toString().trim()
 
                 val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
                 val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
@@ -281,8 +282,12 @@ class AddTransferFragment : Fragment() {
                 val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
                 binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
+                val dateValidation = EmptyValidator(dateBinding).validate()
+                binding.dateLayout.error = if (!dateValidation.isSuccess) getString(dateValidation.message) else null
+
                 if (isEqualSpinnerNamesValidation.isSuccess
                     && amountValidation.isSuccess
+                    && dateValidation.isSuccess
                 ) {
                     val walletFrom = wallets.find { it.name == walletFromNameBinding }
                     updateWalletFrom(walletFrom!!, amountBinding.toDouble())

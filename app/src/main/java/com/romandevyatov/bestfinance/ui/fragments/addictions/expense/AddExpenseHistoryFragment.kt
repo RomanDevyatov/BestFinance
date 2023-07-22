@@ -50,6 +50,27 @@ class AddExpenseHistoryFragment : Fragment() {
     private var expenseSubGroupSpinnerPosition = 0
     private var walletSpinnerPosition = 0
 
+    private var expenseSubGroupSpinnerAdapter: SpinnerAdapter? = null
+    private var expenseGroupSpinnerAdapter: SpinnerAdapter? = null
+
+    val archiveExpenseSubGroupListener =
+        object : SpinnerAdapter.DeleteItemClickListener {
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun archive(name: String) {
+                addExpenseHistoryViewModel.archiveExpenseSubGroup(name)
+            }
+        }
+
+    val archiveExpenseGroupListener =
+        object : SpinnerAdapter.DeleteItemClickListener {
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun archive(name: String) {
+                addExpenseHistoryViewModel.archiveExpenseGroup(name)
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -143,107 +164,98 @@ class AddExpenseHistoryFragment : Fragment() {
     private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     private fun initExpenseGroupAndSubGroupSpinners() {
-        var subGroupItems = ArrayList<String>()
-        subGroupItems.add(Constants.EXPENSE_SUB_GROUP)
+        val subGroupSpinnerItems = ArrayList<String>()
+        subGroupSpinnerItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
 
-        val archiveExpenseSubGroupListener =
-            object : SpinnerAdapter.DeleteItemClickListener {
-
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun archive(name: String) {
-                    addExpenseHistoryViewModel.archiveExpenseSubGroup(name)
-                }
-            }
-
-        var expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupItems, Constants.ADD_NEW_INCOME_GROUP, archiveExpenseSubGroupListener)
+        expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupSpinnerItems, Constants.ADD_NEW_INCOME_GROUP, archiveExpenseSubGroupListener)
 
         addExpenseHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { expenseGroupList ->
-            val spinnerItems = getIncomeGroupItemsForSpinner(expenseGroupList)
+            val spinnerGroupItems = getIncomeGroupItemsForSpinner(expenseGroupList)
 
-            val archiveExpenseGroupListener =
-                object : SpinnerAdapter.DeleteItemClickListener {
-
-                    @RequiresApi(Build.VERSION_CODES.O)
-                    override fun archive(name: String) {
-                        addExpenseHistoryViewModel.archiveExpenseGroup(name)
-                    }
-                }
-
-            val expenseGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, Constants.ADD_NEW_EXPENSE_GROUP, archiveExpenseGroupListener)
+            expenseGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerGroupItems, Constants.ADD_NEW_EXPENSE_GROUP, archiveExpenseGroupListener)
             binding.expenseGroupSpinner.setAdapter(expenseGroupSpinnerAdapter)
 
             restoreAddingExpenseForm()
 
-            if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
-                val spinnerPosition = expenseGroupSpinnerAdapter.getPosition(args.expenseGroupName)
-
-                binding.expenseGroupSpinner.setSelection(spinnerPosition)
-            }
-
-            if (args.expenseSubGroupName != null && args.expenseSubGroupName!!.isNotBlank()) {
-                val selectedExpenseGroupName =
-                    binding.expenseGroupSpinner.text.toString()
-                addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
-                    .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
-                        subGroupItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups)
-                        expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
-
-                        val spinnerPosition = expenseSubGroupSpinnerAdapter.getPosition(args.expenseSubGroupName)
-
-                        binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
-                        binding.expenseSubGroupSpinner.setText(expenseSubGroupSpinnerAdapter.getItem(spinnerPosition))
-                    }
-            }
-
-            binding.expenseGroupSpinner.setOnItemClickListener {
-                    parent, view, position, rowId ->
-                    expenseGroupSpinnerPosition = position
-
-                    binding.expenseSubGroupSpinner.isVisible = true
-
-                    val selectedExpenseGroupName =
-                        binding.expenseGroupSpinner.text.toString()
-
-                    if (selectedExpenseGroupName == Constants.ADD_NEW_EXPENSE_GROUP) {
-                        setAddExpenseFormBeforeAddingExpenseGroup()
-
-                        val action =
-                            AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
-                        findNavController().navigate(action)
-                    }
-                    // TODO: doesn't work as expected
-                    addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
-                        .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
-                            subGroupItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups)
-                            expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
-                            binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
-
-                            if (args.expenseSubGroupName != null && args.expenseSubGroupName!!.isNotBlank()) {
-                                val spinnerPosition = expenseSubGroupSpinnerAdapter.getPosition(args.expenseSubGroupName)
-                                binding.expenseSubGroupSpinner.setSelection(spinnerPosition)
-                            }
-                        }
-            }
+            expenseGroupSpinnerAdapter?.let { setSpinnersArgs() }
         }
+
+        setExpenseGroupSpinnerOnItemClickListener()
 
         binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
+
+        setIncomeSubGroupSpinnerListener()
+    }
+
+    private fun setIncomeSubGroupSpinnerListener() {
         binding.expenseSubGroupSpinner.setOnItemClickListener {
                 parent, view, position, rowId ->
-                expenseSubGroupSpinnerPosition = position
+            expenseSubGroupSpinnerPosition = position
 
-                val selectedExpenseSubGroupName = binding.expenseSubGroupSpinner.text.toString()
+            val selectedExpenseSubGroupName = binding.expenseSubGroupSpinner.text.toString()
 
-                if (selectedExpenseSubGroupName == Constants.ADD_NEW_EXPENSE_SUB_GROUP) {
-                    setAddExpenseFormBeforeAddingExpenseSubGroup()
+            if (selectedExpenseSubGroupName == Constants.ADD_NEW_EXPENSE_SUB_GROUP) {
+                setAddExpenseFormBeforeAddingExpenseSubGroup()
 
-                    val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseSubGroup()
+                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseSubGroup()
 
-                    val selectedExpenseGroupName = binding.expenseGroupSpinner.text.toString()
-                    action.expenseGroupName = selectedExpenseGroupName
-                    findNavController().navigate(action)
-                }
+                val selectedExpenseGroupName = binding.expenseGroupSpinner.text.toString()
+                action.expenseGroupName = selectedExpenseGroupName
+                findNavController().navigate(action)
             }
         }
+    }
+
+    private fun setSpinnersArgs() {
+        if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
+            val spinnerPosition = expenseGroupSpinnerAdapter!!.getPosition(args.expenseGroupName)
+
+            binding.expenseGroupSpinner.setSelection(spinnerPosition)
+        }
+
+        if (args.expenseSubGroupName != null && args.expenseSubGroupName!!.isNotBlank()) {
+            val selectedExpenseGroupName =
+                binding.expenseGroupSpinner.text.toString()
+            addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
+                .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
+                    val subGroupSpinnerItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups)
+                    expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupSpinnerItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
+
+                    val spinnerPosition = expenseSubGroupSpinnerAdapter!!.getPosition(args.expenseSubGroupName)
+
+                    binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
+                    binding.expenseSubGroupSpinner.setText(expenseSubGroupSpinnerAdapter!!.getItem(spinnerPosition))
+                }
+        }
+    }
+
+    private fun setExpenseGroupSpinnerOnItemClickListener() {
+        binding.expenseGroupSpinner.setOnItemClickListener {
+                parent, view, position, rowId ->
+            expenseGroupSpinnerPosition = position
+
+            binding.expenseSubGroupSpinner.isVisible = true
+
+            val selectedExpenseGroupName =
+                binding.expenseGroupSpinner.text.toString()
+
+            if (selectedExpenseGroupName == Constants.ADD_NEW_EXPENSE_GROUP) {
+                setAddExpenseFormBeforeAddingExpenseGroup()
+
+                val action =
+                    AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
+                findNavController().navigate(action)
+            }
+
+            // TODO: doesn't work as expected
+            addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
+                .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
+                    val subGroupItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups)
+                    expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
+                    binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
+                }
+        }
+    }
 
     private fun getIncomeGroupItemsForSpinner(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
