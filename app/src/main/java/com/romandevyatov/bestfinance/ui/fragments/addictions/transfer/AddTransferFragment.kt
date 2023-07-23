@@ -229,8 +229,8 @@ class AddTransferFragment : Fragment() {
                     binding.toWalletNameSpinner.setText(toWalletSpinnerAdapter?.getItem(it))
                 }
                 binding.amountEditText.setText(transferForm.amount)
-                binding.commentEditText.setText(transferForm.comment)
                 binding.dateEditText.setText(transferForm.date)
+                binding.commentEditText.setText(transferForm.comment)
             }
         }
     }
