@@ -29,6 +29,7 @@ import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private val addIncomeHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
 
     private val sharedViewModel: SharedViewModel<AddTransactionForm> by activityViewModels()
+    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private var groupSpinnerPositionGlobal: Int? = null
     private var subGroupSpinnerPositionGlobal: Int? = null
@@ -324,7 +326,7 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun setWalletSpinnersArgs(
+    private fun checkWalletSpinnersValue(
         walletSpinnerAdapter: SpinnerAdapter
     ) {
         if (args.walletName != null && args.walletName!!.isNotBlank()) {
@@ -333,6 +335,8 @@ class AddIncomeHistoryFragment : Fragment() {
             val walletName = walletSpinnerAdapter.getItem(spinnerPosition)
 
             binding.walletSpinner.setText(walletName)
+        } else {
+            restoreWallet(walletSpinnerAdapter)
         }
     }
 
@@ -361,7 +365,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
-            setWalletSpinnersArgs(walletSpinnerAdapter)
+            checkWalletSpinnersValue(walletSpinnerAdapter)
         }
     }
 
@@ -448,23 +452,34 @@ class AddIncomeHistoryFragment : Fragment() {
         sharedViewModel.set(addTransactionForm)
     }
 
+    private fun restoreWallet( // need to save before moving to retrieve value here
+        walletSpinnerAdapter: SpinnerAdapter?
+    ) {
+        val mod = sharedModViewModel.modelForm
+        binding.walletSpinner.setText(mod?.walletSpinnerPosition?.let {
+            walletSpinnerAdapter?.getItem(
+                it
+            )
+        })
+    }
+
     private fun restoreAddingIncomeForm(
-        groupSpinnerPosition: SpinnerAdapter?,
-        subGroupSpinnerPosition: SpinnerAdapter?,
-        walletSpinnerPosition: SpinnerAdapter?
+        groupSpinnerAdapter: SpinnerAdapter?,
+        subGroupSpinnerAdapter: SpinnerAdapter?,
+        walletSpinnerAdapter: SpinnerAdapter?
     ) {
         sharedViewModel.modelForm.observe(viewLifecycleOwner) { addTransactionForm ->
             if (addTransactionForm != null) {
                 addTransactionForm.groupSpinnerPosition?.let {
-                    binding.incomeGroupSpinner.setText(groupSpinnerPosition?.getItem(it))
+                    binding.incomeGroupSpinner.setText(groupSpinnerAdapter?.getItem(it))
                 }
 
                 addTransactionForm.subGroupSpinnerPosition?.let {
-                    binding.incomeSubGroupSpinner.setText(subGroupSpinnerPosition?.getItem(it))
+                    binding.incomeSubGroupSpinner.setText(subGroupSpinnerAdapter?.getItem(it))
                 }
 
                 addTransactionForm.walletSpinnerPosition?.let {
-                    binding.walletSpinner.setText(walletSpinnerPosition?.getItem(it))
+                    binding.walletSpinner.setText(walletSpinnerAdapter?.getItem(it))
                 }
 
                 binding.amountEditText.setText(addTransactionForm.amount)
