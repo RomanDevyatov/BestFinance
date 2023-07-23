@@ -38,7 +38,6 @@ import java.util.*
 @AndroidEntryPoint
 class AddExpenseHistoryFragment : Fragment() {
 
-
     private var _binding: FragmentAddExpenseHistoryBinding? = null
     private val binding get() = _binding!!
 
@@ -165,7 +164,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun initExpenseGroupAndSubGroupSpinners() {
         val subGroupSpinnerItems = ArrayList<String>()
-        subGroupSpinnerItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
+        subGroupSpinnerItems.add(Constants.ADD_NEW_EXPENSE_SUB_GROUP)
 
         expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupSpinnerItems, Constants.ADD_NEW_INCOME_GROUP, archiveExpenseSubGroupListener)
 
@@ -210,15 +209,15 @@ class AddExpenseHistoryFragment : Fragment() {
         if (args.expenseGroupName != null && args.expenseGroupName!!.isNotBlank()) {
             val spinnerPosition = expenseGroupSpinnerAdapter!!.getPosition(args.expenseGroupName)
 
-            binding.expenseGroupSpinner.setSelection(spinnerPosition)
+            binding.expenseGroupSpinner.setText(expenseGroupSpinnerAdapter!!.getItem(spinnerPosition))
         }
 
         if (args.expenseSubGroupName != null && args.expenseSubGroupName!!.isNotBlank()) {
             val selectedExpenseGroupName =
                 binding.expenseGroupSpinner.text.toString()
             addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
-                .observe(viewLifecycleOwner) { incomeGroupWithIncomeSubGroups ->
-                    val subGroupSpinnerItems = getSpinnerSubItems(incomeGroupWithIncomeSubGroups)
+                .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
+                    val subGroupSpinnerItems = getSpinnerSubItemsNotArchived(expenseGroupWithExpenseSubGroups)
                     expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupSpinnerItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
 
                     val spinnerPosition = expenseSubGroupSpinnerAdapter!!.getPosition(args.expenseSubGroupName)
@@ -235,6 +234,7 @@ class AddExpenseHistoryFragment : Fragment() {
             expenseGroupSpinnerPosition = position
 
             binding.expenseSubGroupSpinner.isVisible = true
+            binding.expenseSubGroupSpinner.text = null
 
             val selectedExpenseGroupName =
                 binding.expenseGroupSpinner.text.toString()
@@ -250,7 +250,7 @@ class AddExpenseHistoryFragment : Fragment() {
             // TODO: doesn't work as expected
             addExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(selectedExpenseGroupName)
                 .observe(viewLifecycleOwner) { expenseGroupWithExpenseSubGroups ->
-                    val subGroupItems = getSpinnerSubItems(expenseGroupWithExpenseSubGroups)
+                    val subGroupItems = getSpinnerSubItemsNotArchived(expenseGroupWithExpenseSubGroups)
                     expenseSubGroupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupItems, Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveExpenseSubGroupListener)
                     binding.expenseSubGroupSpinner.setAdapter(expenseSubGroupSpinnerAdapter)
                 }
@@ -259,7 +259,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun getIncomeGroupItemsForSpinner(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
-        spinnerItems.add(Constants.EXPENSE_GROUP)
+
         expenseGroupList?.forEach { it ->
             spinnerItems.add(it.name)
         }
@@ -268,9 +268,8 @@ class AddExpenseHistoryFragment : Fragment() {
         return spinnerItems
     }
 
-    private fun getSpinnerSubItems(expenseGroupWithExpenseSubGroups: ExpenseGroupWithExpenseSubGroups?): ArrayList<String> {
+    private fun getSpinnerSubItemsNotArchived(expenseGroupWithExpenseSubGroups: ExpenseGroupWithExpenseSubGroups?): ArrayList<String> {
         val spinnerSubItems = ArrayList<String>()
-        spinnerSubItems.add(Constants.EXPENSE_SUB_GROUP)
 
         expenseGroupWithExpenseSubGroups?.expenseSubGroups?.forEach {
             if (it.archivedDate == null) {
@@ -402,9 +401,9 @@ class AddExpenseHistoryFragment : Fragment() {
     private fun restoreAddingExpenseForm() {
         sharedViewModel.modelForm.observe(viewLifecycleOwner) { transferForm ->
             if (transferForm != null) {
-                binding.expenseGroupSpinner.setSelection(transferForm.groupSpinnerPosition)
-                binding.expenseSubGroupSpinner.setSelection(transferForm.subGroupSpinnerPosition)
-                binding.walletSpinner.setSelection(transferForm.walletSpinnerPosition)
+//                binding.expenseGroupSpinner.setSelection(transferForm.groupSpinnerPosition)
+//                binding.expenseSubGroupSpinner.setSelection(transferForm.subGroupSpinnerPosition)
+//                binding.walletSpinner.setSelection(transferForm.walletSpinnerPosition)
                 binding.amountEditText.setText(transferForm.amount)
                 binding.dateEditText.setText(transferForm.date)
                 binding.commentEditText.setText(transferForm.comment)

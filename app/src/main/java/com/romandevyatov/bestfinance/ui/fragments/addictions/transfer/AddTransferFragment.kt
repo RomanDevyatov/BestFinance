@@ -114,12 +114,14 @@ class AddTransferFragment : Fragment() {
 
     private fun setFromWalletSpinnerAdapter() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
+
             val spinnerItems = getWalletItemsForSpinner(walletList)
 
             val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,Constants.ADD_NEW_WALLET, archiveWalletListener)
             fromWalletSpinnerAdapter = walletSpinnerAdapter
 
             binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
+
             restoreTransferForm()
 
             setSpinnerArgs(walletSpinnerAdapter)
@@ -137,6 +139,7 @@ class AddTransferFragment : Fragment() {
             binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
             restoreTransferForm()
+
             setSpinnerArgs(walletSpinnerAdapter)
         }
     }
