@@ -8,7 +8,7 @@
     tools:context=".ui.fragments.addictions.expense.AddExpenseHistoryFragment" >
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/expenseGroupSpinnerLayout"
+        android:id="@+id/groupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <AutoCompleteTextView
-            android:id="@+id/expenseGroupSpinner"
+            android:id="@+id/groupSpinner"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/expenseSubGroupSpinnerLayout"
+        android:id="@+id/subGroupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,12 +44,12 @@
         app:helperText="Required"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinnerLayout"
-        app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" >
+        app:layout_constraintEnd_toEndOf="@+id/groupSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/groupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout" >
 
         <AutoCompleteTextView
-            android:id="@+id/expenseSubGroupSpinner"
+            android:id="@+id/subGroupSpinner"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_width="match_parent"
@@ -87,9 +87,9 @@
         app:helperText="Required"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinnerLayout"
-        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinnerLayout" >
+        app:layout_constraintEnd_toEndOf="@+id/subGroupSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/subGroupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupSpinnerLayout" >
 
         <AutoCompleteTextView
             android:id="@+id/walletSpinner"
@@ -102,7 +102,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/amountTextInputLayout"
+        android:id="@+id/amountLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -122,7 +122,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateTextInputLayout"
+        android:id="@+id/dateLayout"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
@@ -130,10 +130,10 @@
         android:layout_marginTop="20dp"
         android:hint="Date"
         app:helperText="Required"
-        app:layout_constraintEnd_toStartOf="@+id/timeTextInputLayout"
+        app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountTextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dateEditText"
@@ -146,7 +146,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/timeTextInputLayout"
+        android:id="@+id/timeLayout"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
         android:hint="Time"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountTextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/timeEditText"
@@ -168,15 +168,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/commentTextInputLayout"
+        android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="32dp"
         android:hint="Comment"
-        app:layout_constraintEnd_toEndOf="@+id/dateTextInputLayout"
-        app:layout_constraintStart_toStartOf="@+id/dateTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextInputLayout" >
+        app:layout_constraintEnd_toEndOf="@+id/dateLayout"
+        app:layout_constraintStart_toStartOf="@+id/dateLayout"
+        app:layout_constraintTop_toBottomOf="@+id/dateLayout" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/commentEditText"
@@ -186,16 +186,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addExpenseHistoryButton"
+        android:id="@+id/addHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"
         android:text="Add"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/commentTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/commentLayout"
         app:layout_constraintHorizontal_bias="0.733"
-        app:layout_constraintStart_toStartOf="@+id/commentTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
+        app:layout_constraintStart_toStartOf="@+id/commentLayout"
+        app:layout_constraintTop_toBottomOf="@+id/commentLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

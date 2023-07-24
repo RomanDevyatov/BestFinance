@@ -8,23 +8,22 @@
     tools:context=".ui.fragments.addictions.income.AddIncomeHistoryFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/incomeGroupSpinnerLayout"
+        android:id="@+id/groupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:clickable="true"
         android:focusable="true"
         android:hint="Group name"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/incomeGroupSpinner"
+            android:id="@+id/groupSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -34,7 +33,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/incomeSubGroupSpinnerLayout"
+        android:id="@+id/subGroupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,13 +43,13 @@
         android:focusable="true"
         android:hint="Income sub group"
         app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="@+id/incomeGroupSpinnerLayout"
+        app:layout_constraintEnd_toEndOf="@+id/groupSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/incomeGroupSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/incomeGroupSpinnerLayout">
+        app:layout_constraintStart_toStartOf="@+id/groupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout">
 
         <AutoCompleteTextView
-            android:id="@+id/incomeSubGroupSpinner"
+            android:id="@+id/subGroupSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -70,10 +69,10 @@
         android:focusable="true"
         android:hint="Wallet"
         app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="@+id/incomeSubGroupSpinnerLayout"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/incomeSubGroupSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/incomeSubGroupSpinnerLayout">
+        app:layout_constraintStart_toStartOf="@+id/subGroupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/subGroupSpinnerLayout">
 
         <AutoCompleteTextView
             android:id="@+id/walletSpinner"
@@ -86,7 +85,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/amountTextInputLayout"
+        android:id="@+id/amountLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
@@ -106,7 +105,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateTextInputLayout"
+        android:id="@+id/dateLayout"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
@@ -114,10 +113,10 @@
         android:layout_marginTop="20dp"
         android:hint="Date"
         app:helperText="Required"
-        app:layout_constraintEnd_toStartOf="@+id/timeTextInputLayout"
+        app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountTextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dateEditText"
@@ -130,7 +129,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/timeTextInputLayout"
+        android:id="@+id/timeLayout"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -139,7 +138,7 @@
         android:hint="Time"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountTextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/timeEditText"
@@ -152,15 +151,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/commentTextInputLayout"
+        android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="Comment"
-        app:layout_constraintEnd_toEndOf="@+id/timeTextInputLayout"
-        app:layout_constraintStart_toStartOf="@+id/dateTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextInputLayout">
+        app:layout_constraintEnd_toEndOf="@+id/timeLayout"
+        app:layout_constraintStart_toStartOf="@+id/dateLayout"
+        app:layout_constraintTop_toBottomOf="@+id/dateLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/commentEditText"
@@ -170,16 +169,17 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addIncomeHistoryButton"
+        android:id="@+id/addHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Add"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/commentTextInputLayout"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="@+id/commentTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
+        app:layout_constraintEnd_toEndOf="@+id/commentLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/commentLayout"
+        app:layout_constraintTop_toBottomOf="@+id/commentLayout"
+        app:layout_constraintVertical_bias="0.204" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

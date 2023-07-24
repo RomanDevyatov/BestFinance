@@ -313,10 +313,10 @@ class AddTransferFragment : Fragment() {
                 binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
                 val dateBindingValidation = EmptyValidator(dateBinding).validate()
-                binding.dateTextInputLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+                binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
 
                 val timeBindingValidation = EmptyValidator(timeBinding).validate()
-                binding.timeTextInputLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
+                binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
                 if (isEqualSpinnerNamesValidation.isSuccess
                     && amountValidation.isSuccess
