@@ -21,6 +21,9 @@ data class TransferHistory (
     @ColumnInfo(name = "to_wallet_id")
     val toWalletId: Long,
 
+    @ColumnInfo(name = "date")
+    val date: LocalDateTime? = null,
+
     @ColumnInfo(name = "comment")
     val comment: String? = null,
 

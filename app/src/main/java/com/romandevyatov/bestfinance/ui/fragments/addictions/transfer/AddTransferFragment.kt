@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.fragments.addictions.transfer
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -20,6 +20,9 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.ui.validators.IsDigitValidator
@@ -244,27 +247,49 @@ class AddTransferFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
-        val myCalendar = Calendar.getInstance()
-        val datePicker = DatePickerDialog.OnDateSetListener() {
-                view, year, month, dayOfMonth ->
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH,month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateDate(myCalendar)
+        val selectedDate = Calendar.getInstance()
+        val datePickerListener = DatePickerDialog.OnDateSetListener() {
+                _, year, month, dayOfMonth ->
+            selectedDate.set(Calendar.YEAR, year)
+            selectedDate.set(Calendar.MONTH, month)
+            selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            binding.dateEditText.setText(dateFormat.format(selectedDate.time))
         }
 
-        val dateET = binding.dateEditText
-        dateET.setOnClickListener {
+        binding.dateEditText.setOnClickListener {
             DatePickerDialog(
                 requireContext(),
-                datePicker,
-                myCalendar.get(Calendar.YEAR),
-                myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.DAY_OF_MONTH)
+                datePickerListener,
+                selectedDate.get(Calendar.YEAR),
+                selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
-        updateDate(myCalendar)
+        binding.dateEditText.setText(dateFormat.format(selectedDate.time))
+    }
+
+    private fun setTimeEditText() {
+        val selectedTime = Calendar.getInstance()
+
+        val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            selectedTime.set(Calendar.MINUTE, minute)
+            binding.timeEditText.setText(timeFormat.format(selectedTime.time))
+        }
+
+        binding.timeEditText.setOnClickListener {
+            TimePickerDialog(
+                requireContext(),
+                timePickerListener,
+                selectedTime.get(Calendar.HOUR_OF_DAY),
+                selectedTime.get(Calendar.MINUTE),
+                false
+            ).show()
+        }
+
+        binding.timeEditText.setText(timeFormat.format(selectedTime.time))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -274,6 +299,8 @@ class AddTransferFragment : Fragment() {
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.amountEditText.text.toString().trim()
                 val dateBinding = binding.dateEditText.text.toString().trim()
+                val timeBinding = binding.timeEditText.text.toString().trim()
+                val comment = binding.commentEditText.text.toString().trim()
 
                 val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
                 val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
@@ -285,12 +312,16 @@ class AddTransferFragment : Fragment() {
                 val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
                 binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
-                val dateValidation = EmptyValidator(dateBinding).validate()
-                binding.dateLayout.error = if (!dateValidation.isSuccess) getString(dateValidation.message) else null
+                val dateBindingValidation = EmptyValidator(dateBinding).validate()
+                binding.dateTextInputLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+
+                val timeBindingValidation = EmptyValidator(timeBinding).validate()
+                binding.timeTextInputLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
                 if (isEqualSpinnerNamesValidation.isSuccess
                     && amountValidation.isSuccess
-                    && dateValidation.isSuccess
+                    && dateBindingValidation.isSuccess
+                    && timeBindingValidation.isSuccess
                 ) {
                     val walletFrom = wallets.find { it.name == walletFromNameBinding }
                     updateWalletFrom(walletFrom!!, amountBinding.toDouble())
@@ -298,8 +329,9 @@ class AddTransferFragment : Fragment() {
                     val walletTo = wallets.find { it.name == walletToNameBinding }
                     updateWalletTo(walletTo!!, amountBinding.toDouble())
 
-                    val comment = binding.commentEditText.text.toString().trim()
-                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble())
+                    val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
+                    val parsedLocalDateTime = LocalDateTime.from(LocalDateTimeRoomTypeConverter.dateTimeFormatter.parse(fullDateTime))
+                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble(), parsedLocalDateTime)
 
                     navigateToHome()
                 }
@@ -319,12 +351,14 @@ class AddTransferFragment : Fragment() {
         comment: String,
         walletFrom: Wallet,
         walletTo: Wallet,
-        amount: Double
+        amount: Double,
+        parsedLocalDateTime: LocalDateTime
     ) {
         val transferHistory = TransferHistory(
             amount = amount,
             fromWalletId = walletFrom.id!!,
             toWalletId = walletTo.id!!,
+            date = parsedLocalDateTime,
             comment = comment,
             createdDate = LocalDateTime.now()
         )
@@ -364,15 +398,6 @@ class AddTransferFragment : Fragment() {
         )
 
         walletViewModel.updateWallet(updatedWalletFrom)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun updateDate(calendar: Calendar) {
-//        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
-//        val sdf = SimpleDateFormat(dateFormat, Locale.US)
-//        binding.dateEditText.setText(sdf.format(calendar.time))
-        val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        binding.dateEditText.setText(LocalDateTime.now().format(iso8601DateTimeFormatter))
     }
 
 }

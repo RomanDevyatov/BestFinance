@@ -35,7 +35,7 @@ data class IncomeHistory(
     val amount: Double,
 
     @ColumnInfo(name = "comment")
-    val description: String?,
+    val comment: String?,
 
     @ColumnInfo(name = "date")
     val date: LocalDateTime? = null,

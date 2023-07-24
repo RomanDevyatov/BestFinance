@@ -94,21 +94,49 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/dateTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="32dp"
-        app:helperText="Required"
+        android:layout_marginTop="20dp"
         android:hint="Date"
-        app:layout_constraintTop_toBottomOf="@+id/amountEditTextLayout" >
+        app:helperText="Required"
+        app:layout_constraintEnd_toStartOf="@+id/timeTextInputLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditTextLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
             app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timeTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
+        android:hint="Time"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditTextLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -119,7 +147,7 @@
         android:layout_marginTop="32dp"
         app:helperText="Required"
         android:hint="Comment"
-        app:layout_constraintTop_toBottomOf="@+id/dateLayout" >
+        app:layout_constraintTop_toBottomOf="@+id/timeTextInputLayout" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/commentEditText"

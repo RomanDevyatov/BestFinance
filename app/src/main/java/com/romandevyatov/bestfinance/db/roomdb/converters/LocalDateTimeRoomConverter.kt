@@ -3,27 +3,34 @@ package com.romandevyatov.bestfinance.db.roomdb.converters
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class LocalDateTimeRoomTypeConverter {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val customDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")//DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    companion object {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @TypeConverter
-    fun customFormatDateStringToLocalDateTime(iso8601DateString: String?): LocalDateTime? {
-        if (iso8601DateString == null)
-            return null
-        return LocalDateTime.from(customDateTimeFormatter.parse(iso8601DateString))
+        @RequiresApi(Build.VERSION_CODES.O)
+        val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun localDateTimeToCustomFormatTimeString(date: LocalDateTime?): String? {
-        if (date != null) {
-            return date.format(customDateTimeFormatter)
+    fun dateTimeStringToLocalDateTime(dateTimeString: String?): LocalDateTime? {
+        if (dateTimeString == null)
+            return null
+        return LocalDateTime.from(dateTimeFormatter.parse(dateTimeString))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @TypeConverter
+    fun localDateTimeToCustomFormatTimeString(dateLocalDateTime: LocalDateTime?): String? {
+        if (dateLocalDateTime != null) {
+            return dateLocalDateTime.format(dateTimeFormatter)
         }
         return null
     }

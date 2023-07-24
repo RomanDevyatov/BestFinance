@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryIncomeBinding
 import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
-import java.time.format.DateTimeFormatter
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 
 class IncomeHistoryItemViewHolder(
     private val binding: CardHistoryIncomeBinding
@@ -16,7 +16,6 @@ class IncomeHistoryItemViewHolder(
         binding.balanceTextView.text = incomeHistory.incomeHistory.amount.toString()
         binding.incomeGroupNameOfIncomeHistoryTextView.text = incomeHistory.incomeSubGroup.name
 
-        val customDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        binding.dateIncomeTextView.text = incomeHistory.incomeHistory.createdDate?.format(customDateTimeFormatter)
+        binding.dateIncomeTextView.text = incomeHistory.incomeHistory.createdDate?.format(dateTimeFormatter)
     }
 }

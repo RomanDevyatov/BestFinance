@@ -1,6 +1,11 @@
 package com.romandevyatov.bestfinance.utils
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object Constants {
@@ -34,8 +39,5 @@ object Constants {
 
     const val FIELD_IS_EMPTY_MESSAGE = "Please enter some text!"
     const val ADD_NEW_WALLET: String = "Add new wallet"
-
-    val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
 }
