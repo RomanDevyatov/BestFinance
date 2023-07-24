@@ -45,6 +45,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
+    private var prevGroupSpinnerPositionGlobal: Int? = null
     private var prevSubGroupSpinnerPositionGlobal: Int? = null
     private var prevWalletSpinnerPositionGlobal: Int? = null
 
@@ -316,14 +317,14 @@ class AddIncomeHistoryFragment : Fragment() {
                 binding.incomeGroupSpinner.text.toString()
 
             if (selectedGroupName == Constants.ADD_NEW_INCOME_GROUP) {
-                resetGroupSpinner()
+                groupSpinnerPositionGlobal = prevGroupSpinnerPositionGlobal
                 saveAddTransactionFormBeforeAddGroup()
 
                 val action =
                     AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddNewIncomeGroup()
                 findNavController().navigate(action)
             } else {
-
+                prevGroupSpinnerPositionGlobal = position
                 // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
                 addIncomeHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
                     selectedGroupName
