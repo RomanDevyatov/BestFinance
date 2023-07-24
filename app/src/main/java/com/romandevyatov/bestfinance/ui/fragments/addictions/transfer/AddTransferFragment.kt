@@ -32,7 +32,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.TransferForm
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -326,7 +326,7 @@ class AddTransferFragment : Fragment() {
             fromWalletId = walletFrom.id!!,
             toWalletId = walletTo.id!!,
             comment = comment,
-            createdDate = OffsetDateTime.now()
+            createdDate = LocalDateTime.now()
         )
         transferHistoryViewModel.insertTransferHistory(transferHistory)
     }
@@ -372,7 +372,7 @@ class AddTransferFragment : Fragment() {
 //        val sdf = SimpleDateFormat(dateFormat, Locale.US)
 //        binding.dateEditText.setText(sdf.format(calendar.time))
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
+        binding.dateEditText.setText(LocalDateTime.now().format(iso8601DateTimeFormatter))
     }
 
 }

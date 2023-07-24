@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 
 @Entity(
@@ -27,6 +27,6 @@ data class IncomeGroup(
     val description: String? = null,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: OffsetDateTime? = null
+    val archivedDate: LocalDateTime? = null
 
 )

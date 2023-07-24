@@ -1,7 +1,7 @@
 package com.romandevyatov.bestfinance.db.entities
 
 import androidx.room.*
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 @Entity(tableName = "expense_sub_group",
     foreignKeys = [
@@ -29,6 +29,6 @@ data class ExpenseSubGroup(
     val expenseGroupId: Long,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: OffsetDateTime? = null
+    val archivedDate: LocalDateTime? = null
 
 )

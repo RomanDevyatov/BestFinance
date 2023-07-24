@@ -9,7 +9,7 @@ import com.romandevyatov.bestfinance.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +25,7 @@ class AddTransferViewModel @Inject constructor(
             id = selectedWallet.id,
             name = selectedWallet.name,
             balance = selectedWallet.balance,
-            archivedDate = OffsetDateTime.now(),
+            archivedDate = LocalDateTime.now(),
             input = selectedWallet.input,
             output = selectedWallet.output,
             description = selectedWallet.description

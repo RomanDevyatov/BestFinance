@@ -38,7 +38,7 @@ import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -452,18 +452,20 @@ class AddExpenseHistoryFragment : Fragment() {
 //        val sdf = SimpleDateFormat(dateFormat, Locale.US)
 //        binding.dateEditText.setText(sdf.format(calendar.time))
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        binding.dateEditText.setText(OffsetDateTime.now().format(iso8601DateTimeFormatter))
+        binding.dateEditText.setText(LocalDateTime.now().format(iso8601DateTimeFormatter))
     }
 
     private fun setAddExpenseFormBeforeAddExpenseGroup() {
         val amountBinding = binding.amountEditText.text.toString().trim()
         val dateEditText = binding.dateEditText.text.toString().trim()
+        val timeEditText = binding.dateEditText.text.toString().trim() // TODO: replace it
         val commentBinding = binding.commentEditText.text.toString().trim()
 
         val addTransactionForm = AddTransactionForm(
             walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateEditText,
+            time = timeEditText,
             comment = commentBinding
         )
         sharedModViewModel.set(addTransactionForm)
@@ -488,6 +490,7 @@ class AddExpenseHistoryFragment : Fragment() {
         val amountBinding = binding.amountEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
         val dateEditText = binding.dateEditText.text.toString().trim()
+        val timeEditText = binding.dateEditText.text.toString().trim() // TODO: replace
 
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = groupSpinnerPositionGlobal,

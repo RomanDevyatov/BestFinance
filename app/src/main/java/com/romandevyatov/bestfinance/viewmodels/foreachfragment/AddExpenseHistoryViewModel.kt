@@ -17,7 +17,7 @@ import com.romandevyatov.bestfinance.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -45,7 +45,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
         val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
         val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
 
-        val archivedDate = OffsetDateTime.now()
+        val archivedDate = LocalDateTime.now()
         val expenseGroupArchived = ExpenseGroup(
             id = expenseGroup.id,
             name = expenseGroup.name,
@@ -100,9 +100,9 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 expenseSubGroupId = expenseGroupId,
                 amount = amountBinding,
                 description = commentBinding,
-                date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
+                date = LocalDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
                 walletId = walletId,
-                createdDate = OffsetDateTime.now()
+                createdDate = LocalDateTime.now()
             )
         )
     }
@@ -168,7 +168,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             name = expenseSubGroup.name,
             description = expenseSubGroup.description,
             expenseGroupId = expenseSubGroup.expenseGroupId,
-            archivedDate = OffsetDateTime.now()
+            archivedDate = LocalDateTime.now()
         )
 
         expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupArchived)
@@ -182,7 +182,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             id = selectedWallet.id,
             name = selectedWallet.name,
             balance = selectedWallet.balance,
-            archivedDate = OffsetDateTime.now(),
+            archivedDate = LocalDateTime.now(),
             input = selectedWallet.input,
             output = selectedWallet.output,
             description = selectedWallet.description

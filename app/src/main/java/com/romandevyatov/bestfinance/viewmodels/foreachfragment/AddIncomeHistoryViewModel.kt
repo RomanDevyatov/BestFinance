@@ -14,7 +14,7 @@ import com.romandevyatov.bestfinance.repositories.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -41,7 +41,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
 
         val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
         val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
-        val archivedDate = OffsetDateTime.now()
+        val archivedDate = LocalDateTime.now()
 
         val incomeGroupArchived = IncomeGroup(
             id = incomeGroup.id,
@@ -93,14 +93,16 @@ class AddIncomeHistoryViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun insertIncomeHistoryRecord(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
         val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val parsedDateTime = LocalDateTime.parse(dateBinding, formatter)
         insertIncomeHistory(
             IncomeHistory(
                 incomeSubGroupId = incomeGroupId,
                 amount = amountBinding,
                 description = commentBinding,
-                date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
+                date = parsedDateTime,// LocalDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
                 walletId = walletId,
-                createdDate = OffsetDateTime.now()
+                createdDate = LocalDateTime.now()
             )
         )
     }
@@ -167,7 +169,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 name = incomeSubGroup.name,
                 description = incomeSubGroup.description,
                 incomeGroupId = incomeSubGroup.incomeGroupId,
-                archivedDate = OffsetDateTime.now()
+                archivedDate = LocalDateTime.now()
             )
 
             incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroupArchived)
@@ -182,7 +184,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
             id = selectedWallet.id,
             name = selectedWallet.name,
             balance = selectedWallet.balance,
-            archivedDate = OffsetDateTime.now(),
+            archivedDate = LocalDateTime.now(),
             input = selectedWallet.input,
             output = selectedWallet.output,
             description = selectedWallet.description

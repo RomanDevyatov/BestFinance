@@ -6,5 +6,6 @@ data class AddTransactionForm(
     val walletSpinnerPosition: Int? = null,
     val amount: String? = null,
     val date: String? = null,
+    val time: String? = null,
     val comment: String? = null
 )

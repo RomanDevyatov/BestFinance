@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 @Entity(tableName = "transfer_history")
 data class TransferHistory (
@@ -25,9 +25,9 @@ data class TransferHistory (
     val comment: String? = null,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: OffsetDateTime? = null,
+    val archivedDate: LocalDateTime? = null,
 
     @ColumnInfo(name = "created_date")
-    val createdDate: OffsetDateTime? = null
+    val createdDate: LocalDateTime? = null
 
 )

@@ -3,26 +3,25 @@ package com.romandevyatov.bestfinance.db.roomdb.converters
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
-class OffsetDateTimeRoomTypeConverter {
+class LocalDateTimeRoomTypeConverter {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    private val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")//DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun iso8601DateStringToOffsetDateTime(iso8601DateString: String?): OffsetDateTime? {
+    fun customFormatDateStringToLocalDateTime(iso8601DateString: String?): LocalDateTime? {
         if (iso8601DateString == null)
             return null
-        return OffsetDateTime.from(iso8601DateTimeFormatter.parse(iso8601DateString))
+        return LocalDateTime.from(iso8601DateTimeFormatter.parse(iso8601DateString))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun offsetDateTimeToIso8601OffsetDateTimeString(date: OffsetDateTime?): String? {
+    fun localDateTimeToCustomFormatTimeString(date: LocalDateTime?): String? {
         if (date != null) {
             return date.format(iso8601DateTimeFormatter)
         }
