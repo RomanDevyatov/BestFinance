@@ -451,7 +451,7 @@ class AddExpenseHistoryFragment : Fragment() {
 //        val dateFormat =  //"yyyy-MM-dd HH:mm:ss"
 //        val sdf = SimpleDateFormat(dateFormat, Locale.US)
 //        binding.dateEditText.setText(sdf.format(calendar.time))
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         binding.dateEditText.setText(LocalDateTime.now().format(iso8601DateTimeFormatter))
     }
 

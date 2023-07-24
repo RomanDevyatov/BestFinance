@@ -16,9 +16,7 @@ class IncomeHistoryItemViewHolder(
         binding.balanceTextView.text = incomeHistory.incomeHistory.amount.toString()
         binding.incomeGroupNameOfIncomeHistoryTextView.text = incomeHistory.incomeSubGroup.name
 //        val dateFormat = "yyyy-MM-dd HH:mm:ss"
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        binding.dateIncomeTextView.text = incomeHistory.incomeHistory.createdDate?.format(iso8601DateTimeFormatter)
-
-
+        val customDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        binding.dateIncomeTextView.text = incomeHistory.incomeHistory.createdDate?.format(customDateTimeFormatter)
     }
 }

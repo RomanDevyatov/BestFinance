@@ -92,7 +92,6 @@ class AddIncomeHistoryViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun insertIncomeHistoryRecord(incomeGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val parsedDateTime = LocalDateTime.parse(dateBinding, formatter)
         insertIncomeHistory(

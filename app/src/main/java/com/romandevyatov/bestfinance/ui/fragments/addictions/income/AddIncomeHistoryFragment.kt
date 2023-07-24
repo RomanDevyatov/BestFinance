@@ -57,8 +57,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
-    private val timeFormat = SimpleDateFormat("hh:mm", Locale.US)
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+    private val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
 //    val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     private val archiveGroupListener =
@@ -194,10 +195,7 @@ class AddIncomeHistoryFragment : Fragment() {
             selectedDate.set(Calendar.MONTH, month)
             selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            val dateFormat = "dd/MM/yyyy"
-            val simpleDateFormat = SimpleDateFormat(dateFormat, Locale.US)
-
-            binding.dateEditText.setText(simpleDateFormat.format(selectedDate.time))
+            binding.dateEditText.setText(dateFormat.format(selectedDate.time))
         }
 
         binding.dateEditText.setOnClickListener {

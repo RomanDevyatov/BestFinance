@@ -89,6 +89,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         app:helperText="Required"
+        android:hint="Amount"
         app:layout_constraintEnd_toEndOf="@+id/walletSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/walletSpinnerLayout"
@@ -97,8 +98,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amountEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Amount" />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -119,6 +119,7 @@
             android:id="@+id/dateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="none"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -138,6 +139,7 @@
             android:id="@+id/timeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="none"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 

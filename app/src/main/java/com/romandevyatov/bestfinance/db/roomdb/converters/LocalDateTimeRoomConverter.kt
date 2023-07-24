@@ -9,21 +9,21 @@ import java.time.format.DateTimeFormatter
 class LocalDateTimeRoomTypeConverter {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")//DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    private val customDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")//DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun customFormatDateStringToLocalDateTime(iso8601DateString: String?): LocalDateTime? {
         if (iso8601DateString == null)
             return null
-        return LocalDateTime.from(iso8601DateTimeFormatter.parse(iso8601DateString))
+        return LocalDateTime.from(customDateTimeFormatter.parse(iso8601DateString))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun localDateTimeToCustomFormatTimeString(date: LocalDateTime?): String? {
         if (date != null) {
-            return date.format(iso8601DateTimeFormatter)
+            return date.format(customDateTimeFormatter)
         }
         return null
     }

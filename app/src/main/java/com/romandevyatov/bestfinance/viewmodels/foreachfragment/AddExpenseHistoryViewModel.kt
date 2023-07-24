@@ -94,7 +94,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun insertExpenseHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         insertExpenseHistory(
             ExpenseHistory(
                 expenseSubGroupId = expenseGroupId,
