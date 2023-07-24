@@ -25,7 +25,6 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeC
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
-import com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeHistoryFragmentDirections
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.*
@@ -511,8 +510,8 @@ class AddExpenseHistoryFragment : Fragment() {
                 walletSpinnerPositionGlobal = prevWalletSpinnerPositionGlobal
                 saveAddTransactionFormBeforeAddWallet()
 
-                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
-                action.source = Constants.ADD_INCOME_HISTORY_FRAGMENT
+                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddWallet()
+                action.source = Constants.ADD_EXPENSE_HISTORY_FRAGMENT
                 findNavController().navigate(action)
             } else {
                 prevWalletSpinnerPositionGlobal = walletSpinnerPositionGlobal
@@ -538,6 +537,8 @@ class AddExpenseHistoryFragment : Fragment() {
         val commentBinding = binding.commentEditText.text.toString().trim()
 
         val addTransactionForm = AddTransactionForm(
+            groupSpinnerPosition = groupSpinnerPositionGlobal,
+            subGroupSpinnerPosition = subGroupSpinnerPositionGlobal,
             walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateEditText,
@@ -555,6 +556,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = groupSpinnerPositionGlobal,
+            subGroupSpinnerPosition = subGroupSpinnerPositionGlobal,
             walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateEditText,
@@ -573,6 +575,7 @@ class AddExpenseHistoryFragment : Fragment() {
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = groupSpinnerPositionGlobal,
             subGroupSpinnerPosition = subGroupSpinnerPositionGlobal,
+            walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             comment = commentBinding,
             date = dateEditText,

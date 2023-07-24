@@ -35,7 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
 
-
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
 
@@ -545,6 +544,8 @@ class AddIncomeHistoryFragment : Fragment() {
         val commentBinding = binding.commentEditText.text.toString().trim()
 
         val addTransactionForm = AddTransactionForm(
+            groupSpinnerPosition = groupSpinnerPositionGlobal,
+            subGroupSpinnerPosition = subGroupSpinnerPositionGlobal,
             walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateBinding,
@@ -581,6 +582,7 @@ class AddIncomeHistoryFragment : Fragment() {
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = groupSpinnerPositionGlobal,
             subGroupSpinnerPosition = subGroupSpinnerPositionGlobal,
+            walletSpinnerPosition = walletSpinnerPositionGlobal,
             amount = amountBinding,
             comment = commentBinding,
             date = dateBinding,
