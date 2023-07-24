@@ -1,5 +1,8 @@
 package com.romandevyatov.bestfinance.utils
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 object Constants {
 
     const val SPINNER_TO = "spinner_to"
@@ -31,5 +34,8 @@ object Constants {
 
     const val FIELD_IS_EMPTY_MESSAGE = "Please enter some text!"
     const val ADD_NEW_WALLET: String = "Add new wallet"
+
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
 }
