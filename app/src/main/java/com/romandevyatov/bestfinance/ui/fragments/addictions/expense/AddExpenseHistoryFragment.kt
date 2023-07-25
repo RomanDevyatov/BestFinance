@@ -64,6 +64,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 if (binding.groupSpinner.text.toString() == name) {
                     binding.groupSpinner.text = null
                     groupSpinnerPositionGlobalBeforeAdd = -1
+                    resetSubGroupSpinner()
                 }
                 sharedModViewModel.set(null)
 
@@ -156,15 +157,15 @@ class AddExpenseHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setButtonOnClickListener() {
         binding.addHistoryButton.setOnClickListener {
-            val expenseSubGroupNameBinding = binding.subGroupSpinner.text.toString()
+            val subGroupNameBinding = binding.subGroupSpinner.text.toString()
             val amountBinding = binding.amountEditText.text.toString().trim()
             val commentBinding = binding.commentEditText.text.toString().trim()
             val walletNameBinding = binding.walletSpinner.text.toString()
             val dateBinding = binding.dateEditText.text.toString().trim()
             val timeBinding = binding.timeEditText.text.toString().trim()
 
-            val expenseSubGroupNameBindingValidation = EmptyValidator(expenseSubGroupNameBinding).validate()
-            binding.subGroupSpinnerLayout.error = if (!expenseSubGroupNameBindingValidation.isSuccess) getString(expenseSubGroupNameBindingValidation.message) else null
+            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+            binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
 
             val amountBindingValidation = EmptyValidator(amountBinding).validate()
             binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
@@ -178,7 +179,7 @@ class AddExpenseHistoryFragment : Fragment() {
             val timeBindingValidation = EmptyValidator(timeBinding).validate()
             binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
-            if (expenseSubGroupNameBindingValidation.isSuccess
+            if (subGroupNameBindingValidation.isSuccess
                 && amountBindingValidation.isSuccess
                 && walletNameBindingValidation.isSuccess
                 && dateBindingValidation.isSuccess
@@ -188,7 +189,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
                 addHistoryViewModel.addExpenseHistory(
-                    expenseSubGroupNameBinding,
+                    subGroupNameBinding,
                     amountBinding.toDouble(),
                     commentBinding,
                     parsedLocalDateTime,
@@ -271,10 +272,10 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
+    private fun getGroupItemsForSpinner(groups: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
-        expenseGroupList?.forEach { it ->
+        groups?.forEach { it ->
             spinnerItems.add(it.name)
         }
         spinnerItems.add(ADD_NEW_EXPENSE_GROUP)
@@ -483,7 +484,7 @@ class AddExpenseHistoryFragment : Fragment() {
         val walletNameArg = args.walletName ?: ""
 
         if (walletNameArg.isNotBlank()) {
-            val walletSpinnerPosition = walletSpinnerAdapter.getPosition(args.walletName)
+            val walletSpinnerPosition = walletSpinnerAdapter.getPosition(walletNameArg)
 
             if (walletSpinnerPosition != -1) {
                 walletSpinnerPositionGlobalBeforeAdd = walletSpinnerPosition
@@ -632,12 +633,5 @@ class AddExpenseHistoryFragment : Fragment() {
     private fun resetSubGroupSpinner() {
         binding.subGroupSpinner.text = null
     }
-
-
-//    private fun markButtonDisable(button: Button) {
-//        button.isEnabled = false
-//        button.setTextColor(ContextCompat.getColor(binding.addExpenseHistoryButton.context, R.color.white))
-//        button.setBackgroundColor(ContextCompat.getColor(binding.addExpenseHistoryButton.context, R.color.black))
-//    }
 
 }

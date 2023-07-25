@@ -157,15 +157,15 @@ class AddIncomeHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setButtonOnClickListener() {
         binding.addHistoryButton.setOnClickListener {
-            val incomeSubGroupNameBinding = binding.subGroupSpinner.text.toString()
+            val subGroupNameBinding = binding.subGroupSpinner.text.toString()
             val amountBinding = binding.amountEditText.text.toString().trim()
             val commentBinding = binding.commentEditText.text.toString().trim()
             val walletNameBinding = binding.walletSpinner.text.toString()
             val dateBinding = binding.dateEditText.text.toString().trim()
             val timeBinding = binding.timeEditText.text.toString().trim()
 
-            val incomeSubGroupNameBindingValidation = EmptyValidator(incomeSubGroupNameBinding).validate()
-            binding.subGroupSpinnerLayout.error = if (!incomeSubGroupNameBindingValidation.isSuccess) getString(incomeSubGroupNameBindingValidation.message) else null
+            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+            binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
 
             val amountBindingValidation = EmptyValidator(amountBinding).validate()
             binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
@@ -179,7 +179,7 @@ class AddIncomeHistoryFragment : Fragment() {
             val timeBindingValidation = EmptyValidator(timeBinding).validate()
             binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
-            if (incomeSubGroupNameBindingValidation.isSuccess
+            if (subGroupNameBindingValidation.isSuccess
                 && amountBindingValidation.isSuccess
                 && walletNameBindingValidation.isSuccess
                 && dateBindingValidation.isSuccess
@@ -189,7 +189,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
                 addHistoryViewModel.addIncomeHistory(
-                    incomeSubGroupNameBinding,
+                    subGroupNameBinding,
                     amountBinding.toDouble(),
                     commentBinding,
                     parsedLocalDateTime,
@@ -272,10 +272,10 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(incomeGroupList: List<IncomeGroup>?): ArrayList<String> {
+    private fun getGroupItemsForSpinner(groups: List<IncomeGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
-        incomeGroupList?.forEach { it ->
+        groups?.forEach { it ->
             spinnerItems.add(it.name)
         }
         spinnerItems.add(ADD_NEW_INCOME_GROUP)
@@ -633,11 +633,5 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun resetSubGroupSpinner() {
         binding.subGroupSpinner.text = null
     }
-
-//    private fun markButtonDisable(button: Button) {
-//        button.isEnabled = false
-//        button.setTextColor(ContextCompat.getColor(binding.addIncomeHistoryButton.context, R.color.white))
-//        button.setBackgroundColor(ContextCompat.getColor(binding.addIncomeHistoryButton.context, R.color.black))
-//    }
 
 }
