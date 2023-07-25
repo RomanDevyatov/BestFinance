@@ -13,7 +13,7 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     fun getAllExpenseSubGroups(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllLiveData()
 
-    fun getAllExpenseSubGroupsWhereArchivedDateIsNull(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllNotArchivedLiveData()
+    fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllNotArchivedLiveData()
 
 
     suspend fun insertExpenseSubGroup(expenseGroup: ExpenseSubGroup) {

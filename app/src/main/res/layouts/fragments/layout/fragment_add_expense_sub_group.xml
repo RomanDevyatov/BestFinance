@@ -46,7 +46,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/groupSpinnerTextInputLayout"
+        android:id="@+id/groupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="368dp"
         android:layout_height="75dp"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/subGroupDescriptionTextInputLayout">
 
         <AutoCompleteTextView
-            android:id="@+id/groupSpinnerAutoCompleteTextView"
+            android:id="@+id/groupSpinner"
             android:layout_width="387dp"
             android:layout_height="wrap_content"
             android:inputType="none" />

@@ -57,7 +57,7 @@ class IncomeGroupViewModel @Inject constructor(
     }
 
     fun getIncomeGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupRepository.getIncomeGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
+        return incomeGroupRepository.getIncomeGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
     val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()

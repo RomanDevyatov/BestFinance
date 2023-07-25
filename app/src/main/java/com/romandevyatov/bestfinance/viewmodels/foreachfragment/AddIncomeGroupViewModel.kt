@@ -73,7 +73,7 @@ class AddIncomeGroupViewModel @Inject constructor(
     }
 
     fun getIncomeGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupRepository.getIncomeGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
+        return incomeGroupRepository.getIncomeGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
     fun unarchiveIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
