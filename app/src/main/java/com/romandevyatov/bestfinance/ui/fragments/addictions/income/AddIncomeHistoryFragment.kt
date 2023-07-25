@@ -64,6 +64,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 if (binding.groupSpinner.text.toString() == name) {
                     binding.groupSpinner.text = null
                     groupSpinnerPositionGlobalBeforeAdd = -1
+                    resetSubGroupSpinner()
                 }
                 sharedModViewModel.set(null)
 
