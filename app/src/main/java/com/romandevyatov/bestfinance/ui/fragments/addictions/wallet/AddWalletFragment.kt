@@ -14,6 +14,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,6 +27,10 @@ import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.ui.validators.IsDigitValidator
 import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.ADD_TRANSFER_HISTORY_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.WALLETS_FRAGMENT
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +44,19 @@ class AddWalletFragment : Fragment() {
 
     private val args: AddWalletFragmentArgs by navArgs()
 
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+
+//        val callback = object : OnBackPressedCallback(
+//            true
+//        ) {
+//            override fun handleOnBackPressed() {
+//                performNavigation(args.source, null)
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+//    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +68,12 @@ class AddWalletFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                performNavigation(args.source, null)
+            }
+        })
 
         binding.addWalletButton.setOnClickListener {
             val walletNameBinding = binding.walletNameEditText.text.toString().trim()
@@ -66,10 +90,11 @@ class AddWalletFragment : Fragment() {
                 && walletBalanceValidation.isSuccess
             ) {
                 walletViewModel.getWalletByNameLiveData(walletNameBinding).observe(viewLifecycleOwner) { wallet ->
-                    if (wallet != null) {
-                        if (wallet.archivedDate != null) {
-                            showWalletDialog(requireContext(), wallet, "Do you want to unarchive `$walletNameBinding` wallet?")
-                        }
+                    if (wallet?.archivedDate != null) {
+                        showWalletDialog(
+                            requireContext(),
+                            wallet,
+                            "Do you want to unarchive `$walletNameBinding` wallet?")
                     } else {
                         val newWallet = Wallet(
                             name = walletNameBinding,
@@ -83,6 +108,7 @@ class AddWalletFragment : Fragment() {
                 }
             }
         }
+
     }
 
     override fun onDestroyView() {
@@ -115,55 +141,32 @@ class AddWalletFragment : Fragment() {
 
         dialog.show()
     }
-//    fun showWalletDialog(context: Context, wallet: Wallet) {
-//        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-//
-//        val customView = LayoutInflater.from(context).inflate(R.layout.dialog_alert, null)
-//        builder.setView(customView)
-//
-//        customView.findViewById<TextView>(R.id.dialogAlertTitleTextView).text = "Unarchive?"
-//        customView.findViewById<TextView>(R.id.dialogAlertMessageTextView).text = "Do you want to unarchive this wallet?"
-//
-//        builder.setPositiveButton("YES") { dialog, which ->
-//            walletViewModel.unarchiveWallet(wallet)
-//            performNavigation(args.source, wallet.name)
-//        }
-//        builder.setNegativeButton("NO") { dialog, which -> dialog.cancel() }
-//
-//        val alertDialog = builder.create()
-//
-//        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-//
-//        alertDialog.show()
-//
-//        val positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-//        val negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-//
-//        positiveButton.setTextColor(Color.WHITE)
-//        negativeButton.setTextColor(Color.WHITE)
-//    }
 
-    private fun performNavigation(prevFragmentString: String?, walletName: String) {
+    private fun performNavigation(prevFragmentString: String?, walletName: String?) {
         when (prevFragmentString) {
-            Constants.ADD_INCOME_HISTORY_FRAGMENT -> {
+            ADD_INCOME_HISTORY_FRAGMENT -> {
                 val action =
                     AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
                 action.walletName = walletName
+                action.incomeGroupName = null
+                action.incomeSubGroupName = null
                 findNavController().navigate(action)
             }
-            Constants.ADD_EXPENSE_HISTORY_FRAGMENT -> {
+            ADD_EXPENSE_HISTORY_FRAGMENT -> {
                 val action =
                     AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
                 action.walletName = walletName
+                action.expenseGroupName = null
+                action.expenseSubGroupName = null
                 findNavController().navigate(action)
             }
-            Constants.ADD_TRANSFER_HISTORY_FRAGMENT -> {
+            ADD_TRANSFER_HISTORY_FRAGMENT -> {
                 val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddTransfer()
                 action.walletName = walletName
                 action.spinnerType = args.spinnerType
                 findNavController().navigate(action)
             }
-            Constants.WALLETS_FRAGMENT -> {
+            WALLETS_FRAGMENT -> {
                 val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
                 findNavController().navigate(action)
             }
