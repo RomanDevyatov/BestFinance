@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class ExpenseSubGroupViewModel @Inject constructor(
@@ -45,17 +43,6 @@ class ExpenseSubGroupViewModel @Inject constructor(
         expenseSubGroupRepository.deleteAllExpenseSubGroups()
     }
 
-    // val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
-
-//    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
-//        expenseSubGroupsLiveData.value?.forEach { it ->
-//            if (it.name == expenseSubGroupName) {
-//                return it
-//            }
-//        }
-//
-//        return null
-//    }
     val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
 

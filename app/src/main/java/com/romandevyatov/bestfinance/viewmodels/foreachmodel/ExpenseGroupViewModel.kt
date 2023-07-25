@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository

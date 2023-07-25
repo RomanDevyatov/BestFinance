@@ -56,12 +56,12 @@ class AnalyzeFragment : Fragment() {
                 )
                 mList.add(apd)
 
-                val apdr = ParentData(
+                val parentData = ParentData(
                     analyzeParentTitle = Constants.EXPENSE,
                     type = Constants.EXPENSES_PARENT_TYPE,
                     subParentNestedListExpenses = expenses
                 )
-                mList.add(apdr)
+                mList.add(parentData)
 
                 expandableGroupAdapter = ExpandableGroupAdapter(mList)
                 binding.analyzeGroupRecycler.adapter = expandableGroupAdapter

@@ -134,5 +134,4 @@ class WalletFragment : Fragment() {
             attachToRecyclerView(binding.walletRecyclerView)
         }
     }
-
 }

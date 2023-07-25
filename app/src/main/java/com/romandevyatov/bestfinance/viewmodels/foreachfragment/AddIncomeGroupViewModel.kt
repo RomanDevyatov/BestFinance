@@ -64,7 +64,7 @@ class AddIncomeGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 
-    suspend fun getIncomeGroupByName(name: String): IncomeGroup {
+    fun getIncomeGroupByName(name: String): IncomeGroup {
         return incomeGroupRepository.getIncomeGroupByName(name)
     }
 

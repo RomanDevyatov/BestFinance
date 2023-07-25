@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.viewmodels.shared
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
@@ -16,5 +15,4 @@ class SharedModifiedViewModel<T> @Inject constructor(): ViewModel() {
     override fun onCleared() {
         modelForm = null
     }
-
 }
