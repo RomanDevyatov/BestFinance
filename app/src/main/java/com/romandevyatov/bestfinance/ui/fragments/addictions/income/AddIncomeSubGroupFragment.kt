@@ -118,9 +118,8 @@ class AddIncomeSubGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             addIncomeSubGroupViewModel.unarchiveIncomeSubGroup(incomeSubGroup)
-
+            dialog.dismiss()
             findNavController().navigate(action)
         }
 

@@ -104,7 +104,7 @@ class AddWalletFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            Toast.makeText(context, message,Toast.LENGTH_LONG).show()
+            dialog.dismiss()
             walletViewModel.unarchiveWallet(wallet)
             performNavigation(args.source, wallet.name)
         }

@@ -114,8 +114,8 @@ class AddIncomeGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             incomeGroupViewModel.unarchiveIncomeGroup(incomeGroup)
+            dialog.dismiss()
             val action =
                 AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
             action.incomeGroupName = incomeGroup.name
