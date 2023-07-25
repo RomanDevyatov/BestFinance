@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,7 +28,7 @@ class AddIncomeGroupFragment : Fragment() {
     private var _binding: FragmentAddIncomeGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val incomeGroupViewModel: AddIncomeGroupViewModel by viewModels()
+    private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,38 +52,38 @@ class AddIncomeGroupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNewGroupButton.setOnClickListener {
-            val newIncomeGroupNameBinding = binding.groupNameInputEditText.text.toString()
-            val newIncomeGroupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
-            val newIncomeGroupIsPassiveBinding = binding.isPassiveCheckBox.isChecked
+            val groupNameBinding = binding.groupNameInputEditText.text.toString()
+            val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
+            val isPassiveBinding = binding.isPassiveCheckBox.isChecked
 
-            val nameEmptyValidation = EmptyValidator(newIncomeGroupNameBinding).validate()
+            val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
             binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                incomeGroupViewModel.getIncomeGroupNameByNameLiveData(newIncomeGroupNameBinding).observe(viewLifecycleOwner) { incomeGroup ->
+                addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { incomeGroup ->
                     if (incomeGroup?.archivedDate != null) {
                         showWalletDialog(
                             requireContext(),
-                            incomeGroup, "Do you want to unarchive `$newIncomeGroupNameBinding` income group?")
+                            incomeGroup,
+                            "Do you want to unarchive `$groupNameBinding` income group?")
                     } else {
-                        incomeGroupViewModel.insertIncomeGroup(
+                        addGroupViewModel.insertIncomeGroup(
                             IncomeGroup(
-                                name = newIncomeGroupNameBinding,
-                                description = newIncomeGroupDescriptionBinding,
-                                isPassive = newIncomeGroupIsPassiveBinding
+                                name = groupNameBinding,
+                                description = groupDescriptionBinding,
+                                isPassive = isPassiveBinding
                             )
                         )
                         val action =
                             AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                        action.incomeGroupName = newIncomeGroupNameBinding
+                        action.incomeGroupName = groupNameBinding
                         findNavController().navigate(action)
                     }
                 }
@@ -112,7 +111,7 @@ class AddIncomeGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            incomeGroupViewModel.unarchiveIncomeGroup(incomeGroup)
+            addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
             dialog.dismiss()
             val action =
                 AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()

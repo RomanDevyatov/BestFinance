@@ -60,6 +60,20 @@ class AddExpenseGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
+    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup> {
+        return expenseGroupRepository.getExpenseGroupNameByNameLiveData(groupNameBinding)
+    }
+
+    fun unarchiveExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
+        val unarchivedExpenseGroup = ExpenseGroup(
+            id = expenseGroup.id,
+            name = expenseGroup.name,
+            description = expenseGroup.description,
+            archivedDate = null
+        )
+        updateExpenseGroup(unarchivedExpenseGroup)
+    }
+
     val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupLiveData()
 
     val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData()

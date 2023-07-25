@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import java.time.LocalDateTime
@@ -70,5 +71,8 @@ interface ExpenseGroupDao {
     @Transaction
     @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name: String): ExpenseGroupWithExpenseSubGroups
+
+    @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName LIMIT 1")
+    fun getByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroup>
 
 }
