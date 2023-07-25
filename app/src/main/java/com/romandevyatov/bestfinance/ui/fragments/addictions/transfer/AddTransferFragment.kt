@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
@@ -21,7 +20,6 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
@@ -57,9 +55,8 @@ class AddTransferFragment : Fragment() {
 
     private val sharedModViewModel: SharedModifiedViewModel<AddTransferForm> by activityViewModels()
 
-    private var prevFromSpinnerPositionGlobal: Int? = null
-
-    private var prevToSpinnerPositionGlobal: Int? = null
+    private var prevFromSpinnerPositionGlobal: Int = -1
+    private var prevToSpinnerPositionGlobal: Int = -1
 
     private val args: AddTransferFragmentArgs by navArgs()
 
@@ -68,15 +65,7 @@ class AddTransferFragment : Fragment() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addTransferViewModel.archiveWallet(name)
-                if (binding.toWalletNameSpinner.text.toString() == name) {
-                    binding.toWalletNameSpinner.text = null
-                    prevToSpinnerPositionGlobal = -1
-                }
-                if (binding.fromWalletNameSpinner.text.toString() == name) {
-                    binding.fromWalletNameSpinner.text = null
-                    prevFromSpinnerPositionGlobal = -1
-                }
+                archiveWallet(name)
 
                 dismissAndDropdownSpinner(binding.fromWalletNameSpinner)
             }
@@ -87,19 +76,24 @@ class AddTransferFragment : Fragment() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addTransferViewModel.archiveWallet(name)
-                if (binding.toWalletNameSpinner.text.toString() == name) {
-                    binding.toWalletNameSpinner.text = null
-                    prevToSpinnerPositionGlobal = null
-                }
-                if (binding.fromWalletNameSpinner.text.toString() == name) {
-                    binding.fromWalletNameSpinner.text = null
-                    prevFromSpinnerPositionGlobal = null
-                }
-
+                archiveWallet(name)
+                sharedModViewModel.set(null)
                 dismissAndDropdownSpinner(binding.toWalletNameSpinner)
             }
         }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun archiveWallet(name: String) {
+        addTransferViewModel.archiveWallet(name)
+        if (binding.toWalletNameSpinner.text.toString() == name) {
+            binding.toWalletNameSpinner.text = null
+            prevToSpinnerPositionGlobal = -1
+        }
+        if (binding.fromWalletNameSpinner.text.toString() == name) {
+            binding.fromWalletNameSpinner.text = null
+            prevFromSpinnerPositionGlobal = -1
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -161,10 +155,6 @@ class AddTransferFragment : Fragment() {
             binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
             setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter)
-
-//            restoreTransferForm()
-//
-//            setSpinnerArgs(walletSpinnerAdapter)
         }
     }
 
@@ -178,10 +168,6 @@ class AddTransferFragment : Fragment() {
             binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
             setIfAvailableToWalletSpinnersValue(walletSpinnerAdapter)
-
-//            restoreTransferForm()
-//
-//            setSpinnerArgs(walletSpinnerAdapter)
         }
     }
 
@@ -199,6 +185,7 @@ class AddTransferFragment : Fragment() {
     private fun setFromSpinnerListener() {
         binding.fromWalletNameSpinner.setOnItemClickListener {
                 _, _, position, _ ->
+
 
             val selectedWalletNameFrom =
                 binding.fromWalletNameSpinner.text.toString()
@@ -219,7 +206,7 @@ class AddTransferFragment : Fragment() {
 //                )
 //                sharedModViewModel.set(transferForm)
 
-                navigateToAddNewWallet(SPINNER_FROM)
+                navigateAddNewWallet(SPINNER_FROM)
             } else {
                 prevFromSpinnerPositionGlobal = position
             }
@@ -249,7 +236,7 @@ class AddTransferFragment : Fragment() {
 //                )
 //                sharedModViewModel.set(transferForm)
 
-                navigateToAddNewWallet(SPINNER_TO)
+                navigateAddNewWallet(SPINNER_TO)
             } else {
                 prevToSpinnerPositionGlobal = position
             }
@@ -259,13 +246,16 @@ class AddTransferFragment : Fragment() {
     private fun setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter: SpinnerAdapter) {
         val walletNameArg = args.walletName
         val spinnerTypeArg = args.spinnerType
-        if (walletNameArg?.isNotBlank() == true && spinnerTypeArg ==  SPINNER_FROM) {
-                val spinnerPosition = walletSpinnerAdapter.getPosition(walletNameArg)
-                prevFromSpinnerPositionGlobal = spinnerPosition
+        if (walletNameArg?.isNotBlank() == true && spinnerTypeArg == SPINNER_FROM) {
+            val spinnerPosition = walletSpinnerAdapter.getPosition(walletNameArg)
+            prevFromSpinnerPositionGlobal = spinnerPosition
 
+            if (spinnerPosition != -1) {
                 val fromWalletName = walletSpinnerAdapter.getItem(spinnerPosition)
 
                 binding.fromWalletNameSpinner.setText(fromWalletName, false)
+            }
+
         } else {
             restoreFromWalletSpinnerValue(walletSpinnerAdapter)
         }
@@ -275,12 +265,14 @@ class AddTransferFragment : Fragment() {
         val mod = sharedModViewModel.modelForm
 
         val fromWalletSpinnerPosition = mod?.fromWalletSpinnerPosition
-        prevFromSpinnerPositionGlobal = fromWalletSpinnerPosition
-
         if (fromWalletSpinnerPosition != null) {
-            val walletName = walletSpinnerAdapter.getItem(fromWalletSpinnerPosition)
+            prevFromSpinnerPositionGlobal = fromWalletSpinnerPosition
 
-            binding.fromWalletNameSpinner.setText(walletName, false)
+            if (fromWalletSpinnerPosition != -1) {
+                val walletName = walletSpinnerAdapter.getItem(fromWalletSpinnerPosition)
+
+                binding.fromWalletNameSpinner.setText(walletName, false)
+            }
         }
     }
 
@@ -288,14 +280,14 @@ class AddTransferFragment : Fragment() {
         val walletNameArg = args.walletName
         val spinnerTypeArg = args.spinnerType
         if (walletNameArg?.isNotBlank() == true && spinnerTypeArg == SPINNER_TO) {
-                val spinnerPosition = walletSpinnerAdapter.getPosition(walletNameArg)
-
+            val spinnerPosition = walletSpinnerAdapter.getPosition(walletNameArg)
+            if (spinnerPosition != -1) {
                 prevToSpinnerPositionGlobal = spinnerPosition
 
                 val toWalletName = walletSpinnerAdapter.getItem(spinnerPosition)
 
                 binding.toWalletNameSpinner.setText(toWalletName, false)
-
+            }
         } else {
             restoreToWalletSpinnerValue(walletSpinnerAdapter)
         }
@@ -305,12 +297,14 @@ class AddTransferFragment : Fragment() {
         val mod = sharedModViewModel.modelForm
 
         val toWalletSpinnerPosition = mod?.toWalletSpinnerPosition
-        prevToSpinnerPositionGlobal = toWalletSpinnerPosition
-
         if (toWalletSpinnerPosition != null) {
-            val walletName = walletSpinnerAdapter.getItem(toWalletSpinnerPosition)
+            prevToSpinnerPositionGlobal = toWalletSpinnerPosition
 
-            binding.toWalletNameSpinner.setText(walletName, false)
+            if (toWalletSpinnerPosition != -1) {
+                val walletName = walletSpinnerAdapter.getItem(toWalletSpinnerPosition)
+
+                binding.toWalletNameSpinner.setText(walletName, false)
+            }
         }
     }
 
@@ -334,7 +328,7 @@ class AddTransferFragment : Fragment() {
         }
     }
 
-    private fun navigateToAddNewWallet(spinnerType: String) {
+    private fun navigateAddNewWallet(spinnerType: String) {
         val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationAddWallet()
         action.source = Constants.ADD_TRANSFER_HISTORY_FRAGMENT
         action.spinnerType = spinnerType
@@ -426,6 +420,7 @@ class AddTransferFragment : Fragment() {
 
                     val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                     val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
+
                     insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble(), parsedLocalDateTime)
 
                     sharedModViewModel.set(null)
@@ -508,7 +503,7 @@ class AddTransferFragment : Fragment() {
     }
 
     private fun setPrevValue(position: Int?, spinner: AutoCompleteTextView) {
-        if (position == null) {
+        if (position == null || position == -1) {
             spinner.text = null
         } else {
             val name = spinner.adapter.getItem(position).toString()

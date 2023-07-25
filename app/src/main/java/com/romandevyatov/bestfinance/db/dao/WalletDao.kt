@@ -43,5 +43,8 @@ interface WalletDao {
     @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
     fun getWalletByNameAndNotArchived(walletName: String): Wallet
 
+    @Query("SELECT * FROM wallet WHERE name = :walletName LIMIT 1")
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>
+
 
 }

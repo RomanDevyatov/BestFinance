@@ -36,6 +36,23 @@ class WalletViewModel @Inject constructor(
         return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet> {
+        return walletRepository.getWalletByNameLiveData(walletName)
+    }
+
+    fun unarchiveWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+        val updatedWallet = Wallet(
+            id = wallet.id,
+            name = wallet.name,
+            description = wallet.description,
+            balance = wallet.balance,
+            input = wallet.input,
+            output = wallet.output,
+            archivedDate = null
+        )
+        updateWallet(updatedWallet)
+    }
+
     fun updateWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
 

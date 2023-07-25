@@ -40,7 +40,7 @@ class AddWalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNewWalletButton.setOnClickListener {
+        binding.addWalletButton.setOnClickListener {
             val walletNameBinding = binding.walletNameEditText.text.toString().trim()
             val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
             val walletDescriptionBinding = binding.walletDescriptionEditText.text.toString().trim()
@@ -54,15 +54,28 @@ class AddWalletFragment : Fragment() {
             if (walletNameValidation.isSuccess
                 && walletBalanceValidation.isSuccess
             ) {
-                val newWallet = Wallet(
-                    name = walletNameBinding,
-                    balance = walletBalanceBinding.toDouble(),
-                    description = walletDescriptionBinding
-                )
+                walletViewModel.getWalletByNameLiveData(walletNameBinding).observe(viewLifecycleOwner) { wallet ->
+                    if (wallet != null) {
+                        if (wallet.archivedDate != null) {
+                            val flag = true // Wallet with this name is archived, do you want to unarchive it?
+                            if (flag) { // unarchive
+                                walletViewModel.unarchiveWallet(wallet)
+                            }
+                        } else {
+                            // this wallet is already exists
+                        }
+                    } else {
+                        val newWallet = Wallet(
+                            name = walletNameBinding,
+                            balance = walletBalanceBinding.toDouble(),
+                            description = walletDescriptionBinding
+                        )
 
-                walletViewModel.insertWallet(newWallet)
+                        walletViewModel.insertWallet(newWallet)
+                    }
 
-                performNavigation(args.source, walletNameBinding)
+                    performNavigation(args.source, walletNameBinding)
+                }
             }
         }
     }

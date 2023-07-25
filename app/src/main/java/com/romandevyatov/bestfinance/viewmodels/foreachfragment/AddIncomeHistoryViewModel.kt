@@ -38,30 +38,31 @@ class AddIncomeHistoryViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveIncomeGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val incomeGroupWithIncomeSubGroups = getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(name)
+        if (incomeGroupWithIncomeSubGroups != null) {
+            val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
+            val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
+            val archivedDate = LocalDateTime.now()
 
-        val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
-        val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
-        val archivedDate = LocalDateTime.now()
-
-        val incomeGroupArchived = IncomeGroup(
-            id = incomeGroup.id,
-            name = incomeGroup.name,
-            isPassive = incomeGroup.isPassive,
-            description = incomeGroup.description,
-            archivedDate = archivedDate
-        )
-        updateIncomeGroup(incomeGroupArchived)
-
-        incomeSubGroups.forEach { subGroup ->
-            val incomeSubGroupArchived = IncomeSubGroup(
-                id = subGroup.id,
-                name = subGroup.name,
-                description = subGroup.description,
-                incomeGroupId = subGroup.incomeGroupId,
+            val incomeGroupArchived = IncomeGroup(
+                id = incomeGroup.id,
+                name = incomeGroup.name,
+                isPassive = incomeGroup.isPassive,
+                description = incomeGroup.description,
                 archivedDate = archivedDate
             )
+            updateIncomeGroup(incomeGroupArchived)
 
-            updateIncomeSubGroup(incomeSubGroupArchived)
+            incomeSubGroups.forEach { subGroup ->
+                val incomeSubGroupArchived = IncomeSubGroup(
+                    id = subGroup.id,
+                    name = subGroup.name,
+                    description = subGroup.description,
+                    incomeGroupId = subGroup.incomeGroupId,
+                    archivedDate = archivedDate
+                )
+
+                updateIncomeSubGroup(incomeSubGroupArchived)
+            }
         }
     }
 
