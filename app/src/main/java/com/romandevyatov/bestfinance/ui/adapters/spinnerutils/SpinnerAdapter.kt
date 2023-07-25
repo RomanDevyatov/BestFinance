@@ -37,7 +37,6 @@ class SpinnerAdapter(
         itemDeleteTextView.isVisible = itemText != addItem
 
         itemDeleteTextView.setOnClickListener {
-            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
             listener?.archive(itemText)
         }
 
@@ -56,12 +55,6 @@ class SpinnerAdapter(
         return position.toLong()
     }
 
-//    fun updateData(newItems: MutableList<String>) {
-//        items.clear()
-//        items.addAll(newItems)
-//        notifyDataSetChanged()
-//    }
-
     private var customFilter: CustomFilter? = null
 
     override fun getFilter(): Filter {
@@ -71,18 +64,10 @@ class SpinnerAdapter(
         return customFilter!!
     }
 
-    //    // Method to update the data source and refresh the dropdown
     fun updateData(newItems: MutableList<String>) {
         items = newItems
         notifyDataSetChanged()
     }
-
-    fun calculateDropdownHeight(maxItemsToShow: Int): Int {
-        val itemHeight = context.resources.getDimensionPixelSize(android.R.dimen.dialog_min_width_minor)
-        val itemCount = Math.min(items.size, maxItemsToShow)
-        return itemCount * itemHeight
-    }
-
 
     private class CustomFilter(
         private val originalList: List<String>,
@@ -110,9 +95,3 @@ class SpinnerAdapter(
     }
 
 }
-
-
-
-
-
-
