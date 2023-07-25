@@ -52,6 +52,10 @@ class AddIncomeHistoryFragment : Fragment() {
     private var prevSubGroupSpinnerPositionGlobal: Int? = null
     private var prevWalletSpinnerPositionGlobal: Int? = null
 
+    private var groupSpinnerAdapterGlobal: SpinnerAdapter? = null
+    private var subGroupSpinnerAdapterGlobal: SpinnerAdapter? = null
+    private var walletSpinnerAdapterGlobal: SpinnerAdapter? = null
+
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private val archiveGroupListener =
@@ -77,6 +81,8 @@ class AddIncomeHistoryFragment : Fragment() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
                 addHistoryViewModel.archiveWallet(name)
+                binding.groupSpinner.dismissDropDown()
+                binding.groupSpinner.showDropDown()
             }
         }
 
@@ -408,7 +414,7 @@ class AddIncomeHistoryFragment : Fragment() {
             val subGroupName = subGroupSpinnerAdapter.getItem(subGroupSpinnerPosition)
 
             binding.subGroupSpinner.setText(subGroupName)
-        } else {
+        } else if (args.incomeGroupName == null || args.incomeGroupName?.isBlank() == true) {
             restoreSubGroupSpinnerValue(subGroupSpinnerAdapter)
         }
 //        binding.subGroupSpinner.threshold = Int.MAX_VALUE
@@ -520,6 +526,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = prevGroupSpinnerPositionGlobal,
+            subGroupSpinnerPosition = prevSubGroupSpinnerPositionGlobal,
             walletSpinnerPosition = prevWalletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateBinding,

@@ -5,20 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Filterable
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.utils.Constants
-import kotlin.collections.ArrayList
 
 class SpinnerAdapter(
     context: Context,
     private val resourceId: Int,
-    private val items: ArrayList<String>,
+    private var items: MutableList<String>,
     private val addItem: String,
     private val listener: DeleteItemClickListener? = null
-) : ArrayAdapter<String>(context, resourceId, items) {
+) : ArrayAdapter<String>(context, resourceId, items), Filterable {
+
 
     interface DeleteItemClickListener {
 
@@ -59,4 +59,16 @@ class SpinnerAdapter(
         return position.toLong()
     }
 
+    fun updateData(newItems: MutableList<String>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
 }
+
+
+
+
+
+
