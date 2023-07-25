@@ -5,23 +5,43 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addExpenseGroupNameFragment"
-    tools:context=".ui.fragments.addictions.expense.AddExpenseGroupNameFragment" >
+    tools:context=".ui.fragments.addictions.expense.AddExpenseGroupFragment" >
 
-    <EditText
-        android:id="@+id/newExpenseGroupName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newExpenseGroupNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Expense group name"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <EditText
-        android:id="@+id/commentEditText"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newExpenseGroupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Expense group name"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionEditTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
         android:hint="Expense group description"
-        app:layout_constraintEnd_toEndOf="@+id/newExpenseGroupName"
-        app:layout_constraintStart_toStartOf="@+id/newExpenseGroupName"
-        app:layout_constraintTop_toBottomOf="@+id/newExpenseGroupName" />
+        app:layout_constraintEnd_toEndOf="@+id/newExpenseGroupNameLayout"
+        app:layout_constraintStart_toStartOf="@+id/newExpenseGroupNameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/newExpenseGroupNameLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addNewExpenseGroupNameButton"

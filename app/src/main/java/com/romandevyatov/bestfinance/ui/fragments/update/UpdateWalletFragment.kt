@@ -70,5 +70,4 @@ class UpdateWalletFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

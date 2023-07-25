@@ -17,8 +17,7 @@ import com.romandevyatov.bestfinance.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,29 +40,31 @@ class AddExpenseHistoryViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveExpenseGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val expenseGroupWithExpenseSubGroups = getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name)
+        if (expenseGroupWithExpenseSubGroups != null) {
+            val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
+            val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
 
-        val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
-        val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
+            val archivedDate = LocalDateTime.now()
 
-        val archivedDate = OffsetDateTime.now()
-        val expenseGroupArchived = ExpenseGroup(
-            id = expenseGroup.id,
-            name = expenseGroup.name,
-            description = expenseGroup.description,
-            archivedDate = archivedDate
-        )
-        updateExpenseGroup(expenseGroupArchived)
-
-        expenseSubGroups.forEach { subGroup ->
-            val expenseSubGroupArchived = ExpenseSubGroup(
-                id = subGroup.id,
-                name = subGroup.name,
-                description = subGroup.description,
-                expenseGroupId = subGroup.expenseGroupId,
+            val expenseGroupArchived = ExpenseGroup(
+                id = expenseGroup.id,
+                name = expenseGroup.name,
+                description = expenseGroup.description,
                 archivedDate = archivedDate
             )
+            updateExpenseGroup(expenseGroupArchived)
 
-            updateExpenseSubGroup(expenseSubGroupArchived)
+            expenseSubGroups.forEach { subGroup ->
+                val expenseSubGroupArchived = ExpenseSubGroup(
+                    id = subGroup.id,
+                    name = subGroup.name,
+                    description = subGroup.description,
+                    expenseGroupId = subGroup.expenseGroupId,
+                    archivedDate = archivedDate
+                )
+
+                updateExpenseSubGroup(expenseSubGroupArchived)
+            }
         }
     }
 
@@ -77,7 +78,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addExpenseHistory(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, dateBinding: String, walletNameBinding: String) {
+    fun addExpenseHistory(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameNotArchived(expenseSubGroupNameBinding)
             val expenseSubGroupId = expenseSubGroup.id!!.toLong()
@@ -85,7 +86,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, parsedLocalDateTime, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }
@@ -93,16 +94,15 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertExpenseHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, dateBinding: String, walletId: Long) {
-        val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    private fun insertExpenseHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletId: Long) {
         insertExpenseHistory(
             ExpenseHistory(
                 expenseSubGroupId = expenseGroupId,
                 amount = amountBinding,
                 description = commentBinding,
-                date = OffsetDateTime.from(iso8601DateTimeFormatter.parse(dateBinding)),
+                date = parsedLocalDateTime,
                 walletId = walletId,
-                createdDate = OffsetDateTime.now()
+                createdDate = LocalDateTime.now()
             )
         )
     }
@@ -132,7 +132,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun archive(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, dateBinding: String, walletNameBinding: String) {
+    fun archive(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameNotArchived(expenseSubGroupNameBinding)
             val expenseSubGroupId = expenseSubGroup.id!!.toLong()
@@ -140,7 +140,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val wallet = getWalletByNameNotArchived(walletNameBinding)
             val walletId = wallet.id!!
 
-            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, dateBinding, walletId)
+            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, parsedLocalDateTime, walletId)
 
             updateWallet(walletId, wallet, amountBinding)
         }
@@ -168,7 +168,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             name = expenseSubGroup.name,
             description = expenseSubGroup.description,
             expenseGroupId = expenseSubGroup.expenseGroupId,
-            archivedDate = OffsetDateTime.now()
+            archivedDate = LocalDateTime.now()
         )
 
         expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupArchived)
@@ -182,7 +182,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             id = selectedWallet.id,
             name = selectedWallet.name,
             balance = selectedWallet.balance,
-            archivedDate = OffsetDateTime.now(),
+            archivedDate = LocalDateTime.now(),
             input = selectedWallet.input,
             output = selectedWallet.output,
             description = selectedWallet.description

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
 
-
 @Dao
 interface TransferHistoryDao {
     

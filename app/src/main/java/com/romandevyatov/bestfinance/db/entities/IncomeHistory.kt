@@ -4,8 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.time.OffsetDateTime
-
+import java.time.LocalDateTime
 
 @Entity(tableName = "income_history",
     foreignKeys = [
@@ -36,18 +35,18 @@ data class IncomeHistory(
     val amount: Double,
 
     @ColumnInfo(name = "comment")
-    val description: String?,
+    val comment: String?,
 
     @ColumnInfo(name = "date")
-    val date: OffsetDateTime? = null,
+    val date: LocalDateTime? = null,
 
     @ColumnInfo(name = "wallet_id")
     val walletId: Long,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: OffsetDateTime? = null,
+    val archivedDate: LocalDateTime? = null,
 
     @ColumnInfo(name = "created_date")
-    val createdDate: OffsetDateTime? = null
+    val createdDate: LocalDateTime? = null
 
 )

@@ -21,7 +21,7 @@ import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -112,7 +112,7 @@ class WalletFragment : Fragment() {
                     id = selectedWallet.id,
                     name = selectedWallet.name,
                     balance = selectedWallet.balance,
-                    archivedDate = OffsetDateTime.now(),
+                    archivedDate = LocalDateTime.now(),
                     input = selectedWallet.input,
                     output = selectedWallet.output,
                     description = selectedWallet.description
@@ -134,5 +134,4 @@ class WalletFragment : Fragment() {
             attachToRecyclerView(binding.walletRecyclerView)
         }
     }
-
 }

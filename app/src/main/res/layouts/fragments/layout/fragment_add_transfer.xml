@@ -9,51 +9,135 @@
     android:id="@+id/addTransferFragment"
     tools:context=".ui.fragments.addictions.transfer.AddTransferFragment">
 
-    <Spinner
-        android:id="@+id/walletNameFromSpinner"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fromWalletNameSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
         android:hint="From"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Spinner
-        android:id="@+id/walletNameToSpinner"
+        <AutoCompleteTextView
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:id="@+id/fromWalletNameSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/toWalletNameSpinnerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
         android:hint="To"
-        app:layout_constraintEnd_toEndOf="@+id/walletNameFromSpinner"
-        app:layout_constraintStart_toStartOf="@+id/walletNameFromSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameFromSpinner" />
+        app:helperText="Required"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="@+id/fromWalletNameSpinnerLayout"
+        app:layout_constraintStart_toStartOf="@+id/fromWalletNameSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/fromWalletNameSpinnerLayout" >
 
-    <EditText
-        android:id="@+id/amountEditText"
+        <AutoCompleteTextView
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:id="@+id/toWalletNameSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/amountEditTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
+        app:helperText="Required"
         android:hint="Amount"
-        app:layout_constraintTop_toBottomOf="@+id/walletNameToSpinner"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout" >
 
-    <EditText
-        android:id="@+id/dateEditText"
-        android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/amountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dateLayout"
+        android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
         android:hint="Date"
-        app:layout_constraintTop_toBottomOf="@+id/amountEditText"
-        tools:layout_editor_absoluteX="0dp" />
+        app:helperText="Required"
+        app:layout_constraintEnd_toStartOf="@+id/timeLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditTextLayout">
 
-    <EditText
-        android:id="@+id/commentEditText"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timeLayout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
+        android:hint="Time"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountEditTextLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
+        app:helperText="Required"
         android:hint="Comment"
-        app:layout_constraintTop_toBottomOf="@+id/dateEditText"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/timeLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/transferButton"
@@ -63,9 +147,9 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.869"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.818" />
+        app:layout_constraintTop_toBottomOf="@+id/commentLayout"
+        app:layout_constraintVertical_bias="0.302" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

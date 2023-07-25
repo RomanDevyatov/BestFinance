@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
@@ -44,8 +43,8 @@ class ExpenseGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name)
     }
 
-    fun getExpenseGroupByNameAndArchivedDateIsNull(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
-        return expenseGroupRepository.getExpenseGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName)
+    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+        return expenseGroupRepository.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
     val allExpenseGroupWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupLiveData()

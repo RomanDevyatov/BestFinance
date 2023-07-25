@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.income
+package com.romandevyatov.bestfinance.ui.fragments.addictions.expense
 
 import android.app.Dialog
 import android.content.Context
@@ -16,19 +16,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddIncomeGroupFragment : Fragment() {
+class AddExpenseGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddIncomeGroupBinding? = null
+    private var _binding: FragmentAddExpenseGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
+    private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -38,8 +38,8 @@ class AddIncomeGroupFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 val action =
-                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                action.incomeGroupName = null
+                    AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                action.expenseGroupName = null
                 findNavController().navigate(action)
             }
         }
@@ -51,39 +51,38 @@ class AddIncomeGroupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddExpenseGroupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNewGroupButton.setOnClickListener {
-            val groupNameBinding = binding.groupNameInputEditText.text.toString()
-            val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
-            val isPassiveBinding = binding.isPassiveCheckBox.isChecked
+        binding.addNewExpenseGroupNameButton.setOnClickListener {
+            val groupNameBinding = binding.newExpenseGroupName.text.toString().trim()
+            val descriptionBinding = binding.descriptionEditText.text.toString().trim()
 
             val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
-            binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+            binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { incomeGroup ->
-                    if (incomeGroup?.archivedDate != null) {
+                addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
+                    if (expenseGroup?.archivedDate != null) {
                         showWalletDialog(
                             requireContext(),
-                            incomeGroup,
-                            "Do you want to unarchive `$groupNameBinding` income group?")
+                            expenseGroup,
+                            "Do you want to unarchive `$groupNameBinding` expense group?")
                     } else {
-                        addGroupViewModel.insertIncomeGroup(
-                            IncomeGroup(
+                        addGroupViewModel.insertExpenseGroup(
+                            ExpenseGroup(
                                 name = groupNameBinding,
-                                description = groupDescriptionBinding,
-                                isPassive = isPassiveBinding
+                                description = descriptionBinding
                             )
                         )
+
                         val action =
-                            AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                        action.incomeGroupName = groupNameBinding
+                            AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                        action.expenseGroupName = groupNameBinding
                         findNavController().navigate(action)
                     }
                 }
@@ -96,7 +95,7 @@ class AddIncomeGroupFragment : Fragment() {
         _binding = null
     }
 
-    fun showWalletDialog(context: Context, group: IncomeGroup, message: String?) {
+    private fun showWalletDialog(context: Context, group: ExpenseGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -110,11 +109,11 @@ class AddIncomeGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveIncomeGroup(group)
+            addGroupViewModel.unarchiveExpenseGroup(group)
             dialog.dismiss()
             val action =
-                AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-            action.incomeGroupName = group.name
+                AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+            action.expenseGroupName = group.name
             findNavController().navigate(action)
         }
 

@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 
 @Dao
@@ -40,7 +40,7 @@ interface IncomeSubGroupDao {
     fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date = :archivedDate")
-    fun getAllWithArchivedDateLiveData(archivedDate: OffsetDateTime?): LiveData<List<IncomeSubGroup>>
+    fun getAllWithArchivedDateLiveData(archivedDate: LocalDateTime?): LiveData<List<IncomeSubGroup>>
 
     @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
     fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>

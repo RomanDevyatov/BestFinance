@@ -39,7 +39,7 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
 
             binding.balanceTextView.text = transferHistory.amount.toString()
 
-            val iso8601DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+            val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             binding.dateTransferTextView.text = transferHistory.createdDate?.format(iso8601DateTimeFormatter)
         }
 

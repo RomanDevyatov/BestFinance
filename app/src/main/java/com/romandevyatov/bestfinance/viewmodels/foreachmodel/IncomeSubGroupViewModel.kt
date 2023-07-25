@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class IncomeSubGroupViewModel @Inject constructor(
     private val incomeSubGroupRepository: IncomeSubGroupRepository
@@ -45,8 +44,5 @@ class IncomeSubGroupViewModel @Inject constructor(
     fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> {
         return incomeSubGroupRepository.getIncomeSubGroupByNameNotArchivedLiveData(name)
     }
-
-
-
 
 }
