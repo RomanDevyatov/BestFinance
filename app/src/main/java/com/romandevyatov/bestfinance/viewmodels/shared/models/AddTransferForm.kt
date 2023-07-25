@@ -1,9 +1,10 @@
 package com.romandevyatov.bestfinance.viewmodels.shared.models
 
-data class TransferForm (
+data class AddTransferForm (
     val fromWalletSpinnerPosition: Int? = null,
     val toWalletSpinnerPosition: Int? = null,
     val amount: String? = null,
     val comment: String? = null,
-    val date: String? = null
+    val date: String? = null,
+    val time: String? = null
 )

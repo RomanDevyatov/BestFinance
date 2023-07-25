@@ -58,24 +58,6 @@
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    <Spinner-->
-<!--        android:id="@+id/expenseSubGroupSpinner"-->
-<!--        android:layout_width="270dp"-->
-<!--        android:layout_height="46dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/expenseGroupSpinnerLayout"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/expenseGroupSpinnerLayout"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/expenseGroupSpinnerLayout" />-->
-
-<!--    <Spinner-->
-<!--        android:id="@+id/walletSpinner"-->
-<!--        android:layout_width="270dp"-->
-<!--        android:layout_height="46dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/expenseSubGroupSpinner"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/expenseSubGroupSpinner"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupSpinner" />-->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/walletSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"

@@ -53,11 +53,11 @@
             android:id="@+id/action_navigation_add_income_to_navigation_home"
             app:destination="@id/navigation_home" />
         <action
-            android:id="@+id/action_navigation_add_income_to_navigation_add_new_income_group"
-            app:destination="@id/navigation_add_new_income_group" />
+            android:id="@+id/action_navigation_add_income_to_navigation_add_income_group"
+            app:destination="@id/navigation_add_income_group" />
         <action
-            android:id="@+id/action_navigation_add_income_to_navigation_add_new_sub_income_group"
-            app:destination="@id/navigation_add_new_income_sub_group" />
+            android:id="@+id/action_navigation_add_income_to_navigation_add_sub_income_group"
+            app:destination="@id/navigation_add_income_sub_group" />
         <action
             android:id="@+id/action_navigation_add_income_to_navigation_add_wallet"
             app:destination="@id/navigation_add_wallet" />
@@ -89,11 +89,11 @@
             android:id="@+id/action_navigation_add_expense_to_navigation_home"
             app:destination="@id/navigation_home" />
         <action
-            android:id="@+id/action_navigation_add_expense_to_navigation_add_new_expense_group"
-            app:destination="@id/navigation_add_new_expense_group" />
+            android:id="@+id/action_navigation_add_expense_to_navigation_add_expense_group"
+            app:destination="@id/navigation_add_expense_group" />
         <action
-            android:id="@+id/action_navigation_add_expense_to_navigation_add_new_expense_sub_group"
-            app:destination="@id/navigation_add_new_expense_sub_group" />
+            android:id="@+id/action_navigation_add_expense_to_navigation_add_expense_sub_group"
+            app:destination="@id/navigation_add_expense_sub_group" />
         <action
             android:id="@+id/action_navigation_add_expense_to_navigation_add_wallet"
             app:destination="@id/navigation_add_wallet" />
@@ -120,23 +120,23 @@
         android:label="History"
         tools:layout="@layout/fragment_history" />
     <fragment
-        android:id="@+id/navigation_add_new_income_group"
+        android:id="@+id/navigation_add_income_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeGroupFragment"
         android:label="New income group"
         tools:layout="@layout/fragment_add_income_group" >
 
         <action
-            android:id="@+id/action_navigation_add_new_income_group_to_navigation_add_income"
+            android:id="@+id/action_navigation_add_income_group_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_add_new_income_sub_group"
+        android:id="@+id/navigation_add_income_sub_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeSubGroupFragment"
         android:label="New income sub group"
         tools:layout="@layout/fragment_add_income_sub_group" >
 
         <action
-            android:id="@+id/action_navigation_add_new_income_sub_group_to_navigation_add_income"
+            android:id="@+id/action_navigation_add_income_sub_group_to_navigation_add_income"
             app:destination="@id/navigation_add_income" />
 
         <argument
@@ -146,23 +146,23 @@
             android:defaultValue="@null" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_add_new_expense_group"
+        android:id="@+id/navigation_add_expense_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseGroupFragment"
         android:label="New expense group"
         tools:layout="@layout/fragment_add_expense_group" >
 
         <action
-            android:id="@+id/action_navigation_add_new_expense_group_to_navigation_add_expense"
+            android:id="@+id/action_navigation_add_expense_group_to_navigation_add_expense"
             app:destination="@id/navigation_add_expense" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_add_new_expense_sub_group"
+        android:id="@+id/navigation_add_expense_sub_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.expense.AddExpenseSubGroupFragment"
         android:label="New expense sub group"
         tools:layout="@layout/fragment_add_expense_sub_group" >
 
         <action
-            android:id="@+id/action_navigation_add_new_expense_sub_group_to_navigation_add_expense"
+            android:id="@+id/action_navigation_add_expense_sub_group_to_navigation_add_expense"
             app:destination="@id/navigation_add_expense" />
 
         <argument
@@ -207,10 +207,10 @@
         android:label="Transfer"
         tools:layout="@layout/fragment_add_transfer" >
         <action
-            android:id="@+id/action_add_new_transfer_fragment_to_navigation_home"
+            android:id="@+id/action_add_transfer_fragment_to_navigation_home"
             app:destination="@id/navigation_home" />
         <action
-            android:id="@+id/action_add_new_transfer_fragment_to_navigation_add_wallet"
+            android:id="@+id/action_add_transfer_fragment_to_navigation_add_wallet"
             app:destination="@id/navigation_add_wallet" />
 
         <argument

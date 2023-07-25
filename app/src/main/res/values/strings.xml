@@ -4,6 +4,6 @@
     <string name="text_validation_success">Correct!</string>
     <string name="text_validation_error_empty_field">Please fill empty field!</string>
     <string name="text_validation_error_wrong_email_field">Incorrect email address!</string>
-    <string name="text_validation_same_spinner_values_field">The same spinner values!</string>
+    <string name="text_validation_same_spinner_values_field">The same wallet names!</string>
 
 </resources>

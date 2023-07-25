@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Filterable
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.isVisible
 import com.romandevyatov.bestfinance.R
 
@@ -16,9 +13,8 @@ class SpinnerAdapter(
     private val resourceId: Int,
     private var items: MutableList<String>,
     private val addItem: String,
-    private val listener: DeleteItemClickListener? = null
+    var listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, resourceId, items), Filterable {
-
 
     interface DeleteItemClickListener {
 
@@ -33,13 +29,14 @@ class SpinnerAdapter(
         )
 
         val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
-        val itemDelTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
+        val itemDeleteTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
 
         val itemText = items[position]
         itemNameTextView.text = itemText
 
-        itemDelTextView.isVisible = itemText != addItem
-        itemDelTextView.setOnClickListener {
+        itemDeleteTextView.isVisible = itemText != addItem
+
+        itemDeleteTextView.setOnClickListener {
             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
             listener?.archive(itemText)
         }
@@ -59,10 +56,57 @@ class SpinnerAdapter(
         return position.toLong()
     }
 
+//    fun updateData(newItems: MutableList<String>) {
+//        items.clear()
+//        items.addAll(newItems)
+//        notifyDataSetChanged()
+//    }
+
+    private var customFilter: CustomFilter? = null
+
+    override fun getFilter(): Filter {
+        if (customFilter == null) {
+            customFilter = CustomFilter(items, this)
+        }
+        return customFilter!!
+    }
+
+    //    // Method to update the data source and refresh the dropdown
     fun updateData(newItems: MutableList<String>) {
-        items.clear()
-        items.addAll(newItems)
+        items = newItems
         notifyDataSetChanged()
+    }
+
+    fun calculateDropdownHeight(maxItemsToShow: Int): Int {
+        val itemHeight = context.resources.getDimensionPixelSize(android.R.dimen.dialog_min_width_minor)
+        val itemCount = Math.min(items.size, maxItemsToShow)
+        return itemCount * itemHeight
+    }
+
+
+    private class CustomFilter(
+        private val originalList: List<String>,
+        private val adapter: SpinnerAdapter
+    ) : Filter() {
+
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filterResults = FilterResults()
+
+            if (constraint == null || constraint.isEmpty()) {
+                filterResults.values = originalList
+                filterResults.count = originalList.size
+            } else {
+                val filteredList = originalList.filter { it.contains(constraint, ignoreCase = false) }
+                filterResults.values = filteredList
+                filterResults.count = filteredList.size
+            }
+
+            return filterResults
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            adapter.updateData(results?.values as MutableList<String>)
+        }
     }
 
 }

@@ -35,10 +35,9 @@ class AddIncomeGroupFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 val action =
-                    AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
+                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
                 action.incomeGroupName = null
                 findNavController().navigate(action)
-//                findNavController().navigate(R.id.action_navigation_add_new_income_group_to_navigation_add_income)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -76,7 +75,7 @@ class AddIncomeGroupFragment : Fragment() {
                 )
 
                 val action =
-                    AddIncomeGroupFragmentDirections.actionNavigationAddNewIncomeGroupToNavigationAddIncome()
+                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
                 action.incomeGroupName = newIncomeGroupName
                 findNavController().navigate(action)
             }

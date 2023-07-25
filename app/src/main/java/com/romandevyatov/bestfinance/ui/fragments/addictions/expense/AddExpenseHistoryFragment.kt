@@ -26,7 +26,10 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeC
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
-import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
@@ -34,6 +37,7 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class AddExpenseHistoryFragment : Fragment() {
@@ -57,6 +61,11 @@ class AddExpenseHistoryFragment : Fragment() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
                 addHistoryViewModel.archiveExpenseGroup(name)
+                if (binding.groupSpinner.text.toString() == name) {
+                    binding.groupSpinner.text = null
+                }
+
+                dismissAndDropdownSpinner(binding.groupSpinner)
             }
         }
 
@@ -64,7 +73,12 @@ class AddExpenseHistoryFragment : Fragment() {
         object : SpinnerAdapter.DeleteItemClickListener {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addHistoryViewModel.archiveExpenseSubGroup(name)
+                addHistoryViewModel.archiveExpenseGroup(name)
+                if (binding.subGroupSpinner.text.toString() == name) {
+                    binding.subGroupSpinner.text = null
+                }
+
+                dismissAndDropdownSpinner(binding.subGroupSpinner)
             }
         }
 
@@ -73,7 +87,12 @@ class AddExpenseHistoryFragment : Fragment() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addHistoryViewModel.archiveWallet(name)
+                addHistoryViewModel.archiveExpenseGroup(name)
+                if (binding.walletSpinner.text.toString() == name) {
+                    binding.walletSpinner.text = null
+                }
+
+                dismissAndDropdownSpinner(binding.walletSpinner)
             }
         }
 
@@ -83,7 +102,6 @@ class AddExpenseHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
-//        markButtonDisable(binding.addExpenseHistoryButton)
         return binding.root
     }
 
@@ -99,15 +117,6 @@ class AddExpenseHistoryFragment : Fragment() {
         setButtonOnClickListener()
 
         restoreAmountDateCommentValues()
-    }
-
-    private fun setSpinners() {
-        setGroupAndSubGroupSpinnerAdapter()
-        setGroupSpinnerOnClickListener()
-        setSubGroupSpinnerOnClickListener()
-
-        setWalletSpinnerAdapter()
-        setWalletSpinnerOnItemClickListener()
     }
 
     override fun onDestroyView() {
@@ -129,18 +138,27 @@ class AddExpenseHistoryFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
+    private fun setSpinners() {
+        setGroupAndSubGroupSpinnerAdapter()
+        setGroupSpinnerOnClickListener()
+        setSubGroupSpinnerOnClickListener()
+
+        setWalletSpinnerAdapter()
+        setWalletSpinnerOnItemClickListener()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setButtonOnClickListener() {
         binding.addHistoryButton.setOnClickListener {
-            val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+            val expenseSubGroupNameBinding = binding.subGroupSpinner.text.toString()
             val amountBinding = binding.amountEditText.text.toString().trim()
             val commentBinding = binding.commentEditText.text.toString().trim()
             val walletNameBinding = binding.walletSpinner.text.toString()
             val dateBinding = binding.dateEditText.text.toString().trim()
             val timeBinding = binding.timeEditText.text.toString().trim()
 
-            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+            val expenseSubGroupNameBindingValidation = EmptyValidator(expenseSubGroupNameBinding).validate()
+            binding.subGroupSpinnerLayout.error = if (!expenseSubGroupNameBindingValidation.isSuccess) getString(expenseSubGroupNameBindingValidation.message) else null
 
             val amountBindingValidation = EmptyValidator(amountBinding).validate()
             binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
@@ -154,7 +172,7 @@ class AddExpenseHistoryFragment : Fragment() {
             val timeBindingValidation = EmptyValidator(timeBinding).validate()
             binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
-            if (subGroupNameBindingValidation.isSuccess
+            if (expenseSubGroupNameBindingValidation.isSuccess
                 && amountBindingValidation.isSuccess
                 && walletNameBindingValidation.isSuccess
                 && dateBindingValidation.isSuccess
@@ -164,7 +182,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
                 addHistoryViewModel.addExpenseHistory(
-                    subGroupNameBinding,
+                    expenseSubGroupNameBinding,
                     amountBinding.toDouble(),
                     commentBinding,
                     parsedLocalDateTime,
@@ -228,8 +246,12 @@ class AddExpenseHistoryFragment : Fragment() {
         addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-            val groupSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerGroupItems,
-                Constants.ADD_NEW_EXPENSE_GROUP, archiveGroupListener)
+            val groupSpinnerAdapter = SpinnerAdapter(
+                requireContext(),
+                R.layout.item_with_del,
+                spinnerGroupItems,
+                ADD_NEW_EXPENSE_GROUP,
+                archiveGroupListener)
 
             binding.groupSpinner.setAdapter(groupSpinnerAdapter)
 
@@ -239,13 +261,13 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groupList: List<ExpenseGroup>?): ArrayList<String> {
+    private fun getGroupItemsForSpinner(expenseGroupList: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
-        groupList?.forEach { it ->
+        expenseGroupList?.forEach { it ->
             spinnerItems.add(it.name)
         }
-        spinnerItems.add(Constants.ADD_NEW_EXPENSE_GROUP)
+        spinnerItems.add(ADD_NEW_EXPENSE_GROUP)
 
         return spinnerItems
     }
@@ -268,8 +290,7 @@ class AddExpenseHistoryFragment : Fragment() {
                 getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
             val subGroupSpinnerAdapter =
-                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems,
-                    Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
+                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
 
             binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 
@@ -279,7 +300,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun setEmptySubGroupSpinnerAdapter() {
         val emptySubGroupSpinnerAdapter = getEmptySubGroupSpinnerAdapter()
-//        subGroupSpinnerPositionGlobal = null
 
         binding.subGroupSpinner.setAdapter(emptySubGroupSpinnerAdapter)
     }
@@ -287,12 +307,15 @@ class AddExpenseHistoryFragment : Fragment() {
     private fun getEmptySubGroupSpinnerAdapter(): SpinnerAdapter {
         val subGroupSpinnerItems = ArrayList<String>()
 
-        subGroupSpinnerItems.add(Constants.ADD_NEW_EXPENSE_SUB_GROUP)
+        subGroupSpinnerItems.add(ADD_NEW_EXPENSE_SUB_GROUP)
 
-        val subGroupAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, subGroupSpinnerItems,
-            Constants.ADD_NEW_EXPENSE_GROUP, archiveSubGroupListener)
-
-        return subGroupAdapter
+        return SpinnerAdapter(
+            requireContext(),
+            R.layout.item_with_del,
+            subGroupSpinnerItems,
+            ADD_NEW_EXPENSE_GROUP,
+            archiveSubGroupListener
+        )
     }
 
     private fun setGroupSpinnerOnClickListener() {
@@ -306,11 +329,13 @@ class AddExpenseHistoryFragment : Fragment() {
             val selectedGroupName =
                 binding.groupSpinner.text.toString()
 
-            if (selectedGroupName == Constants.ADD_NEW_EXPENSE_GROUP) {
+            if (selectedGroupName == ADD_NEW_EXPENSE_GROUP) {
+                setPrevValue(prevGroupSpinnerPositionGlobal, binding.groupSpinner)
+
                 saveAddTransactionFormBeforeAddGroup()
 
                 val action =
-                    AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseGroup()
+                    AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddExpenseGroup()
                 findNavController().navigate(action)
             } else {
                 // TODO: getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData doesn't work
@@ -318,16 +343,23 @@ class AddExpenseHistoryFragment : Fragment() {
                     selectedGroupName
                 ).observe(viewLifecycleOwner) { groupWithSubGroups ->
                     val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
-                    val adapter =
-                        SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems,
-                            Constants.ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener
-                        )
+                    val subGroupSpinnerAdapter =
+                        SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
 
-                    binding.subGroupSpinner.setAdapter(adapter)
+                    binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
                 }
 
                 prevGroupSpinnerPositionGlobal = position
             }
+        }
+    }
+
+    private fun setPrevValue(position: Int?, spinner: AutoCompleteTextView) {
+        if (position == null) {
+            spinner.text = null
+        } else {
+            val name = spinner.adapter.getItem(position).toString()
+            spinner.setText(name, false)
         }
     }
 
@@ -337,10 +369,12 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val selectedSubGroupName = binding.subGroupSpinner.text.toString()
 
-            if (selectedSubGroupName == Constants.ADD_NEW_EXPENSE_SUB_GROUP) {
+            if (selectedSubGroupName == ADD_NEW_EXPENSE_SUB_GROUP) {
+                setPrevValue(prevSubGroupSpinnerPositionGlobal, binding.subGroupSpinner)
+
                 saveAddTransactionFormBeforeAddSubGroup()
 
-                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddNewExpenseSubGroup()
+                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddExpenseSubGroup()
                 action.expenseGroupName = binding.groupSpinner.text.toString()
                 findNavController().navigate(action)
             } else {
@@ -355,11 +389,13 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
-            if (selectedWalletName == Constants.ADD_NEW_WALLET) {
+            if (selectedWalletName == ADD_NEW_WALLET) {
+                setPrevValue(prevWalletSpinnerPositionGlobal, binding.walletSpinner)
+
                 saveAddTransactionFormBeforeAddWallet()
 
                 val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddWallet()
-                action.source = Constants.ADD_EXPENSE_HISTORY_FRAGMENT
+                action.source = ADD_EXPENSE_HISTORY_FRAGMENT
                 findNavController().navigate(action)
             } else {
                 prevWalletSpinnerPositionGlobal = position
@@ -377,11 +413,10 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val groupName = groupSpinnerAdapter.getItem(groupSpinnerPosition)
 
-            binding.groupSpinner.setText(groupName)
+            binding.groupSpinner.setText(groupName, false)
         } else {
             restoreGroupSpinnerValue(groupSpinnerAdapter)
         }
-//        binding.groupSpinner.threshold = Int.MAX_VALUE
     }
 
     private fun restoreGroupSpinnerValue(
@@ -396,7 +431,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val groupName = groupSpinnerAdapter.getItem(groupSpinnerPosition)
 
-            binding.groupSpinner.setText(groupName)
+            binding.groupSpinner.setText(groupName, false)
         }
     }
 
@@ -409,11 +444,10 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val subGroupName = subGroupSpinnerAdapter.getItem(subGroupSpinnerPosition)
 
-            binding.subGroupSpinner.setText(subGroupName)
-        } else {
+            binding.subGroupSpinner.setText(subGroupName, false)
+        } else if (args.expenseGroupName == null || args.expenseGroupName?.isBlank() == true) {
             restoreSubGroupSpinnerValue(subGroupSpinnerAdapter)
         }
-//        binding.subGroupSpinner.threshold = Int.MAX_VALUE
     }
 
     private fun restoreSubGroupSpinnerValue(subGroupSpinnerAdapter: SpinnerAdapter) {
@@ -425,7 +459,7 @@ class AddExpenseHistoryFragment : Fragment() {
         if (subGroupSpinnerPosition != null) {
             val subGroupName = subGroupSpinnerAdapter.getItem(subGroupSpinnerPosition)
 
-            binding.subGroupSpinner.setText(subGroupName)
+            binding.subGroupSpinner.setText(subGroupName, false)
         }
     }
 
@@ -436,11 +470,10 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val walletName = walletSpinnerAdapter.getItem(spinnerPosition)
 
-            binding.walletSpinner.setText(walletName)
+            binding.walletSpinner.setText(walletName, false)
         } else {
             restoreWalletSpinnerValue(walletSpinnerAdapter)
         }
-//        binding.walletSpinner.threshold = Int.MAX_VALUE
     }
 
     private fun restoreWalletSpinnerValue(walletSpinnerAdapter: SpinnerAdapter) {
@@ -452,7 +485,7 @@ class AddExpenseHistoryFragment : Fragment() {
         if (walletSpinnerPosition != null) {
             val walletName = walletSpinnerAdapter.getItem(walletSpinnerPosition)
 
-            binding.walletSpinner.setText(walletName)
+            binding.walletSpinner.setText(walletName, false)
         }
     }
 
@@ -485,7 +518,7 @@ class AddExpenseHistoryFragment : Fragment() {
             }
         }
 
-        spinnerSubItems.add(Constants.ADD_NEW_EXPENSE_SUB_GROUP)
+        spinnerSubItems.add(ADD_NEW_EXPENSE_SUB_GROUP)
 
         return spinnerSubItems
     }
@@ -495,13 +528,19 @@ class AddExpenseHistoryFragment : Fragment() {
 
             val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems,
-                Constants.ADD_NEW_WALLET, archiveWalletListener)
-
+            val walletSpinnerAdapter =
+                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems, ADD_NEW_WALLET, archiveWalletListener)
             binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
             setIfAvailableWalletSpinnersValue(walletSpinnerAdapter)
         }
+    }
+
+    private fun dismissAndDropdownSpinner(spinner: AutoCompleteTextView) {
+        spinner.dismissDropDown()
+        spinner.postDelayed({
+            spinner.showDropDown()
+        }, 20)
     }
 
     private fun getWalletItemsForSpinner(walletList: List<Wallet>?): ArrayList<String> {
@@ -510,7 +549,7 @@ class AddExpenseHistoryFragment : Fragment() {
         walletList?.forEach { it ->
             spinnerItems.add(it.name)
         }
-        spinnerItems.add(Constants.ADD_NEW_WALLET)
+        spinnerItems.add(ADD_NEW_WALLET)
 
         return spinnerItems
     }
@@ -523,6 +562,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
         val addTransactionForm = AddTransactionForm(
             groupSpinnerPosition = prevGroupSpinnerPositionGlobal,
+            subGroupSpinnerPosition = prevSubGroupSpinnerPositionGlobal,
             walletSpinnerPosition = prevWalletSpinnerPositionGlobal,
             amount = amountBinding,
             date = dateBinding,
@@ -571,6 +611,7 @@ class AddExpenseHistoryFragment : Fragment() {
     private fun resetSubGroupSpinner() {
         binding.subGroupSpinner.text = null
     }
+
 
 //    private fun markButtonDisable(button: Button) {
 //        button.isEnabled = false

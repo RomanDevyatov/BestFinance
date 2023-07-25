@@ -69,7 +69,7 @@ class AddIncomeSubGroupFragment : Fragment() {
                     addIncomeSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
 
                     val action =
-                        AddIncomeSubGroupFragmentDirections.actionNavigationAddNewIncomeSubGroupToNavigationAddIncome()
+                        AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
                     action.incomeGroupName = selectedIncomeGroupName
                     action.incomeSubGroupName = incomeSubGroupNameBinding
                     findNavController().navigate(action)

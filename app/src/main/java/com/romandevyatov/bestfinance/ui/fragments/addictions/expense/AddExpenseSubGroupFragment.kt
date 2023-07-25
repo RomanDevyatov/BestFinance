@@ -69,7 +69,7 @@ class AddExpenseSubGroupFragment : Fragment() {
                     expenseSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
 
                     val action =
-                        AddExpenseSubGroupFragmentDirections.actionNavigationAddNewExpenseSubGroupToNavigationAddExpense()
+                        AddExpenseSubGroupFragmentDirections.actionNavigationAddExpenseSubGroupToNavigationAddExpense()
                     action.expenseGroupName = selectedExpenseGroupNameBinding
                     action.expenseSubGroupName = expenseSubGroupNameBinding
                     findNavController().navigate(action)

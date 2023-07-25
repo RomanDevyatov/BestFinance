@@ -31,7 +31,7 @@ class AddExpenseGroupFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 val action =
-                    AddExpenseGroupFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
+                    AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
                 findNavController().navigate(action)
             }
         }
@@ -63,7 +63,7 @@ class AddExpenseGroupFragment : Fragment() {
             )
 
             val action =
-                AddExpenseGroupFragmentDirections.actionNavigationAddNewExpenseGroupToNavigationAddExpense()
+                AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
             action.expenseGroupName = expenseGroupNameBinding
             findNavController().navigate(action)
         }
