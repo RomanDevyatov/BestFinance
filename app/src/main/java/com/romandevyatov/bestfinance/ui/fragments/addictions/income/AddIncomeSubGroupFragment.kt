@@ -50,43 +50,43 @@ class AddIncomeSubGroupFragment : Fragment() {
 
         binding.addSubGroupButton.setOnClickListener {
 
-            val incomeSubGroupNameBinding = binding.subGroupNameEditText.text.toString()
-            val descriptionBinding = binding.incomeSubGroupDescription.text.toString()
-            val selectedIncomeGroupNameBinding = binding.groupSpinner.text.toString()
+            val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
+            val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
+            val selectedGroupNameBinding = binding.groupSpinner.text.toString()
 
-            val incomeSubGroupNameValidation = EmptyValidator(incomeSubGroupNameBinding).validate()
-            binding.incomeSubGroupNameTextInputLayout.error = if (!incomeSubGroupNameValidation.isSuccess) getString(incomeSubGroupNameValidation.message) else null
+            val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
+            binding.incomeSubGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(subGroupNameValidation.message) else null
 
-            val incomeGroupSpinnerValidation = EmptyValidator(selectedIncomeGroupNameBinding).validate()
-            binding.groupSpinnerLayout.error = if (!incomeGroupSpinnerValidation.isSuccess) getString(incomeGroupSpinnerValidation.message) else null
+            val groupSpinnerValidation = EmptyValidator(selectedGroupNameBinding).validate()
+            binding.groupSpinnerLayout.error = if (!groupSpinnerValidation.isSuccess) getString(groupSpinnerValidation.message) else null
 
-            if (incomeSubGroupNameValidation.isSuccess
-                && incomeGroupSpinnerValidation.isSuccess
+            if (subGroupNameValidation.isSuccess
+                && groupSpinnerValidation.isSuccess
             ) {
                 addSubGroupViewModel.getIncomeGroupNotArchivedByNameLiveData(
-                    selectedIncomeGroupNameBinding
+                    selectedGroupNameBinding
                 ).observe(viewLifecycleOwner) {
-                    val incomeGroupId = it.id!!
+                    val groupId = it.id!!
 
                     addSubGroupViewModel.getIncomeSubGroupByNameLiveData(
-                        incomeSubGroupNameBinding
-                    ).observe(viewLifecycleOwner) { incomeSubGroup ->
+                        subGroupNameBinding
+                    ).observe(viewLifecycleOwner) { subGroup ->
 
                         val action =
                             AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-                        action.incomeGroupName = selectedIncomeGroupNameBinding
-                        action.incomeSubGroupName = incomeSubGroupNameBinding
+                        action.incomeGroupName = selectedGroupNameBinding
+                        action.incomeSubGroupName = subGroupNameBinding
 
-                        if (incomeSubGroup?.archivedDate != null) {
+                        if (subGroup?.archivedDate != null) {
                             showWalletDialog(
                                 requireContext(),
-                                incomeSubGroup,
-                                "Do you want to unarchive `${incomeSubGroupNameBinding}` income sub group?")
+                                subGroup,
+                                "Do you want to unarchive `${subGroupNameBinding}` income sub group?")
                         } else {
                             val newIncomeSubGroup = IncomeSubGroup(
-                                name = incomeSubGroupNameBinding,
+                                name = subGroupNameBinding,
                                 description = descriptionBinding,
-                                incomeGroupId = incomeGroupId
+                                incomeGroupId = groupId
                             )
 
                             addSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
@@ -94,7 +94,6 @@ class AddIncomeSubGroupFragment : Fragment() {
 
                         findNavController().navigate(action)
                     }
-
                 }
             }
         }
@@ -113,16 +112,16 @@ class AddIncomeSubGroupFragment : Fragment() {
 
             binding.groupSpinner.setAdapter(spinnerAdapter)
 
-            if (args.incomeGroupName != null && args.incomeGroupName!!.isNotBlank()) {
+            if (args.incomeGroupName?.isNotBlank() == true) {
                 binding.groupSpinner.setText(args.incomeGroupName.toString(), false)
             }
         }
     }
 
-    private fun getIncomeGroupList(incomeGroupList: List<IncomeGroup>?): ArrayList<String> {
+    private fun getIncomeGroupList(groups: List<IncomeGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
-        incomeGroupList?.forEach { it ->
+        groups?.forEach {
             spinnerItems.add(it.name)
         }
 
@@ -131,7 +130,7 @@ class AddIncomeSubGroupFragment : Fragment() {
 
     private fun showWalletDialog(
         context: Context,
-        incomeSubGroup: IncomeSubGroup,
+        subGroup: IncomeSubGroup,
         message: String
     ) {
         val dialog = Dialog(context)
@@ -147,7 +146,7 @@ class AddIncomeSubGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addSubGroupViewModel.unarchiveIncomeSubGroup(incomeSubGroup)
+            addSubGroupViewModel.unarchiveIncomeSubGroup(subGroup)
             dialog.dismiss()
         }
 

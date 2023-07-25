@@ -87,7 +87,6 @@ class AddIncomeGroupFragment : Fragment() {
                         findNavController().navigate(action)
                     }
                 }
-
             }
         }
     }
@@ -97,7 +96,7 @@ class AddIncomeGroupFragment : Fragment() {
         _binding = null
     }
 
-    fun showWalletDialog(context: Context, incomeGroup: IncomeGroup, message: String?) {
+    fun showWalletDialog(context: Context, group: IncomeGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -111,11 +110,11 @@ class AddIncomeGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
+            addGroupViewModel.unarchiveIncomeGroup(group)
             dialog.dismiss()
             val action =
                 AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-            action.incomeGroupName = incomeGroup.name
+            action.incomeGroupName = group.name
             findNavController().navigate(action)
         }
 

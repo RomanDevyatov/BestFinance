@@ -47,45 +47,45 @@ class AddExpenseSubGroupFragment : Fragment() {
 
         initGroupSpinner()
 
-        binding.addNewExpenseSubGroupNameButton.setOnClickListener {
+        binding.addSubGroupNameButton.setOnClickListener {
 
-            val expenseSubGroupNameBinding = binding.subGroupNameEditText.text.toString()
-            val expenseSubGroupDescriptionBinding = binding.subGroupDescriptionEditText.text.toString()
-            val selectedExpenseGroupNameBinding = binding.groupSpinner.text.toString()
+            val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
+            val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
+            val selectedGroupNameBinding = binding.groupSpinner.text.toString()
 
-            val expenseSubGroupNameValidation = EmptyValidator(expenseSubGroupNameBinding).validate()
-            binding.subGroupNameTextInputLayout.error = if (!expenseSubGroupNameValidation.isSuccess) getString(expenseSubGroupNameValidation.message) else null
+            val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
+            binding.subGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(subGroupNameValidation.message) else null
 
-            val expenseGroupMaterialSpinnerValidation = EmptyValidator(selectedExpenseGroupNameBinding).validate()
-            binding.groupSpinnerLayout.error = if (!expenseGroupMaterialSpinnerValidation.isSuccess) getString(expenseGroupMaterialSpinnerValidation.message) else null
+            val groupMaterialSpinnerValidation = EmptyValidator(selectedGroupNameBinding).validate()
+            binding.groupSpinnerLayout.error = if (!groupMaterialSpinnerValidation.isSuccess) getString(groupMaterialSpinnerValidation.message) else null
 
-            if (expenseSubGroupNameValidation.isSuccess
-                && expenseGroupMaterialSpinnerValidation.isSuccess
+            if (subGroupNameValidation.isSuccess
+                && groupMaterialSpinnerValidation.isSuccess
             ) {
                 addSubGroupViewModel.getExpenseGroupNotArchivedByNameLiveData(
-                    selectedExpenseGroupNameBinding
+                    selectedGroupNameBinding
                 ).observe(viewLifecycleOwner) {
-                    val expenseGroupId = it.id!!
+                    val groupId = it.id!!
 
                     addSubGroupViewModel.getExpenseSubGroupByNameLiveData(
-                        expenseSubGroupNameBinding
-                    ).observe(viewLifecycleOwner) { expenseSubGroup ->
+                        subGroupNameBinding
+                    ).observe(viewLifecycleOwner) { subGroup ->
 
                         val action =
                             AddExpenseSubGroupFragmentDirections.actionNavigationAddExpenseSubGroupToNavigationAddExpense()
-                        action.expenseGroupName = selectedExpenseGroupNameBinding
-                        action.expenseSubGroupName = expenseSubGroupNameBinding
+                        action.expenseGroupName = selectedGroupNameBinding
+                        action.expenseSubGroupName = subGroupNameBinding
 
-                        if (expenseSubGroup?.archivedDate != null) {
+                        if (subGroup?.archivedDate != null) {
                             showWalletDialog(
                                 requireContext(),
-                                expenseSubGroup,
-                                "Do you want to unarchive `${expenseSubGroupNameBinding}` expense sub group?")
+                                subGroup,
+                                "Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
                         } else {
                             val newExpenseSubGroup = ExpenseSubGroup(
-                                name = expenseSubGroupNameBinding,
-                                description = expenseSubGroupDescriptionBinding,
-                                expenseGroupId = expenseGroupId
+                                name = subGroupNameBinding,
+                                description = descriptionBinding,
+                                expenseGroupId = groupId
                             )
 
                             addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
@@ -117,10 +117,10 @@ class AddExpenseSubGroupFragment : Fragment() {
         }
     }
 
-    private fun getExpenseGroupList(expenseGroupList: List<ExpenseSubGroup>): ArrayList<String> {
+    private fun getExpenseGroupList(groups: List<ExpenseSubGroup>): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
-        expenseGroupList.forEach {
+        groups.forEach {
             spinnerItems.add(it.name)
         }
 
@@ -129,7 +129,7 @@ class AddExpenseSubGroupFragment : Fragment() {
 
     private fun showWalletDialog(
         context: Context,
-        expenseSubGroup: ExpenseSubGroup,
+        subGroup: ExpenseSubGroup,
         message: String
     ) {
         val dialog = Dialog(context)
@@ -145,7 +145,7 @@ class AddExpenseSubGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addSubGroupViewModel.unarchiveExpenseSubGroup(expenseSubGroup)
+            addSubGroupViewModel.unarchiveExpenseSubGroup(subGroup)
             dialog.dismiss()
         }
 

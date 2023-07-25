@@ -39,6 +39,7 @@ class AddExpenseGroupFragment : Fragment() {
             override fun handleOnBackPressed() {
                 val action =
                     AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                action.expenseGroupName = null
                 findNavController().navigate(action)
             }
         }
@@ -94,7 +95,7 @@ class AddExpenseGroupFragment : Fragment() {
         _binding = null
     }
 
-    private fun showWalletDialog(context: Context, expenseGroup: ExpenseGroup, message: String?) {
+    private fun showWalletDialog(context: Context, group: ExpenseGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -108,11 +109,11 @@ class AddExpenseGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
+            addGroupViewModel.unarchiveExpenseGroup(group)
             dialog.dismiss()
             val action =
                 AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-            action.expenseGroupName = expenseGroup.name
+            action.expenseGroupName = group.name
             findNavController().navigate(action)
         }
 
