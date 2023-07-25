@@ -70,12 +70,10 @@ class AddIncomeGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 incomeGroupViewModel.getIncomeGroupNameByNameLiveData(newIncomeGroupNameBinding).observe(viewLifecycleOwner) { incomeGroup ->
-                    if (incomeGroup != null) {
-                        if (incomeGroup.archivedDate != null) {
-                            showWalletDialog(requireContext(), incomeGroup, "Do you want to unarchive `$newIncomeGroupNameBinding` income group?")
-                        } else {
-
-                        }
+                    if (incomeGroup?.archivedDate != null) {
+                        showWalletDialog(
+                            requireContext(),
+                            incomeGroup, "Do you want to unarchive `$newIncomeGroupNameBinding` income group?")
                     } else {
                         incomeGroupViewModel.insertIncomeGroup(
                             IncomeGroup(

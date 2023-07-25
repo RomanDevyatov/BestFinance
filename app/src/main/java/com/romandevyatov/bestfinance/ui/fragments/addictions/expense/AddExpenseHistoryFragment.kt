@@ -196,9 +196,13 @@ class AddExpenseHistoryFragment : Fragment() {
                 )
 
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+                navigateToHome()
             }
         }
+    }
+
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
