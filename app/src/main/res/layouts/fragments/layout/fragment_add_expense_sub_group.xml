@@ -11,10 +11,12 @@
         android:id="@+id/subGroupNameTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Sub group name"
         app:helperText="Required"
-        android:hint="Expense sub group name"
-        android:layout_marginHorizontal="20dp"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -29,12 +31,11 @@
         android:id="@+id/subGroupDescriptionTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Expense sub group description"
-        app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:hint="Sub group description"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupNameTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/subGroupNameTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/subGroupNameTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -48,18 +49,19 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/groupSpinnerLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="368dp"
-        android:layout_height="75dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="Expense groups"
         app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/subGroupDescriptionTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/subGroupDescriptionTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/subGroupDescriptionTextInputLayout">
 
         <AutoCompleteTextView
             android:id="@+id/groupSpinner"
-            android:layout_width="387dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -69,13 +71,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:textSize="20sp"
         android:text="Add"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.865" />
+        app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout"
+        app:layout_constraintVertical_bias="0.086" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

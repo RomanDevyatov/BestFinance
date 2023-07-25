@@ -50,7 +50,7 @@ class AddIncomeSubGroupFragment : Fragment() {
 
         binding.addSubGroupButton.setOnClickListener {
 
-            val incomeSubGroupNameBinding = binding.incomeSubGroupName.text.toString()
+            val incomeSubGroupNameBinding = binding.subGroupNameEditText.text.toString()
             val descriptionBinding = binding.incomeSubGroupDescription.text.toString()
             val selectedIncomeGroupNameBinding = binding.groupSpinner.text.toString()
 

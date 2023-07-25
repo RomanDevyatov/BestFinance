@@ -41,6 +41,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
         if (incomeGroupWithIncomeSubGroups != null) {
             val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
             val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
+
             val archivedDate = LocalDateTime.now()
 
             val incomeGroupArchived = IncomeGroup(

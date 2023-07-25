@@ -66,10 +66,6 @@ class AddExpenseGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
-                    val action =
-                        AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                    action.expenseGroupName = expenseGroup.name
-
                     if (expenseGroup?.archivedDate != null) {
                         showWalletDialog(
                             requireContext(),
@@ -82,9 +78,12 @@ class AddExpenseGroupFragment : Fragment() {
                                 description = descriptionBinding
                             )
                         )
-                    }
 
-                    findNavController().navigate(action)
+                        val action =
+                            AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                        action.expenseGroupName = groupNameBinding
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
@@ -95,7 +94,7 @@ class AddExpenseGroupFragment : Fragment() {
         _binding = null
     }
 
-    private fun showWalletDialog(context: Context, incomeGroup: ExpenseGroup, message: String?) {
+    private fun showWalletDialog(context: Context, expenseGroup: ExpenseGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -109,8 +108,12 @@ class AddExpenseGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveExpenseGroup(incomeGroup)
+            addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
             dialog.dismiss()
+            val action =
+                AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+            action.expenseGroupName = expenseGroup.name
+            findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {

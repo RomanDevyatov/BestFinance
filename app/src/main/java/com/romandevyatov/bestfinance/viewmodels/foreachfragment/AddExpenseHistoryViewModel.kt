@@ -41,29 +41,31 @@ class AddExpenseHistoryViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveExpenseGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val expenseGroupWithExpenseSubGroups = getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name)
+        if (expenseGroupWithExpenseSubGroups != null) {
+            val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
+            val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
 
-        val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
-        val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
+            val archivedDate = LocalDateTime.now()
 
-        val archivedDate = LocalDateTime.now()
-        val expenseGroupArchived = ExpenseGroup(
-            id = expenseGroup.id,
-            name = expenseGroup.name,
-            description = expenseGroup.description,
-            archivedDate = archivedDate
-        )
-        updateExpenseGroup(expenseGroupArchived)
-
-        expenseSubGroups.forEach { subGroup ->
-            val expenseSubGroupArchived = ExpenseSubGroup(
-                id = subGroup.id,
-                name = subGroup.name,
-                description = subGroup.description,
-                expenseGroupId = subGroup.expenseGroupId,
+            val expenseGroupArchived = ExpenseGroup(
+                id = expenseGroup.id,
+                name = expenseGroup.name,
+                description = expenseGroup.description,
                 archivedDate = archivedDate
             )
+            updateExpenseGroup(expenseGroupArchived)
 
-            updateExpenseSubGroup(expenseSubGroupArchived)
+            expenseSubGroups.forEach { subGroup ->
+                val expenseSubGroupArchived = ExpenseSubGroup(
+                    id = subGroup.id,
+                    name = subGroup.name,
+                    description = subGroup.description,
+                    expenseGroupId = subGroup.expenseGroupId,
+                    archivedDate = archivedDate
+                )
+
+                updateExpenseSubGroup(expenseSubGroupArchived)
+            }
         }
     }
 
