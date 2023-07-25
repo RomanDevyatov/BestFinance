@@ -108,7 +108,8 @@ class MainActivity() : AppCompatActivity() {
             R.id.navigation_add_expense_sub_group,
             R.id.navigation_history,
             R.id.navigation_add_transfer,
-            R.id.navigation_analyze
+            R.id.navigation_analyze,
+            R.id.navigation_add_wallet
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

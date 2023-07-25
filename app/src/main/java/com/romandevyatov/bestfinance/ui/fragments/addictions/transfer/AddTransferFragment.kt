@@ -1,14 +1,19 @@
 package com.romandevyatov.bestfinance.ui.fragments.addictions.transfer
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -194,17 +199,6 @@ class AddTransferFragment : Fragment() {
                 setPrevValue(prevFromSpinnerPositionGlobal, binding.fromWalletNameSpinner)
 
                 saveAddTransferFormBeforeAddWallet()
-//                val amountBinding = binding.amountEditText.text.toString().trim()
-//                val commentBinding = binding.commentEditText.text.toString().trim()
-//                val dateEditText = binding.dateEditText.text.toString().trim()
-//
-//                val transferForm = TransferForm(
-//                    toWalletSpinnerPosition = prevToSpinnerPositionGlobal,
-//                    amount = amountBinding,
-//                    comment = commentBinding,
-//                    date = dateEditText
-//                )
-//                sharedModViewModel.set(transferForm)
 
                 navigateAddNewWallet(SPINNER_FROM)
             } else {
@@ -224,17 +218,6 @@ class AddTransferFragment : Fragment() {
                 setPrevValue(prevToSpinnerPositionGlobal, binding.toWalletNameSpinner)
 
                 saveAddTransferFormBeforeAddWallet()
-//                val amountBinding = binding.amountEditText.text.toString().trim()
-//                val commentBinding = binding.commentEditText.text.toString().trim()
-//                val dateEditText = binding.dateEditText.text.toString().trim()
-
-//                val transferForm = TransferForm(
-//                    fromWalletSpinnerPosition = prevFromSpinnerPositionGlobal,
-//                    amount = amountBinding,
-//                    comment = commentBinding,
-//                    date = dateEditText
-//                )
-//                sharedModViewModel.set(transferForm)
 
                 navigateAddNewWallet(SPINNER_TO)
             } else {
