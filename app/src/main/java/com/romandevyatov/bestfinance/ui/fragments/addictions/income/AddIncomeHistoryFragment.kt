@@ -309,7 +309,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
             binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
-            getSavedWalletSpinnerValue(walletSpinnerAdapter)
+            val savedWalletName = getSavedWalletSpinnerValue(walletSpinnerAdapter)
+
+            binding.walletSpinner.setText(savedWalletName, false)
         }
     }
 
