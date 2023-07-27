@@ -308,7 +308,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
             binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
-            getSavedWalletSpinnerValue(walletSpinnerAdapter)
+            setIfAvailableWalletSpinnerValue(walletSpinnerAdapter)
         }
     }
 
@@ -440,14 +440,14 @@ class AddExpenseHistoryFragment : Fragment() {
         }
     }
 
-    private fun getSavedWalletSpinnerValue(walletSpinnerAdapter: SpinnerAdapter): String? {
+    private fun setIfAvailableWalletSpinnerValue(walletSpinnerAdapter: SpinnerAdapter) {
         val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.walletSpinnerValue
 
-        if (savedWalletName?.isNotBlank() == true && !isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
-            return null
-        }
+        if (savedWalletName?.isNotBlank() == true && isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
+            walletSpinnerValueGlobalBeforeAdd = savedWalletName
 
-        return savedWalletName
+            binding.walletSpinner.setText(savedWalletName, false)
+        }
     }
 
     private fun isNameInAdapter(subGroupSpinnerAdapter: SpinnerAdapter, savedSubGroupName: String?): Boolean {

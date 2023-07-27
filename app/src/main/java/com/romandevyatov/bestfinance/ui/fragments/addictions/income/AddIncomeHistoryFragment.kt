@@ -309,9 +309,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
-            val savedWalletName = getSavedWalletSpinnerValue(walletSpinnerAdapter)
-
-            binding.walletSpinner.setText(savedWalletName, false)
+            setIfAvailableWalletSpinnerValue(walletSpinnerAdapter)
         }
     }
 
@@ -433,26 +431,21 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun setIfAvailableSubGroupSpinnersValue(subGroupSpinnerAdapter: SpinnerAdapter) {
         val savedSubGroupName = args.incomeSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
 
-        if (savedSubGroupName?.isNotBlank() == true) {
+        if (savedSubGroupName?.isNotBlank() == true && isNameInAdapter(subGroupSpinnerAdapter, savedSubGroupName)) {
+            subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
 
-            if (isNameInAdapter(subGroupSpinnerAdapter, savedSubGroupName)) {
-                subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
-
-                binding.subGroupSpinner.setText(savedSubGroupName, false)
-            }
+            binding.subGroupSpinner.setText(savedSubGroupName, false)
         }
     }
 
-    private fun getSavedWalletSpinnerValue(walletSpinnerAdapter: SpinnerAdapter): String? {
+    private fun setIfAvailableWalletSpinnerValue(walletSpinnerAdapter: SpinnerAdapter) {
         val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.walletSpinnerValue
 
-        if (savedWalletName?.isNotBlank() == true && !isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
-            return null
+        if (savedWalletName?.isNotBlank() == true && isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
+            walletSpinnerValueGlobalBeforeAdd = savedWalletName
+
+            binding.walletSpinner.setText(savedWalletName, false)
         }
-
-        walletSpinnerValueGlobalBeforeAdd = savedWalletName
-
-        return savedWalletName
     }
 
     private fun isNameInAdapter(subGroupSpinnerAdapter: SpinnerAdapter, savedSubGroupName: String?): Boolean {
