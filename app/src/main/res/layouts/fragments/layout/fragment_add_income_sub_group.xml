@@ -14,7 +14,7 @@
         android:hint="Sub group name"
         app:helperText="Required"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
@@ -70,14 +70,12 @@
         android:id="@+id/addSubGroupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="40dp"
         android:text="Add"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout"
-        app:layout_constraintVertical_bias="0.073" />
+        app:layout_constraintEnd_toEndOf="@+id/groupSpinnerLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/groupSpinnerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

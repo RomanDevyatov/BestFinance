@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
+import com.romandevyatov.bestfinance.db.entities.IncomeGroup
 import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +21,8 @@ class IncomeHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
-    private val incomeHistoryAdapter: IncomeHistoryAdapter = IncomeHistoryAdapter()
+    private val groupViewModel: IncomeGroupViewModel by viewModels()
+    private var incomeHistoryAdapter: IncomeHistoryAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,14 +38,19 @@ class IncomeHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
+        groupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
+            val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
+
+            incomeHistoryAdapter = IncomeHistoryAdapter(incomeGroupMap)
+            binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) {
-            incomeHistoryAdapter.submitList(it)
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { allIncomeHistoryWithIncomeGroupAndWallet ->
+                incomeHistoryAdapter?.submitList(allIncomeHistoryWithIncomeGroupAndWallet.reversed())
         }
 
     }

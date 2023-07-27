@@ -127,7 +127,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
-        app:helperText="Required"
         android:hint="Comment"
         app:layout_constraintTop_toBottomOf="@+id/timeLayout" >
 
@@ -143,13 +142,12 @@
         android:id="@+id/transferButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transfer"
+        android:layout_marginTop="40dp"
+        android:text="Add"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.869"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentLayout"
-        app:layout_constraintVertical_bias="0.302" />
+        app:layout_constraintEnd_toEndOf="@+id/commentLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/commentLayout"
+        app:layout_constraintTop_toBottomOf="@+id/commentLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

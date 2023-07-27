@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.ui.adapters.viewholders.ExpenseHistoryItemViewHolder
 
-class ExpenseHistoryAdapter : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>() {
+class ExpenseHistoryAdapter(private val expenseGroupMap: Map<Long?, ExpenseGroup>) : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<ExpenseHistoryWithExpenseSubGroupAndWallet>() {
         override fun areItemsTheSame(oldItem: ExpenseHistoryWithExpenseSubGroupAndWallet, newItem: ExpenseHistoryWithExpenseSubGroupAndWallet): Boolean {
@@ -25,7 +26,6 @@ class ExpenseHistoryAdapter : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseHistoryItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = CardHistoryExpenseBinding.inflate(from, parent, false)
@@ -34,7 +34,9 @@ class ExpenseHistoryAdapter : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ExpenseHistoryItemViewHolder, position: Int) {
-        holder.bindItem(differ.currentList[position])
+        val currentHistoryElement = differ.currentList[position]
+        val currentGroup = expenseGroupMap[currentHistoryElement.expenseSubGroup.expenseGroupId]
+        holder.bindItem(differ.currentList[position], currentGroup)
     }
 
     override fun getItemCount(): Int {

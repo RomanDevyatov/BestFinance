@@ -12,6 +12,7 @@ import android.view.Window
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,24 @@ class AddIncomeSubGroupFragment : Fragment() {
     private val addSubGroupViewModel: AddIncomeSubGroupViewModel by viewModels()
 
     private val args: AddIncomeSubGroupFragmentArgs by navArgs()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                val action =
+                    AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
+                action.incomeGroupName = null
+                action.incomeSubGroupName = null
+                action.walletName = null
+                findNavController().navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

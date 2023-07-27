@@ -1,26 +1,29 @@
 package com.romandevyatov.bestfinance.ui.adapters.viewholders
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.db.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
-import java.time.format.DateTimeFormatter
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import java.util.*
 
-class ExpenseHistoryItemViewHolder (private val binding: CardHistoryExpenseBinding
+class ExpenseHistoryItemViewHolder (
+    private val binding: CardHistoryExpenseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SimpleDateFormat")
-    fun bindItem(expenseHistory: ExpenseHistoryWithExpenseSubGroupAndWallet) {
+    fun bindItem(
+        expenseHistory: ExpenseHistoryWithExpenseSubGroupAndWallet,
+        expenseGroup: ExpenseGroup?
+    ) {
         binding.balanceTextView.text = expenseHistory.expenseHistory.amount.toString()
-        binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup.name
-//        val dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        binding.dateTextView.text = SimpleDateFormat(dateFormat).format(expenseHistory.expenseHistory.date)
-        val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(iso8601DateTimeFormatter)
 
+        binding.expenseGroup.text = expenseGroup?.name.toString()
+
+        binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup.name
+
+        binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(dateTimeFormatter)
     }
 }

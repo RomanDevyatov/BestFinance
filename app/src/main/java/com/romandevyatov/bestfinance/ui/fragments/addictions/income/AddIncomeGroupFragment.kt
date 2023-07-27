@@ -40,6 +40,8 @@ class AddIncomeGroupFragment : Fragment() {
                 val action =
                     AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
                 action.incomeGroupName = null
+                action.incomeSubGroupName = null
+                action.walletName = null
                 findNavController().navigate(action)
             }
         }
