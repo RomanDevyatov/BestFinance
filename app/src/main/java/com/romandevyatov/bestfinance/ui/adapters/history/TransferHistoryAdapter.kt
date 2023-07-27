@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
 import com.romandevyatov.bestfinance.db.entities.TransferHistory
-import java.time.format.DateTimeFormatter
+import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 
 class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.TransferItemViewHolder>() {
 
@@ -32,17 +32,14 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transferHistory: TransferHistory) {
-            binding.transferHistoryTextView.text = StringBuilder()
-                                                        .append(transferHistory.fromWalletId.toString())
-                                                        .append(" -> ")
-                                                        .append(transferHistory.toWalletId.toString())
+            binding.fromNameTextView.text = transferHistory.fromWalletId.toString()
+
+            binding.toNameTextView.text = transferHistory.toWalletId.toString()
 
             binding.balanceTextView.text = transferHistory.amount.toString()
 
-            val iso8601DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-            binding.dateTransferTextView.text = transferHistory.createdDate?.format(iso8601DateTimeFormatter)
+            binding.dateIncomeTextView.text = transferHistory.createdDate?.format(dateTimeFormatter)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferItemViewHolder {

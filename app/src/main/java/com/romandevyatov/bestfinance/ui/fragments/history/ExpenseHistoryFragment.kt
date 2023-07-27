@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
+import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.ui.adapters.history.ExpenseHistoryAdapter
+import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +21,8 @@ class ExpenseHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
-    private val expenseHistoryAdapter: ExpenseHistoryAdapter = ExpenseHistoryAdapter()
+    private val groupViewModel: ExpenseGroupViewModel by viewModels()
+    private var expenseHistoryAdapter: ExpenseHistoryAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,14 +38,19 @@ class ExpenseHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.expenseHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.expenseHistoryRecyclerView.adapter = expenseHistoryAdapter
+        groupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { groups ->
+            val expenseGroupMap: Map<Long?, ExpenseGroup> = groups.associateBy { it.id }
+
+            expenseHistoryAdapter = ExpenseHistoryAdapter(expenseGroupMap)
+            binding.expenseHistoryRecyclerView.adapter = expenseHistoryAdapter
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         expenseHistoryViewModel.allExpenseHistoryWithExpenseGroupAndWalletLiveData.observe(viewLifecycleOwner) {
-            expenseHistoryAdapter.submitList(it)
+            expenseHistoryAdapter?.submitList(it)
         }
     }
 

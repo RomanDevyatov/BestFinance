@@ -26,6 +26,8 @@ import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeC
 import com.romandevyatov.bestfinance.db.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
+import com.romandevyatov.bestfinance.ui.validators.IsDigitValidator
+import com.romandevyatov.bestfinance.ui.validators.base.BaseValidator
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
@@ -215,7 +217,7 @@ class AddIncomeHistoryFragment : Fragment() {
             val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
             binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
 
-            val amountBindingValidation = EmptyValidator(amountBinding).validate()
+            val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
             binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
 
             val walletNameBindingValidation = EmptyValidator(walletNameBinding).validate()
@@ -521,16 +523,29 @@ class AddIncomeHistoryFragment : Fragment() {
         val timeBinding = binding.timeEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        val addTransactionForm = AddTransactionForm(
-            groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
-            subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
-            walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
-            amount = amountBinding,
-            date = dateBinding,
-            time = timeBinding,
-            comment = commentBinding
-        )
-        sharedModViewModel.set(addTransactionForm)
+        var isSend = true
+        if (amountBinding.isNotBlank()) {
+            val amountBindingValidation = IsDigitValidator(amountBinding).validate()
+            binding.amountLayout.error =
+                if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
+
+            if (!amountBindingValidation.isSuccess) {
+                isSend = false
+            }
+        }
+
+        if (isSend) {
+            val addTransactionForm = AddTransactionForm(
+                groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
+                subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
+                walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
+                amount = amountBinding,
+                date = dateBinding,
+                time = timeBinding,
+                comment = commentBinding
+            )
+            sharedModViewModel.set(addTransactionForm)
+        }
     }
 
     private fun resetSubGroupSpinner() {
