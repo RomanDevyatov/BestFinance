@@ -70,16 +70,18 @@ class AddWalletFragment : Fragment() {
             }
         })
 
-        binding.addWalletButton.setOnClickListener {
-            val walletNameBinding = binding.walletNameEditText.text.toString().trim()
+        binding.addButton.setOnClickListener {
+            val walletNameBinding = binding.nameEditText.text.toString().trim()
             val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
-            val walletDescriptionBinding = binding.walletDescriptionEditText.text.toString().trim()
+            val walletDescriptionBinding = binding.descriptionEditText.text.toString().trim()
 
             val walletNameValidation = EmptyValidator(walletNameBinding).validate()
-            binding.walletNameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
+            binding.nameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
+
+            // checkif wallet exists
 
             val walletBalanceValidation = BaseValidator.validate(EmptyValidator(walletBalanceBinding), IsDigitValidator(walletBalanceBinding))
-            binding.walletBalanceLayout.error = if (!walletBalanceValidation.isSuccess) getString(walletBalanceValidation.message) else null
+            binding.balanceLayout.error = if (!walletBalanceValidation.isSuccess) getString(walletBalanceValidation.message) else null
 
             if (walletNameValidation.isSuccess
                 && walletBalanceValidation.isSuccess
