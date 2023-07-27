@@ -15,8 +15,8 @@ class HistoryFragment : Fragment() {
 
     private val historyTypeArray = arrayOf(
         "Incomes",
-        "Expenses",
-        "Transfers"
+        "Transfers",
+        "Expenses"
     )
 
     private var _binding: FragmentHistoryBinding? = null

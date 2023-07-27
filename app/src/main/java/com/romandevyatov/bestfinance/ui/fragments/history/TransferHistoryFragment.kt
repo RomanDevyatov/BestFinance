@@ -41,7 +41,7 @@ class TransferHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        transferHistoryViewModel.transferHistoriesLiveData.observe(viewLifecycleOwner) {
+        transferHistoryViewModel.allTransferHistoriesLiveData.observe(viewLifecycleOwner) {
             transferHistoryAdapter.submitList(it)
         }
 

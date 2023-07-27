@@ -18,8 +18,8 @@ class ViewPagerAdapter(fragment: Fragment) :
     override fun createFragment(position: Int): Fragment {
         when (position) {
             0 -> return IncomeHistoryFragment()
-            1 -> return ExpenseHistoryFragment()
+            1 -> return TransferHistoryFragment()
         }
-        return TransferHistoryFragment()
+        return ExpenseHistoryFragment()
     }
 }

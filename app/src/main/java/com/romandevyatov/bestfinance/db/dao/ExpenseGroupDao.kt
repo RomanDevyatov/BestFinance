@@ -75,4 +75,7 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE name = :expenseGroupName LIMIT 1")
     fun getByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroup>
 
+    @Query("SELECT * FROM expense_group ORDER BY id ASC")
+    fun getAllExpenseGroupsLiveData(): LiveData<List<ExpenseGroup>>
+
 }

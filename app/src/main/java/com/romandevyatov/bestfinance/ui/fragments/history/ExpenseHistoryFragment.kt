@@ -38,7 +38,7 @@ class ExpenseHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.expenseHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        groupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { groups ->
+        groupViewModel.allExpenseGroupLiveData.observe(viewLifecycleOwner) { groups ->
             val expenseGroupMap: Map<Long?, ExpenseGroup> = groups.associateBy { it.id }
 
             expenseHistoryAdapter = ExpenseHistoryAdapter(expenseGroupMap)

@@ -38,7 +38,7 @@ class IncomeHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        groupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
+        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
             val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
 
             incomeHistoryAdapter = IncomeHistoryAdapter(incomeGroupMap)

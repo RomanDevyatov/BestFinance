@@ -15,7 +15,7 @@ class TransferHistoryViewModel @Inject constructor(
     private val transferHistoryRepository: TransferHistoryRepository
 ) : ViewModel() {
 
-    val transferHistoriesLiveData: LiveData<List<TransferHistory>> = transferHistoryRepository.getAllTransferHistories()
+    val allTransferHistoriesLiveData: LiveData<List<TransferHistory>> = transferHistoryRepository.getAllTransferHistories()
 
     val notArchivedTransferHistoriesLiveData: LiveData<List<TransferHistory>>
         = transferHistoryRepository.getAllTransferHistoriesByArchivedDate(null)
