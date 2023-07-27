@@ -450,6 +450,8 @@ class AddIncomeHistoryFragment : Fragment() {
             return null
         }
 
+        walletSpinnerValueGlobalBeforeAdd = savedWalletName
+
         return savedWalletName
     }
 
