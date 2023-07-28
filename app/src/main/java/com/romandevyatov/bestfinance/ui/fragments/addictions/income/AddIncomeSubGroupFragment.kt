@@ -90,18 +90,7 @@ class AddIncomeSubGroupFragment : Fragment() {
                     addSubGroupViewModel.getIncomeSubGroupByNameLiveData(
                         subGroupNameBinding
                     ).observe(viewLifecycleOwner) { subGroup ->
-
-                        val action =
-                            AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-                        action.incomeGroupName = selectedGroupNameBinding
-                        action.incomeSubGroupName = subGroupNameBinding
-
-                        if (subGroup?.archivedDate != null) {
-                            showWalletDialog(
-                                requireContext(),
-                                subGroup,
-                                "Do you want to unarchive `${subGroupNameBinding}` income sub group?")
-                        } else {
+                        if (subGroup == null) {
                             val newIncomeSubGroup = IncomeSubGroup(
                                 name = subGroupNameBinding,
                                 description = descriptionBinding,
@@ -109,9 +98,23 @@ class AddIncomeSubGroupFragment : Fragment() {
                             )
 
                             addSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
+                            val action =
+                                AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
+                            action.incomeGroupName = selectedGroupNameBinding
+                            action.incomeSubGroupName = subGroupNameBinding
+                            findNavController().navigate(action)
+                        } else if (subGroup.archivedDate == null) {
+                            showExistingDialog(
+                                requireContext(),
+                                "This sub group `$subGroupNameBinding` is already existing."
+                            )
+                        } else {
+                            showUnarchiveSubGroupDialog(
+                                requireContext(),
+                                selectedGroupNameBinding,
+                                subGroup,
+                                "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` income sub group?")
                         }
-
-                        findNavController().navigate(action)
                     }
                 }
             }
@@ -147,8 +150,9 @@ class AddIncomeSubGroupFragment : Fragment() {
         return spinnerItems
     }
 
-    private fun showWalletDialog(
+    private fun showUnarchiveSubGroupDialog(
         context: Context,
+        groupName: String,
         subGroup: IncomeSubGroup,
         message: String
     ) {
@@ -167,6 +171,12 @@ class AddIncomeSubGroupFragment : Fragment() {
         btnYes.setOnClickListener {
             addSubGroupViewModel.unarchiveIncomeSubGroup(subGroup)
             dialog.dismiss()
+
+            val action =
+                AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
+            action.incomeGroupName = groupName
+            action.incomeSubGroupName = subGroup.name
+            findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {
@@ -176,4 +186,22 @@ class AddIncomeSubGroupFragment : Fragment() {
         dialog.show()
     }
 
+    private fun showExistingDialog(context: Context, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_info)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnOk: Button = dialog.findViewById(R.id.btnOk)
+
+        tvMessage.text = message
+
+        btnOk.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
 }

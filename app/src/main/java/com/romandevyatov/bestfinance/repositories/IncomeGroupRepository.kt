@@ -47,7 +47,7 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName)
     }
 
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
         return incomeGroupDao.getByNameLiveData(incomeGroupName)
     }
 

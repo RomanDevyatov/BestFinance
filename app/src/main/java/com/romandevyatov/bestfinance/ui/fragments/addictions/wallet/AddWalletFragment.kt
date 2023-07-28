@@ -86,13 +86,8 @@ class AddWalletFragment : Fragment() {
             if (walletNameValidation.isSuccess
                 && walletBalanceValidation.isSuccess
             ) {
-                walletViewModel.getWalletByNameLiveData(walletNameBinding).observe(viewLifecycleOwner) { wallet ->
-                    if (wallet?.archivedDate != null) {
-                        showWalletDialog(
-                            requireContext(),
-                            wallet,
-                            "Do you want to unarchive `$walletNameBinding` wallet?")
-                    } else {
+                walletViewModel.getWalletByNameLiveData(walletNameBinding)?.observe(viewLifecycleOwner) { wallet ->
+                    if (wallet == null) {
                         val newWallet = Wallet(
                             name = walletNameBinding,
                             balance = walletBalanceBinding.toDouble(),
@@ -101,6 +96,16 @@ class AddWalletFragment : Fragment() {
 
                         walletViewModel.insertWallet(newWallet)
                         performNavigation(args.source, walletNameBinding)
+                    } else if (wallet.archivedDate == null) {
+                        showExistingDialog(
+                            requireContext(),
+                            "This wallet `$walletNameBinding` is already existing."
+                        )
+                    } else {
+                        showUnarchiveDialog(
+                            requireContext(),
+                            wallet,
+                            "The wallet with this name is archived. Do you want to unarchive `$walletNameBinding` wallet?")
                     }
                 }
             }
@@ -111,32 +116,6 @@ class AddWalletFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    fun showWalletDialog(context: Context, wallet: Wallet, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
-
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
-            dialog.dismiss()
-            walletViewModel.unarchiveWallet(wallet)
-            performNavigation(args.source, wallet.name)
-        }
-
-        bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
     private fun performNavigation(prevFragmentString: String?, walletName: String?) {
@@ -168,6 +147,51 @@ class AddWalletFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+    }
+
+    private fun showUnarchiveDialog(context: Context, wallet: Wallet, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_alert)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnYes: Button = dialog.findViewById(R.id.btnYes)
+        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+
+        tvMessage.text = message
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            walletViewModel.unarchiveWallet(wallet)
+            performNavigation(args.source, wallet.name)
+        }
+
+        bntNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showExistingDialog(context: Context, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_info)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnOk: Button = dialog.findViewById(R.id.btnOk)
+
+        tvMessage.text = message
+
+        btnOk.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 }

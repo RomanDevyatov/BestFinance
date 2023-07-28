@@ -71,16 +71,41 @@ class AddExpenseSubGroupFragment : Fragment() {
                         subGroupNameBinding
                     ).observe(viewLifecycleOwner) { subGroup ->
 
+                        if (subGroup == null) {
+                            val newExpenseSubGroup = ExpenseSubGroup(
+                                name = subGroupNameBinding,
+                                description = descriptionBinding,
+                                expenseGroupId = groupId
+                            )
+
+                            addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+
+                            val action =
+                                AddExpenseSubGroupFragmentDirections.actionNavigationAddExpenseSubGroupToNavigationAddExpense()
+                            action.expenseGroupName = selectedGroupNameBinding
+                            action.expenseSubGroupName = subGroupNameBinding
+                        } else if (subGroup.archivedDate == null) {
+                            showExistingDialog(
+                                requireContext(),
+                                "This sub group `$subGroupNameBinding` is already existing."
+                            )
+                        } else {
+                            showUnarchiveDialog(
+                                requireContext(),
+                                subGroup,
+                                "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
+                        }
+
                         val action =
                             AddExpenseSubGroupFragmentDirections.actionNavigationAddExpenseSubGroupToNavigationAddExpense()
                         action.expenseGroupName = selectedGroupNameBinding
                         action.expenseSubGroupName = subGroupNameBinding
 
                         if (subGroup?.archivedDate != null) {
-                            showWalletDialog(
+                            showUnarchiveDialog(
                                 requireContext(),
                                 subGroup,
-                                "Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
+                                "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
                         } else {
                             val newExpenseSubGroup = ExpenseSubGroup(
                                 name = subGroupNameBinding,
@@ -127,7 +152,7 @@ class AddExpenseSubGroupFragment : Fragment() {
         return spinnerItems
     }
 
-    private fun showWalletDialog(
+    private fun showUnarchiveDialog(
         context: Context,
         subGroup: ExpenseSubGroup,
         message: String
@@ -150,6 +175,25 @@ class AddExpenseSubGroupFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showExistingDialog(context: Context, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_info)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnOk: Button = dialog.findViewById(R.id.btnOk)
+
+        tvMessage.text = message
+
+        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

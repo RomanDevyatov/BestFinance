@@ -49,7 +49,7 @@ interface IncomeGroupDao {
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE name = :incomeGroupName LIMIT 1")
-    fun getByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>
+    fun getByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>?
 
     @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
     fun getByName(name: String): IncomeGroup

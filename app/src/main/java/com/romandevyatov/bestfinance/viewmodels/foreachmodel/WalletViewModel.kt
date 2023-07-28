@@ -35,7 +35,7 @@ class WalletViewModel @Inject constructor(
         return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
         return walletRepository.getWalletByNameLiveData(walletName)
     }
 

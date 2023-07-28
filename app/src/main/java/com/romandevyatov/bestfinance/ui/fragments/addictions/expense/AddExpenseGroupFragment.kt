@@ -18,6 +18,8 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
 import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.db.entities.IncomeGroup
+import com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeGroupFragmentDirections
 import com.romandevyatov.bestfinance.ui.validators.EmptyValidator
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,12 +69,7 @@ class AddExpenseGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
-                    if (expenseGroup?.archivedDate != null) {
-                        showWalletDialog(
-                            requireContext(),
-                            expenseGroup,
-                            "Do you want to unarchive `$groupNameBinding` expense group?")
-                    } else {
+                    if (expenseGroup == null) {
                         addGroupViewModel.insertExpenseGroup(
                             ExpenseGroup(
                                 name = groupNameBinding,
@@ -84,6 +81,16 @@ class AddExpenseGroupFragment : Fragment() {
                             AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
                         action.expenseGroupName = groupNameBinding
                         findNavController().navigate(action)
+                    } else if (expenseGroup.archivedDate == null) {
+                        showExistingDialog(
+                            requireContext(),
+                            "This group `$groupNameBinding` is already existing."
+                        )
+                    } else {
+                        showWalletDialog(
+                            requireContext(),
+                            expenseGroup,
+                            "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
                     }
                 }
             }
@@ -118,6 +125,25 @@ class AddExpenseGroupFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showExistingDialog(context: Context, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_info)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnOk: Button = dialog.findViewById(R.id.btnOk)
+
+        tvMessage.text = message
+
+        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

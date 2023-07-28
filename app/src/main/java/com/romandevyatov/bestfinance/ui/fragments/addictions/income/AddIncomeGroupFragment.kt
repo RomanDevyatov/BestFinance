@@ -69,13 +69,8 @@ class AddIncomeGroupFragment : Fragment() {
             binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { incomeGroup ->
-                    if (incomeGroup?.archivedDate != null) {
-                        showWalletDialog(
-                            requireContext(),
-                            incomeGroup,
-                            "Do you want to unarchive `$groupNameBinding` income group?")
-                    } else {
+                addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
+                    if (incomeGroup == null) {
                         addGroupViewModel.insertIncomeGroup(
                             IncomeGroup(
                                 name = groupNameBinding,
@@ -87,7 +82,19 @@ class AddIncomeGroupFragment : Fragment() {
                             AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
                         action.incomeGroupName = groupNameBinding
                         findNavController().navigate(action)
+                    } else if (incomeGroup.archivedDate == null) {
+                        showExistingDialog(
+                            requireContext(),
+                            "This group `$groupNameBinding` is already existing."
+                        )
+                    } else {
+                        showUnarchiveDialog(
+                            requireContext(),
+                            incomeGroup,
+                            "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
+                        )
                     }
+
                 }
             }
         }
@@ -98,7 +105,7 @@ class AddIncomeGroupFragment : Fragment() {
         _binding = null
     }
 
-    fun showWalletDialog(context: Context, group: IncomeGroup, message: String?) {
+    private fun showUnarchiveDialog(context: Context, group: IncomeGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -121,6 +128,25 @@ class AddIncomeGroupFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showExistingDialog(context: Context, message: String?) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_info)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
+        val btnOk: Button = dialog.findViewById(R.id.btnOk)
+
+        tvMessage.text = message
+
+        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

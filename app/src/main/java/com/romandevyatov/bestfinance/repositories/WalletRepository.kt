@@ -40,7 +40,7 @@ class WalletRepository @Inject constructor(
         return walletDao.getById(id)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
         return walletDao.getWalletByNameLiveData(walletName)
     }
 

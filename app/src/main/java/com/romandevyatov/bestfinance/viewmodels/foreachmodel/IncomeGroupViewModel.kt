@@ -47,7 +47,7 @@ class IncomeGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
         return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 
