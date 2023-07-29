@@ -1,6 +1,6 @@
 package com.romandevyatov.bestfinance.ui.adapters.cardactions
 
-import com.romandevyatov.bestfinance.db.entities.IncomeSubGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 
 interface ArchiveItemBySwipe {
 

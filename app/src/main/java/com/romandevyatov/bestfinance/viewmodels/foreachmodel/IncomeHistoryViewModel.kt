@@ -3,9 +3,9 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.IncomeHistory
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
-import com.romandevyatov.bestfinance.repositories.IncomeHistoryRepository
+import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
+import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

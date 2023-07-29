@@ -42,7 +42,11 @@
         android:id="@+id/navigation_settings"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_menu_settings" />
+        tools:layout="@layout/fragment_menu_settings" >
+        <action
+            android:id="@+id/action_navigation_settings_to_archived_groups"
+            app:destination="@id/archivedGroupsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_income"
@@ -114,11 +118,6 @@
             android:defaultValue="@null" />
 
     </fragment>
-    <fragment
-        android:id="@+id/navigation_history"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
-        android:label="History"
-        tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/navigation_add_income_group"
         android:name="com.romandevyatov.bestfinance.ui.fragments.addictions.income.AddIncomeGroupFragment"
@@ -249,5 +248,15 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/archivedGroupsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.ArchivedGroupsFragment"
+        android:label="Archived groups"
+        tools:layout="@layout/fragment_archived_group" />
 
 </navigation>

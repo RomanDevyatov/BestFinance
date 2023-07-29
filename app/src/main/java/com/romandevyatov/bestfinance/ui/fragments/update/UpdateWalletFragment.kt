@@ -17,7 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
-import com.romandevyatov.bestfinance.db.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class UpdateWalletFragment : Fragment() {
 
     private var _binding: FragmentUpdateWalletBinding? = null
+
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
