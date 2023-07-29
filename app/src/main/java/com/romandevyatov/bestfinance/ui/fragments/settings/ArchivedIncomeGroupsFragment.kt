@@ -22,7 +22,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
     private val archiveGroupsViewModel: ArchiveGroupsViewModel by viewModels()
 
-    private lateinit var archivedGroupsAdapter: ArchivedGroupsAdapter
+    private val archivedGroupsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +37,8 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
         initRecyclerView()
 
+        archivedGroupsAdapter.submitList(createGroupData())
+
         binding.unarchiveButton.setOnClickListener {
             unarchiveSelectedGroups()
         }
@@ -47,24 +49,19 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        archivedGroupsAdapter = ArchivedGroupsAdapter(createGroupData())
-        archivedGroupsAdapter.submitList(createGroupData())
-        binding.recyclerView.adapter = archivedGroupsAdapter
-//        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
-//            val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
-//
-//            incomeHistoryAdapter = IncomeHistoryAdapter(incomeGroupMap)
-//            binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
-//        }
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = archivedGroupsAdapter
+        }
     }
 
     private fun unarchiveSelectedGroups() {
-        val selectedGroups = archivedGroupsAdapter.getSelectedGroups()
-        // Perform the desired action with the selected groups
-        // For example, you can show a toast with the selected groups' names
-        val selectedGroupNames = selectedGroups.joinToString(", ") { it.name }
-        Toast.makeText(requireContext(), "Selected Groups: $selectedGroupNames", Toast.LENGTH_SHORT).show()
+        val selectedItems = archivedGroupsAdapter.getSelectedGroups()
+        // Process the selected items here
+        // For example, you can show a Toast with the selected items' texts
+        val selectedTexts = selectedItems.joinToString(", ") { it.name }
+        val toastText = "Selected elements: $selectedTexts"
+        Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()
     }
 
     private fun deleteSelectedGroups() {
