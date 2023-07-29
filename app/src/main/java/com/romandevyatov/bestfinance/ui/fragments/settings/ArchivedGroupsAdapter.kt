@@ -38,6 +38,11 @@ class ArchivedGroupsAdapter :
         fun bindItem(groupItem: GroupItem) {
             binding.groupName.text = groupItem.name
             binding.checkBox.isChecked = groupItem.isSelected
+
+            binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+                // Update the isSelected flag when the CheckBox is clicked
+                groupItem.isSelected = isChecked
+            }
         }
     }
 
@@ -57,5 +62,4 @@ class ArchivedGroupsAdapter :
     fun getSelectedGroups(): List<GroupItem> {
         return differ.currentList.filter { it.isSelected }
     }
-
 }
