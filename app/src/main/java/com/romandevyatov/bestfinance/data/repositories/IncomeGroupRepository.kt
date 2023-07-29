@@ -82,5 +82,13 @@ class IncomeGroupRepository @Inject constructor(
         updateIncomeGroup(incomeGroupNotArchived)
     }
 
+    fun getAllIncomeGroupArchivedLiveData(): LiveData<List<IncomeGroup>> {
+        return incomeGroupDao.getAllIncomeGroupArchivedLiveData()
+    }
+
+    fun getAllIncomeGroupArchivedByNameLiveData(name: String): LiveData<IncomeGroup>? {
+        return incomeGroupDao.getIncomeGroupArchivedByNameLiveData(name)
+    }
+
 
 }

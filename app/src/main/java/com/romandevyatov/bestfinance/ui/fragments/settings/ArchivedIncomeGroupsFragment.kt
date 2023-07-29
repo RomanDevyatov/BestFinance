@@ -8,9 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.databinding.FragmentArchivedIncomeGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchiveGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +35,9 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
         initRecyclerView()
 
-        archivedGroupsAdapter.submitList(createGroupData())
+        archiveGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
+            archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.name)}.toList())
+        }
 
         binding.unarchiveButton.setOnClickListener {
             unarchiveSelectedGroups()
@@ -57,6 +57,15 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
     private fun unarchiveSelectedGroups() {
         val selectedItems = archivedGroupsAdapter.getSelectedGroups()
+
+        selectedItems.forEach { selectedItem ->
+            archiveGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { group ->
+                if (group != null) {
+                    archiveGroupsViewModel.unarchiveIncomeGroup(group)
+                }
+            }
+        }
+
         // Process the selected items here
         // For example, you can show a Toast with the selected items' texts
         val selectedTexts = selectedItems.joinToString(", ") { it.name }

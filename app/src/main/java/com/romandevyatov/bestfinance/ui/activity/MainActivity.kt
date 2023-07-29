@@ -39,25 +39,25 @@ class MainActivity() : AppCompatActivity() {
     // for default app bar, navigate up fixing
     override fun onSupportNavigateUp(): Boolean {
         return when(navController.currentDestination?.id) {
-            R.id.navigation_add_income, R.id.navigation_add_expense, R.id.navigation_add_transfer -> {
+            R.id.add_income_fragment, R.id.add_expense_fragment, R.id.add_transfer_fragment -> {
                 sharedModViewModel.set(null)
-                navController.navigate(R.id.navigation_home)
+                navController.navigate(R.id.home_fragment)
                 true
             }
-            R.id.navigation_add_income_group -> {
-                navController.navigate(R.id.navigation_add_income)
+            R.id.add_income_group_fragment -> {
+                navController.navigate(R.id.add_income_fragment)
                 true
             }
-            R.id.navigation_add_income_sub_group -> {
-                navController.navigate(R.id.navigation_add_income)
+            R.id.add_income_sub_group_fragment -> {
+                navController.navigate(R.id.add_income_fragment)
                 true
             }
-            R.id.navigation_add_expense_group -> {
-                navController.navigate(R.id.navigation_add_expense)
+            R.id.add_expense_group_fragment -> {
+                navController.navigate(R.id.add_expense_fragment)
                 true
             }
-            R.id.navigation_add_expense_sub_group -> {
-                navController.navigate(R.id.navigation_add_expense)
+            R.id.add_expense_sub_group_fragment -> {
+                navController.navigate(R.id.add_expense_fragment)
                 true
             }
             else -> navController.navigateUp()
@@ -82,9 +82,9 @@ class MainActivity() : AppCompatActivity() {
         // for default app bar
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
-                R.id.navigation_wallet,
-                R.id.navigation_settings
+                R.id.home_fragment,
+                R.id.wallet_fragment,
+                R.id.settings_fragment
             )
         )
         setupActionBarWithNavController(this, navController, appBarConfiguration)
@@ -100,16 +100,17 @@ class MainActivity() : AppCompatActivity() {
 
     private fun hideBottomNavigationBar() {
         val bottomNavViewExcludedArray = arrayOf(
-            R.id.navigation_add_income,
-            R.id.navigation_add_income_group,
-            R.id.navigation_add_income_sub_group,
-            R.id.navigation_add_expense,
-            R.id.navigation_add_expense_group,
-            R.id.navigation_add_expense_sub_group,
-            R.id.navigation_history,
-            R.id.navigation_add_transfer,
-            R.id.navigation_analyze,
-            R.id.navigation_add_wallet
+            R.id.add_income_fragment,
+            R.id.add_income_group_fragment,
+            R.id.add_income_sub_group_fragment,
+            R.id.add_expense_fragment,
+            R.id.add_expense_group_fragment,
+            R.id.add_expense_sub_group_fragment,
+            R.id.history_fragment,
+            R.id.add_transfer_fragment,
+            R.id.analyze_fragment,
+            R.id.add_wallet_fragment,
+            R.id.archived_groups_fragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
