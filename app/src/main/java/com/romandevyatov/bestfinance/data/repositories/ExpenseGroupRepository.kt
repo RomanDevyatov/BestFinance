@@ -80,4 +80,12 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getByNameLiveData(groupNameBinding)
     }
 
+    fun getExpenseGroupArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>? {
+        return expenseGroupDao.getExpenseGroupArchivedByNameLiveData(name)
+    }
+
+    fun getAllExpenseGroupArchivedLiveData(): LiveData<List<ExpenseGroup>>? {
+        return expenseGroupDao.getAllExpenseGroupsArchivedLiveData()
+    }
+
 }

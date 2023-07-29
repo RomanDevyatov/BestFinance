@@ -77,4 +77,10 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group ORDER BY id ASC")
     fun getAllExpenseGroupsLiveData(): LiveData<List<ExpenseGroup>>
 
+    @Query("SELECT * FROM expense_group WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
+    fun getExpenseGroupArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>?
+
+    @Query("SELECT * FROM expense_group WHERE archived_date IS NOT NULL")
+    fun getAllExpenseGroupsArchivedLiveData(): LiveData<List<ExpenseGroup>>?
+
 }

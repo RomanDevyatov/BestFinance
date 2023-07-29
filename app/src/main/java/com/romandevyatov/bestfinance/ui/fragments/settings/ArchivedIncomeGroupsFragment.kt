@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentArchivedIncomeGroupsBinding
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchiveGroupsViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchivedIncomeGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     private var _binding: FragmentArchivedIncomeGroupsBinding? = null
     private val binding get() = _binding!!
 
-    private val archiveGroupsViewModel: ArchiveGroupsViewModel by viewModels()
+    private val archivedIncomeGroupsViewModel: ArchivedIncomeGroupsViewModel by viewModels()
 
     private val archivedGroupsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
 
@@ -35,7 +35,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
         initRecyclerView()
 
-        archiveGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
+        archivedIncomeGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
             archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.name)}.toList())
         }
 
@@ -59,9 +59,9 @@ class ArchivedIncomeGroupsFragment : Fragment() {
         val selectedItems = archivedGroupsAdapter.getSelectedGroups()
 
         selectedItems.forEach { selectedItem ->
-            archiveGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { group ->
+            archivedIncomeGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { group ->
                 if (group != null) {
-                    archiveGroupsViewModel.unarchiveIncomeGroup(group)
+                    archivedIncomeGroupsViewModel.unarchiveIncomeGroup(group)
                 }
             }
         }

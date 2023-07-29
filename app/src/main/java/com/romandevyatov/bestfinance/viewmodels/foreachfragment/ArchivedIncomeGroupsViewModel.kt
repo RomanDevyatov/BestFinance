@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ArchiveGroupsViewModel @Inject constructor(
+class ArchivedIncomeGroupsViewModel @Inject constructor(
     private val incomeGroupRepository: IncomeGroupRepository
 ) : ViewModel() {
 

@@ -19,6 +19,6 @@ class ArchivedGroupsViewPagerAdapter(fragment: Fragment) :
         when (position) {
             0 -> return ArchivedIncomeGroupsFragment()
         }
-        return ArchivedIncomeGroupsFragment()
+        return ArchivedExpenseGroupsFragment()
     }
 }
