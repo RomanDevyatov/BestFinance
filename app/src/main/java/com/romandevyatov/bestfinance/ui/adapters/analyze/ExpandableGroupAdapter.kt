@@ -14,7 +14,7 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ParentData
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubParentData
 import com.romandevyatov.bestfinance.utils.Constants
 
-class ExpandableGroupAdapter(val parents: ArrayList<ParentData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view: View =

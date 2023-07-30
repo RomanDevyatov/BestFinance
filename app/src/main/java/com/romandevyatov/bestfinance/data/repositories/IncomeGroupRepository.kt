@@ -90,5 +90,17 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getIncomeGroupArchivedByNameLiveData(name)
     }
 
+    fun getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>? {
+        return incomeGroupDao.getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData()
+    }
+
+    fun getAllIncomeGroupsWhereIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>? {
+        return incomeGroupDao.allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData()
+    }
+
+    fun getAllIncomeGroupsWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>? {
+        return incomeGroupDao.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
+    }
+
 
 }

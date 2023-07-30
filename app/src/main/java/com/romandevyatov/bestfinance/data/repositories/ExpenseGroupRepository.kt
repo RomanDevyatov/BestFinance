@@ -88,4 +88,8 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupsArchivedLiveData()
     }
 
+    fun getAllExpenseGroupsWithExpenseSubGroupsLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroups>>? {
+        return expenseGroupDao.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
+    }
+
 }

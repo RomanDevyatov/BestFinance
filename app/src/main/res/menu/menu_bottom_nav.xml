@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/settings_fragment"
-        android:title="Settings"
+        android:title="Profile"
         android:icon="@drawable/ic_settings"/>
 
 </menu>

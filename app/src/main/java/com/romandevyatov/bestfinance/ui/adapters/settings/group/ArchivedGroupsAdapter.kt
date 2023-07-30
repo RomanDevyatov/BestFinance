@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.groups
+package com.romandevyatov.bestfinance.ui.adapters.settings.group
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemWithCheckboxBinding
+import com.romandevyatov.bestfinance.ui.adapters.settings.group.model.GroupItem
 
 class ArchivedGroupsAdapter :
     RecyclerView.Adapter<ArchivedGroupsAdapter.GroupViewHolder>() {

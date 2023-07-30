@@ -77,5 +77,30 @@ interface IncomeGroupDao {
     @Query("SELECT * FROM income_group WHERE name = :name AND archived_date IS NOT NULL")
     fun getIncomeGroupArchivedByNameLiveData(name: String): LiveData<IncomeGroup>?
 
+    @Transaction
+    @Query("SELECT " +
+            "ig.id, ig.name, ig.is_passive, ig.description, ig.archived_date, " +
+            "isg.id, isg.name, isg.description, isg.income_group_id, isg.archived_date " +
+            "FROM income_group ig " +
+            "INNER JOIN income_sub_group isg " +
+            "ON ig.id = isg.income_group_id " +
+            "WHERE ig.archived_date IS NOT NULL " +
+            "AND isg.archived_date IS NOT NULL")
+    fun getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
+
+    @Transaction
+    @Query("SELECT " +
+            "ig.id, ig.name, ig.is_passive, ig.description, ig.archived_date, " +
+            "isg.id, isg.name, isg.description, isg.income_group_id, isg.archived_date " +
+            "FROM income_group ig " +
+            "INNER JOIN income_sub_group isg " +
+            "ON ig.id = isg.income_group_id " +
+            "WHERE isg.archived_date IS NOT NULL")
+    fun allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
+
+    @Transaction
+    @Query("SELECT * FROM income_group")
+    fun getAllIncomeGroupsWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
+
 
 }

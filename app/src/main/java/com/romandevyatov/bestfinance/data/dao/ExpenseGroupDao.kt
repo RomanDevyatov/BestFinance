@@ -83,4 +83,8 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE archived_date IS NOT NULL")
     fun getAllExpenseGroupsArchivedLiveData(): LiveData<List<ExpenseGroup>>?
 
+    @Transaction
+    @Query("SELECT * FROM expense_group")
+    fun getAllExpenseGroupsWithExpenseSubGroupsLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroups>>?
+
 }

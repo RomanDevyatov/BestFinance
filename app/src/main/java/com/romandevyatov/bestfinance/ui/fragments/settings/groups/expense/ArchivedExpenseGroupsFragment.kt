@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.groups
+package com.romandevyatov.bestfinance.ui.fragments.settings.groups.expense
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentArchivedExpenseGroupsBinding
+import com.romandevyatov.bestfinance.ui.adapters.settings.group.ArchivedGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.group.model.GroupItem
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchivedExpenseGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

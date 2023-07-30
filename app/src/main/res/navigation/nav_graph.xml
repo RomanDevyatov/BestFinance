@@ -47,8 +47,14 @@
             android:id="@+id/action_navigation_settings_to_archived_groups"
             app:destination="@id/archived_groups_fragment" />
         <action
+            android:id="@+id/action_navigation_settings_to_archived_sub_groups"
+            app:destination="@id/archived_sub_groups_fragment" />
+        <action
             android:id="@+id/action_settings_fragment_to_archived_wallets_fragment"
             app:destination="@id/archived_wallets_fragment" />
+        <action
+            android:id="@+id/action_settings_fragment_to_archivedSubGroupsFragment"
+            app:destination="@id/archived_sub_groups_fragment" />
     </fragment>
 
     <fragment
@@ -266,5 +272,10 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.ArchivedWalletsFragment"
         android:label="Archived wallets"
         tools:layout="@layout/fragment_archived_wallets" />
+    <fragment
+        android:id="@+id/archived_sub_groups_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.subgroups.ArchivedSubGroupsFragment"
+        android:label="Archived sub group"
+        tools:layout="@layout/fragment_archived_sub_group" />
 
 </navigation>

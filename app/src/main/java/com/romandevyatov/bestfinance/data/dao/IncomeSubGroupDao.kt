@@ -49,7 +49,10 @@ interface IncomeSubGroupDao {
     fun getByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup
 
     @Query("UPDATE income_sub_group SET archived_date = NULL WHERE income_group_id = :incomeGroupId")
-    fun unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId: Long?)
+    suspend fun unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId: Long?)
+
+    @Query("UPDATE income_sub_group SET archived_date = NULL WHERE id = :id")
+    suspend fun unarchiveIncomeSubGroupById(id: Long?)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :incomeGroupId")
     fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>?

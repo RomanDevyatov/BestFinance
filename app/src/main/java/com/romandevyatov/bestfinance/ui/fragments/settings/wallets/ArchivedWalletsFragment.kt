@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentArchivedWalletsBinding
-import com.romandevyatov.bestfinance.ui.fragments.settings.groups.ArchivedGroupsAdapter
-import com.romandevyatov.bestfinance.ui.fragments.settings.groups.GroupItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.group.ArchivedGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.group.model.GroupItem
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchivedWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

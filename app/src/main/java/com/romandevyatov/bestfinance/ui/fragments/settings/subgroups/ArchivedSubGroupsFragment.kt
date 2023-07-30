@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.groups
+package com.romandevyatov.bestfinance.ui.fragments.settings.subgroups
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.romandevyatov.bestfinance.databinding.FragmentArchivedGroupBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.group.ArchivedGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.databinding.FragmentArchivedSubGroupBinding
+import com.romandevyatov.bestfinance.ui.adapters.settings.subgroup.ArchivedSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ArchivedGroupsFragment : Fragment() {
+class ArchivedSubGroupsFragment: Fragment() {
 
-    private val groupTypeArray = arrayOf(
+    private val subGroupTypeArray = arrayOf(
         "Income",
         "Expense"
     )
 
-    private var _binding: FragmentArchivedGroupBinding? = null
+    private var _binding: FragmentArchivedSubGroupBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -26,21 +26,21 @@ class ArchivedGroupsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentArchivedGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentArchivedSubGroupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewPager = binding.groupViewPager
-        val tabLayout = binding.groupTabLayout
+        val viewPager = binding.subGroupViewPager
+        val tabLayout = binding.subGroupTabLayout
 
-        val adapter = ArchivedGroupsViewPagerAdapter(this)
+        val adapter = ArchivedSubGroupsViewPagerAdapter(this)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = groupTypeArray[position]
+            tab.text = subGroupTypeArray[position]
         }.attach()
     }
 

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/historyFragment"
-    tools:context=".ui.fragments.settings.groups.ArchivedGroupsFragment">
+    tools:context=".ui.fragments.settings.subgroups.ArchivedSubGroupsFragment">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/groupTabLayout"
+        android:id="@+id/subGroupTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -20,12 +20,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/groupViewPager"
+        android:id="@+id/subGroupViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupTabLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/subGroupTabLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,4 +50,7 @@ interface ExpenseSubGroupDao {
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :groupId LIMIT 1")
     fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(name: String, groupId: Long?): LiveData<ExpenseSubGroup>?
 
+    @Query("UPDATE expense_sub_group SET archived_date = NULL WHERE id = :id")
+    fun unarchiveExpenseSubGroupById(id: Long?)
+
 }
