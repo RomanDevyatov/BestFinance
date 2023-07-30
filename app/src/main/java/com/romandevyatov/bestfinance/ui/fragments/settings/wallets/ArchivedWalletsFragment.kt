@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,19 @@ class ArchivedWalletsFragment : Fragment() {
 
     private val archivedWalletsViewModel: ArchivedWalletsViewModel by viewModels()
 
-    private val archivedWalletsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
+    private lateinit var archivedWalletsAdapter: ArchivedGroupsAdapter
+
+    private var walletItemMutableList: MutableList<GroupItem> = mutableListOf()
+
+    private val listener = object : ArchivedGroupsAdapter.OnSubGroupCheckedChangeListener {
+        override fun onSubgroupChecked(groupItem: GroupItem) {
+            val index = walletItemMutableList.indexOf(groupItem)
+            if (index != -1) {
+                walletItemMutableList[index] = groupItem
+                archivedWalletsAdapter.submitList(walletItemMutableList)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +46,17 @@ class ArchivedWalletsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
-
         archivedWalletsViewModel.allWalletsArchivedLiveData?.observe(viewLifecycleOwner) { allWalletsArchived ->
-            archivedWalletsAdapter.submitList(allWalletsArchived.map { GroupItem(it.id, it.name) }.toMutableList())
+            archivedWalletsAdapter = ArchivedGroupsAdapter(listener)
+            binding.walletRecyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = archivedWalletsAdapter
+            }
+            walletItemMutableList = allWalletsArchived.map {
+                GroupItem(it.id, it.name)
+            }.toMutableList()
+
+            archivedWalletsAdapter.submitList(walletItemMutableList)
         }
 
         binding.unarchiveButton.setOnClickListener {
@@ -47,13 +65,6 @@ class ArchivedWalletsFragment : Fragment() {
 
         binding.deleteButton.setOnClickListener {
             deleteSelectedGroups()
-        }
-    }
-
-    private fun initRecyclerView() {
-        binding.walletRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = archivedWalletsAdapter
         }
     }
 
@@ -76,5 +87,4 @@ class ArchivedWalletsFragment : Fragment() {
             archivedWalletsViewModel.deleteWalletById(group.id)
         }
     }
-
 }
