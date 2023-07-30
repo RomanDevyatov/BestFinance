@@ -264,7 +264,7 @@
     <fragment
         android:id="@+id/archived_wallets_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.ArchivedWalletsFragment"
-        android:label="fragment_archived_wallets"
+        android:label="Archived wallets"
         tools:layout="@layout/fragment_archived_wallets" />
 
 </navigation>

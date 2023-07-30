@@ -42,7 +42,7 @@ class ArchivedWalletsFragment : Fragment() {
         }
 
         binding.unarchiveButton.setOnClickListener {
-            unarchiveSelectedGroups()
+            unarchiveSelectedWallets()
         }
 
         binding.deleteButton.setOnClickListener {
@@ -57,7 +57,7 @@ class ArchivedWalletsFragment : Fragment() {
         }
     }
 
-    private fun unarchiveSelectedGroups() {
+    private fun unarchiveSelectedWallets() {
         val selectedItems = archivedWalletsAdapter.getSelectedGroups()
 
         selectedItems.forEach { selectedItem ->
