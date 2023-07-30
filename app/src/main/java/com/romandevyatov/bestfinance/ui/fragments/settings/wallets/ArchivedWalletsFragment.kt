@@ -52,8 +52,9 @@ class ArchivedWalletsFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context)
                 adapter = archivedWalletsAdapter
             }
+
             walletItemMutableList = allWalletsArchived.map {
-                GroupItem(it.id, it.name)
+                GroupItem(it.id, it.name, false)
             }.toMutableList()
 
             archivedWalletsAdapter.submitList(walletItemMutableList)

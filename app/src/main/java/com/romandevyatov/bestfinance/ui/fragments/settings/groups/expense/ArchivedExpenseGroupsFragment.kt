@@ -30,7 +30,7 @@ class ArchivedExpenseGroupsFragment : Fragment() {
             val index = groupItemMutableList.indexOf(groupItem)
             if (index != -1) {
                 groupItemMutableList[index] = groupItem
-                (binding.recyclerView.adapter as ArchivedGroupsAdapter).submitList(groupItemMutableList)
+                archivedGroupsAdapter.submitList(groupItemMutableList)
             }
         }
     }
@@ -52,6 +52,7 @@ class ArchivedExpenseGroupsFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context)
                 adapter = archivedGroupsAdapter
             }
+
             groupItemMutableList = groupsArchived.map {
                 GroupItem(it.id, it.name, false)
             }.toMutableList()

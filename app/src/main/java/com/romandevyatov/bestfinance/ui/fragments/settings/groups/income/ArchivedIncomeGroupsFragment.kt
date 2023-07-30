@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +30,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
             val index = groupItemMutableList.indexOf(groupItem)
             if (index != -1) {
                 groupItemMutableList[index] = groupItem
-                (binding.recyclerView.adapter as ArchivedGroupsAdapter).submitList(groupItemMutableList)
+                archivedGroupsAdapter.submitList(groupItemMutableList)
             }
         }
     }
@@ -53,6 +52,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context)
                 adapter = archivedGroupsAdapter
             }
+
             groupItemMutableList = allIncomeGroupsArchived.map {
                 GroupItem(it.id, it.name, false)
             }.toMutableList()
