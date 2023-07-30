@@ -42,5 +42,9 @@ class ArchivedWalletsViewModel @Inject constructor(
         return walletRepository.getWalletArchivedByNameLiveData(name)
     }
 
+    fun deleteWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.deleteWalletById(id)
+    }
+
 
 }

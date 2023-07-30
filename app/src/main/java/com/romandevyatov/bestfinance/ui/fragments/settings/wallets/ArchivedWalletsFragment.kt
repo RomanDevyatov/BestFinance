@@ -67,20 +67,14 @@ class ArchivedWalletsFragment : Fragment() {
                 }
             }
         }
-
-        // Process the selected items here
-        // For example, you can show a Toast with the selected items' texts
-        val selectedTexts = selectedItems.joinToString(", ") { it.name }
-        val toastText = "Selected elements: $selectedTexts"
-        Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()
     }
 
     private fun deleteSelectedGroups() {
-        val selectedGroups = archivedWalletsAdapter.getSelectedGroups()
-        // Perform the desired action with the selected groups
-        // For example, you can show a toast with the selected groups' names
-        val selectedGroupNames = selectedGroups.joinToString(", ") { it.name }
-        Toast.makeText(requireContext(), "Selected Groups: $selectedGroupNames", Toast.LENGTH_SHORT).show()
+        val selectedItems = archivedWalletsAdapter.getSelectedGroups()
+
+        selectedItems.forEach { group ->
+            archivedWalletsViewModel.deleteWalletById(group.id)
+        }
     }
 
 }

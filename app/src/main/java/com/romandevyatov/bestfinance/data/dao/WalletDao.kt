@@ -32,7 +32,7 @@ interface WalletDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM wallet WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM wallet WHERE name = :name LIMIT 1")
     fun getByNameLiveData(name: String): LiveData<Wallet>?

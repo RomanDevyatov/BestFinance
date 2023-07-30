@@ -50,9 +50,9 @@ class WalletRepository @Inject constructor(
         return walletDao.getByNameArchivedLiveData(walletName)
     }
 
-
-
-
+    suspend fun deleteWalletById(id: Long?) {
+        walletDao.deleteById(id)
+    }
 
 
 }

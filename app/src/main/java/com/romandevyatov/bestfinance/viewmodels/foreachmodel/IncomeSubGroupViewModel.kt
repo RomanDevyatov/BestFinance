@@ -30,7 +30,7 @@ class IncomeSubGroupViewModel @Inject constructor(
         incomeSubGroupRepository.deleteIncomeSubGroup(incomeSubGroup)
     }
 
-    fun deleteIncomeSubGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteIncomeSubGroupById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         incomeSubGroupRepository.deleteIncomeSubGroupById(id)
     }
 
