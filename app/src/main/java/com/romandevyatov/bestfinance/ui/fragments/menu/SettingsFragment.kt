@@ -79,14 +79,14 @@ class SettingsFragment : Fragment() {
                     SubCategoryItem("Wallet", R.drawable.ic_wallet)
                 )
             ),
-            CategoryItem(
-                "Report",
-                R.drawable.ic_report,
-                listOf(
-                    SubCategoryItem("Export", R.drawable.ic_export),
-                    SubCategoryItem("Import", R.drawable.ic_import)
-                )
-            )
+//            CategoryItem(
+//                "Report",
+//                R.drawable.ic_report,
+//                listOf(
+//                    SubCategoryItem("Export", R.drawable.ic_export),
+//                    SubCategoryItem("Import", R.drawable.ic_import)
+//                )
+//            )
         )
     }
 
