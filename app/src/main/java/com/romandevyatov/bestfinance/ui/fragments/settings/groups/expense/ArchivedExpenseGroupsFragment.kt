@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,19 @@ class ArchivedExpenseGroupsFragment : Fragment() {
 
     private val archiveExpenseGroupsViewModel: ArchivedExpenseGroupsViewModel by viewModels()
 
-    private val archivedGroupsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
+    private lateinit var archivedGroupsAdapter: ArchivedGroupsAdapter
+
+    private var groupItemMutableList: MutableList<GroupItem> = mutableListOf()
+
+    private val listener = object : ArchivedGroupsAdapter.OnSubGroupCheckedChangeListener {
+        override fun onSubgroupChecked(groupItem: GroupItem) {
+            val index = groupItemMutableList.indexOf(groupItem)
+            if (index != -1) {
+                groupItemMutableList[index] = groupItem
+                (binding.recyclerView.adapter as ArchivedGroupsAdapter).submitList(groupItemMutableList)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +46,17 @@ class ArchivedExpenseGroupsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
-
         archiveExpenseGroupsViewModel.allExpenseGroupsArchivedLiveData?.observe(viewLifecycleOwner) { groupsArchived ->
-            archivedGroupsAdapter.submitList(groupsArchived.map { GroupItem(it.id, it.name) }.toList())
+            archivedGroupsAdapter = ArchivedGroupsAdapter(listener)
+            binding.recyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = archivedGroupsAdapter
+            }
+            groupItemMutableList = groupsArchived.map {
+                GroupItem(it.id, it.name, false)
+            }.toMutableList()
+
+            archivedGroupsAdapter.submitList(groupItemMutableList)
         }
 
         binding.unarchiveButton.setOnClickListener {
@@ -47,13 +65,6 @@ class ArchivedExpenseGroupsFragment : Fragment() {
 
         binding.deleteButton.setOnClickListener {
             deleteSelectedGroups()
-        }
-    }
-
-    private fun initRecyclerView() {
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = archivedGroupsAdapter
         }
     }
 

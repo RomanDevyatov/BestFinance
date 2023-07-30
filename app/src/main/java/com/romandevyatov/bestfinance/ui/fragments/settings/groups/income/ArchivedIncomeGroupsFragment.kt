@@ -22,7 +22,19 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
     private val archivedIncomeGroupsViewModel: ArchivedIncomeGroupsViewModel by viewModels()
 
-    private val archivedGroupsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
+    private lateinit var archivedGroupsAdapter: ArchivedGroupsAdapter
+
+    private var groupItemMutableList: MutableList<GroupItem> = mutableListOf()
+
+    private val listener = object : ArchivedGroupsAdapter.OnSubGroupCheckedChangeListener {
+        override fun onSubgroupChecked(groupItem: GroupItem) {
+            val index = groupItemMutableList.indexOf(groupItem)
+            if (index != -1) {
+                groupItemMutableList[index] = groupItem
+                (binding.recyclerView.adapter as ArchivedGroupsAdapter).submitList(groupItemMutableList)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +47,17 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
-
         archivedIncomeGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
-            archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.id, it.name) }.toList())
+            archivedGroupsAdapter = ArchivedGroupsAdapter(listener)
+            binding.recyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = archivedGroupsAdapter
+            }
+            groupItemMutableList = allIncomeGroupsArchived.map {
+                GroupItem(it.id, it.name, false)
+            }.toMutableList()
+
+            archivedGroupsAdapter.submitList(groupItemMutableList)
         }
 
         binding.unarchiveButton.setOnClickListener {
@@ -47,13 +66,6 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
         binding.deleteButton.setOnClickListener {
             deleteSelectedGroups()
-        }
-    }
-
-    private fun initRecyclerView() {
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = archivedGroupsAdapter
         }
     }
 
@@ -77,5 +89,4 @@ class ArchivedIncomeGroupsFragment : Fragment() {
             archivedIncomeGroupsViewModel.deleteIncomeGroupByName(groupItem.id)
         }
     }
-
 }

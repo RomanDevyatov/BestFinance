@@ -8,12 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemWithCheckboxBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.group.model.GroupItem
 
-class ArchivedGroupsAdapter :
-    RecyclerView.Adapter<ArchivedGroupsAdapter.GroupViewHolder>() {
+class ArchivedGroupsAdapter(
+    private val listener: OnSubGroupCheckedChangeListener? = null
+) : RecyclerView.Adapter<ArchivedGroupsAdapter.GroupViewHolder>() {
+
+    interface OnSubGroupCheckedChangeListener {
+        fun onSubgroupChecked(groupItem: GroupItem)
+    }
 
     private val differentCallback = object: DiffUtil.ItemCallback<GroupItem>() {
         override fun areItemsTheSame(oldItem: GroupItem, newItem: GroupItem): Boolean {
-            return oldItem.name == newItem.name
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: GroupItem, newItem: GroupItem): Boolean {
@@ -23,7 +28,8 @@ class ArchivedGroupsAdapter :
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun submitList(newList: List<GroupItem>) {
+
+    fun submitList(newList: MutableList<GroupItem>) {
         differ.submitList(newList)
     }
 
@@ -35,8 +41,8 @@ class ArchivedGroupsAdapter :
             binding.checkBox.isChecked = groupItem.isSelected
 
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-                // Update the isSelected flag when the CheckBox is clicked
                 groupItem.isSelected = isChecked
+                listener?.onSubgroupChecked(groupItem)
             }
         }
     }
@@ -54,7 +60,7 @@ class ArchivedGroupsAdapter :
 
     override fun getItemCount() = differ.currentList.size
 
-    fun getSelectedGroups(): List<GroupItem> {
-        return differ.currentList.filter { it.isSelected }
+    fun getSelectedGroups(): MutableList<GroupItem> {
+        return differ.currentList.filter { it.isSelected }.toMutableList()
     }
 }
