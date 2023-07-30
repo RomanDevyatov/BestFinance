@@ -22,18 +22,7 @@ class AddIncomeGroupViewModel @Inject constructor(
     val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
     fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val name = incomeGroup.name
-        val existingIncomeGroup = incomeGroupRepository.getIncomeGroupByName(name)
-        if (existingIncomeGroup == null) {
-            incomeGroupRepository.insertIncomeGroup(incomeGroup)
-        } else if (existingIncomeGroup.archivedDate != null) {
-            val incomeGroupWithIncomeSubGroups = incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(name)
-            incomeGroupRepository.unarchiveIncomeGroup(incomeGroupWithIncomeSubGroups.incomeGroup)
-
-            incomeGroupWithIncomeSubGroups.incomeSubGroups.forEach {
-                incomeSubGroupRepository.unarchiveIncomeSubGroup(it)
-            }
-        }
+        incomeGroupRepository.insertIncomeGroup(incomeGroup)
     }
 
     fun updateIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {

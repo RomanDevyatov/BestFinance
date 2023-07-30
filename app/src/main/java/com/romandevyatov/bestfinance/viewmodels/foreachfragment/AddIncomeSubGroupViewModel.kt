@@ -66,10 +66,6 @@ class AddIncomeSubGroupViewModel @Inject constructor(
 
 
 
-
-
-
-
     val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
     fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
