@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions
+package com.romandevyatov.bestfinance.ui.fragments.adds
 
 import org.junit.Assert
 import org.junit.Test

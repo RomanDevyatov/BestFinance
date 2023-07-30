@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.transfer
+package com.romandevyatov.bestfinance.ui.fragments.adds.transfer
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

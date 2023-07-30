@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/addExpenseHistoryFragment"
-    tools:context=".ui.fragments.addictions.expense.AddExpenseHistoryFragment" >
+    tools:context=".ui.fragments.adds.expense.AddExpenseHistoryFragment" >
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/groupSpinnerLayout"

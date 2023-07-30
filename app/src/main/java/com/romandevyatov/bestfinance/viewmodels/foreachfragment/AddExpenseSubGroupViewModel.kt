@@ -42,19 +42,7 @@ class AddExpenseSubGroupViewModel @Inject constructor(
         expenseSubGroupRepository.deleteAllExpenseSubGroups()
     }
 
-    // val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
-
-    //    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
-//        expenseSubGroupsLiveData.value?.forEach { it ->
-//            if (it.name == expenseSubGroupName) {
-//                return it
-//            }
-//        }
-//
-//        return null
-//    }
     val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
-
 
     fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> {
         return expenseSubGroupRepository.getExpenseSubGroupByNameNotArchivedLiveData(name)
@@ -77,6 +65,10 @@ class AddExpenseSubGroupViewModel @Inject constructor(
             archivedDate = null
         )
         updateExpenseSubGroup(expenseSubGroupUnarchived)
+    }
+
+    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup>? {
+        return expenseSubGroupRepository.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding, groupId)
     }
 
 

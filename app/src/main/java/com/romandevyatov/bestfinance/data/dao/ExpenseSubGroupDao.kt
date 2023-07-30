@@ -39,9 +39,15 @@ interface ExpenseSubGroupDao {
     fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup>
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
-    abstract fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup
+    fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :expenseGroupId LIMIT 1")
     fun getByNameAndGroupId(name: String, expenseGroupId: Long): ExpenseSubGroup
+
+    @Query("UPDATE expense_sub_group SET archived_date = NULL WHERE expense_group_id = :expenseGroupId")
+    fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?)
+
+    @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :groupId LIMIT 1")
+    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(name: String, groupId: Long?): LiveData<ExpenseSubGroup>?
 
 }

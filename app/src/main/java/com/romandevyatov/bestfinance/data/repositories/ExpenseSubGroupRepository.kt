@@ -53,4 +53,12 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     fun getExpenseSubGroupByNameAndExpenseGroupId(name: String, expenseGroupId: Long): ExpenseSubGroup = expenseSubGroupDao.getByNameAndGroupId(name, expenseGroupId)
 
+    fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?) {
+        return expenseSubGroupDao.unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId)
+    }
+
+    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup>? {
+        return expenseSubGroupDao.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding, groupId)
+    }
+
 }

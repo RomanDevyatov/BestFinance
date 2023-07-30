@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.wallet
+package com.romandevyatov.bestfinance.ui.fragments.adds.wallet
 
 import android.app.Dialog
 import android.content.Context

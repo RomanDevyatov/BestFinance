@@ -56,4 +56,12 @@ class IncomeSubGroupRepository @Inject constructor(
         return incomeSubGroupDao.getByNameAndIncomeGroupId(name, incomeGroupId)
     }
 
+    fun unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId: Long?) {
+        return incomeSubGroupDao.unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId)
+    }
+
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>? {
+        return incomeSubGroupDao.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
+    }
+
 }

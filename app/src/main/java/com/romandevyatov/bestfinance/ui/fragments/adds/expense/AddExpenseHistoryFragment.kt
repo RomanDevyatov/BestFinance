@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.income
+package com.romandevyatov.bestfinance.ui.fragments.adds.expense
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -17,10 +17,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
@@ -28,12 +28,12 @@ import com.romandevyatov.bestfinance.ui.adapters.spinnerutils.SpinnerAdapter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
-import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
+import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
+import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.viewmodels.*
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,12 +42,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class AddIncomeHistoryFragment : Fragment() {
+class AddExpenseHistoryFragment : Fragment() {
 
-    private var _binding: FragmentAddIncomeHistoryBinding? = null
+    private var _binding: FragmentAddExpenseHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private val addHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
+    private val addHistoryViewModel: AddExpenseHistoryViewModel by viewModels()
 
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
@@ -55,14 +55,14 @@ class AddIncomeHistoryFragment : Fragment() {
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
 
-    private val args: AddIncomeHistoryFragmentArgs by navArgs()
+    private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     private val archiveGroupListener =
         object : SpinnerAdapter.DeleteItemClickListener {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addHistoryViewModel.archiveIncomeGroup(name)
+                addHistoryViewModel.archiveExpenseGroup(name)
                 if (binding.groupSpinner.text.toString() == name) {
                     resetSubGroupSpinner()
                     binding.groupSpinner.text = null
@@ -76,10 +76,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val archiveSubGroupListener =
         object : SpinnerAdapter.DeleteItemClickListener {
-
             @RequiresApi(Build.VERSION_CODES.O)
             override fun archive(name: String) {
-                addHistoryViewModel.archiveIncomeSubGroup(name)
+                addHistoryViewModel.archiveExpenseSubGroup(name)
                 if (binding.subGroupSpinner.text.toString() == name) {
                     binding.subGroupSpinner.text = null
                     subGroupSpinnerValueGlobalBeforeAdd = null
@@ -111,7 +110,7 @@ class AddIncomeHistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
+        _binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -142,7 +141,7 @@ class AddIncomeHistoryFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -238,7 +237,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                 val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
-                addHistoryViewModel.addIncomeHistory(
+                addHistoryViewModel.addExpenseHistory(
                     subGroupNameBinding,
                     amountBinding.toDouble(),
                     commentBinding,
@@ -253,18 +252,18 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun navigateToHome() {
-        findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+        findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { groups ->
+        addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
             val groupSpinnerAdapter = SpinnerAdapter(
                 requireContext(),
                 R.layout.item_with_del,
                 spinnerGroupItems,
-                ADD_NEW_INCOME_GROUP,
+                ADD_NEW_EXPENSE_GROUP,
                 archiveGroupListener)
 
             binding.groupSpinner.setAdapter(groupSpinnerAdapter)
@@ -286,14 +285,14 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setSubGroupSpinnerAdapterByGroupName(groupSpinnerBinding: String) {
-        addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
+        addHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
             val spinnerSubItems =
                 getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
             val subGroupSpinnerAdapter =
-                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_INCOME_SUB_GROUP, archiveSubGroupListener)
+                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
 
             binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 
@@ -324,13 +323,13 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun getEmptySubGroupSpinnerAdapter(): SpinnerAdapter {
         val subGroupSpinnerItems = ArrayList<String>()
 
-        subGroupSpinnerItems.add(ADD_NEW_INCOME_SUB_GROUP)
+        subGroupSpinnerItems.add(ADD_NEW_EXPENSE_SUB_GROUP)
 
         return SpinnerAdapter(
             requireContext(),
             R.layout.item_with_del,
             subGroupSpinnerItems,
-            ADD_NEW_INCOME_GROUP,
+            ADD_NEW_EXPENSE_GROUP,
             archiveSubGroupListener
         )
     }
@@ -346,22 +345,22 @@ class AddIncomeHistoryFragment : Fragment() {
                 resetSubGroupSpinner()
             }
 
-            if (selectedGroupName == ADD_NEW_INCOME_GROUP) {
+            if (selectedGroupName == ADD_NEW_EXPENSE_GROUP) {
                 setPrevValue(groupSpinnerValueGlobalBeforeAdd, binding.groupSpinner)
 
                 saveAddTransactionForm()
 
                 val action =
-                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddIncomeGroup()
+                    AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddExpenseGroup()
                 findNavController().navigate(action)
             } else {
-                // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
-                addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
+                // TODO: getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData doesn't work
+                addHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
                     selectedGroupName
                 ).observe(viewLifecycleOwner) { groupWithSubGroups ->
                     val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
                     val subGroupSpinnerAdapter =
-                        SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_INCOME_SUB_GROUP, archiveSubGroupListener)
+                        SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
 
                     binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
                 }
@@ -381,13 +380,13 @@ class AddIncomeHistoryFragment : Fragment() {
 
             val selectedSubGroupName = binding.subGroupSpinner.text.toString()
 
-            if (selectedSubGroupName == ADD_NEW_INCOME_SUB_GROUP) {
+            if (selectedSubGroupName == ADD_NEW_EXPENSE_SUB_GROUP) {
                 setPrevValue(subGroupSpinnerValueGlobalBeforeAdd, binding.subGroupSpinner)
 
                 saveAddTransactionForm()
 
-                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
-                action.incomeGroupName = binding.groupSpinner.text.toString()
+                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddExpenseSubGroup()
+                action.expenseGroupName = binding.groupSpinner.text.toString()
                 findNavController().navigate(action)
             } else {
                 subGroupSpinnerValueGlobalBeforeAdd = selectedSubGroupName
@@ -406,8 +405,8 @@ class AddIncomeHistoryFragment : Fragment() {
 
                 saveAddTransactionForm()
 
-                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
-                action.source = ADD_INCOME_HISTORY_FRAGMENT
+                val action = AddExpenseHistoryFragmentDirections.actionNavigationAddExpenseToNavigationAddWallet()
+                action.source = ADD_EXPENSE_HISTORY_FRAGMENT
                 action.spinnerType = null
                 findNavController().navigate(action)
             } else {
@@ -417,7 +416,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setIfAvailableGroupSpinnersValue(groupSpinnerAdapter: SpinnerAdapter) {
-        val savedGroupName = args.incomeGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
+        val savedGroupName = args.expenseGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
 
         if (savedGroupName?.isNotBlank() == true) {
             resetSubGroupSpinner()
@@ -431,12 +430,15 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setIfAvailableSubGroupSpinnersValue(subGroupSpinnerAdapter: SpinnerAdapter) {
-        val savedSubGroupName = args.incomeSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
+        val savedSubGroupName = args.expenseSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
 
-        if (savedSubGroupName?.isNotBlank() == true && isNameInAdapter(subGroupSpinnerAdapter, savedSubGroupName)) {
-            subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
+        if (savedSubGroupName?.isNotBlank() == true) {
 
-            binding.subGroupSpinner.setText(savedSubGroupName, false)
+            if (isNameInAdapter(subGroupSpinnerAdapter, savedSubGroupName)) {
+                subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
+
+                binding.subGroupSpinner.setText(savedSubGroupName, false)
+            }
         }
     }
 
@@ -474,27 +476,27 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<IncomeGroup>?): ArrayList<String> {
+    private fun getGroupItemsForSpinner(groups: List<ExpenseGroup>?): ArrayList<String> {
         val spinnerItems = ArrayList<String>()
 
         groups?.forEach { it ->
             spinnerItems.add(it.name)
         }
-        spinnerItems.add(ADD_NEW_INCOME_GROUP)
+        spinnerItems.add(ADD_NEW_EXPENSE_GROUP)
 
         return spinnerItems
     }
 
-    private fun getSpinnerSubItemsNotArchived(groupWithSubGroups: IncomeGroupWithIncomeSubGroups?): ArrayList<String> {
+    private fun getSpinnerSubItemsNotArchived(groupWithSubGroups: ExpenseGroupWithExpenseSubGroups?): ArrayList<String> {
         val spinnerSubItems = ArrayList<String>()
 
-        groupWithSubGroups?.incomeSubGroups?.forEach {
+        groupWithSubGroups?.expenseSubGroups?.forEach {
             if (it.archivedDate == null) {
                 spinnerSubItems.add(it.name)
             }
         }
 
-        spinnerSubItems.add(ADD_NEW_INCOME_SUB_GROUP)
+        spinnerSubItems.add(ADD_NEW_EXPENSE_SUB_GROUP)
 
         return spinnerSubItems
     }
@@ -523,18 +525,10 @@ class AddIncomeHistoryFragment : Fragment() {
         val timeBinding = binding.timeEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        var isSend = true
-        if (amountBinding.isNotBlank()) {
-            val amountBindingValidation = IsDigitValidator(amountBinding).validate()
-            binding.amountLayout.error =
-                if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
+        val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
+        binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
 
-            if (!amountBindingValidation.isSuccess) {
-                isSend = false
-            }
-        }
-
-        if (isSend) {
+        if (amountBindingValidation.isSuccess) {
             val addTransactionForm = AddTransactionForm(
                 groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
                 subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,

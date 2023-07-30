@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.addhistory
+package com.romandevyatov.bestfinance.ui.fragments.adds.history
 
 import android.os.Bundle
 import android.util.Log

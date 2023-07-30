@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.income
+package com.romandevyatov.bestfinance.ui.fragments.adds.income
 
 import android.app.Dialog
 import android.content.Context
@@ -87,9 +87,9 @@ class AddIncomeSubGroupFragment : Fragment() {
                 ).observe(viewLifecycleOwner) {
                     val groupId = it.id!!
 
-                    addSubGroupViewModel.getIncomeSubGroupByNameLiveData(
-                        subGroupNameBinding
-                    ).observe(viewLifecycleOwner) { subGroup ->
+                    addSubGroupViewModel.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(
+                        subGroupNameBinding, groupId
+                    )?.observe(viewLifecycleOwner) { subGroup ->
                         if (subGroup == null) {
                             val newIncomeSubGroup = IncomeSubGroup(
                                 name = subGroupNameBinding,

@@ -60,6 +60,10 @@ class AddIncomeSubGroupViewModel @Inject constructor(
         return incomeSubGroupRepository.getIncomeSubGroupByNameLiveData(name)
     }
 
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>? {
+        return incomeSubGroupRepository.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
+    }
+
 
 
 

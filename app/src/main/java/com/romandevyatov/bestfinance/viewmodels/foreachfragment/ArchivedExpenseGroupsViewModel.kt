@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
+import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArchivedExpenseGroupsViewModel @Inject constructor(
-    private val expenseGroupRepository: ExpenseGroupRepository
+    private val expenseGroupRepository: ExpenseGroupRepository,
+    private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
     fun getExpenseGroupsArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>? {
@@ -32,6 +35,11 @@ class ArchivedExpenseGroupsViewModel @Inject constructor(
             description = expenseGroup.description,
             archivedDate = null
         )
+        unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupNotArchived.id)
         updateExpenseGroup(expenseGroupNotArchived)
+    }
+
+    fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?) = viewModelScope.launch (Dispatchers.IO) {
+        expenseSubGroupRepository.unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId)
     }
 }

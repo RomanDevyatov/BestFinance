@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.addictions.expense
+package com.romandevyatov.bestfinance.ui.fragments.adds.expense
 
 import android.app.Dialog
 import android.content.Context
@@ -67,9 +67,9 @@ class AddExpenseSubGroupFragment : Fragment() {
                 ).observe(viewLifecycleOwner) {
                     val groupId = it.id!!
 
-                    addSubGroupViewModel.getExpenseSubGroupByNameLiveData(
-                        subGroupNameBinding
-                    ).observe(viewLifecycleOwner) { subGroup ->
+                    addSubGroupViewModel.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(
+                        subGroupNameBinding, groupId
+                    )?.observe(viewLifecycleOwner) { subGroup ->
 
                         if (subGroup == null) {
                             val newExpenseSubGroup = ExpenseSubGroup(
