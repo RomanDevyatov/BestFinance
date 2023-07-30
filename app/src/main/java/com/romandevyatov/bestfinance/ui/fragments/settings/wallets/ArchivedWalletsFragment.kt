@@ -38,7 +38,7 @@ class ArchivedWalletsFragment : Fragment() {
         initRecyclerView()
 
         archivedWalletsViewModel.allWalletsArchivedLiveData?.observe(viewLifecycleOwner) { allWalletsArchived ->
-            archivedWalletsAdapter.submitList(allWalletsArchived.map { GroupItem(it.name) }.toList())
+            archivedWalletsAdapter.submitList(allWalletsArchived.map { GroupItem(it.id, it.name) }.toList())
         }
 
         binding.unarchiveButton.setOnClickListener {

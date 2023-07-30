@@ -25,15 +25,31 @@ interface IncomeGroupDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM income_group WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long?)
 
     @Transaction
     @Query("SELECT * FROM income_group")
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
+    /*
+    Not Archived
+     */
+    @Query("SELECT * FROM income_group WHERE name = :selectedIncomeGroupName AND archived_date IS NULL")
+    fun getByNameNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup>
+
+    @Query("SELECT * FROM income_group WHERE archived_date IS NULL ORDER BY id ASC")
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeGroup>>
+
+    @Query("SELECT * FROM income_group WHERE id = :groupId AND archived_date IS NULL")
+    fun getByIdNotArchived(groupId: Long): IncomeGroup
+
     @Transaction
-    @Query("SELECT * FROM income_group WHERE archived_date IS NULL LIMIT 1")
-    fun getAllIncomeGroupNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
+    @Query("SELECT * FROM income_group WHERE name = :name AND archived_date IS NULL")
+    fun getByNameNotArchivedWithIncomeSubGroups(name: String): IncomeGroupWithIncomeSubGroups
+
+    @Transaction
+    @Query("SELECT * FROM income_group WHERE archived_date IS NULL")
+    fun getAllNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>>
 
     @Transaction
     @Query("SELECT " +
@@ -48,28 +64,15 @@ interface IncomeGroupDao {
             "LIMIT 1")
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
 
-    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName LIMIT 1")
-    fun getByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>?
+    @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
+    fun getByNameLiveData(name: String): LiveData<IncomeGroup>?
 
     @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
     fun getByName(name: String): IncomeGroup
 
-    @Query("SELECT * FROM income_group WHERE name = :selectedIncomeGroupName AND archived_date IS NULL")
-    fun getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup>
-
-    @Query("SELECT * FROM income_group WHERE archived_date IS NULL ORDER BY id ASC")
-    fun getAllNotArchivedLiveData(): LiveData<List<IncomeGroup>>
-
     @Transaction
-    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName AND archived_date IS NULL")
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName: String): IncomeGroupWithIncomeSubGroups
-
-    @Query("SELECT * FROM income_group WHERE id = :incomeGroupId AND archived_date IS NULL")
-    fun getByIdNotArchived(incomeGroupId: Long): IncomeGroup
-
-    @Transaction
-    @Query("SELECT * FROM income_group WHERE name = :incomeGroupName")
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String): IncomeGroupWithIncomeSubGroups
+    @Query("SELECT * FROM income_group WHERE name = :name")
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(name: String): IncomeGroupWithIncomeSubGroups
 
     @Query("SELECT * FROM income_group WHERE archived_date IS NOT NULL")
     fun getAllIncomeGroupArchivedLiveData(): LiveData<List<IncomeGroup>>
@@ -96,11 +99,11 @@ interface IncomeGroupDao {
             "INNER JOIN income_sub_group isg " +
             "ON ig.id = isg.income_group_id " +
             "WHERE isg.archived_date IS NOT NULL")
-    fun allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
+    fun getAllNotArchivedWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
 
     @Transaction
     @Query("SELECT * FROM income_group")
-    fun getAllIncomeGroupsWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
+    fun getAllWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
 
 
 }

@@ -34,23 +34,28 @@ interface WalletDao {
     @Query("DELETE FROM wallet WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("SELECT * FROM wallet WHERE name = :name LIMIT 1")
+    fun getByNameLiveData(name: String): LiveData<Wallet>?
+
+    /*
+    Not Archived
+     */
     @Query("SELECT * FROM wallet WHERE archived_date IS NULL")
     fun getAllNotArchivedLiveData(): LiveData<List<Wallet>>
 
-    @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
-    fun getWalletByNameAndNotArchivedLiveData(walletName: String): LiveData<Wallet>
+    @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
+    fun getByNameNotArchivedLiveData(name: String): LiveData<Wallet>
 
-    @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NULL LIMIT 1")
-    fun getWalletByNameAndNotArchived(walletName: String): Wallet
+    @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
+    fun getByNameNotArchived(name: String): Wallet
 
-    @Query("SELECT * FROM wallet WHERE name = :walletName LIMIT 1")
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>?
-
-    @Query("SELECT * FROM wallet WHERE name = :walletName AND archived_date IS NOT NULL LIMIT 1")
-    fun getWalletArchivedByNameLiveData(walletName: String): LiveData<Wallet>?
-
+    /*
+    Archived
+     */
     @Query("SELECT * FROM wallet WHERE archived_date IS NOT NULL")
     fun getAllArchivedLiveData(): LiveData<List<Wallet>>?
 
+    @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
+    fun getByNameArchivedLiveData(name: String): LiveData<Wallet>?
 
 }

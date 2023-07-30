@@ -27,6 +27,6 @@ interface TransferHistoryDao {
 
     @Transaction
     @Query("SELECT * FROM transfer_history")
-    fun getAllTransferHistoryWithTransferGroupAndWallet(): LiveData<List<TransferHistory>>
+    fun getAllWithTransferGroupAndWallet(): LiveData<List<TransferHistory>>
     
 }

@@ -21,7 +21,7 @@ class ArchivedIncomeSubGroupsFragment : Fragment() {
     private var _binding: FragmentArchivedIncomeSubGroupsBinding? = null
     private val binding get() = _binding!!
 
-    private val archivedIncomeGroupsViewModel: ArchivedIncomeSubGroupsViewModel by viewModels()
+    private val archivedIncomeSubGroupsViewModel: ArchivedIncomeSubGroupsViewModel by viewModels()
 
     val selectedSubgroups: MutableList<SubGroup> = mutableListOf()
 
@@ -41,7 +41,7 @@ class ArchivedIncomeSubGroupsFragment : Fragment() {
             }
         }
 
-        archivedIncomeGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+        archivedIncomeSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             if (allGroupsWithSubGroups != null) {
                 val groups: MutableList<GroupWithSubGroups> = mutableListOf()
 
@@ -69,15 +69,21 @@ class ArchivedIncomeSubGroupsFragment : Fragment() {
         }
 
         binding.deleteButton.setOnClickListener {
-            processSelectedSubgroups(selectedSubgroups)
+            deleteSelectedSubgroups(selectedSubgroups)
         }
 
         return binding.root
     }
 
+    private fun deleteSelectedSubgroups(selectedSubgroups: MutableList<SubGroup>) {
+        selectedSubgroups.forEach { subGroup ->
+            archivedIncomeSubGroupsViewModel.deleteIncomeSubGroupById(subGroup.id)
+        }
+    }
+
     private fun processSelectedSubgroups(selectedSubgroups: List<SubGroup>) {
         selectedSubgroups.forEach { subGroup ->
-            archivedIncomeGroupsViewModel.unarchiveIncomeSubGroupById(subGroup.id)
+            archivedIncomeSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroup.id)
         }
     }
 }

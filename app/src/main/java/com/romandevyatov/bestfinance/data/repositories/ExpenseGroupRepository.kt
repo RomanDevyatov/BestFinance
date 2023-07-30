@@ -17,10 +17,10 @@ class ExpenseGroupRepository @Inject constructor(
     fun getAllExpenseGroupsLiveData(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllExpenseGroupsLiveData()
 
     fun getAllExpenseGroupWithExpenseSubGroupLiveData() : LiveData<List<ExpenseGroupWithExpenseSubGroups>> {
-        return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsLiveData()
+        return expenseGroupDao.getAllWithExpenseSubGroupsLiveData()
     }
 
-    fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllExpenseGroupsNotArchivedLiveData()
+    fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseGroup>> = expenseGroupDao.getAllNotArchivedLiveData()
 
     suspend fun insertExpenseGroup(expenseGroup: ExpenseGroup) {
         expenseGroupDao.insert(expenseGroup)
@@ -34,7 +34,7 @@ class ExpenseGroupRepository @Inject constructor(
         expenseGroupDao.update(expenseGroup)
     }
 
-    suspend fun deleteExpenseGroupById(id: Int) = expenseGroupDao.deleteById(id)
+    suspend fun deleteExpenseGroupById(id: Long?) = expenseGroupDao.deleteById(id)
 
     suspend fun deleteAllExpenseGroups() = expenseGroupDao.deleteAll()
 
@@ -51,7 +51,7 @@ class ExpenseGroupRepository @Inject constructor(
     }
 
     fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
-        return expenseGroupDao.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
+        return expenseGroupDao.getByNameNotArchivedLiveData(selectedExpenseGroupName)
     }
 
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name: String): ExpenseGroupWithExpenseSubGroups {

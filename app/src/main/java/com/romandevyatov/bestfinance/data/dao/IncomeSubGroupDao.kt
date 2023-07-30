@@ -5,7 +5,6 @@ import androidx.room.*
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import java.time.LocalDateTime
 
-
 @Dao
 interface IncomeSubGroupDao {
 
@@ -25,10 +24,25 @@ interface IncomeSubGroupDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM income_sub_group WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
     fun getByName(name: String): IncomeSubGroup
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name")
+    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :groupId")
+    fun getByNameAndGroupId(name: String, groupId: Long): IncomeSubGroup
+
+    @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :groupId")
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, groupId: Long?): LiveData<IncomeSubGroup>?
+
+    /*
+    Not Archived
+     */
+    @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
     fun getByNameNotArchived(name: String?): IncomeSubGroup
@@ -36,25 +50,16 @@ interface IncomeSubGroupDao {
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
     fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>
 
-    @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
-
+    /*
+    Archived
+     */
     @Query("SELECT * FROM income_sub_group WHERE archived_date = :archivedDate")
-    fun getAllWithArchivedDateLiveData(archivedDate: LocalDateTime?): LiveData<List<IncomeSubGroup>>
-
-    @Query("SELECT * FROM income_sub_group WHERE archived_date IS NULL")
-    fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
-
-    @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :incomeGroupId")
-    fun getByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup
+    fun getAllByArchivedDateLiveData(archivedDate: LocalDateTime?): LiveData<List<IncomeSubGroup>>
 
     @Query("UPDATE income_sub_group SET archived_date = NULL WHERE income_group_id = :incomeGroupId")
     suspend fun unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId: Long?)
 
     @Query("UPDATE income_sub_group SET archived_date = NULL WHERE id = :id")
     suspend fun unarchiveIncomeSubGroupById(id: Long?)
-
-    @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :incomeGroupId")
-    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>?
 
 }

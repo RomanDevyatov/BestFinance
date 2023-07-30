@@ -31,7 +31,7 @@ class IncomeGroupRepository @Inject constructor(
         incomeGroupDao.update(incomeGroup)
     }
 
-    suspend fun deleteIncomeGroupById(id: Int) = incomeGroupDao.deleteById(id)
+    suspend fun deleteIncomeGroupById(id: Long?) = incomeGroupDao.deleteById(id)
 
     suspend fun deleteAllIncomeGroups() = incomeGroupDao.deleteAll()
 
@@ -40,7 +40,7 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> {
-        return incomeGroupDao.getAllIncomeGroupNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData()
+        return incomeGroupDao.getAllNotArchivedWithIncomeSubGroupsIncludingIncomeHistoriesLiveData()
     }
 
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups> {
@@ -52,7 +52,7 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getIncomeGroupNotArchivedByNameLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupDao.getIncomeGroupByNameAndNotArchivedLiveData(selectedIncomeGroupName)
+        return incomeGroupDao.getByNameNotArchivedLiveData(selectedIncomeGroupName)
     }
 
     fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
@@ -60,7 +60,7 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName)
+        return incomeGroupDao.getByNameNotArchivedWithIncomeSubGroups(incomeGroupName)
     }
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
@@ -95,11 +95,11 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun getAllIncomeGroupsWhereIncomeSubGroupsArchivedLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>? {
-        return incomeGroupDao.allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData()
+        return incomeGroupDao.getAllNotArchivedWithIncomeSubGroupsLiveData()
     }
 
     fun getAllIncomeGroupsWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>? {
-        return incomeGroupDao.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
+        return incomeGroupDao.getAllWithIncomeSubGroupsLiveData()
     }
 
 

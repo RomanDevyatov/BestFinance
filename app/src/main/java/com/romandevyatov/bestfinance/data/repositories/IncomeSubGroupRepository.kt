@@ -27,7 +27,7 @@ class IncomeSubGroupRepository @Inject constructor(
         incomeSubGroupDao.update(incomeGroup)
     }
 
-    suspend fun deleteIncomeSubGroupById(id: Int) = incomeSubGroupDao.deleteById(id)
+    suspend fun deleteIncomeSubGroupById(id: Long?) = incomeSubGroupDao.deleteById(id)
 
     suspend fun deleteAllIncomeSubGroups() = incomeSubGroupDao.deleteAll()
 
@@ -53,7 +53,7 @@ class IncomeSubGroupRepository @Inject constructor(
     }
 
     fun getIncomeSubGroupByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup {
-        return incomeSubGroupDao.getByNameAndIncomeGroupId(name, incomeGroupId)
+        return incomeSubGroupDao.getByNameAndGroupId(name, incomeGroupId)
     }
 
     suspend fun unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId: Long?) {

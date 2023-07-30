@@ -12,8 +12,8 @@ class IncomeHistoryRepository @Inject constructor(
     private val incomeHistoryDao: IncomeHistoryDao
 ) {
 
-    fun getAllIncomeHistoryWithIncomeGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> {
-        return incomeHistoryDao.getAllIncomeHistoryWithIncomeGroupAndWallet()
+    fun getAllIncomeHistoryWithIncomeSubGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> {
+        return incomeHistoryDao.getAllWithIncomeSubGroupAndWallet()
     }
 
     fun getAllIncomeHistory(): LiveData<List<IncomeHistory>> {

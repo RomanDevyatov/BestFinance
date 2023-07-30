@@ -28,6 +28,6 @@ interface ExpenseHistoryDao {
 
     @Transaction
     @Query("SELECT * FROM expense_history")
-    fun getAllExpenseHistoryWithExpenseGroupAndWalletLiveData(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>>
+    fun getAllWithExpenseGroupAndWalletLiveData(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>>
 
 }

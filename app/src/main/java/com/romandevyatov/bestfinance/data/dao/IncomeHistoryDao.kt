@@ -29,6 +29,6 @@ interface IncomeHistoryDao {
 
     @Transaction
     @Query("SELECT * FROM income_history")
-    fun getAllIncomeHistoryWithIncomeGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>>
+    fun getAllWithIncomeSubGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>>
 
 }

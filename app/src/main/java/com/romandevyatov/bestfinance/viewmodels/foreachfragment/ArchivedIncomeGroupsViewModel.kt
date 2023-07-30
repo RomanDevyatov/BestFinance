@@ -48,6 +48,10 @@ class ArchivedIncomeGroupsViewModel @Inject constructor(
         incomeSubGroupRepository.unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId)
     }
 
+    fun deleteIncomeGroupByName(id: Long?) = viewModelScope.launch (Dispatchers.IO) {
+        incomeGroupRepository.deleteIncomeGroupById(id)
+    }
+
     val allIncomeGroupsArchivedWithIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData()
 
     val allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getAllIncomeGroupsWhereIncomeSubGroupsArchivedLiveData()

@@ -38,7 +38,7 @@ class ArchivedIncomeGroupsFragment : Fragment() {
         initRecyclerView()
 
         archivedIncomeGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
-            archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.name) }.toList())
+            archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.id, it.name) }.toList())
         }
 
         binding.unarchiveButton.setOnClickListener {
@@ -60,28 +60,22 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     private fun unarchiveSelectedGroups() {
         val selectedItems = archivedGroupsAdapter.getSelectedGroups()
 
-        selectedItems.forEach { selectedItem ->
-            archivedIncomeGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { group ->
+        selectedItems.forEach { groupItem ->
+            archivedIncomeGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(groupItem.name)?.observe(viewLifecycleOwner) { group ->
                 if (group != null) {
                     val isIncludeSubGroups = binding.checkBox.isChecked
                     archivedIncomeGroupsViewModel.unarchiveIncomeGroup(group, isIncludeSubGroups)
                 }
             }
         }
-
-        // Process the selected items here
-        // For example, you can show a Toast with the selected items' texts
-        val selectedTexts = selectedItems.joinToString(", ") { it.name }
-        val toastText = "Selected elements: $selectedTexts"
-        Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()
     }
 
     private fun deleteSelectedGroups() {
-        val selectedGroups = archivedGroupsAdapter.getSelectedGroups()
-        // Perform the desired action with the selected groups
-        // For example, you can show a toast with the selected groups' names
-        val selectedGroupNames = selectedGroups.joinToString(", ") { it.name }
-        Toast.makeText(requireContext(), "Selected Groups: $selectedGroupNames", Toast.LENGTH_SHORT).show()
+        val selectedItems = archivedGroupsAdapter.getSelectedGroups()
+
+        selectedItems.forEach { groupItem ->
+            archivedIncomeGroupsViewModel.deleteIncomeGroupByName(groupItem.id)
+        }
     }
 
 }

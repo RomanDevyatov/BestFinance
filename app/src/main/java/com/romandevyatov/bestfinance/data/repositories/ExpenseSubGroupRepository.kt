@@ -15,7 +15,6 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     fun getAllExpenseGroupsNotArchivedLiveData(): LiveData<List<ExpenseSubGroup>> = expenseSubGroupDao.getAllNotArchivedLiveData()
 
-
     suspend fun insertExpenseSubGroup(expenseGroup: ExpenseSubGroup) {
         expenseSubGroupDao.insert(expenseGroup)
     }
@@ -28,7 +27,7 @@ class ExpenseSubGroupRepository @Inject constructor(
         expenseSubGroupDao.update(expenseGroup)
     }
 
-    suspend fun deleteExpenseSubGroupById(id: Int) = expenseSubGroupDao.deleteById(id)
+    suspend fun deleteExpenseSubGroupById(id: Long?) = expenseSubGroupDao.deleteById(id)
 
     suspend fun deleteAllExpenseSubGroups() = expenseSubGroupDao.deleteAll()
 
@@ -38,7 +37,7 @@ class ExpenseSubGroupRepository @Inject constructor(
 
     fun getExpenseSubGroupByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup> = expenseSubGroupDao.getByNameNotArchivedLiveData(name)
 
-    fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup = expenseSubGroupDao.getExpenseSubGroupByNameNotArchived(name)
+    fun getExpenseSubGroupByNameNotArchived(name: String): ExpenseSubGroup = expenseSubGroupDao.getByNameNotArchived(name)
 
     suspend fun unarchiveExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) {
         val expenseSubGroupNotArchived = ExpenseSubGroup(
@@ -54,15 +53,15 @@ class ExpenseSubGroupRepository @Inject constructor(
     fun getExpenseSubGroupByNameAndExpenseGroupId(name: String, expenseGroupId: Long): ExpenseSubGroup = expenseSubGroupDao.getByNameAndGroupId(name, expenseGroupId)
 
     fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?) {
-        return expenseSubGroupDao.unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId)
+        return expenseSubGroupDao.unarchiveByGroupId(expenseGroupId)
     }
 
     fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup>? {
-        return expenseSubGroupDao.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding, groupId)
+        return expenseSubGroupDao.getByNameAndGroupIdLiveData(subGroupNameBinding, groupId)
     }
 
     suspend fun unarchiveExpenseSubGroupById(id: Long?) {
-        return expenseSubGroupDao.unarchiveExpenseSubGroupById(id)
+        return expenseSubGroupDao.unarchiveById(id)
     }
 
 }

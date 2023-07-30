@@ -75,10 +75,16 @@ class ArchivedExpenseSubGroupsFragment : Fragment() {
         }
 
         binding.deleteButton.setOnClickListener {
-            processSelectedSubgroups(selectedSubgroups)
+            deleteSelectedSubgroups(selectedSubgroups)
         }
 
         return binding.root
+    }
+
+    private fun deleteSelectedSubgroups(selectedSubgroups: List<SubGroup>) {
+        selectedSubgroups.forEach { subGroup ->
+            archivedExpenseGroupsViewModel.deleteExpenseSubGroupById(subGroup.id)
+        }
     }
 
     private fun processSelectedSubgroups(selectedSubgroups: List<SubGroup>) {

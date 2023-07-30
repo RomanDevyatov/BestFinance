@@ -44,7 +44,7 @@ class AddExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.deleteExpenseGroup(expenseGroup)
     }
 
-    fun deleteExpenseGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteExpenseGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.deleteExpenseGroupById(id)
     }
 

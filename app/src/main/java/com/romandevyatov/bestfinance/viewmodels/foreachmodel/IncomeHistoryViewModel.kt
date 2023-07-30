@@ -30,6 +30,6 @@ class IncomeHistoryViewModel @Inject constructor(
         incomeHistoryRepository.deleteIncomeHistory(incomeHistory)
     }
 
-    val allIncomeHistoryWithIncomeGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeGroupAndWallet()
+    val allIncomeHistoryWithIncomeSubGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeSubGroupAndWallet()
 
 }

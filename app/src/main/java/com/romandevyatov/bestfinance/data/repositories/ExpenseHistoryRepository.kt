@@ -14,7 +14,7 @@ class ExpenseHistoryRepository @Inject constructor(
 ) {
 
     fun getAllExpenseHistoryWithExpenseGroupAndWallet(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> {
-        return expenseHistoryDao.getAllExpenseHistoryWithExpenseGroupAndWalletLiveData()
+        return expenseHistoryDao.getAllWithExpenseGroupAndWalletLiveData()
     }
 
     fun getAllExpenseHistory(): LiveData<List<ExpenseHistory>> {

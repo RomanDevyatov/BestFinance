@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
-import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,18 +27,24 @@ class ArchivedExpenseGroupsViewModel @Inject constructor(
         expenseGroupRepository.updateExpenseGroup(expenseGroup)
     }
 
-    fun unarchiveExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
+    fun unarchiveExpenseGroup(expenseGroup: ExpenseGroup, isIncludeSubGroups: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         val expenseGroupNotArchived = ExpenseGroup(
             id = expenseGroup.id,
             name = expenseGroup.name,
             description = expenseGroup.description,
             archivedDate = null
         )
-        unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupNotArchived.id)
+        if (isIncludeSubGroups) {
+            unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupNotArchived.id)
+        }
         updateExpenseGroup(expenseGroupNotArchived)
     }
 
     fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?) = viewModelScope.launch (Dispatchers.IO) {
         expenseSubGroupRepository.unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId)
+    }
+
+    fun deleteExpenseGroupByName(id: Long?) = viewModelScope.launch (Dispatchers.IO) {
+        expenseGroupRepository.deleteExpenseGroupById(id)
     }
 }
