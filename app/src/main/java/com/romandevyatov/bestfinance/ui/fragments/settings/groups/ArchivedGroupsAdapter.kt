@@ -1,16 +1,10 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings
+package com.romandevyatov.bestfinance.ui.fragments.settings.groups
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.databinding.ItemWithCheckboxBinding
 
 class ArchivedGroupsAdapter :

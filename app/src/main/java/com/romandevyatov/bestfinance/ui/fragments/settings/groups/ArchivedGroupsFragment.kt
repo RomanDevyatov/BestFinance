@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings
+package com.romandevyatov.bestfinance.ui.fragments.settings.groups
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.databinding.FragmentArchivedGroupBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.HistoryViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

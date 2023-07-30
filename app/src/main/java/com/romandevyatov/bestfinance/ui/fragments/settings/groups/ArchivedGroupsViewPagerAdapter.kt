@@ -1,10 +1,7 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings
+package com.romandevyatov.bestfinance.ui.fragments.settings.groups
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.romandevyatov.bestfinance.ui.fragments.history.ExpenseHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.history.IncomeHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.history.TransferHistoryFragment
 
 class ArchivedGroupsViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {

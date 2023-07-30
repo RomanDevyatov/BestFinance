@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings
+package com.romandevyatov.bestfinance.ui.fragments.settings.wallets
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,25 +8,27 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.romandevyatov.bestfinance.databinding.FragmentArchivedIncomeGroupsBinding
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchivedIncomeGroupsViewModel
+import com.romandevyatov.bestfinance.databinding.FragmentArchivedWalletsBinding
+import com.romandevyatov.bestfinance.ui.fragments.settings.groups.ArchivedGroupsAdapter
+import com.romandevyatov.bestfinance.ui.fragments.settings.groups.GroupItem
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ArchivedWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ArchivedIncomeGroupsFragment : Fragment() {
+class ArchivedWalletsFragment : Fragment() {
 
-    private var _binding: FragmentArchivedIncomeGroupsBinding? = null
+    private var _binding: FragmentArchivedWalletsBinding? = null
     private val binding get() = _binding!!
 
-    private val archivedIncomeGroupsViewModel: ArchivedIncomeGroupsViewModel by viewModels()
+    private val archivedWalletsViewModel: ArchivedWalletsViewModel by viewModels()
 
-    private val archivedGroupsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
+    private val archivedWalletsAdapter: ArchivedGroupsAdapter = ArchivedGroupsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentArchivedIncomeGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentArchivedWalletsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -35,8 +37,8 @@ class ArchivedIncomeGroupsFragment : Fragment() {
 
         initRecyclerView()
 
-        archivedIncomeGroupsViewModel.allIncomeGroupsArchivedLiveData.observe(viewLifecycleOwner) { allIncomeGroupsArchived ->
-            archivedGroupsAdapter.submitList(allIncomeGroupsArchived.map { GroupItem(it.name)}.toList())
+        archivedWalletsViewModel.allWalletsArchivedLiveData?.observe(viewLifecycleOwner) { allWalletsArchived ->
+            archivedWalletsAdapter.submitList(allWalletsArchived.map { GroupItem(it.name) }.toList())
         }
 
         binding.unarchiveButton.setOnClickListener {
@@ -49,19 +51,19 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        binding.recyclerView.apply {
+        binding.walletRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = archivedGroupsAdapter
+            adapter = archivedWalletsAdapter
         }
     }
 
     private fun unarchiveSelectedGroups() {
-        val selectedItems = archivedGroupsAdapter.getSelectedGroups()
+        val selectedItems = archivedWalletsAdapter.getSelectedGroups()
 
         selectedItems.forEach { selectedItem ->
-            archivedIncomeGroupsViewModel.getIncomeGroupsArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { group ->
-                if (group != null) {
-                    archivedIncomeGroupsViewModel.unarchiveIncomeGroup(group)
+            archivedWalletsViewModel.getWalletArchivedByNameLiveData(selectedItem.name)?.observe(viewLifecycleOwner) { wallet ->
+                if (wallet != null) {
+                    archivedWalletsViewModel.unarchiveWallet(wallet)
                 }
             }
         }
@@ -74,22 +76,11 @@ class ArchivedIncomeGroupsFragment : Fragment() {
     }
 
     private fun deleteSelectedGroups() {
-        val selectedGroups = archivedGroupsAdapter.getSelectedGroups()
+        val selectedGroups = archivedWalletsAdapter.getSelectedGroups()
         // Perform the desired action with the selected groups
         // For example, you can show a toast with the selected groups' names
         val selectedGroupNames = selectedGroups.joinToString(", ") { it.name }
         Toast.makeText(requireContext(), "Selected Groups: $selectedGroupNames", Toast.LENGTH_SHORT).show()
     }
-
-    private fun createGroupData(): List<GroupItem> {
-        // Replace this with your actual list of groups or fetch it from your data source
-        return listOf(
-            GroupItem("Group 1"),
-            GroupItem("Group 2"),
-            GroupItem("Group 3"),
-            // Add more groups here as needed
-        )
-    }
-
 
 }

@@ -14,6 +14,8 @@ class WalletRepository @Inject constructor(
 
     fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAllLiveData()
 
+    fun getAllWalletsArchivedLiveData(): LiveData<List<Wallet>>? = walletDao.getAllArchivedLiveData()
+
     fun getAllWalletsNotArchivedLiveData(): LiveData<List<Wallet>> = walletDao.getAllNotArchivedLiveData()
 
     suspend fun insertWallet(wallet: Wallet) {
@@ -43,5 +45,14 @@ class WalletRepository @Inject constructor(
     fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
         return walletDao.getWalletByNameLiveData(walletName)
     }
+
+    fun getWalletArchivedByNameLiveData(walletName: String): LiveData<Wallet>? {
+        return walletDao.getWalletArchivedByNameLiveData(walletName)
+    }
+
+
+
+
+
 
 }
