@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.adds.income
+package com.romandevyatov.bestfinance.ui.fragments.add.income
 
 import android.app.Dialog
 import android.content.Context

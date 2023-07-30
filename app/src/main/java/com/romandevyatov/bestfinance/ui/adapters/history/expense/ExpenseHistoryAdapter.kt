@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.history
+package com.romandevyatov.bestfinance.ui.adapters.history.expense
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
-import com.romandevyatov.bestfinance.ui.adapters.viewholders.ExpenseHistoryItemViewHolder
 
 class ExpenseHistoryAdapter(private val expenseGroupMap: Map<Long?, ExpenseGroup>) : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>() {
 

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.history
+package com.romandevyatov.bestfinance.ui.adapters.history.transfer
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -7,11 +7,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
+import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
 
-class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.TransferItemViewHolder>() {
+class TransferHistoryAdapter : RecyclerView.Adapter<TransferItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<TransferHistory>() {
 
@@ -25,22 +24,6 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferHistoryAdapter.Trans
     }
 
     val transferDiffer = AsyncListDiffer(this, differentCallback)
-
-    inner class TransferItemViewHolder(
-        private val binding: CardHistoryTransferBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(transferHistory: TransferHistory) {
-            binding.fromNameTextView.text = transferHistory.fromWalletId.toString()
-
-            binding.toNameTextView.text = transferHistory.toWalletId.toString()
-
-            binding.balanceTextView.text = transferHistory.amount.toString()
-
-            binding.dateIncomeTextView.text = transferHistory.createdDate?.format(dateTimeFormatter)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferItemViewHolder {
         val from = LayoutInflater.from(parent.context)

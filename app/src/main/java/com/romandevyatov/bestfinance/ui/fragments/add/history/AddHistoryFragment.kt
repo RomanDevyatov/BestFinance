@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.adds.history
+package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +21,6 @@ abstract class AddHistoryFragment <VB : ViewBinding, VM : ViewModel>(
     // Only valid between onCreateView and onDestroyView
     protected val binding get() = _binding!!
 
-    open var useSharedViewModel: Boolean = false
     protected lateinit var addHistoryViewModel: VM
 
     // Make it open, so it can be overridden in child fragments

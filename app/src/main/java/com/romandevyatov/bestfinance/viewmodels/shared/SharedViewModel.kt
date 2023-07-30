@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
-
 class SharedViewModel<T> @Inject constructor(): ViewModel() {
 
     private val _modelForm = MutableLiveData<T?>()

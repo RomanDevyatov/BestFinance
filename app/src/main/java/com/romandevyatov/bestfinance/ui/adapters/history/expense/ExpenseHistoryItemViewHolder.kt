@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.viewholders
+package com.romandevyatov.bestfinance.ui.adapters.history.expense
 
 import android.os.Build
 import androidx.annotation.RequiresApi

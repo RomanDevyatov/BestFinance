@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.spinnerutils
+package com.romandevyatov.bestfinance.ui.adapters.spinner
 
 import android.content.Context
 import android.view.LayoutInflater
