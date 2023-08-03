@@ -105,5 +105,14 @@ interface IncomeGroupDao {
     @Query("SELECT * FROM income_group")
     fun getAllWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
 
+    @Query("SELECT * FROM income_group WHERE id = :id")
+    fun getById(id: Long): IncomeGroup
+
+    @Query("SELECT * FROM income_group WHERE id = :id")
+    fun getByIdLiveData(id: Long?): LiveData<IncomeGroup>?
+
+    @Query("UPDATE income_group SET archived_date = NULL WHERE id = :id")
+    fun unarchiveById(id: Long?)
+
 
 }

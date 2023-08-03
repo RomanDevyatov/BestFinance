@@ -93,4 +93,10 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
     fun getExpenseGroupArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>?
 
+    @Query("SELECT * FROM expense_group WHERE id = :id")
+    fun getById(id: Long): ExpenseGroup
+
+    @Query("UPDATE expense_group SET archived_date = NULL WHERE id = :id")
+    fun unarchiveExpenseGroupById(id: Long?)
+
 }

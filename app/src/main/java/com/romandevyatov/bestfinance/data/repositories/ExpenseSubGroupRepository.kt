@@ -60,8 +60,12 @@ class ExpenseSubGroupRepository @Inject constructor(
         return expenseSubGroupDao.getByNameAndGroupIdLiveData(subGroupNameBinding, groupId)
     }
 
-    suspend fun unarchiveExpenseSubGroupById(id: Long?) {
+    fun unarchiveExpenseSubGroupById(id: Long?) {
         return expenseSubGroupDao.unarchiveById(id)
+    }
+
+    fun getByNameNotArchived(name: String): ExpenseSubGroup {
+        return expenseSubGroupDao.getByNameNotArchived(name)
     }
 
 }

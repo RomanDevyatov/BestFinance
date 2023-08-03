@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.settings.groups.income.ArchivedIncomeGroupsFragment" >
+    tools:context=".ui.fragments.settings.deprecated.groups.income.ArchivedIncomeGroupsFragment" >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

@@ -68,4 +68,8 @@ class IncomeSubGroupRepository @Inject constructor(
         return incomeSubGroupDao.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
     }
 
+    fun getIncomeSubGroupByIdLiveData(id: Long?): LiveData<IncomeSubGroup>? {
+        return incomeSubGroupDao.getByIdLiveData(id)
+    }
+
 }
