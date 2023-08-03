@@ -61,6 +61,7 @@ class SettingsFragment : Fragment() {
             "Group"     -> SettingsFragmentDirections.actionNavigationSettingsToArchivedGroups()
             "Subgroup"  -> SettingsFragmentDirections.actionSettingsFragmentToArchivedSubGroupsFragment()
             "Wallet"    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
+            "General"   -> SettingsFragmentDirections.actionSettingsFragmentToGeneralGroupsAndSubGroupsFragment()
 //                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
 //                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
             else -> return
@@ -76,7 +77,8 @@ class SettingsFragment : Fragment() {
                 listOf(
                     SubCategoryItem("Group", R.drawable.ic_group),
                     SubCategoryItem("Subgroup", R.drawable.ic_subgroup),
-                    SubCategoryItem("Wallet", R.drawable.ic_wallet)
+                    SubCategoryItem("Wallet", R.drawable.ic_wallet),
+                    SubCategoryItem("General", R.drawable.ic_wallet)
                 )
             ),
 //            CategoryItem(

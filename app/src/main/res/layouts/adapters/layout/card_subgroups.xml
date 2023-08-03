@@ -17,13 +17,22 @@
                     android:text="Text"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/subgroupCheckBox"
-                    app:layout_constraintHorizontal_bias="0.048"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <CheckBox
                     android:id="@+id/subgroupCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/switchCompat"
+                    app:layout_constraintHorizontal_bias="0.969"
+                    app:layout_constraintStart_toEndOf="@+id/subgroupNameTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchCompat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
