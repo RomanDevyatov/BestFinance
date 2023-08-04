@@ -42,7 +42,7 @@ class WalletsAdapter(
         if (position != -1) {
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
-            submitList(updatedList)
+            differ.submitList(updatedList)
             notifyItemRemoved(position)
         }
     }
