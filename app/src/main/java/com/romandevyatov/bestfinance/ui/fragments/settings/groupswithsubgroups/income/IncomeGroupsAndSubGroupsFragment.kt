@@ -13,8 +13,8 @@ import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithInco
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentIncomeGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.GroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroups
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroup
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralIncomeGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,50 +26,49 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
     private val generalGroupsAndSubGroupsViewModel: GeneralIncomeGroupsAndSubGroupsViewModel by viewModels()
 
-    private var groupWithSubGroupsMutableList: MutableList<GroupWithSubGroups> = mutableListOf()
+    private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
 
     private var adapter: GroupWithSubgroupsAdapter? = null
 
     private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupCheckedChangeListener {
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onSubgroupChecked(subgroup: SubGroup, isChecked: Boolean) {
+        override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
+            val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
+                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
+                    val updatedSubGroup = subGroupItem.copy(isChecked = isChecked)
 
-            val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsMutableList.map { groupWithSubGroups ->
-                if (groupWithSubGroups.subgroups.contains(subgroup)) {
-                    val updatedSubgroup = subgroup.copy(isChecked = isChecked)
+                    val subGroupsMutableList = groupWithSubGroups.subgroups
 
-                    val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
-
-                    val index = subGroupsMutableList.indexOf(subgroup)
+                    val index = subGroupsMutableList.indexOf(subGroupItem)
 
                     if (index != -1) {
-                        subGroupsMutableList[index] = updatedSubgroup
+                        subGroupsMutableList[index] = updatedSubGroup
                     }
 
                     groupWithSubGroups.copy(subgroups = subGroupsMutableList)
                 } else {
                     groupWithSubGroups
                 }
-            }
+            }.toMutableList()
 
-            groupWithSubGroupsMutableList.clear()
-            groupWithSubGroupsMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.updateGroups(groupWithSubGroupsMutableList)
+            groupWithSubGroupsItemMutableList.clear()
+            groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
+            adapter?.updateGroups(groupWithSubGroupsItemMutableList)
 
             if (isChecked) {
-                 generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subgroup.id)
+                 generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
             } else {
-                 generalGroupsAndSubGroupsViewModel.archiveIncomeSubGroup(subgroup.name)
+                 generalGroupsAndSubGroupsViewModel.archiveIncomeSubGroup(subGroupItem.name)
             }
         }
 
-        override fun onSubGroupDelete(subGroup: SubGroup) {
-            groupWithSubGroupsMutableList.map { groupWithSubGroups ->
+        override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
+            groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
 
-                if (groupWithSubGroups.subgroups.contains(subGroup)) {
+                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
                     val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
 
-                    val index = subGroupsMutableList.indexOf(subGroup)
+                    val index = subGroupsMutableList.indexOf(subGroupItem)
 
                     if (index != -1) {
                         subGroupsMutableList.removeAt(index)
@@ -77,28 +76,25 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
                 }
             }
 
-            generalGroupsAndSubGroupsViewModel.deleteIncomeSubGroupById(subGroup.id)
+            generalGroupsAndSubGroupsViewModel.deleteIncomeSubGroupById(subGroupItem.id)
         }
     }
-
 
     private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onGroupChecked(groupWithSubGroups: GroupWithSubGroups, isChecked: Boolean) {
-            val updatedGroups = groupWithSubGroupsMutableList.toMutableList()
-
-            val index = updatedGroups.indexOf(groupWithSubGroups)
+        override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
+            val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
             if (index != -1) {
-                val updatedGroup = groupWithSubGroups.copy(isArchived = isChecked)
-                updatedGroups[index] = updatedGroup
+                val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
+                groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.updateGroups(updatedGroups)
+                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
 
                 if (isChecked) {
-                    generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroups.id)
+                    generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroupsItem.id)
                 } else {
-                     generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroups.id!!)
+                     generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroupsItem.id!!)
                 }
             }
         }
@@ -115,7 +111,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupList ->
                 updateGroupWithSubGroupsList(groupList)
-                adapter?.updateGroups(groupWithSubGroupsMutableList)
+                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
             }
         }
 
@@ -130,20 +126,20 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
     }
 
     private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<IncomeGroupWithIncomeSubGroups>) {
-        groupWithSubGroupsMutableList.clear()
+        groupWithSubGroupsItemMutableList.clear()
 
         for (groupWithSubGroup in groupsWithSubGroups) {
-            val subGroupsForAdapter = groupWithSubGroup.incomeSubGroups.map {
-                SubGroup(it.id, it.name, false, it.archivedDate == null)
-            }
+            val subGroupsForAdapterItem = groupWithSubGroup.incomeSubGroups.map {
+                SubGroupItem(it.id, it.name, false, it.archivedDate == null)
+            }.toMutableList()
 
-            if (subGroupsForAdapter.isNotEmpty()) {
-                groupWithSubGroupsMutableList.add(
-                    GroupWithSubGroups(
+            if (subGroupsForAdapterItem.isNotEmpty()) {
+                groupWithSubGroupsItemMutableList.add(
+                    GroupWithSubGroupsItem(
                         groupWithSubGroup.incomeGroup.id,
                         groupWithSubGroup.incomeGroup.name,
                         groupWithSubGroup.incomeGroup.archivedDate == null,
-                        subGroupsForAdapter
+                        subGroupsForAdapterItem
                     )
                 )
             }

@@ -6,31 +6,30 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroup
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
 
 class SubGroupsAdapter(
     private val listener: OnSubGroupCheckedChangeListener? = null
 ) : RecyclerView.Adapter<SubGroupsAdapter.SubGroupViewHolder>() {
 
     interface OnSubGroupCheckedChangeListener {
-        fun onSubgroupChecked(subgroup: SubGroup, isChecked: Boolean)
-
-        fun onSubGroupDelete(subGroup: SubGroup)
+        fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean)
+        fun onSubGroupDelete(subGroupItem: SubGroupItem)
     }
 
-    private val differentCallback = object: DiffUtil.ItemCallback<SubGroup>() {
-        override fun areItemsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<SubGroupItem>() {
+        override fun areItemsTheSame(oldItem: SubGroupItem, newItem: SubGroupItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
+        override fun areContentsTheSame(oldItem: SubGroupItem, newItem: SubGroupItem): Boolean {
             return oldItem == newItem
         }
     }
 
-    private val differ = AsyncListDiffer(this, differentCallback)
+    private val differ = AsyncListDiffer(this, differCallback)
 
-    fun updateSubgroups(newSubgroups: List<SubGroup>) {
+    fun updateSubgroups(newSubgroups: List<SubGroupItem>) {
         differ.submitList(newSubgroups)
     }
 
@@ -38,17 +37,17 @@ class SubGroupsAdapter(
         private val binding: CardSubGroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindSubgroup(subGroup: SubGroup) {
-            binding.subgroupNameTextView.text = subGroup.name
+        fun bind(subGroupItem: SubGroupItem) {
+            binding.subgroupNameTextView.text = subGroupItem.name
 
             binding.deleteButton.setOnClickListener {
-                listener?.onSubGroupDelete(subGroup)
+                listener?.onSubGroupDelete(subGroupItem)
             }
 
-            binding.switchCompat.isChecked = subGroup.isExist
+            binding.switchCompat.isChecked = subGroupItem.isExist
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                listener?.onSubgroupChecked(subGroup, isChecked)
+                listener?.onSubgroupChecked(subGroupItem, isChecked)
             }
         }
     }
@@ -59,13 +58,11 @@ class SubGroupsAdapter(
     }
 
     override fun onBindViewHolder(holder: SubGroupViewHolder, position: Int) {
-        val subgroup = differ.currentList[position]
-        holder.bindSubgroup(subgroup)
+        val subGroupItem = differ.currentList[position]
+        holder.bind(subGroupItem)
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
-
 }

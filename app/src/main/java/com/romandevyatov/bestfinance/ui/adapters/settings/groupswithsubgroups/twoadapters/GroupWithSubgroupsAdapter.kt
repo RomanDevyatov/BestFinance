@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroups
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
@@ -15,22 +15,22 @@ class GroupWithSubgroupsAdapter(
 ) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
 
     interface OnGroupCheckedChangeListener {
-        fun onGroupChecked(groupWithSubGroups: GroupWithSubGroups, isChecked: Boolean)
+        fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean)
     }
 
-    private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroups>() {
-        override fun areItemsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
+    private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroupsItem>() {
+        override fun areItemsTheSame(oldItem: GroupWithSubGroupsItem, newItem: GroupWithSubGroupsItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
+        override fun areContentsTheSame(oldItem: GroupWithSubGroupsItem, newItem: GroupWithSubGroupsItem): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun updateGroups(newGroups: List<GroupWithSubGroups>) {
+    fun updateGroups(newGroups: List<GroupWithSubGroupsItem>) {
         differ.submitList(newGroups)
     }
 
@@ -38,18 +38,18 @@ class GroupWithSubgroupsAdapter(
         private val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindGroup(groupWithSubGroups: GroupWithSubGroups) {
-            binding.groupNameTextView.text = groupWithSubGroups.name
-            binding.switchCompat.isChecked = groupWithSubGroups.isArchived
+        fun bindGroup(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
+            binding.groupNameTextView.text = groupWithSubGroupsItem.name
+            binding.switchCompat.isChecked = groupWithSubGroupsItem.isArchived
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                groupListener?.onGroupChecked(groupWithSubGroups, isChecked)
+                groupListener?.onGroupChecked(groupWithSubGroupsItem, isChecked)
             }
 
             val subGroupsAdapter = SubGroupsAdapter(listener)
             binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
             binding.subGroupRecyclerView.adapter = subGroupsAdapter
-            subGroupsAdapter.updateSubgroups(groupWithSubGroups.subgroups)
+            subGroupsAdapter.updateSubgroups(groupWithSubGroupsItem.subgroups)
         }
     }
 
