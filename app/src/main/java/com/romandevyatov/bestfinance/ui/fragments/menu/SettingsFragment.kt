@@ -67,7 +67,7 @@ class SettingsFragment : Fragment() {
     private fun createCategoryData(): List<CategoryItem> {
         return listOf(
             CategoryItem(
-                "Elements",
+                "Categories",
                 R.drawable.ic_archive,
                 listOf(
                     SubCategoryItem("Groups and Sub Groups", R.drawable.ic_wallet),

@@ -60,7 +60,7 @@ class IncomeSubGroupRepository @Inject constructor(
         return incomeSubGroupDao.unarchiveIncomeSubGroupsByIncomeGroupId(incomeGroupId)
     }
 
-    suspend fun unarchiveIncomeSubGroupById(id: Long?) {
+    fun unarchiveIncomeSubGroupById(id: Long?) {
         return incomeSubGroupDao.unarchiveIncomeSubGroupById(id)
     }
 
@@ -70,6 +70,10 @@ class IncomeSubGroupRepository @Inject constructor(
 
     fun getIncomeSubGroupByIdLiveData(id: Long?): LiveData<IncomeSubGroup>? {
         return incomeSubGroupDao.getByIdLiveData(id)
+    }
+
+    fun updateArchivedDateById(id: Long?, date: String?) {
+        return incomeSubGroupDao.updateArchivedDateById(id, date)
     }
 
 }

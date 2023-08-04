@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentExpenseGroupsAndSubGroupsBinding
@@ -15,8 +16,10 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.Gr
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralExpenseGroupsAndSubGroupsViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExpenseGroupsAndSubGroupsFragment : Fragment() {
@@ -24,38 +27,15 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
     private var _binding: SettingsFragmentExpenseGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
-    private val generalGroupsAndSubGroupsViewModel: GeneralExpenseGroupsAndSubGroupsViewModel by viewModels()
+    private val generalGroupsAndSubGroupsViewModel: ExpenseGroupsAndSubGroupsViewModel by viewModels()
 
     private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
 
     private var groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter? = null
 
-    private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupCheckedChangeListener {
+    private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupListener {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
-
-            val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
-                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
-                    val updatedSubgroup = subGroupItem.copy(isExist = isChecked)
-
-                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
-
-                    val index = subGroupsMutableList?.indexOf(subGroupItem)
-
-                    if (index != null && index != -1) {
-                        subGroupsMutableList[index] = updatedSubgroup
-                    }
-
-                    groupWithSubGroups.copy(subgroups = subGroupsMutableList)
-                } else {
-                    groupWithSubGroups
-                }
-            }.toMutableList()
-
-            groupWithSubGroupsItemMutableList.clear()
-            groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
-
             if (isChecked) {
                 generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
             } else {
@@ -64,19 +44,6 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
-            groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
-
-                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
-                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
-
-                    val index = subGroupsMutableList?.indexOf(subGroupItem)
-
-                    if (index != null && index != -1) {
-                        subGroupsMutableList.removeAt(index)
-                    }
-                }
-            }
-
             generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroupItem.id)
         }
     }
@@ -85,14 +52,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
-            val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
-
-            if (index != -1) {
-                val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
-                groupWithSubGroupsItemMutableList[index] = updatedGroup
-
-                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
-
+            lifecycleScope.launch(Dispatchers.IO) {
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
                 } else {
@@ -102,13 +62,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-            val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
-
-            if (index != -1) {
-                groupWithSubGroupsItemMutableList.removeAt(index)
-
-                generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
-            }
+            generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
         }
     }
 
@@ -121,8 +75,8 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         setupRecyclerView()
 
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-            allGroupsWithSubGroups?.let { groupList ->
-                updateGroupWithSubGroupsList(groupList)
+            allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
+                updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
                 groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }
         }
@@ -139,22 +93,18 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
     private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
         groupWithSubGroupsItemMutableList.clear()
-
-        for (groupWithSubGroup in groupsWithSubGroups) {
-            val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                SubGroupItem(it.id, it.name, it.expenseGroupId, it.archivedDate == null)
-            }.toMutableList()
-
-            if (subGroupsForAdapterItem.isNotEmpty()) {
-                groupWithSubGroupsItemMutableList.add(
-                    GroupWithSubGroupsItem(
-                        groupWithSubGroup.expenseGroup.id,
-                        groupWithSubGroup.expenseGroup.name,
-                        groupWithSubGroup.expenseGroup.archivedDate == null,
-                        subGroupsForAdapterItem
-                    )
+        groupWithSubGroupsItemMutableList.addAll(
+            groupsWithSubGroups.map { groupWithSubGroup ->
+                val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
+                    SubGroupItem(it.id, it.name, it.expenseGroupId, it.archivedDate == null)
+                }.toMutableList()
+                GroupWithSubGroupsItem(
+                    groupWithSubGroup.expenseGroup.id,
+                    groupWithSubGroup.expenseGroup.name,
+                    groupWithSubGroup.expenseGroup.archivedDate == null,
+                    subGroupsForAdapterItem
                 )
             }
-        }
+        )
     }
 }

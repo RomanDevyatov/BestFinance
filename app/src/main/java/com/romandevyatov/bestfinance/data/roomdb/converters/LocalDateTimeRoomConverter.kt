@@ -16,6 +16,11 @@ class LocalDateTimeRoomTypeConverter {
         val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getNowFormatted() : String {
+            return (LocalDateTime.now()).format(dateTimeFormatter)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

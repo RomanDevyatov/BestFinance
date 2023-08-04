@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -8,11 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
-    private val listener: SubGroupsAdapter.OnSubGroupCheckedChangeListener? = null
+    private val listener: SubGroupsAdapter.OnSubGroupListener? = null
 ) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
 
     interface OnGroupCheckedChangeListener {
@@ -36,54 +36,41 @@ class GroupWithSubgroupsAdapter(
         differ.submitList(newGroups)
     }
 
-    fun removeItem(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-        val position = differ.currentList.indexOf(groupWithSubGroupsItem)
-        if (position != -1) {
-            val updatedList = differ.currentList.toMutableList()
-            updatedList.removeAt(position)
-            submitList(updatedList)
-        }
-    }
-
-//    fun removeSubItem(subGroupItem: SubGroupItem) {
-//        val groupPosition = differ.currentList.indexOfFirst { it.id == subGroupItem.groupId }
-//        if (groupPosition != -1) {
-//            val updatedGroup = differ.currentList[groupPosition].copy(subgroups = null)
-//            val updatedList = differ.currentList.toMutableList()
-//            updatedList[groupPosition] = updatedGroup
-//            differ.submitList(updatedList)
-//        }
-//    }
-
     inner class GroupViewHolder(
-        private val binding: CardGroupWithSubgroupsBinding
+        val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val subGroupsAdapter = SubGroupsAdapter(listener)
-
-        init {
-            binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
-            binding.subGroupRecyclerView.adapter = subGroupsAdapter
-        }
 
         fun bindGroup(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
             binding.groupNameTextView.text = groupWithSubGroupsItem.name
-            binding.switchCompat.isChecked = groupWithSubGroupsItem.isArchived
 
+            binding.switchCompat.setOnCheckedChangeListener(null)
+            binding.switchCompat.isChecked = groupWithSubGroupsItem.isExist
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
+                groupWithSubGroupsItem.isExist = isChecked
                 groupListener?.onGroupChecked(groupWithSubGroupsItem, isChecked)
+
+                if (isChecked) {
+                    binding.subGroupRecyclerView.visibility = View.VISIBLE
+                } else {
+                    binding.subGroupRecyclerView.visibility = View.GONE
+                }
+            }
+
+            if (groupWithSubGroupsItem.isExist) {
+                binding.subGroupRecyclerView.visibility = View.VISIBLE
+            } else {
+                binding.subGroupRecyclerView.visibility = View.GONE
             }
 
             binding.deleteButton.setOnClickListener {
-                removeItem(groupWithSubGroupsItem)
                 groupListener?.onGroupDelete(groupWithSubGroupsItem)
             }
 
-            groupWithSubGroupsItem.subgroups?.let {
-                subGroupsAdapter.submitList(it)
-            }
+            val subGroupsAdapter = SubGroupsAdapter(groupWithSubGroupsItem.subgroups, listener)
+            binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.subGroupRecyclerView.adapter = subGroupsAdapter
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
         val binding = CardGroupWithSubgroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false)

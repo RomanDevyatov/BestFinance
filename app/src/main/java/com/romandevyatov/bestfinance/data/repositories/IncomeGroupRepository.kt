@@ -111,7 +111,17 @@ class IncomeGroupRepository @Inject constructor(
     }
 
     fun unarchiveIncomeGroupById(id: Long?) {
-        return incomeGroupDao.unarchiveById(id)
+        return incomeGroupDao.unarchiveByIdSpecific(id)
     }
+
+    fun archiveIncomeGroupById(id: Long?, date: String) {
+        return incomeGroupDao.archiveById(id, date)
+    }
+
+    fun updateArchivedDateById(id: Long?, date: String) {
+        return incomeGroupDao.updateArchivedDateById(id, date)
+    }
+
+
 
 }

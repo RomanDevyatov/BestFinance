@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class GeneralExpenseGroupsAndSubGroupsViewModel @Inject constructor(
+class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository,
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
