@@ -29,8 +29,18 @@ class SubGroupsAdapter(
 
     private val differ = AsyncListDiffer(this, differCallback)
 
-    fun updateSubgroups(newSubgroups: List<SubGroupItem>) {
+    fun submitList(newSubgroups: List<SubGroupItem>) {
         differ.submitList(newSubgroups)
+    }
+
+    fun removeItem(subGroupsItem: SubGroupItem) {
+        val position = differ.currentList.indexOf(subGroupsItem)
+        if (position != -1) {
+            val updatedList = differ.currentList.toMutableList()
+            updatedList.removeAt(position)
+            submitList(updatedList)
+            notifyItemRemoved(position)
+        }
     }
 
     inner class SubGroupViewHolder(

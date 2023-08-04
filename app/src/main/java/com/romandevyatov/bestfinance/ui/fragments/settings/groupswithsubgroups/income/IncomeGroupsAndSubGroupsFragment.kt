@@ -53,7 +53,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+            adapter?.submitList(groupWithSubGroupsItemMutableList)
 
             if (isChecked) {
                  generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
@@ -72,6 +72,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
                     if (index != -1) {
                         subGroupsMutableList.removeAt(index)
+                        adapter?.removeSubItem(subGroupItem)
                     }
                 }
             }
@@ -89,13 +90,24 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList)
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroupsItem.id)
                 } else {
                      generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroupsItem.id!!)
                 }
+            }
+        }
+
+        override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
+            val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
+
+            if (index != -1) {
+                groupWithSubGroupsItemMutableList.removeAt(index)
+                adapter?.removeItem(groupWithSubGroupsItem)
+
+                generalGroupsAndSubGroupsViewModel.deleteIncomeGroupById(groupWithSubGroupsItem.id)
             }
         }
     }
@@ -111,7 +123,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupList ->
                 updateGroupWithSubGroupsList(groupList)
-                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList)
             }
         }
 

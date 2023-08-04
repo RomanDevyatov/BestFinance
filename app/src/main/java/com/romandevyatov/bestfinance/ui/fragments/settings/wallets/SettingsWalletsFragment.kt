@@ -96,7 +96,7 @@ class SettingsWalletsFragment : Fragment() {
     private val walletItemDeleteListener = object : WalletsAdapter.OnWalletItemDeleteListener {
         override fun onWalletItemDelete(walletItem: WalletItem) {
             walletItemMutableList.remove(walletItem)
-            walletsAdapter.submitList(walletItemMutableList)
+            walletsAdapter.removeItem(walletItem)
             settingsWalletsViewModel.deleteWalletById(walletItem.id)
         }
     }

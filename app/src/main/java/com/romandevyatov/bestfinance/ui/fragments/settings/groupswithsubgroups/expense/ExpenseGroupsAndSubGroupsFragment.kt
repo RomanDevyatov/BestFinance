@@ -54,7 +54,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+            adapter?.submitList(groupWithSubGroupsItemMutableList)
 
             if (isChecked) {
                 generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
@@ -73,6 +73,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
                     if (index != -1) {
                         subGroupsMutableList.removeAt(index)
+                        adapter?.removeItem(groupWithSubGroups)
                     }
                 }
             }
@@ -90,13 +91,24 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList)
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
                 } else {
                     generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(groupWithSubGroupsItem.id!!)
                 }
+            }
+        }
+
+        override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
+            val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
+
+            if (index != -1) {
+                groupWithSubGroupsItemMutableList.removeAt(index)
+                adapter?.removeItem(groupWithSubGroupsItem)
+
+                generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
             }
         }
     }
@@ -112,7 +124,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupList ->
                 updateGroupWithSubGroupsList(groupList)
-                adapter?.updateGroups(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList)
             }
         }
 

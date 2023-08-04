@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
     private val listener: SubGroupsAdapter.OnSubGroupCheckedChangeListener? = null
 ) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
 
+    val subGroupsAdapter = SubGroupsAdapter(listener)
+
     interface OnGroupCheckedChangeListener {
         fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean)
+        fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem)
     }
 
     private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroupsItem>() {
@@ -30,8 +34,22 @@ class GroupWithSubgroupsAdapter(
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun updateGroups(newGroups: List<GroupWithSubGroupsItem>) {
+    fun submitList(newGroups: List<GroupWithSubGroupsItem>) {
         differ.submitList(newGroups)
+    }
+
+    fun removeItem(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
+        val position = differ.currentList.indexOf(groupWithSubGroupsItem)
+        if (position != -1) {
+            val updatedList = differ.currentList.toMutableList()
+            updatedList.removeAt(position)
+            submitList(updatedList)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun removeSubItem(subGroupItem: SubGroupItem) {
+        subGroupsAdapter.removeItem(subGroupItem)
     }
 
     inner class GroupViewHolder(
@@ -46,10 +64,14 @@ class GroupWithSubgroupsAdapter(
                 groupListener?.onGroupChecked(groupWithSubGroupsItem, isChecked)
             }
 
-            val subGroupsAdapter = SubGroupsAdapter(listener)
+            binding.deleteButton.setOnClickListener {
+                groupListener?.onGroupDelete(groupWithSubGroupsItem)
+            }
+
+
             binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
             binding.subGroupRecyclerView.adapter = subGroupsAdapter
-            subGroupsAdapter.updateSubgroups(groupWithSubGroupsItem.subgroups)
+            subGroupsAdapter.submitList(groupWithSubGroupsItem.subgroups)
         }
     }
 

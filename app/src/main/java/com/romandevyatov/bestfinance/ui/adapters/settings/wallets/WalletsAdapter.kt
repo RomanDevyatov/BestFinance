@@ -37,6 +37,16 @@ class WalletsAdapter(
         differ.submitList(walletItems)
     }
 
+    fun removeItem(walletItem: WalletItem) {
+        val position = differ.currentList.indexOf(walletItem)
+        if (position != -1) {
+            val updatedList = differ.currentList.toMutableList()
+            updatedList.removeAt(position)
+            submitList(updatedList)
+            notifyItemRemoved(position)
+        }
+    }
+
     inner class WalletItemViewHolder(
         private val binding: CardWalletItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
