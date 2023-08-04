@@ -12,7 +12,7 @@ class WalletRepository @Inject constructor(
     private val walletDao: WalletDao
 ) {
 
-    fun getAllWallets(): LiveData<List<Wallet>> = walletDao.getAllLiveData()
+    fun getAllWalletLiveData(): LiveData<List<Wallet>> = walletDao.getAllLiveData()
 
     fun getAllWalletsArchivedLiveData(): LiveData<List<Wallet>>? = walletDao.getAllArchivedLiveData()
 
@@ -53,6 +53,11 @@ class WalletRepository @Inject constructor(
     suspend fun deleteWalletById(id: Long?) {
         walletDao.deleteById(id)
     }
+
+    fun unarchiveWalletById(id: Long?) {
+        walletDao.unarchiveById(id)
+    }
+
 
 
 }

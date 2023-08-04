@@ -2,8 +2,8 @@ package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.expense.GeneralExpenseGroupsAndSubGroupsFragment
-import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.income.GeneralIncomeGroupsAndSubGroupsFragment
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.expense.ExpenseGroupsAndSubGroupsFragment
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.income.IncomeGroupsAndSubGroupsFragment
 
 class GeneralGroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
@@ -16,8 +16,8 @@ class GeneralGroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
 
     override fun createFragment(position: Int): Fragment {
         when (position) {
-            0 -> return GeneralIncomeGroupsAndSubGroupsFragment()
+            0 -> return IncomeGroupsAndSubGroupsFragment()
         }
-        return GeneralExpenseGroupsAndSubGroupsFragment()
+        return ExpenseGroupsAndSubGroupsFragment()
     }
 }

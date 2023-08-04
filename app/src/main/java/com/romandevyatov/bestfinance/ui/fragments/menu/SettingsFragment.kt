@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,8 +43,6 @@ class SettingsFragment : Fragment() {
         val onSubCategoryClickListener = object : SubCategoryAdapter.OnSubCategoryClickListener {
 
             override fun onSubCategoryClick(subCategory: SubCategoryItem) {
-                Toast.makeText(requireContext(), "Clicked: ${subCategory.name}", Toast.LENGTH_SHORT).show()
-
                 navigateToSubCategory(subCategory)
             }
         }
@@ -58,9 +55,7 @@ class SettingsFragment : Fragment() {
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
         val action = when (subCategory.name) {
-//            "Group"     -> SettingsFragmentDirections.actionNavigationSettingsToArchivedGroups()
-//            "Subgroup"  -> SettingsFragmentDirections.actionSettingsFragmentToArchivedSubGroupsFragment()
-            "Groups and Sub Groups"   -> SettingsFragmentDirections.actionSettingsFragmentToGeneralGroupsAndSubGroupsFragment()
+            "Groups and Sub Groups"   -> SettingsFragmentDirections.actionSettingsFragmentToGroupsAndSubGroupsSettingsFragment()
             "Wallet"    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
 //                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
 //                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
@@ -72,11 +67,9 @@ class SettingsFragment : Fragment() {
     private fun createCategoryData(): List<CategoryItem> {
         return listOf(
             CategoryItem(
-                "Archived",
+                "Elements",
                 R.drawable.ic_archive,
                 listOf(
-//                    SubCategoryItem("Group", R.drawable.ic_group),
-//                    SubCategoryItem("Subgroup", R.drawable.ic_subgroup),
                     SubCategoryItem("Groups and Sub Groups", R.drawable.ic_wallet),
                     SubCategoryItem("Wallet", R.drawable.ic_wallet)
                 )

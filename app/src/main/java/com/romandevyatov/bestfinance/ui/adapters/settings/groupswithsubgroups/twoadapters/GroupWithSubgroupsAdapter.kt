@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardArchivedGroupWithSubgroupsBinding
+import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroups
 
 class GroupWithSubgroupsAdapter(
@@ -35,7 +35,7 @@ class GroupWithSubgroupsAdapter(
     }
 
     inner class GroupViewHolder(
-        private val binding: CardArchivedGroupWithSubgroupsBinding
+        private val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindGroup(groupWithSubGroups: GroupWithSubGroups) {
@@ -55,7 +55,7 @@ class GroupWithSubgroupsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
-        val binding = CardArchivedGroupWithSubgroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = CardGroupWithSubgroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return GroupViewHolder(binding)
     }
 

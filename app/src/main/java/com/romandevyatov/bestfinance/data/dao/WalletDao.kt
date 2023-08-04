@@ -58,4 +58,7 @@ interface WalletDao {
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
     fun getByNameArchivedLiveData(name: String): LiveData<Wallet>?
 
+    @Query("UPDATE wallet SET archived_date = NULL WHERE id = :id")
+    fun unarchiveById(id: Long?)
+
 }
