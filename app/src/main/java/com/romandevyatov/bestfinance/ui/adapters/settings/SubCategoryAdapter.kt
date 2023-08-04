@@ -35,7 +35,7 @@ class SubCategoryAdapter(
 
         holder.subcategoryName.text = currentItem.name
         holder.subcategoryIcon.setImageResource(currentItem.icon)
-        // Set tick visibility (assuming you have a tick icon in your item layout)
+
         holder.tickIcon.visibility = View.VISIBLE
 
         holder.itemView.setOnClickListener {

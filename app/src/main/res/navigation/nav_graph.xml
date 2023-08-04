@@ -282,7 +282,7 @@
         tools:layout="@layout/fragment_archived_sub_group" />
     <fragment
         android:id="@+id/general_groups_and_sub_groups_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.general.GeneralGroupsAndSubGroupsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GeneralGroupsAndSubGroupsFragment"
         android:label="@layout/fragment_general_groups_and_sub_groups" />
 
 </navigation>

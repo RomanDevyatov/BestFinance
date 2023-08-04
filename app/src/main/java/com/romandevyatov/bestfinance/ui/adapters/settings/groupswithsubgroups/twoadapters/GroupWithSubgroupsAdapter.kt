@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters
+package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardArchivedGroupWithSubgroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.models.GroupWithSubGroups
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroups
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
@@ -18,7 +18,17 @@ class GroupWithSubgroupsAdapter(
         fun onGroupChecked(group: GroupWithSubGroups, isChecked: Boolean)
     }
 
-    private val differ = AsyncListDiffer(this, GroupDiffCallback())
+    private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroups>() {
+        override fun areItemsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, differentCallback)
 
     fun updateGroups(newGroups: List<GroupWithSubGroups>) {
         differ.submitList(newGroups)
@@ -30,10 +40,10 @@ class GroupWithSubgroupsAdapter(
 
         fun bindGroup(groupWithSubGroups: GroupWithSubGroups) {
             binding.groupNameTextView.text = groupWithSubGroups.name
-            binding.switchCompat.isChecked = groupWithSubGroups.isExist
+            binding.switchCompat.isChecked = groupWithSubGroups.isArchived
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                groupWithSubGroups.isExist = isChecked
+                groupWithSubGroups.isArchived = isChecked
                 groupListener?.onGroupChecked(groupWithSubGroups, isChecked)
             }
 
@@ -56,15 +66,5 @@ class GroupWithSubgroupsAdapter(
 
     override fun getItemCount(): Int {
         return differ.currentList.size
-    }
-}
-
-private class GroupDiffCallback : DiffUtil.ItemCallback<GroupWithSubGroups>() {
-    override fun areItemsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: GroupWithSubGroups, newItem: GroupWithSubGroups): Boolean {
-        return oldItem == newItem
     }
 }

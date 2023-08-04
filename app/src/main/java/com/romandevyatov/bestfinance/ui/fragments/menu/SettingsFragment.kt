@@ -58,10 +58,10 @@ class SettingsFragment : Fragment() {
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
         val action = when (subCategory.name) {
-            "Group"     -> SettingsFragmentDirections.actionNavigationSettingsToArchivedGroups()
-            "Subgroup"  -> SettingsFragmentDirections.actionSettingsFragmentToArchivedSubGroupsFragment()
+//            "Group"     -> SettingsFragmentDirections.actionNavigationSettingsToArchivedGroups()
+//            "Subgroup"  -> SettingsFragmentDirections.actionSettingsFragmentToArchivedSubGroupsFragment()
+            "Groups and Sub Groups"   -> SettingsFragmentDirections.actionSettingsFragmentToGeneralGroupsAndSubGroupsFragment()
             "Wallet"    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
-            "General"   -> SettingsFragmentDirections.actionSettingsFragmentToGeneralGroupsAndSubGroupsFragment()
 //                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
 //                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
             else -> return

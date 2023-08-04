@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters
+package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.models.SubGroup
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroup
 
 class SubGroupsAdapter(
     private val listener: OnSubGroupCheckedChangeListener? = null
@@ -18,7 +18,17 @@ class SubGroupsAdapter(
         fun onSubGroupDelete(subGroup: SubGroup)
     }
 
-    private val differ = AsyncListDiffer(this, SubGroupDiffCallback())
+    private val differentCallback = object: DiffUtil.ItemCallback<SubGroup>() {
+        override fun areItemsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, differentCallback)
 
     fun updateSubgroups(newSubgroups: List<SubGroup>) {
         differ.submitList(newSubgroups)
@@ -57,14 +67,6 @@ class SubGroupsAdapter(
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-}
 
-private class SubGroupDiffCallback : DiffUtil.ItemCallback<SubGroup>() {
-    override fun areItemsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
-        return oldItem.id == newItem.id
-    }
 
-    override fun areContentsTheSame(oldItem: SubGroup, newItem: SubGroup): Boolean {
-        return oldItem == newItem
-    }
 }

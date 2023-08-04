@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.general
+package com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.databinding.FragmentGeneralGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.GeneralGroupsAndSubGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GeneralGroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,4 +44,3 @@ class GeneralGroupsAndSubGroupsFragment : Fragment() {
         }.attach()
     }
 }
-

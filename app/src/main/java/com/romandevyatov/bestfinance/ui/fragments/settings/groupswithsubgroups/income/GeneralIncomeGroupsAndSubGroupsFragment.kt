@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.general.expense
+package com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.income
 
 import android.os.Build
 import android.os.Bundle
@@ -9,22 +9,22 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.databinding.FragmentGeneralExpenseGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.models.GroupWithSubGroups
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.models.SubGroup
-import com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories.recyclerviewapproach.twoadapters.SubGroupsAdapter
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralExpenseGroupsAndSubGroupsViewModel
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.databinding.FragmentGeneralIncomeGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.GroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.SubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroups
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroup
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralIncomeGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
+class GeneralIncomeGroupsAndSubGroupsFragment : Fragment() {
 
-    private var _binding: FragmentGeneralExpenseGroupsAndSubGroupsBinding? = null
+    private var _binding: FragmentGeneralIncomeGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
-    private val generalGroupsAndSubGroupsViewModel: GeneralExpenseGroupsAndSubGroupsViewModel by viewModels()
+    private val generalGroupsAndSubGroupsViewModel: GeneralIncomeGroupsAndSubGroupsViewModel by viewModels()
 
     private var groupWithSubGroupsMutableList: MutableList<GroupWithSubGroups> = mutableListOf()
 
@@ -57,9 +57,9 @@ class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
             adapter?.updateGroups(groupWithSubGroupsMutableList)
 
             if (isChecked) {
-                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subgroup.id)
+                 generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subgroup.id)
             } else {
-                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(subgroup.name)
+                 generalGroupsAndSubGroupsViewModel.archiveIncomeSubGroup(subgroup.name)
             }
         }
 
@@ -77,9 +77,10 @@ class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
                 }
             }
 
-            generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroup.id)
+            generalGroupsAndSubGroupsViewModel.deleteIncomeSubGroupById(subGroup.id)
         }
     }
+
 
     private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
 
@@ -89,15 +90,15 @@ class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
 
             val index = updatedGroups.indexOf(groupWithSubGroups)
             if (index != -1) {
-                val updatedGroup = groupWithSubGroups.copy(isExist = isChecked)
+                val updatedGroup = groupWithSubGroups.copy(isArchived = isChecked)
                 updatedGroups[index] = updatedGroup
 
                 adapter?.updateGroups(updatedGroups)
 
                 if (isChecked) {
-                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroups.id)
+                    generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroups.id)
                 } else {
-                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(groupWithSubGroups.id!!)
+                     generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroups.id!!)
                 }
             }
         }
@@ -107,11 +108,11 @@ class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGeneralExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentGeneralIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
 
-        generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+        generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupList ->
                 updateGroupWithSubGroupsList(groupList)
                 adapter?.updateGroups(groupWithSubGroupsMutableList)
@@ -128,20 +129,20 @@ class GeneralExpenseGroupsAndSubGroupsFragment : Fragment() {
         binding.recyclerView.adapter = adapter
     }
 
-    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
+    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<IncomeGroupWithIncomeSubGroups>) {
         groupWithSubGroupsMutableList.clear()
 
         for (groupWithSubGroup in groupsWithSubGroups) {
-            val subGroupsForAdapter = groupWithSubGroup.expenseSubGroups.map {
+            val subGroupsForAdapter = groupWithSubGroup.incomeSubGroups.map {
                 SubGroup(it.id, it.name, false, it.archivedDate == null)
             }
 
             if (subGroupsForAdapter.isNotEmpty()) {
                 groupWithSubGroupsMutableList.add(
                     GroupWithSubGroups(
-                        groupWithSubGroup.expenseGroup.id,
-                        groupWithSubGroup.expenseGroup.name,
-                        groupWithSubGroup.expenseGroup.archivedDate == null,
+                        groupWithSubGroup.incomeGroup.id,
+                        groupWithSubGroup.incomeGroup.name,
+                        groupWithSubGroup.incomeGroup.archivedDate == null,
                         subGroupsForAdapter
                     )
                 )

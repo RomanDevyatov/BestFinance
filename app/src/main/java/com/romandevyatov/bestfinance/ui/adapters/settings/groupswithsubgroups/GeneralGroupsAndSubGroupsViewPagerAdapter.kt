@@ -1,9 +1,9 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.generalcategories
+package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.romandevyatov.bestfinance.ui.fragments.settings.general.expense.GeneralExpenseGroupsAndSubGroupsFragment
-import com.romandevyatov.bestfinance.ui.fragments.settings.general.income.GeneralIncomeGroupsAndSubGroupsFragment
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.expense.GeneralExpenseGroupsAndSubGroupsFragment
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.income.GeneralIncomeGroupsAndSubGroupsFragment
 
 class GeneralGroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
