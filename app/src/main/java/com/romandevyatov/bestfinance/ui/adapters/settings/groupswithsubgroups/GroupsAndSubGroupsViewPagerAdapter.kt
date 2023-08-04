@@ -5,7 +5,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.expense.ExpenseGroupsAndSubGroupsFragment
 import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.income.IncomeGroupsAndSubGroupsFragment
 
-class GeneralGroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
+class GroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
 
     private val NUM_TABS = 2

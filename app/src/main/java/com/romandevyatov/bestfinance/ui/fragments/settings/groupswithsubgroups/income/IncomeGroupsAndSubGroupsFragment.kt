@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentIncomeGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralIncomeGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,14 +34,14 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
             val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
-                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
-                    val updatedSubGroup = subGroupItem.copy(isChecked = isChecked)
+                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
+                    val updatedSubGroup = subGroupItem.copy(isExist = isChecked)
 
                     val subGroupsMutableList = groupWithSubGroups.subgroups
 
-                    val index = subGroupsMutableList.indexOf(subGroupItem)
+                    val index = subGroupsMutableList?.indexOf(subGroupItem)
 
-                    if (index != -1) {
+                    if (index != null && index != -1) {
                         subGroupsMutableList[index] = updatedSubGroup
                     }
 
@@ -53,7 +53,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.submitList(groupWithSubGroupsItemMutableList)
+            adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
             if (isChecked) {
                  generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
@@ -65,12 +65,12 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
             groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
 
-                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
-                    val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
+                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
+                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
 
-                    val index = subGroupsMutableList.indexOf(subGroupItem)
+                    val index = subGroupsMutableList?.indexOf(subGroupItem)
 
-                    if (index != -1) {
+                    if (index != null && index != -1) {
                         subGroupsMutableList.removeAt(index)
                         adapter?.removeSubItem(subGroupItem)
                     }
@@ -90,12 +90,12 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.submitList(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroupsItem.id)
                 } else {
-                     generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroupsItem.id!!)
+                    generalGroupsAndSubGroupsViewModel.archiveIncomeGroupById(groupWithSubGroupsItem.id!!)
                 }
             }
         }
@@ -121,9 +121,9 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         setupRecyclerView()
 
         generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-            allGroupsWithSubGroups?.let { groupList ->
-                updateGroupWithSubGroupsList(groupList)
-                adapter?.submitList(groupWithSubGroupsItemMutableList)
+            allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
+                updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
+                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }
         }
 
@@ -142,7 +142,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
         for (groupWithSubGroup in groupsWithSubGroups) {
             val subGroupsForAdapterItem = groupWithSubGroup.incomeSubGroups.map {
-                SubGroupItem(it.id, it.name, false, it.archivedDate == null)
+                SubGroupItem(it.id, it.name, it.incomeGroupId, it.archivedDate == null)
             }.toMutableList()
 
             if (subGroupsForAdapterItem.isNotEmpty()) {

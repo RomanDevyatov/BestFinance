@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters
+package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
 
 class SubGroupsAdapter(
     private val listener: OnSubGroupCheckedChangeListener? = null
@@ -39,7 +39,6 @@ class SubGroupsAdapter(
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
             submitList(updatedList)
-            notifyItemRemoved(position)
         }
     }
 

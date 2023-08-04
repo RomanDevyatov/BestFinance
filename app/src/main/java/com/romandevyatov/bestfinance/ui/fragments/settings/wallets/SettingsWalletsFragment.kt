@@ -41,7 +41,6 @@ class SettingsWalletsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         walletsAdapter = WalletsAdapter(walletItemCheckedChangeListener, walletItemDeleteListener)
-
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletsAdapter
     }
@@ -56,7 +55,7 @@ class SettingsWalletsFragment : Fragment() {
                     }.toMutableList()
                 )
 
-                walletsAdapter.submitList(walletItemMutableList)
+                walletsAdapter.submitList(walletItemMutableList.toList())
             }
         }
     }
@@ -66,22 +65,17 @@ class SettingsWalletsFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
             updateWalletChecked(walletItem, isChecked)
-            handleWalletCheckedChange(walletItem, isChecked)
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
-        val updatedWallets = walletItemMutableList.map {
-            if (it == walletItem) {
-                walletItem.copy(isExist = isChecked)
-            } else {
-                it
-            }
-        }.toMutableList()
-
-        walletItemMutableList.clear()
-        walletItemMutableList.addAll(updatedWallets)
-        walletsAdapter.submitList(updatedWallets)
+        val position = walletItemMutableList.indexOf(walletItem)
+        if (position != -1) {
+            walletItemMutableList[position] = walletItem.copy(isExist = isChecked)
+            walletsAdapter.submitList(walletItemMutableList.toList())
+            handleWalletCheckedChange(walletItem, isChecked)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

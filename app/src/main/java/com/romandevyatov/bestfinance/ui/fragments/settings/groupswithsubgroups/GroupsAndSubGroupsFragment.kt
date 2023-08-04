@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GeneralGroupsAndSubGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,7 +35,7 @@ class GroupsAndSubGroupsFragment : Fragment() {
         val viewPager = binding.groupViewPager
         val tabLayout = binding.groupTabLayout
 
-        val adapter = GeneralGroupsAndSubGroupsViewPagerAdapter(this)
+        val adapter = GroupsAndSubGroupsViewPagerAdapter(this)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

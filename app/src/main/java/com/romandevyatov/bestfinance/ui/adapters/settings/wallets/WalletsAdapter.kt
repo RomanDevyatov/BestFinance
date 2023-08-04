@@ -33,7 +33,7 @@ class WalletsAdapter(
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun submitList(walletItems: MutableList<WalletItem>) {
+    fun submitList(walletItems: List<WalletItem>) {
         differ.submitList(walletItems)
     }
 
@@ -43,7 +43,6 @@ class WalletsAdapter(
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
             differ.submitList(updatedList)
-            notifyItemRemoved(position)
         }
     }
 
@@ -72,8 +71,8 @@ class WalletsAdapter(
     }
 
     override fun onBindViewHolder(holder: WalletItemViewHolder, position: Int) {
-        val subgroup = differ.currentList[position]
-        holder.bindSubgroup(subgroup)
+        val walletItem = differ.currentList[position]
+        holder.bindSubgroup(walletItem)
     }
 
     override fun getItemCount(): Int {

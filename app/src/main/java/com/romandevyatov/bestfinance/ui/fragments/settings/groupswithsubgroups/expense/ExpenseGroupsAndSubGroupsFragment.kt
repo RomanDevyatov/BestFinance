@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentExpenseGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.GeneralExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,14 +35,14 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
 
             val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
-                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
-                    val updatedSubgroup = subGroupItem.copy(isChecked = isChecked)
+                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
+                    val updatedSubgroup = subGroupItem.copy(isExist = isChecked)
 
-                    val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
+                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
 
-                    val index = subGroupsMutableList.indexOf(subGroupItem)
+                    val index = subGroupsMutableList?.indexOf(subGroupItem)
 
-                    if (index != -1) {
+                    if (index != null && index != -1) {
                         subGroupsMutableList[index] = updatedSubgroup
                     }
 
@@ -54,7 +54,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.submitList(groupWithSubGroupsItemMutableList)
+            adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
             if (isChecked) {
                 generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
@@ -66,12 +66,12 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
             groupWithSubGroupsItemMutableList.map { groupWithSubGroups ->
 
-                if (groupWithSubGroups.subgroups.contains(subGroupItem)) {
-                    val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
+                if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
+                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
 
-                    val index = subGroupsMutableList.indexOf(subGroupItem)
+                    val index = subGroupsMutableList?.indexOf(subGroupItem)
 
-                    if (index != -1) {
+                    if (index != null && index != -1) {
                         subGroupsMutableList.removeAt(index)
                         adapter?.removeItem(groupWithSubGroups)
                     }
@@ -91,7 +91,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.submitList(groupWithSubGroupsItemMutableList)
+                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
@@ -143,7 +143,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
         for (groupWithSubGroup in groupsWithSubGroups) {
             val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                SubGroupItem(it.id, it.name, false, it.archivedDate == null)
+                SubGroupItem(it.id, it.name, it.expenseGroupId, it.archivedDate == null)
             }.toMutableList()
 
             if (subGroupsForAdapterItem.isNotEmpty()) {

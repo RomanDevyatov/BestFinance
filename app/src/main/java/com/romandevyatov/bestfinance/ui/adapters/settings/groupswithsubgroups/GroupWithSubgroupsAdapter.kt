@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters
+package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,15 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.twoadapters.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
     private val listener: SubGroupsAdapter.OnSubGroupCheckedChangeListener? = null
 ) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
-
-    val subGroupsAdapter = SubGroupsAdapter(listener)
 
     interface OnGroupCheckedChangeListener {
         fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean)
@@ -44,17 +42,23 @@ class GroupWithSubgroupsAdapter(
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
             differ.submitList(updatedList)
-            notifyItemRemoved(position)
         }
     }
 
     fun removeSubItem(subGroupItem: SubGroupItem) {
-        subGroupsAdapter.removeItem(subGroupItem)
+        val groupPosition = differ.currentList.indexOfFirst { it.id == subGroupItem.groupId }
+        if (groupPosition != -1) {
+            val updatedGroup = differ.currentList[groupPosition].copy(subgroups = null)
+            val updatedList = differ.currentList.toMutableList()
+            updatedList[groupPosition] = updatedGroup
+            differ.submitList(updatedList)
+        }
     }
 
     inner class GroupViewHolder(
         private val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val subGroupsAdapter = SubGroupsAdapter(listener)
 
         fun bindGroup(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
             binding.groupNameTextView.text = groupWithSubGroupsItem.name
@@ -71,7 +75,9 @@ class GroupWithSubgroupsAdapter(
 
             binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
             binding.subGroupRecyclerView.adapter = subGroupsAdapter
-            subGroupsAdapter.submitList(groupWithSubGroupsItem.subgroups)
+            groupWithSubGroupsItem.subgroups?.let {
+                subGroupsAdapter.submitList(it)
+            }
         }
     }
 
