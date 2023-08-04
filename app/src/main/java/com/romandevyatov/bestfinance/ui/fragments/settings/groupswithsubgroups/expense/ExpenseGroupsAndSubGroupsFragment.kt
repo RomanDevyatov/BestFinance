@@ -32,15 +32,15 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
     private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupCheckedChangeListener {
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onSubgroupChecked(subgroup: SubGroup, isChecked: Boolean) {
+        override fun onSubgroupChecked(subGroup: SubGroup, isChecked: Boolean) {
 
             val updatedGroupWithSubGroupsMutableList = groupWithSubGroupsMutableList.map { groupWithSubGroups ->
-                if (groupWithSubGroups.subgroups.contains(subgroup)) {
-                    val updatedSubgroup = subgroup.copy(isChecked = isChecked)
+                if (groupWithSubGroups.subgroups.contains(subGroup)) {
+                    val updatedSubgroup = subGroup.copy(isChecked = isChecked)
 
                     val subGroupsMutableList = groupWithSubGroups.subgroups.toMutableList()
 
-                    val index = subGroupsMutableList.indexOf(subgroup)
+                    val index = subGroupsMutableList.indexOf(subGroup)
 
                     if (index != -1) {
                         subGroupsMutableList[index] = updatedSubgroup
@@ -57,9 +57,9 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
             adapter?.updateGroups(groupWithSubGroupsMutableList)
 
             if (isChecked) {
-                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subgroup.id)
+                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroup.id)
             } else {
-                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(subgroup.name)
+                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(subGroup.name)
             }
         }
 

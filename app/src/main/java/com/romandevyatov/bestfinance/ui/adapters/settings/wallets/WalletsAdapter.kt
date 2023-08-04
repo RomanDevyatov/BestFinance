@@ -33,7 +33,7 @@ class WalletsAdapter(
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun submitList(walletItems: List<WalletItem>) {
+    fun submitList(walletItems: MutableList<WalletItem>) {
         differ.submitList(walletItems)
     }
 
@@ -41,18 +41,17 @@ class WalletsAdapter(
         private val binding: CardWalletItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindSubgroup(subGroup: WalletItem) {
-            binding.walletTextView.text = subGroup.name
+        fun bindSubgroup(walletItem: WalletItem) {
+            binding.walletTextView.text = walletItem.name
 
             binding.deleteButton.setOnClickListener {
-                walletItemDeleteListener.onWalletItemDelete(subGroup)
+                walletItemDeleteListener.onWalletItemDelete(walletItem)
             }
 
-            binding.switchCompat.isChecked = subGroup.isExist
+            binding.switchCompat.isChecked = walletItem.isExist
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                subGroup.isExist = isChecked
-                onWalletItemCheckedChangeListener?.onWalletChecked(subGroup, isChecked)
+                onWalletItemCheckedChangeListener?.onWalletChecked(walletItem, isChecked)
             }
         }
     }

@@ -48,7 +48,6 @@ class SubGroupsAdapter(
             binding.switchCompat.isChecked = subGroup.isExist
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                subGroup.isExist = isChecked
                 listener?.onSubgroupChecked(subGroup, isChecked)
             }
         }

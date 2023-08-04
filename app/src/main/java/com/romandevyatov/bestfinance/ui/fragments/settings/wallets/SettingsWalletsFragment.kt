@@ -65,23 +65,31 @@ class SettingsWalletsFragment : Fragment() {
 
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
-            val updatedWallets = walletItemMutableList.map {
-                if (it.id == walletItem.id) {
-                    walletItem.copy(isExist = isChecked)
-                } else {
-                    it
-                }
-            }
+            updateWalletChecked(walletItem, isChecked)
+            handleWalletCheckedChange(walletItem, isChecked)
+        }
+    }
 
-            walletItemMutableList.clear()
-            walletItemMutableList.addAll(updatedWallets)
-            walletsAdapter.submitList(updatedWallets)
-
-            if (isChecked) {
-                settingsWalletsViewModel.unarchiveWalletById(walletItem.id)
+    private fun updateWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
+        val updatedWallets = walletItemMutableList.map {
+            if (it == walletItem) {
+                walletItem.copy(isExist = isChecked)
             } else {
-                settingsWalletsViewModel.archiveWalletById(walletItem.id!!)
+                it
             }
+        }.toMutableList()
+
+        walletItemMutableList.clear()
+        walletItemMutableList.addAll(updatedWallets)
+        walletsAdapter.submitList(updatedWallets)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleWalletCheckedChange(walletItem: WalletItem, isChecked: Boolean) {
+        if (isChecked) {
+            settingsWalletsViewModel.unarchiveWalletById(walletItem.id)
+        } else {
+            settingsWalletsViewModel.archiveWalletById(walletItem.id!!)
         }
     }
 

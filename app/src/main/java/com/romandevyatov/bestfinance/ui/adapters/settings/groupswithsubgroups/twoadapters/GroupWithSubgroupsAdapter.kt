@@ -15,7 +15,7 @@ class GroupWithSubgroupsAdapter(
 ) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
 
     interface OnGroupCheckedChangeListener {
-        fun onGroupChecked(group: GroupWithSubGroups, isChecked: Boolean)
+        fun onGroupChecked(groupWithSubGroups: GroupWithSubGroups, isChecked: Boolean)
     }
 
     private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroups>() {
@@ -43,7 +43,6 @@ class GroupWithSubgroupsAdapter(
             binding.switchCompat.isChecked = groupWithSubGroups.isArchived
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                groupWithSubGroups.isArchived = isChecked
                 groupListener?.onGroupChecked(groupWithSubGroups, isChecked)
             }
 
