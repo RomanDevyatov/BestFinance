@@ -41,24 +41,29 @@ class GroupWithSubgroupsAdapter(
         if (position != -1) {
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
-            differ.submitList(updatedList)
+            submitList(updatedList)
         }
     }
 
-    fun removeSubItem(subGroupItem: SubGroupItem) {
-        val groupPosition = differ.currentList.indexOfFirst { it.id == subGroupItem.groupId }
-        if (groupPosition != -1) {
-            val updatedGroup = differ.currentList[groupPosition].copy(subgroups = null)
-            val updatedList = differ.currentList.toMutableList()
-            updatedList[groupPosition] = updatedGroup
-            differ.submitList(updatedList)
-        }
-    }
+//    fun removeSubItem(subGroupItem: SubGroupItem) {
+//        val groupPosition = differ.currentList.indexOfFirst { it.id == subGroupItem.groupId }
+//        if (groupPosition != -1) {
+//            val updatedGroup = differ.currentList[groupPosition].copy(subgroups = null)
+//            val updatedList = differ.currentList.toMutableList()
+//            updatedList[groupPosition] = updatedGroup
+//            differ.submitList(updatedList)
+//        }
+//    }
 
     inner class GroupViewHolder(
         private val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         private val subGroupsAdapter = SubGroupsAdapter(listener)
+
+        init {
+            binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.subGroupRecyclerView.adapter = subGroupsAdapter
+        }
 
         fun bindGroup(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
             binding.groupNameTextView.text = groupWithSubGroupsItem.name
@@ -69,17 +74,16 @@ class GroupWithSubgroupsAdapter(
             }
 
             binding.deleteButton.setOnClickListener {
+                removeItem(groupWithSubGroupsItem)
                 groupListener?.onGroupDelete(groupWithSubGroupsItem)
             }
 
-
-            binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
-            binding.subGroupRecyclerView.adapter = subGroupsAdapter
             groupWithSubGroupsItem.subgroups?.let {
                 subGroupsAdapter.submitList(it)
             }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
         val binding = CardGroupWithSubgroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -51,6 +51,7 @@ class SubGroupsAdapter(
 
             binding.deleteButton.setOnClickListener {
                 listener?.onSubGroupDelete(subGroupItem)
+                removeItem(subGroupItem)
             }
 
             binding.switchCompat.isChecked = subGroupItem.isExist

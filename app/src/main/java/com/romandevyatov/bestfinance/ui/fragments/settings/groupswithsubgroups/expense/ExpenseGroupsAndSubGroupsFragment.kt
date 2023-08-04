@@ -28,7 +28,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
     private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
 
-    private var adapter: GroupWithSubgroupsAdapter? = null
+    private var groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter? = null
 
     private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupCheckedChangeListener {
         @RequiresApi(Build.VERSION_CODES.O)
@@ -50,11 +50,11 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
                 } else {
                     groupWithSubGroups
                 }
-            }
+            }.toMutableList()
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+            groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
             if (isChecked) {
                 generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
@@ -73,7 +73,6 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
                     if (index != null && index != -1) {
                         subGroupsMutableList.removeAt(index)
-                        adapter?.removeItem(groupWithSubGroups)
                     }
                 }
             }
@@ -87,11 +86,12 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
             val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
+
             if (index != -1) {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
@@ -106,7 +106,6 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
             if (index != -1) {
                 groupWithSubGroupsItemMutableList.removeAt(index)
-                adapter?.removeItem(groupWithSubGroupsItem)
 
                 generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
             }
@@ -124,7 +123,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupList ->
                 updateGroupWithSubGroupsList(groupList)
-                adapter?.submitList(groupWithSubGroupsItemMutableList)
+                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }
         }
 
@@ -132,10 +131,10 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+        groupWithSubgroupsAdapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = groupWithSubgroupsAdapter
     }
 
     private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {

@@ -28,7 +28,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
     private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
 
-    private var adapter: GroupWithSubgroupsAdapter? = null
+    private var groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter? = null
 
     private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupCheckedChangeListener {
         @RequiresApi(Build.VERSION_CODES.O)
@@ -37,7 +37,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
                 if (groupWithSubGroups.subgroups?.contains(subGroupItem) == true) {
                     val updatedSubGroup = subGroupItem.copy(isExist = isChecked)
 
-                    val subGroupsMutableList = groupWithSubGroups.subgroups
+                    val subGroupsMutableList = groupWithSubGroups.subgroups?.toMutableList()
 
                     val index = subGroupsMutableList?.indexOf(subGroupItem)
 
@@ -53,7 +53,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
             groupWithSubGroupsItemMutableList.clear()
             groupWithSubGroupsItemMutableList.addAll(updatedGroupWithSubGroupsMutableList)
-            adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+            groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
             if (isChecked) {
                  generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
@@ -72,7 +72,6 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
                     if (index != null && index != -1) {
                         subGroupsMutableList.removeAt(index)
-                        adapter?.removeSubItem(subGroupItem)
                     }
                 }
             }
@@ -86,11 +85,12 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
             val index = groupWithSubGroupsItemMutableList.indexOf(groupWithSubGroupsItem)
+
             if (index != -1) {
                 val updatedGroup = groupWithSubGroupsItem.copy(isArchived = isChecked)
                 groupWithSubGroupsItemMutableList[index] = updatedGroup
 
-                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
 
                 if (isChecked) {
                     generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupById(groupWithSubGroupsItem.id)
@@ -105,7 +105,6 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
             if (index != -1) {
                 groupWithSubGroupsItemMutableList.removeAt(index)
-                adapter?.removeItem(groupWithSubGroupsItem)
 
                 generalGroupsAndSubGroupsViewModel.deleteIncomeGroupById(groupWithSubGroupsItem.id)
             }
@@ -123,7 +122,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
                 updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
-                adapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }
         }
 
@@ -131,10 +130,10 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+        groupWithSubgroupsAdapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = groupWithSubgroupsAdapter
     }
 
     private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<IncomeGroupWithIncomeSubGroups>) {
