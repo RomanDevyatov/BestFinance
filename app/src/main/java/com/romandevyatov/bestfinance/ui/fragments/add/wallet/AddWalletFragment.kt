@@ -87,8 +87,6 @@ class AddWalletFragment : Fragment() {
             val walletNameValidation = EmptyValidator(walletNameBinding).validate()
             binding.nameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
 
-            // checkif wallet exists
-
             val walletBalanceValidation = BaseValidator.validate(EmptyValidator(walletBalanceBinding), IsDigitValidator(walletBalanceBinding))
             binding.balanceLayout.error = if (!walletBalanceValidation.isSuccess) getString(walletBalanceValidation.message) else null
 
