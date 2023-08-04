@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +31,9 @@ class AddExpenseGroupFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
+
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,40 +64,54 @@ class AddExpenseGroupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNewExpenseGroupNameButton.setOnClickListener {
-            val groupNameBinding = binding.newExpenseGroupName.text.toString().trim()
-            val descriptionBinding = binding.descriptionEditText.text.toString().trim()
+            handleButtonClick(view)
+        }
+    }
 
-            val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
-            binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+    private fun handleButtonClick(view: View) {
+        if (!isButtonClickable) return
+        isButtonClickable = false
+        view.isEnabled = false
 
-            if (nameEmptyValidation.isSuccess) {
-                addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
-                    if (expenseGroup == null) {
-                        addGroupViewModel.insertExpenseGroup(
-                            ExpenseGroup(
-                                name = groupNameBinding,
-                                description = descriptionBinding
-                            )
+        val groupNameBinding = binding.newExpenseGroupName.text.toString().trim()
+        val descriptionBinding = binding.descriptionEditText.text.toString().trim()
+
+        val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
+        binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+
+        if (nameEmptyValidation.isSuccess) {
+            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
+                if (expenseGroup == null) {
+                    addGroupViewModel.insertExpenseGroup(
+                        ExpenseGroup(
+                            name = groupNameBinding,
+                            description = descriptionBinding
                         )
+                    )
 
-                        val action =
-                            AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                        action.expenseGroupName = groupNameBinding
-                        findNavController().navigate(action)
-                    } else if (expenseGroup.archivedDate == null) {
-                        showExistingDialog(
-                            requireContext(),
-                            "This group `$groupNameBinding` is already existing."
-                        )
-                    } else {
-                        showWalletDialog(
-                            requireContext(),
-                            expenseGroup,
-                            "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
-                    }
+                    val action =
+                        AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                    action.expenseGroupName = groupNameBinding
+                    findNavController().navigate(action)
+                } else if (expenseGroup.archivedDate == null) {
+                    showExistingDialog(
+                        requireContext(),
+                        "This group `$groupNameBinding` is already existing."
+                    )
+                } else {
+                    showWalletDialog(
+                        requireContext(),
+                        expenseGroup,
+                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
                 }
             }
         }
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            isButtonClickable = true
+            view.isEnabled = true
+        }, clickDelay.toLong())
     }
 
     override fun onDestroyView() {

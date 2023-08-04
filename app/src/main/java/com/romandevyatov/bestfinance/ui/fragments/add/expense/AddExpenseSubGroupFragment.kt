@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +35,9 @@ class AddExpenseSubGroupFragment : Fragment() {
 
     private val args: AddExpenseSubGroupFragmentArgs by navArgs()
 
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +53,9 @@ class AddExpenseSubGroupFragment : Fragment() {
         initGroupSpinner()
 
         binding.addSubGroupNameButton.setOnClickListener {
+            if (!isButtonClickable) return@setOnClickListener
+            isButtonClickable = false
+            view.isEnabled = false
 
             val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
             val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
@@ -120,6 +128,12 @@ class AddExpenseSubGroupFragment : Fragment() {
                     }
                 }
             }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                isButtonClickable = true
+                view.isEnabled = true
+            }, clickDelay.toLong())
         }
     }
 

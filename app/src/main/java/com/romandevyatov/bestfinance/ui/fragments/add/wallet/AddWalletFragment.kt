@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +41,9 @@ class AddWalletFragment : Fragment() {
 
     private val args: AddWalletFragmentArgs by navArgs()
 
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
+
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)
 
@@ -71,6 +76,10 @@ class AddWalletFragment : Fragment() {
         })
 
         binding.addButton.setOnClickListener {
+            if (!isButtonClickable) return@setOnClickListener
+            isButtonClickable = false
+            view.isEnabled = false
+
             val walletNameBinding = binding.nameEditText.text.toString().trim()
             val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
             val walletDescriptionBinding = binding.descriptionEditText.text.toString().trim()
@@ -109,6 +118,12 @@ class AddWalletFragment : Fragment() {
                     }
                 }
             }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                isButtonClickable = true
+                view.isEnabled = true
+            }, clickDelay.toLong())
         }
 
     }

@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +56,9 @@ class AddIncomeHistoryFragment : Fragment() {
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
+
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
 
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
@@ -124,7 +129,7 @@ class AddIncomeHistoryFragment : Fragment() {
         setDateEditText()
         setTimeEditText()
 
-        setButtonOnClickListener()
+        setButtonOnClickListener(view)
 
         restoreAmountDateCommentValues()
     }
@@ -205,8 +210,12 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setButtonOnClickListener() {
+    private fun setButtonOnClickListener(view: View) {
         binding.addHistoryButton.setOnClickListener {
+            if (!isButtonClickable) return@setOnClickListener
+            isButtonClickable = false
+            view.isEnabled = false
+
             val subGroupNameBinding = binding.subGroupSpinner.text.toString()
             val amountBinding = binding.amountEditText.text.toString().trim()
             val commentBinding = binding.commentEditText.text.toString().trim()
@@ -249,6 +258,12 @@ class AddIncomeHistoryFragment : Fragment() {
                 sharedModViewModel.set(null)
                 navigateToHome()
             }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                isButtonClickable = true
+                view.isEnabled = true
+            }, clickDelay.toLong())
         }
     }
 

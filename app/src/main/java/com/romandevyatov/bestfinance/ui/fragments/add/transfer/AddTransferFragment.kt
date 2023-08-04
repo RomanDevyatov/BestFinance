@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,6 +61,9 @@ class AddTransferFragment : Fragment() {
     private var toSpinnerValueGlobalBeforeAdd: String? = null
 
     private val args: AddTransferFragmentArgs by navArgs()
+
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
 
     private val archiveFromWalletListener =
         object : SpinnerAdapter.DeleteItemClickListener {
@@ -130,7 +135,7 @@ class AddTransferFragment : Fragment() {
         setDateEditText()
         setTimeEditText()
 
-        setButtonOnClickListener()
+        setButtonOnClickListener(view)
 
         restoreAmountDateCommentValues()
     }
@@ -326,8 +331,12 @@ class AddTransferFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setButtonOnClickListener() {
+    private fun setButtonOnClickListener(view: View) {
         binding.transferButton.setOnClickListener {
+            if (!isButtonClickable) return@setOnClickListener
+            isButtonClickable = false
+            view.isEnabled = false
+
             walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
                 val amountBinding = binding.amountEditText.text.toString().trim()
                 val dateBinding = binding.dateEditText.text.toString().trim()
@@ -371,6 +380,12 @@ class AddTransferFragment : Fragment() {
                     findNavController().navigate(action)
                 }
             }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                isButtonClickable = true
+                view.isEnabled = true
+            }, clickDelay.toLong())
         }
     }
 

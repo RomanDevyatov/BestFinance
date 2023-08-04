@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.HandlerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -29,6 +32,9 @@ class AddIncomeGroupFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
+
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,43 +67,55 @@ class AddIncomeGroupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNewGroupButton.setOnClickListener {
-            val groupNameBinding = binding.groupNameInputEditText.text.toString()
-            val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
-            val isPassiveBinding = binding.isPassiveCheckBox.isChecked
+            handleButtonClick(view)
+        }
+    }
 
-            val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
-            binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+    private fun handleButtonClick(view: View) {
+        if (!isButtonClickable) return
+        isButtonClickable = false
+        view.isEnabled = false
 
-            if (nameEmptyValidation.isSuccess) {
-                addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
-                    if (incomeGroup == null) {
-                        addGroupViewModel.insertIncomeGroup(
-                            IncomeGroup(
-                                name = groupNameBinding,
-                                description = groupDescriptionBinding,
-                                isPassive = isPassiveBinding
-                            )
-                        )
-                        val action =
-                            AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                        action.incomeGroupName = groupNameBinding
-                        findNavController().navigate(action)
-                    } else if (incomeGroup.archivedDate == null) {
-                        showExistingDialog(
-                            requireContext(),
-                            "This group `$groupNameBinding` is already existing."
-                        )
-                    } else {
-                        showUnarchiveDialog(
-                            requireContext(),
-                            incomeGroup,
-                            "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
-                        )
-                    }
+        val groupNameBinding = binding.groupNameInputEditText.text.toString()
+        val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
+        val isPassiveBinding = binding.isPassiveCheckBox.isChecked
 
+        val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
+        binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+
+        if (nameEmptyValidation.isSuccess) {
+            addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
+                if (incomeGroup == null) {
+                    addGroupViewModel.insertIncomeGroup(
+                        IncomeGroup(
+                            name = groupNameBinding,
+                            description = groupDescriptionBinding,
+                            isPassive = isPassiveBinding
+                        )
+                    )
+                    val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                    action.incomeGroupName = groupNameBinding
+                    findNavController().navigate(action)
+                } else if (incomeGroup.archivedDate == null) {
+                    showExistingDialog(
+                        requireContext(),
+                        "This group `$groupNameBinding` is already existing."
+                    )
+                } else {
+                    showUnarchiveDialog(
+                        requireContext(),
+                        incomeGroup,
+                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
+                    )
                 }
             }
         }
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            isButtonClickable = true
+            view.isEnabled = true
+        }, clickDelay.toLong())
     }
 
     override fun onDestroyView() {

@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +58,9 @@ class AddExpenseHistoryFragment : Fragment() {
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
 
     private val args: AddExpenseHistoryFragmentArgs by navArgs()
+
+    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private var isButtonClickable = true
 
     private val archiveGroupListener =
         object : SpinnerAdapter.DeleteItemClickListener {
@@ -123,7 +128,7 @@ class AddExpenseHistoryFragment : Fragment() {
         setDateEditText()
         setTimeEditText()
 
-        setButtonOnClickListener()
+        setButtonOnClickListener(view)
 
         restoreAmountDateCommentValues()
     }
@@ -204,51 +209,66 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setButtonOnClickListener() {
+    private fun setButtonOnClickListener(view: View) {
         binding.addHistoryButton.setOnClickListener {
-            val subGroupNameBinding = binding.subGroupSpinner.text.toString()
-            val amountBinding = binding.amountEditText.text.toString().trim()
-            val commentBinding = binding.commentEditText.text.toString().trim()
-            val walletNameBinding = binding.walletSpinner.text.toString()
-            val dateBinding = binding.dateEditText.text.toString().trim()
-            val timeBinding = binding.timeEditText.text.toString().trim()
-
-            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
-
-            val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
-            binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
-
-            val walletNameBindingValidation = EmptyValidator(walletNameBinding).validate()
-            binding.walletSpinnerLayout.error = if (!walletNameBindingValidation.isSuccess) getString(walletNameBindingValidation.message) else null
-
-            val dateBindingValidation = EmptyValidator(dateBinding).validate()
-            binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
-
-            val timeBindingValidation = EmptyValidator(timeBinding).validate()
-            binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
-
-            if (subGroupNameBindingValidation.isSuccess
-                && amountBindingValidation.isSuccess
-                && walletNameBindingValidation.isSuccess
-                && dateBindingValidation.isSuccess
-                && timeBindingValidation.isSuccess) {
-
-                val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
-                val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
-
-                addHistoryViewModel.addExpenseHistory(
-                    subGroupNameBinding,
-                    amountBinding.toDouble(),
-                    commentBinding,
-                    parsedLocalDateTime,
-                    walletNameBinding
-                )
-
-                sharedModViewModel.set(null)
-                navigateToHome()
-            }
+            handleButtonClick(view)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleButtonClick(view: View) {
+        if (!isButtonClickable) return
+        isButtonClickable = false
+        view.isEnabled = false
+
+        val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+        val amountBinding = binding.amountEditText.text.toString().trim()
+        val commentBinding = binding.commentEditText.text.toString().trim()
+        val walletNameBinding = binding.walletSpinner.text.toString()
+        val dateBinding = binding.dateEditText.text.toString().trim()
+        val timeBinding = binding.timeEditText.text.toString().trim()
+
+        val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+        binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+
+        val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
+        binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
+
+        val walletNameBindingValidation = EmptyValidator(walletNameBinding).validate()
+        binding.walletSpinnerLayout.error = if (!walletNameBindingValidation.isSuccess) getString(walletNameBindingValidation.message) else null
+
+        val dateBindingValidation = EmptyValidator(dateBinding).validate()
+        binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+
+        val timeBindingValidation = EmptyValidator(timeBinding).validate()
+        binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
+
+        if (subGroupNameBindingValidation.isSuccess
+            && amountBindingValidation.isSuccess
+            && walletNameBindingValidation.isSuccess
+            && dateBindingValidation.isSuccess
+            && timeBindingValidation.isSuccess) {
+
+            val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
+            val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
+
+            addHistoryViewModel.addExpenseHistory(
+                subGroupNameBinding,
+                amountBinding.toDouble(),
+                commentBinding,
+                parsedLocalDateTime,
+                walletNameBinding
+            )
+
+            sharedModViewModel.set(null)
+            navigateToHome()
+        }
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            isButtonClickable = true
+            view.isEnabled = true
+        }, clickDelay.toLong())
     }
 
     private fun navigateToHome() {
