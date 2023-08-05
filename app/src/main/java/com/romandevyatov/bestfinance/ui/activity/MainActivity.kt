@@ -111,7 +111,9 @@ class MainActivity() : AppCompatActivity() {
             R.id.analyze_fragment,
             R.id.add_wallet_fragment,
             R.id.wallets_settings_fragment,
-            R.id.groups_and_sub_groups_settings_fragment
+            R.id.groups_and_sub_groups_settings_fragment,
+            R.id.update_expense_group_fragment,
+            R.id.update_income_group_fragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

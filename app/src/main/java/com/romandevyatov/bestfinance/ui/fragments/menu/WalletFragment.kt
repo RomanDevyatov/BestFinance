@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
-import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
+import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint

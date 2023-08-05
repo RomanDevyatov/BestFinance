@@ -70,6 +70,10 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
             generalGroupsAndSubGroupsViewModel.deleteIncomeGroupById(groupWithSubGroupsItem.id)
         }
+
+        override fun navigate(name: String) {
+            TODO("Not yet implemented")
+        }
     }
 
     override fun onCreateView(

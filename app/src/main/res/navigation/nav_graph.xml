@@ -103,6 +103,7 @@
         <action
             android:id="@+id/action_navigation_add_expense_to_navigation_add_wallet"
             app:destination="@id/add_wallet_fragment" />
+
         <argument
             android:name="expenseGroupName"
             app:argType="string"
@@ -250,20 +251,65 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+
     <fragment
         android:id="@+id/history_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
         android:label="History"
         tools:layout="@layout/fragment_history" />
+
     <fragment
         android:id="@+id/groups_and_sub_groups_settings_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragment"
         android:label="Groups and Sub groups"
-        tools:layout="@layout/settings_fragment_groups_and_sub_groups" />
+        tools:layout="@layout/settings_fragment_groups_and_sub_groups" >
+
+        <action
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_expense_group_fragment"
+            app:destination="@id/update_expense_group_fragment" />
+        <action
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_income_group_fragment"
+            app:destination="@id/update_income_group_fragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/wallets_settings_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.SettingsWalletsFragment"
         android:label="Wallets"
         tools:layout="@layout/fragment_settings_wallets" />
+
+    <fragment
+        android:id="@+id/update_expense_group_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateExpenseGroupFragment"
+        android:label="Update expense group"
+        tools:layout="@layout/fragment_update_expense_group" >
+
+        <action
+            android:id="@+id/action_navigation_update_expense_group_to_navigation_settings_groups_and_sub_groups_settings_fragment"
+            app:destination="@id/groups_and_sub_groups_settings_fragment" />
+
+        <argument
+            android:name="expenseGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/update_income_group_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateIncomeGroupFragment"
+        android:label="Update income group"
+        tools:layout="@layout/fragment_update_income_group" >
+
+        <action
+            android:id="@+id/action_navigation_update_income_group_to_navigation_settings_groups_and_sub_groups_settings_fragment"
+            app:destination="@id/groups_and_sub_groups_settings_fragment" />
+
+        <argument
+            android:name="incomeGroupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 </navigation>

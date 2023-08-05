@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.wallet
+package com.romandevyatov.bestfinance.ui.adapters.menu.wallet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

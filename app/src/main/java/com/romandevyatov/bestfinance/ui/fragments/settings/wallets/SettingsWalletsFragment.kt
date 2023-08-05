@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.WalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletItem

@@ -76,7 +76,7 @@ class ExpenseGroupRepository @Inject constructor(
         updateExpenseGroup(expenseGroupNotArchived)
     }
 
-    fun getExpenseGroupNameByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup> {
+    fun getExpenseGroupNameByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup>? {
         return expenseGroupDao.getByNameLiveData(groupNameBinding)
     }
 

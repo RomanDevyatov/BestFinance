@@ -60,7 +60,7 @@ class AddExpenseGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 
-    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup> {
+    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup>? {
         return expenseGroupRepository.getExpenseGroupNameByNameLiveData(groupNameBinding)
     }
 

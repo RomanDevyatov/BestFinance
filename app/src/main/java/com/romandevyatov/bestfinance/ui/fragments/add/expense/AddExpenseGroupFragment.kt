@@ -80,7 +80,7 @@ class AddExpenseGroupFragment : Fragment() {
         binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
         if (nameEmptyValidation.isSuccess) {
-            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding).observe(viewLifecycleOwner) { expenseGroup ->
+            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { expenseGroup ->
                 if (expenseGroup == null) {
                     addGroupViewModel.insertExpenseGroup(
                         ExpenseGroup(

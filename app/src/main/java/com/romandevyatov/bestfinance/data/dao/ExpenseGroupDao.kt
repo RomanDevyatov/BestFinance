@@ -26,7 +26,7 @@ interface ExpenseGroupDao {
     suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
-    fun getByNameLiveData(name: String): LiveData<ExpenseGroup>
+    fun getByNameLiveData(name: String): LiveData<ExpenseGroup>?
 
     @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
     fun getExpenseGroupByName(name: String): ExpenseGroup

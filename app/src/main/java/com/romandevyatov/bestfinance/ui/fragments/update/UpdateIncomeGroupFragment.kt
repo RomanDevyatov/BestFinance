@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,31 +14,31 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
-import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
+import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UpdateExpenseGroupFragment : Fragment() {
-    private var _binding: FragmentUpdateExpenseGroupBinding? = null
+class UpdateIncomeGroupFragment : Fragment() {
+    private var _binding: FragmentUpdateIncomeGroupBinding? = null
 
     private val binding get() = _binding!!
 
-    private val updateExpenseGroupViewModel: UpdateExpenseGroupViewModel by viewModels()
+    private val updateIncomeGroupViewModel: UpdateIncomeGroupViewModel by viewModels()
 
-    private val args: UpdateExpenseGroupFragmentArgs by navArgs()
+    private val args: UpdateIncomeGroupFragmentArgs by navArgs()
 
-    private var expenseGroupId: Long? = null
+    private var incomeGroupId: Long? = null
 
-    private var expenseGroupGlobal: ExpenseGroup? = null
+    private var incomeGroupGlobal: IncomeGroup? = null
 
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
@@ -46,56 +47,60 @@ class UpdateExpenseGroupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUpdateExpenseGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentUpdateIncomeGroupBinding.inflate(inflater, container, false)
 
-        binding.reusable.addNewExpenseGroupNameButton.text = "Update"
+        binding.reusable.addNewGroupButton.text = "Update"
 
-        updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
-            ?.observe(viewLifecycleOwner) { expenseGroup ->
-                expenseGroupGlobal = ExpenseGroup(
-                    expenseGroup.id,
-                    expenseGroup.name,
-                    expenseGroup.description,
-                    expenseGroup.archivedDate)
-            binding.reusable.newExpenseGroupName.setText(expenseGroup.name)
-            binding.reusable.descriptionEditText.setText(expenseGroup.description)
-            expenseGroupId = expenseGroup.id
-            binding.checkedTextView.isChecked = expenseGroup.archivedDate != null
-            binding.checkedTextView.isEnabled = false
-        }
+        updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
+            ?.observe(viewLifecycleOwner) { incomeGroup ->
+                incomeGroupGlobal = IncomeGroup(
+                    incomeGroup.id,
+                    incomeGroup.name,
+                    incomeGroup.isPassive,
+                    incomeGroup.description,
+                    incomeGroup.archivedDate)
+                binding.reusable.groupNameInputEditText.setText(incomeGroup.name)
+                binding.reusable.groupDescriptionInputEditText.setText(incomeGroup.description)
+                incomeGroupId = incomeGroup.id
+                binding.checkedTextView.isChecked = incomeGroup.archivedDate != null
+                binding.checkedTextView.isEnabled = false
+            }
 
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.reusable.addNewExpenseGroupNameButton.setOnClickListener {
+        binding.reusable.addNewGroupButton.setOnClickListener {
             if (!isButtonClickable) return@setOnClickListener
             isButtonClickable = false
             view.isEnabled = false
 
-            val nameBinding = binding.reusable.newExpenseGroupName.text.toString()
-            val descriptionBinding = binding.reusable.descriptionEditText.text.toString()
+            val nameBinding = binding.reusable.groupNameInputEditText.text.toString()
+            val descriptionBinding = binding.reusable.groupDescriptionInputEditText.text.toString()
+            val isPassiveBinding = binding.reusable.isPassiveCheckBox.isChecked
 
             val nameEmptyValidation = EmptyValidator(nameBinding).validate()
-            binding.reusable.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+            binding.reusable.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                val updatedExpenseGroup = ExpenseGroup(
-                    id = expenseGroupId,
+                val updatedIncomeGroup = IncomeGroup(
+                    id = incomeGroupId,
                     name = nameBinding,
+                    isPassive = isPassiveBinding,
                     description = descriptionBinding,
-                    archivedDate = expenseGroupGlobal?.archivedDate
+                    archivedDate = incomeGroupGlobal?.archivedDate
                 )
 
-                updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(nameBinding)
+                updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(nameBinding)
                     ?.observe(viewLifecycleOwner) { group ->
-                        if (group == null || nameBinding == args.expenseGroupName.toString()) {
-                            updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroup)
+                        if (group == null || nameBinding == args.incomeGroupName.toString()) {
+                            updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroup)
 
                             val action =
-                                UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+                                UpdateIncomeGroupFragmentDirections.actionNavigationUpdateIncomeGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
                             findNavController().navigate(action)
                         } else {
                             // Group is already existing

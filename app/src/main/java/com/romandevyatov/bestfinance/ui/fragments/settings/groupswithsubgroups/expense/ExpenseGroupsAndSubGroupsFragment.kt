@@ -9,13 +9,19 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentExpenseGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeSubGroupFragmentDirections
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragmentDirections
+
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +69,13 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
         override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
             generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
+        }
+
+        override fun navigate(name: String) {
+            val action =
+                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseGroupFragment()
+            action.expenseGroupName = name
+            findNavController().navigate(action)
         }
     }
 
