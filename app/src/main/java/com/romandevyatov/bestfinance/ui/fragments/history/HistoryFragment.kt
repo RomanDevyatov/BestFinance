@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.databinding.FragmentHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.ViewPagerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.HistoryViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,8 +15,8 @@ class HistoryFragment : Fragment() {
 
     private val historyTypeArray = arrayOf(
         "Incomes",
-        "Expenses",
-        "Transfers"
+        "Transfers",
+        "Expenses"
     )
 
     private var _binding: FragmentHistoryBinding? = null
@@ -37,7 +37,7 @@ class HistoryFragment : Fragment() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
-        val adapter = ViewPagerAdapter(this)
+        val adapter = HistoryViewPagerAdapter(this)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

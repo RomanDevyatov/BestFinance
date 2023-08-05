@@ -7,7 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     android:id="@+id/addTransferFragment"
-    tools:context=".ui.fragments.addictions.transfer.AddTransferFragment">
+    tools:context=".ui.fragments.add.transfer.AddTransferFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fromWalletNameSpinnerLayout"

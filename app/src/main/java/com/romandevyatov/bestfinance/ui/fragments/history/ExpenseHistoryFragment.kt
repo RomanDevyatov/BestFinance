@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
-import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.ui.adapters.history.ExpenseHistoryAdapter
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.ui.adapters.history.expense.ExpenseHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +38,7 @@ class ExpenseHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.expenseHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        groupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { groups ->
+        groupViewModel.allExpenseGroupLiveData.observe(viewLifecycleOwner) { groups ->
             val expenseGroupMap: Map<Long?, ExpenseGroup> = groups.associateBy { it.id }
 
             expenseHistoryAdapter = ExpenseHistoryAdapter(expenseGroupMap)

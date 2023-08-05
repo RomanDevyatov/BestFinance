@@ -3,10 +3,10 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.repositories.ExpenseGroupRepository
-import com.romandevyatov.bestfinance.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
+import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,27 +34,11 @@ class AddExpenseSubGroupViewModel @Inject constructor(
         expenseSubGroupRepository.deleteExpenseSubGroup(expenseSubGroup)
     }
 
-    fun deleteExpenseSubGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        expenseSubGroupRepository.deleteExpenseSubGroupById(id)
-    }
-
     fun deleteAllExpenseSubGroup() = viewModelScope.launch(Dispatchers.IO) {
         expenseSubGroupRepository.deleteAllExpenseSubGroups()
     }
 
-    // val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
-
-    //    fun getExpenseSubGroupByName(expenseSubGroupName: String) : ExpenseSubGroup? {
-//        expenseSubGroupsLiveData.value?.forEach { it ->
-//            if (it.name == expenseSubGroupName) {
-//                return it
-//            }
-//        }
-//
-//        return null
-//    }
     val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
-
 
     fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> {
         return expenseSubGroupRepository.getExpenseSubGroupByNameNotArchivedLiveData(name)
@@ -77,6 +61,10 @@ class AddExpenseSubGroupViewModel @Inject constructor(
             archivedDate = null
         )
         updateExpenseSubGroup(expenseSubGroupUnarchived)
+    }
+
+    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup>? {
+        return expenseSubGroupRepository.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding, groupId)
     }
 
 

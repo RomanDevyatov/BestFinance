@@ -3,10 +3,10 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import com.romandevyatov.bestfinance.repositories.IncomeGroupRepository
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ class IncomeGroupViewModel @Inject constructor(
     private val incomeGroupRepository: IncomeGroupRepository
 ) : ViewModel() {
 
-    val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
+    val allIncomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
     fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
         incomeGroupRepository.insertIncomeGroup(incomeGroup)
@@ -31,7 +31,7 @@ class IncomeGroupViewModel @Inject constructor(
             incomeGroupRepository.deleteIncomeGroup(incomeGroup)
     }
 
-    fun deleteIncomeGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteIncomeGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
             incomeGroupRepository.deleteIncomeGroupById(id)
     }
 
@@ -47,7 +47,7 @@ class IncomeGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
         return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 

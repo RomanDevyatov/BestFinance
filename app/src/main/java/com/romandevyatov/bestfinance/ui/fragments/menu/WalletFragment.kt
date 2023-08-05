@@ -8,21 +8,19 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
-import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.ui.adapters.wallet.WalletAdapter
+import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
-import com.romandevyatov.bestfinance.viewmodels.shared.SharedViewModel
-import java.time.LocalDateTime
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
@@ -31,8 +29,6 @@ class WalletFragment : Fragment() {
 
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
-
-    private val sharedViewModel: SharedViewModel<Wallet> by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMenuWalletBinding.inflate(inflater, container, false)

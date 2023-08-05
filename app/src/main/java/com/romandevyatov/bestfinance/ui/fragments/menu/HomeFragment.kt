@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
             binding.totalCapitalTextView.text = balanceValue.toString()
         }
 
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
             homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
                 passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
                     .filter { i ->

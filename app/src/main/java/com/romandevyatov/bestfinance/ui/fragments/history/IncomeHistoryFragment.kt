@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.ui.adapters.history.IncomeHistoryAdapter
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.ui.adapters.history.income.IncomeHistoryAdapter
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +38,7 @@ class IncomeHistoryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        groupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
+        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
             val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
 
             incomeHistoryAdapter = IncomeHistoryAdapter(incomeGroupMap)
@@ -49,7 +49,7 @@ class IncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeGroupAndWalletLiveData.observe(viewLifecycleOwner) { allIncomeHistoryWithIncomeGroupAndWallet ->
+        incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { allIncomeHistoryWithIncomeGroupAndWallet ->
                 incomeHistoryAdapter?.submitList(allIncomeHistoryWithIncomeGroupAndWallet.reversed())
         }
 

@@ -3,11 +3,11 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.IncomeGroup
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.db.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import com.romandevyatov.bestfinance.repositories.IncomeGroupRepository
-import com.romandevyatov.bestfinance.repositories.IncomeSubGroupRepository
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
+import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
+import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,18 +22,7 @@ class AddIncomeGroupViewModel @Inject constructor(
     val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
     fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val name = incomeGroup.name
-        val existingIncomeGroup = incomeGroupRepository.getIncomeGroupByName(name)
-        if (existingIncomeGroup == null) {
-            incomeGroupRepository.insertIncomeGroup(incomeGroup)
-        } else if (existingIncomeGroup.archivedDate != null) {
-            val incomeGroupWithIncomeSubGroups = incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(name)
-            incomeGroupRepository.unarchiveIncomeGroup(incomeGroupWithIncomeSubGroups.incomeGroup)
-
-            incomeGroupWithIncomeSubGroups.incomeSubGroups.forEach {
-                incomeSubGroupRepository.unarchiveIncomeSubGroup(it)
-            }
-        }
+        incomeGroupRepository.insertIncomeGroup(incomeGroup)
     }
 
     fun updateIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
@@ -44,7 +33,7 @@ class AddIncomeGroupViewModel @Inject constructor(
         incomeGroupRepository.deleteIncomeGroup(incomeGroup)
     }
 
-    fun deleteIncomeGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteIncomeGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         incomeGroupRepository.deleteIncomeGroupById(id)
     }
 
@@ -60,7 +49,7 @@ class AddIncomeGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup> {
+    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
         return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
     }
 

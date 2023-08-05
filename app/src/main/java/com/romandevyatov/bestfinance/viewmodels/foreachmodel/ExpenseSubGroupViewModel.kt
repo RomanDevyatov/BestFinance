@@ -3,8 +3,8 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ class ExpenseSubGroupViewModel @Inject constructor(
         expenseSubGroupRepository.deleteExpenseSubGroup(expenseSubGroup)
     }
 
-    fun deleteExpenseSubGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteExpenseSubGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         expenseSubGroupRepository.deleteExpenseSubGroupById(id)
     }
 

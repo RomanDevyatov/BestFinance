@@ -3,10 +3,10 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.db.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
-import com.romandevyatov.bestfinance.repositories.ExpenseGroupRepository
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
+import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +16,8 @@ import javax.inject.Inject
 class ExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
 ) : ViewModel() {
+
+    val allExpenseGroupLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupsLiveData()
 
     val allExpenseGroupsNotArchivedLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
@@ -31,7 +33,7 @@ class ExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.deleteExpenseGroup(expenseGroup)
     }
 
-    fun deleteExpenseGroupById(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteExpenseGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.deleteExpenseGroupById(id)
     }
 

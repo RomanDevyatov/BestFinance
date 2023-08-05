@@ -3,8 +3,8 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.db.entities.Wallet
-import com.romandevyatov.bestfinance.repositories.WalletRepository
+import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ class WalletViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    val walletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWallets()
+    val walletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
 
     val allWalletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
@@ -35,7 +35,7 @@ class WalletViewModel @Inject constructor(
         return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
         return walletRepository.getWalletByNameLiveData(walletName)
     }
 
