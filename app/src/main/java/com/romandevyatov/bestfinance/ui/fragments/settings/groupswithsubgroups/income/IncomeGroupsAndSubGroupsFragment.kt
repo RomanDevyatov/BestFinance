@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentIncomeGroupsAndSubGroupsBinding
@@ -16,6 +17,7 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.Gr
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +74,10 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun navigate(name: String) {
-            TODO("Not yet implemented")
+            val action =
+                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateIncomeGroupFragment()
+            action.incomeGroupName = name
+            findNavController().navigate(action)
         }
     }
 
