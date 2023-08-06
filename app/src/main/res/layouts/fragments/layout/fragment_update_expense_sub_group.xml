@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/updateIncomeSubGroupFragment"
-    tools:context=".ui.fragments.update.subgroup.UpdateIncomeSubGroupFragment" >
+    android:id="@+id/updateExpenseSubGroupFragment"
+    tools:context=".ui.fragments.update.subgroup.UpdateExpenseSubGroupFragment" >
 
     <include
         android:id="@+id/reusable"
-        layout="@layout/fragment_add_income_sub_group"
+        layout="@layout/fragment_add_expense_sub_group"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 

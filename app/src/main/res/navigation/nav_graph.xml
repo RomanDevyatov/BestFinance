@@ -238,7 +238,7 @@
     </fragment>
     <fragment
         android:id="@+id/update_wallet_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateWalletFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment"
         android:label="Update wallet"
         tools:layout="@layout/fragment_update_wallet" >
         <action
@@ -273,6 +273,10 @@
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_income_sub_group_fragment"
             app:destination="@id/update_income_sub_group_fragment" />
+
+        <action
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_expense_sub_group_fragment"
+            app:destination="@id/update_expense_sub_group_fragment" />
     </fragment>
 
     <fragment
@@ -283,7 +287,7 @@
 
     <fragment
         android:id="@+id/update_expense_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateExpenseGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.group.UpdateExpenseGroupFragment"
         android:label="Update expense group"
         tools:layout="@layout/fragment_update_expense_group" >
 
@@ -300,7 +304,7 @@
 
     <fragment
         android:id="@+id/update_income_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateIncomeGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.group.UpdateIncomeGroupFragment"
         android:label="Update income group"
         tools:layout="@layout/fragment_update_income_group" >
 
@@ -317,7 +321,7 @@
 
     <fragment
         android:id="@+id/update_income_sub_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateIncomeSubGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.subgroup.UpdateIncomeSubGroupFragment"
         android:label="Update income sub group"
         tools:layout="@layout/fragment_update_income_sub_group" >
 
@@ -327,6 +331,22 @@
 
         <argument
             android:name="incomeSubGroupId"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/update_expense_sub_group_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.subgroup.UpdateExpenseSubGroupFragment"
+        android:label="Update expense sub group"
+        tools:layout="@layout/fragment_update_expense_sub_group" >
+
+        <action
+            android:id="@+id/action_navigation_update_expense_sub_group_to_navigation_settings_groups_and_sub_groups_settings_fragment"
+            app:destination="@id/groups_and_sub_groups_settings_fragment" />
+
+        <argument
+            android:name="expenseSubGroupId"
             app:argType="long"
             android:defaultValue="0L" />
     </fragment>

@@ -54,7 +54,10 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun navigateToUpdateSubGroup(id: Long) {
-            TODO("Not yet implemented")
+            val action =
+                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseSubGroupFragment()
+            action.expenseSubGroupId = id
+            findNavController().navigate(action)
         }
     }
 

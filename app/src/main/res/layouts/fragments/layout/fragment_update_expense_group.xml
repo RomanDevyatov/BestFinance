@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/updateExpenseGroupFragment"
-    tools:context=".ui.fragments.update.UpdateExpenseGroupFragment" >
+    tools:context=".ui.fragments.update.group.UpdateExpenseGroupFragment" >
 
     <include
         android:id="@+id/reusable"

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.update
+package com.romandevyatov.bestfinance.ui.fragments.update.wallet
 
 import android.app.Dialog
 import android.content.Context

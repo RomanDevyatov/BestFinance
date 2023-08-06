@@ -100,5 +100,10 @@ class ExpenseGroupRepository @Inject constructor(
         expenseGroupDao.unarchiveExpenseGroupById(id)
     }
 
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups> {
+        return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id)
+    }
+
+
 
 }
