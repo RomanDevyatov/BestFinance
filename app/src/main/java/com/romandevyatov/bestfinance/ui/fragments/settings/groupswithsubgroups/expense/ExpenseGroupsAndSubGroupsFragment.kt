@@ -52,6 +52,10 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
             generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroupItem.id)
         }
+
+        override fun navigateToUpdateSubGroup(id: Long) {
+            TODO("Not yet implemented")
+        }
     }
 
     private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
@@ -71,7 +75,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
             generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
         }
 
-        override fun navigate(name: String) {
+        override fun navigateToUpdateGroup(name: String) {
             val action =
                 GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseGroupFragment()
             action.expenseGroupName = name
@@ -109,7 +113,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         groupWithSubGroupsItemMutableList.addAll(
             groupsWithSubGroups.map { groupWithSubGroup ->
                 val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                    SubGroupItem(it.id, it.name, it.expenseGroupId, it.archivedDate == null)
+                    SubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
                 }.toMutableList()
                 GroupWithSubGroupsItem(
                     groupWithSubGroup.expenseGroup.id,

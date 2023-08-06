@@ -15,6 +15,7 @@ class SubGroupsAdapter(
     interface OnSubGroupListener {
         fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean)
         fun onSubGroupDelete(subGroupItem: SubGroupItem)
+        fun navigateToUpdateSubGroup(id: Long)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubGroupViewHolder {
@@ -49,6 +50,10 @@ class SubGroupsAdapter(
 
             binding.deleteButton.setOnClickListener {
                 onSubGroupListener?.onSubGroupDelete(subGroupItem)
+            }
+
+            binding.root.setOnClickListener {
+                onSubGroupListener?.navigateToUpdateSubGroup(subGroupItem.id)
             }
 
         }

@@ -1,8 +1,8 @@
 package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models
 
 data class SubGroupItem(
-    val id: Long?,
+    val id: Long,
     val name: String,
-    val groupId: Long?,
+    val groupId: Long,
     var isExist: Boolean = false
 )

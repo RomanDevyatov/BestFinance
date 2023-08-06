@@ -270,6 +270,9 @@
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_income_group_fragment"
             app:destination="@id/update_income_group_fragment" />
+        <action
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_income_sub_group_fragment"
+            app:destination="@id/update_income_sub_group_fragment" />
     </fragment>
 
     <fragment
@@ -310,6 +313,22 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/update_income_sub_group_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.UpdateIncomeSubGroupFragment"
+        android:label="Update income sub group"
+        tools:layout="@layout/fragment_update_income_sub_group" >
+
+        <action
+            android:id="@+id/action_navigation_update_income_sub_group_to_navigation_settings_groups_and_sub_groups_settings_fragment"
+            app:destination="@id/groups_and_sub_groups_settings_fragment" />
+
+        <argument
+            android:name="incomeSubGroupId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
 
 </navigation>

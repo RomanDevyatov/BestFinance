@@ -23,7 +23,7 @@ class IncomeSubGroupRepository @Inject constructor(
         incomeSubGroupDao.delete(incomeGroup)
     }
 
-    suspend fun updateIncomeSubGroup(incomeGroup: IncomeSubGroup) {
+    fun updateIncomeSubGroup(incomeGroup: IncomeSubGroup) {
         incomeSubGroupDao.update(incomeGroup)
     }
 

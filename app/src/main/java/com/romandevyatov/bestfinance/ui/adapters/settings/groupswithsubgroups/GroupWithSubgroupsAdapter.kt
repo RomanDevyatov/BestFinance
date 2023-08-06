@@ -18,7 +18,7 @@ class GroupWithSubgroupsAdapter(
     interface OnGroupCheckedChangeListener {
         fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean)
         fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem)
-        fun navigate(name: String)
+        fun navigateToUpdateGroup(name: String)
     }
 
     private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroupsItem>() {
@@ -72,7 +72,7 @@ class GroupWithSubgroupsAdapter(
             binding.subGroupRecyclerView.adapter = subGroupsAdapter
 
             binding.root.setOnClickListener {
-                groupListener?.navigate(groupWithSubGroupsItem.name)
+                groupListener?.navigateToUpdateGroup(groupWithSubGroupsItem.name)
             }
         }
     }

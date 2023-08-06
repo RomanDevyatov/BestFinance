@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class UpdateIncomeGroupFragment : Fragment() {
+
     private var _binding: FragmentUpdateIncomeGroupBinding? = null
 
     private val binding get() = _binding!!
@@ -48,6 +50,13 @@ class UpdateIncomeGroupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUpdateIncomeGroupBinding.inflate(inflater, container, false)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_navigation_update_income_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.reusable.addNewGroupButton.text = "Update"
 
