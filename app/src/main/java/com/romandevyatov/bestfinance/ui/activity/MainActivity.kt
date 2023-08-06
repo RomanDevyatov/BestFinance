@@ -18,7 +18,7 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity() : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -34,6 +34,10 @@ class MainActivity() : AppCompatActivity() {
 
         setNavigationTopBar()
         setNavigationBottomBar()
+    }
+
+    override fun onExitApp() {
+        finish()
     }
 
     // for default app bar, navigate up fixing
