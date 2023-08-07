@@ -24,6 +24,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +52,8 @@ class UpdateIncomeGroupFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateIncomeGroupBinding.inflate(inflater, container, false)
 
+        setOnBackPressedHandler()
+
         binding.reusable.addNewGroupButton.text = "Update"
 
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
@@ -71,6 +74,15 @@ class UpdateIncomeGroupFragment : Fragment() {
         return binding.root
     }
 
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_navigation_update_income_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,25 +100,15 @@ class UpdateIncomeGroupFragment : Fragment() {
             binding.reusable.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                val updatedIncomeGroup = IncomeGroup(
-                    id = incomeGroupId,
-                    name = nameBinding,
-                    isPassive = isPassiveBinding,
-                    description = descriptionBinding,
-                    archivedDate = incomeGroupGlobal?.archivedDate
-                )
-
                 updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(nameBinding)
                     ?.observe(viewLifecycleOwner) { group ->
-                        if (group == null || nameBinding == args.incomeGroupName.toString()) {
-                            updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroup)
+                        if (nameBinding == args.incomeGroupName.toString() || group == null) {
+                            updateIncomeGroup(nameBinding, descriptionBinding, isPassiveBinding)
 
-                            val action =
-                                UpdateIncomeGroupFragmentDirections.actionNavigationUpdateIncomeGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                            findNavController().navigate(action)
+                            navigateToSettingsGroupsAndSubGroupsSettingsFragment()
                         } else {
                             // Group is already existing
-                            showExistingDialog(
+                            WindowUtil.showExistingDialog(
                                 requireContext(),
                                 "This group `$nameBinding` is already existing."
                             )
@@ -122,27 +124,31 @@ class UpdateIncomeGroupFragment : Fragment() {
         }
     }
 
+    private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
+        val action =
+            UpdateIncomeGroupFragmentDirections.actionNavigationUpdateIncomeGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun updateIncomeGroup(
+        nameBinding: String,
+        descriptionBinding: String,
+        isPassiveBinding: Boolean
+    ) {
+        val updatedIncomeGroup = IncomeGroup(
+            id = incomeGroupId,
+            name = nameBinding,
+            isPassive = isPassiveBinding,
+            description = descriptionBinding,
+            archivedDate = incomeGroupGlobal?.archivedDate
+        )
+
+        updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroup)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
 }

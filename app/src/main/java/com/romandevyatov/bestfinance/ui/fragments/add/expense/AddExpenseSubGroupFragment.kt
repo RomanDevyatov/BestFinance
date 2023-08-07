@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,7 +94,7 @@ class AddExpenseSubGroupFragment : Fragment() {
                             action.expenseGroupName = selectedGroupNameBinding
                             action.expenseSubGroupName = subGroupNameBinding
                         } else if (subGroup.archivedDate == null) {
-                            showExistingDialog(
+                            WindowUtil.showExistingDialog(
                                 requireContext(),
                                 "This sub group `$subGroupNameBinding` is already existing."
                             )
@@ -189,25 +190,6 @@ class AddExpenseSubGroupFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

@@ -26,6 +26,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseSubGroupBi
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,27 +46,14 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private val clickDelayMs = 1000
     private var isButtonClickable = true
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
-            override fun handleOnBackPressed() {
-                val action =
-                    UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                findNavController().navigate(action)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUpdateExpenseSubGroupBinding.inflate(inflater, container, false)
+
+        setOnBackPressedHandler()
 
         binding.reusable.addSubGroupNameButton.text = "Update"
 
@@ -83,6 +71,17 @@ class UpdateExpenseSubGroupFragment : Fragment() {
             }
 
         return binding.root
+    }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val action =
+                    UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+                findNavController().navigate(action)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,7 +115,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
                     if ((expenseSubGroupOldGlobal?.name != newSubGroupNameBinding
                                 || expenseSubGroupOldGlobal?.expenseGroupId != newExpenseGroupId)
                         && subGroups.contains(newSubGroupNameBinding)) {
-                        showExistingDialog(requireContext(), "This sub group `$newSubGroupNameBinding` is already existing in `${newGroupNameBinding}` group.")
+                        WindowUtil.showExistingDialog(requireContext(), "This sub group `$newSubGroupNameBinding` is already existing in `${newGroupNameBinding}` group.")
                     } else {
                         updateSubGroup(newSubGroupNameBinding, newDescriptionBinding, newExpenseGroupId)
                         navigateToSettingGroupsAndSubGroups()
@@ -202,22 +201,4 @@ class UpdateExpenseSubGroupFragment : Fragment() {
         return spinnerItems
     }
 
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(com.romandevyatov.bestfinance.R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(com.romandevyatov.bestfinance.R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
 }

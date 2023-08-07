@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,24 +94,15 @@ class UpdateExpenseGroupFragment : Fragment() {
             binding.reusable.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
             if (nameEmptyValidation.isSuccess) {
-                val updatedExpenseGroup = ExpenseGroup(
-                    id = expenseGroupId,
-                    name = nameBinding,
-                    description = descriptionBinding,
-                    archivedDate = expenseGroupGlobal?.archivedDate
-                )
-
                 updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(nameBinding)
                     ?.observe(viewLifecycleOwner) { group ->
-                        if (group == null || nameBinding == args.expenseGroupName.toString()) {
-                            updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroup)
+                        if (nameBinding == args.expenseGroupName.toString() || group == null) {
+                            updateExpenseGroup(nameBinding, descriptionBinding)
 
-                            val action =
-                                UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                            findNavController().navigate(action)
+                            navigateToSettingsGroupsAndSubGroupsSettingsFragment()
                         } else {
                             // Group is already existing
-                            showExistingDialog(
+                            WindowUtil.showExistingDialog(
                                 requireContext(),
                                 "This group `$nameBinding` is already existing."
                             )
@@ -126,27 +118,25 @@ class UpdateExpenseGroupFragment : Fragment() {
         }
     }
 
+    private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
+        val action =
+            UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun updateExpenseGroup(nameBinding: String, descriptionBinding: String) {
+        val updatedExpenseGroup = ExpenseGroup(
+            id = expenseGroupGlobal?.id,
+            name = nameBinding,
+            description = descriptionBinding,
+            archivedDate = expenseGroupGlobal?.archivedDate
+        )
+        updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroup)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
 }
