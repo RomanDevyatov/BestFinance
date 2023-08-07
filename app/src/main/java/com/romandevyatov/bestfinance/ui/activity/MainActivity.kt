@@ -64,6 +64,14 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
                 navController.navigate(R.id.add_expense_fragment)
                 true
             }
+            R.id.groups_and_sub_groups_settings_fragment -> {
+                navController.navigate(R.id.settings_fragment)
+                true
+            }
+            R.id.wallets_settings_fragment -> {
+                navController.navigate(R.id.settings_fragment)
+                true
+            }
             else -> navController.navigateUp()
         }
     }
@@ -115,9 +123,12 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             R.id.analyze_fragment,
             R.id.add_wallet_fragment,
             R.id.wallets_settings_fragment,
+            R.id.update_wallet_fragment,
             R.id.groups_and_sub_groups_settings_fragment,
             R.id.update_expense_group_fragment,
-            R.id.update_income_group_fragment
+            R.id.update_income_group_fragment,
+            R.id.update_expense_sub_group_fragment,
+            R.id.update_income_sub_group_fragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

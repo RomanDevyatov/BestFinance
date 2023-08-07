@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
@@ -32,10 +33,14 @@ class WalletFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
+
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { }
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.home_fragment)
+            }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         return binding.root
     }
 

@@ -48,12 +48,7 @@ class UpdateExpenseGroupFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateExpenseGroupBinding.inflate(inflater, container, false)
 
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_navigation_update_expense_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        setOnBackPressedHandler()
 
         binding.reusable.addNewExpenseGroupNameButton.text = "Update"
 
@@ -72,6 +67,15 @@ class UpdateExpenseGroupFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_navigation_update_expense_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

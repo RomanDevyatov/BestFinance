@@ -273,10 +273,12 @@
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_income_sub_group_fragment"
             app:destination="@id/update_income_sub_group_fragment" />
-
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_expense_sub_group_fragment"
             app:destination="@id/update_expense_sub_group_fragment" />
+        <action
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
     </fragment>
 
     <fragment

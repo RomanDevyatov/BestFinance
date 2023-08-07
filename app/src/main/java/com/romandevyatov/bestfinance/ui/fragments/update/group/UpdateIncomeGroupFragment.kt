@@ -51,13 +51,6 @@ class UpdateIncomeGroupFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateIncomeGroupBinding.inflate(inflater, container, false)
 
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_navigation_update_income_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
         binding.reusable.addNewGroupButton.text = "Update"
 
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())

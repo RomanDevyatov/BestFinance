@@ -142,9 +142,7 @@ class AddIncomeHistoryFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
                 findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
@@ -538,29 +536,16 @@ class AddIncomeHistoryFragment : Fragment() {
         val timeBinding = binding.timeEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        var isSend = true
-        if (amountBinding.isNotBlank()) {
-            val amountBindingValidation = IsDigitValidator(amountBinding).validate()
-            binding.amountLayout.error =
-                if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
-
-            if (!amountBindingValidation.isSuccess) {
-                isSend = false
-            }
-        }
-
-        if (isSend) {
-            val addTransactionForm = AddTransactionForm(
-                groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
-                subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
-                walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
-                amount = amountBinding,
-                date = dateBinding,
-                time = timeBinding,
-                comment = commentBinding
-            )
-            sharedModViewModel.set(addTransactionForm)
-        }
+        val addTransactionForm = AddTransactionForm(
+            groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
+            subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
+            walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
+            amount = amountBinding,
+            date = dateBinding,
+            time = timeBinding,
+            comment = commentBinding
+        )
+        sharedModViewModel.set(addTransactionForm)
     }
 
     private fun resetSubGroupSpinner() {
