@@ -24,4 +24,6 @@ object Constants {
     const val GROUPS_AND_SUB_GROUPS_CATEGORY: String = "Groups and Sub Groups"
     const val WALLETS_CATEGORY: String = "Wallets"
 
+    const val clickDelayMs = 1000
+
 }

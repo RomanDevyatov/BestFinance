@@ -16,7 +16,7 @@ class GroupSpinnerAdapter(
     context: Context,
     private val resourceId: Int,
     private var items: MutableList<SpinnerItem>,
-    private val addItemText: String,
+    private val addItemText: String? = null,
     var listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<SpinnerItem>(context, resourceId, items), Filterable {
 
@@ -34,14 +34,11 @@ class GroupSpinnerAdapter(
 
         val binding = ItemWithDelBinding.bind(spinnerView)
 
-//        val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
-//        val itemDeleteTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
-
         val itemText = items[position].name
         binding.itemNameTextView.text = itemText
 
         val hasListener = listener != null
-        val isAddItem = itemText == addItemText
+        val isAddItem = addItemText != null && itemText == addItemText
         binding.itemDelTextView.isVisible = hasListener && !isAddItem
 
         binding.itemDelTextView.setOnClickListener {

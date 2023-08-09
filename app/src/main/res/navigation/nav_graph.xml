@@ -256,7 +256,12 @@
         android:id="@+id/history_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
         android:label="History"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+
+        <action
+            android:id="@+id/action_history_fragment_to_update_income_history_fragment"
+            app:destination="@id/update_income_history_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/groups_and_sub_groups_settings_fragment"
@@ -349,6 +354,21 @@
 
         <argument
             android:name="expenseSubGroupId"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/update_income_history_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHistoryFragment"
+        android:label="Update income history"
+        tools:layout="@layout/fragment_update_income_history" >
+
+        <action
+            android:id="@+id/action_update_income_history_fragment_to_history_fragment"
+            app:destination="@id/history_fragment" />
+        <argument
+            android:name="incomeHistoryId"
             app:argType="long"
             android:defaultValue="0L" />
     </fragment>

@@ -12,7 +12,7 @@ class SpinnerAdapter(
     context: Context,
     private val resourceId: Int,
     private var items: MutableList<String>,
-    private val addItem: String,
+    private val addItem: String? = null,
     var listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, resourceId, items), Filterable {
 
@@ -34,7 +34,7 @@ class SpinnerAdapter(
         val itemText = items[position]
         itemNameTextView.text = itemText
 
-        itemDeleteTextView.isVisible = itemText != addItem
+        itemDeleteTextView.isVisible = addItem != null && itemText != addItem
 
         itemDeleteTextView.setOnClickListener {
             listener?.archive(itemText)
