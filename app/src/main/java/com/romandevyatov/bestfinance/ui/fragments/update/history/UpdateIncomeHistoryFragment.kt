@@ -43,7 +43,6 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateIncomeHistoryViewModel: UpdateIncomeHistoryViewModel by viewModels()
-    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var incomeHistoryGlobal: IncomeHistory? = null
