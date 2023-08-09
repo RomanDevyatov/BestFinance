@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.income
+package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -399,7 +399,8 @@ class AddIncomeHistoryFragment : Fragment() {
 
                 saveAddTransactionForm()
 
-                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
+                val action =
+                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
                 action.incomeGroupName = binding.groupSpinner.text.toString()
                 findNavController().navigate(action)
             } else {
@@ -419,7 +420,8 @@ class AddIncomeHistoryFragment : Fragment() {
 
                 saveAddTransactionForm()
 
-                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
+                val action =
+                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
                 action.source = ADD_INCOME_HISTORY_FRAGMENT
                 action.spinnerType = null
                 findNavController().navigate(action)

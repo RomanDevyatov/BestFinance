@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.expense
+package com.romandevyatov.bestfinance.ui.fragments.add.group
 
 import android.app.Dialog
 import android.content.Context

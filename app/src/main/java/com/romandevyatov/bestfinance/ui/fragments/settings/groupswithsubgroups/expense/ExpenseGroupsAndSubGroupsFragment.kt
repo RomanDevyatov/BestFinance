@@ -19,7 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.Gr
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
-import com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeSubGroupFragmentDirections
+import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddIncomeSubGroupFragmentDirections
 import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragmentDirections
 
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel

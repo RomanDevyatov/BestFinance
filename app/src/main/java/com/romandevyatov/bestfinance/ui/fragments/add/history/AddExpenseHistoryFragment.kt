@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.expense
+package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

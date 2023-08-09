@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.income
+package com.romandevyatov.bestfinance.ui.fragments.add.group
 
 import android.app.Dialog
 import android.content.Context
@@ -14,7 +14,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.HandlerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -94,7 +93,8 @@ class AddIncomeGroupFragment : Fragment() {
                             isPassive = isPassiveBinding
                         )
                     )
-                    val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                    val action =
+                        AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
                     action.incomeGroupName = groupNameBinding
                     findNavController().navigate(action)
                 } else if (incomeGroup.archivedDate == null) {

@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/add_income_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeHistoryFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment"
         android:label="Add Income"
         tools:layout="@layout/fragment_add_income_history" >
         <action
@@ -88,7 +88,7 @@
 
     <fragment
         android:id="@+id/add_expense_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.expense.AddExpenseHistoryFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryFragment"
         android:label="Add Expense"
         tools:layout="@layout/fragment_add_expense_history" >
         <action
@@ -123,7 +123,7 @@
     </fragment>
     <fragment
         android:id="@+id/add_income_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.group.AddIncomeGroupFragment"
         android:label="New income group"
         tools:layout="@layout/fragment_add_income_group" >
 
@@ -133,7 +133,7 @@
     </fragment>
     <fragment
         android:id="@+id/add_income_sub_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeSubGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddIncomeSubGroupFragment"
         android:label="New income sub group"
         tools:layout="@layout/fragment_add_income_sub_group" >
 
@@ -149,7 +149,7 @@
     </fragment>
     <fragment
         android:id="@+id/add_expense_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.expense.AddExpenseGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.group.AddExpenseGroupFragment"
         android:label="New expense group"
         tools:layout="@layout/fragment_add_expense_group" >
 
@@ -159,7 +159,7 @@
     </fragment>
     <fragment
         android:id="@+id/add_expense_sub_group_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.expense.AddExpenseSubGroupFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddExpenseSubGroupFragment"
         android:label="New expense sub group"
         tools:layout="@layout/fragment_add_expense_sub_group" >
 
