@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.data.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.WalletDao
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,9 +56,12 @@ class WalletRepository @Inject constructor(
     }
 
     fun unarchiveWalletById(id: Long?) {
-        walletDao.unarchiveById(id)
+        walletDao.updateArchivedDateById(id, null)
     }
 
+    fun archiveWalletById(id: Long?, date: LocalDateTime) {
+        walletDao.updateArchivedDateById(id, date)
+    }
 
 
 }

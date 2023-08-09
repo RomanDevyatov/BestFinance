@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Delete
 import androidx.room.Query
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import java.time.LocalDateTime
 
 
 @Dao
@@ -60,5 +61,8 @@ interface WalletDao {
 
     @Query("UPDATE wallet SET archived_date = NULL WHERE id = :id")
     fun unarchiveById(id: Long?)
+
+    @Query("UPDATE wallet SET archived_date = :date WHERE id = :id")
+    fun updateArchivedDateById(id: Long?, date: LocalDateTime?)
 
 }

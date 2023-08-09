@@ -16,6 +16,8 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryItem
+import com.romandevyatov.bestfinance.utils.Constants.GROUPS_AND_SUB_GROUPS_CATEGORY
+import com.romandevyatov.bestfinance.utils.Constants.WALLETS_CATEGORY
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,8 +72,8 @@ class SettingsFragment : Fragment() {
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
         val action = when (subCategory.name) {
-            "Groups and Sub Groups"   -> SettingsFragmentDirections.actionSettingsFragmentToGroupsAndSubGroupsSettingsFragment()
-            "Wallet"    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
+            GROUPS_AND_SUB_GROUPS_CATEGORY   -> SettingsFragmentDirections.actionSettingsFragmentToGroupsAndSubGroupsSettingsFragment()
+            WALLETS_CATEGORY    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
 //                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
 //                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
             else -> return
@@ -85,8 +87,8 @@ class SettingsFragment : Fragment() {
                 "Categories",
                 R.drawable.ic_archive,
                 listOf(
-                    SubCategoryItem("Groups and Sub Groups", R.drawable.ic_wallet),
-                    SubCategoryItem("Wallet", R.drawable.ic_wallet)
+                    SubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_wallet),
+                    SubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
                 )
             ),
 //            CategoryItem(

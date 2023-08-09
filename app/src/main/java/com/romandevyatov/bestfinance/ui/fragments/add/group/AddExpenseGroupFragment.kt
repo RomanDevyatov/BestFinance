@@ -33,7 +33,7 @@ class AddExpenseGroupFragment : Fragment() {
 
     private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onAttach(context: Context) {
@@ -112,7 +112,7 @@ class AddExpenseGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelay.toLong())
+        }, clickDelayMs.toLong())
     }
 
     override fun onDestroyView() {

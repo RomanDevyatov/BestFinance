@@ -8,6 +8,7 @@ import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,6 +67,14 @@ class WalletViewModel @Inject constructor(
         )
 
         updateWallet(updatedWallet)
+    }
+
+    fun archiveWalletById(id: Long?, date: LocalDateTime) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.archiveWalletById(id, date)
+    }
+
+    fun unarchiveWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.unarchiveWalletById(id)
     }
 
 }
