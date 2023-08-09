@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.update
+package com.romandevyatov.bestfinance.ui.fragments.update.wallet
 
 import android.app.Dialog
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,47 +61,34 @@ class UpdateWalletFragment : Fragment() {
             val walletBalanceBinding = binding.balanceEditText.text.toString().toDouble()
             val walletDescriptionBinding = binding.descriptionEditText.text.toString()
 
-            if (walletNameBinding != args.walletName.toString()) {
-                walletViewModel.getWalletByNameLiveData(walletNameBinding)?.observe(viewLifecycleOwner) { wallet ->
-                    if (wallet == null) {
-                        val updatedWallet = Wallet(
-                            id = walletId,
-                            name = walletNameBinding,
-                            balance = walletBalanceBinding,
-                            description = walletDescriptionBinding
-                        )
+            walletViewModel.getWalletByNameLiveData(walletNameBinding)?.observe(viewLifecycleOwner) { wallet ->
+                if (walletNameBinding == args.walletName.toString() || wallet == null) {
+                    val updatedWallet = Wallet(
+                        id = walletId,
+                        name = walletNameBinding,
+                        balance = walletBalanceBinding,
+                        description = walletDescriptionBinding
+                    )
 
-                        walletViewModel.updateWalletById(updatedWallet)
+                    walletViewModel.updateWalletById(updatedWallet)
 
-                        val action =
-                            UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-                        findNavController().navigate(action)
-                    } else if (wallet.archivedDate == null){
-                        showExistingDialog(
-                            requireContext(),
-                            "The wallet with this name `$walletNameBinding` is already existing."
-                        )
-                    } else {
-                        showUnarchiveDialog(
-                            requireContext(),
-                            wallet,
-                            "The wallet with this name is archived. Do you want to unarchive `$walletNameBinding` wallet and proceed updating?")
-                    }
+                    val action =
+                        UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
+                    findNavController().navigate(action)
+                } else if (wallet.archivedDate == null) {
+                    WindowUtil.showExistingDialog(
+                        requireContext(),
+                        "The wallet with this name `$walletNameBinding` is already existing."
+                    )
+                } else {
+                    showUnarchiveDialog(
+                        requireContext(),
+                        wallet,
+                        "The wallet with this name is archived. Do you want to unarchive `$walletNameBinding` wallet and proceed updating?"
+                    )
                 }
-            } else {
-                val updatedWallet = Wallet(
-                    id = walletId,
-                    name = walletNameBinding,
-                    balance = walletBalanceBinding,
-                    description = walletDescriptionBinding
-                )
-
-                walletViewModel.updateWalletById(updatedWallet)
-
-                val action =
-                    UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-                findNavController().navigate(action)
             }
+
         }
     }
 
@@ -130,25 +119,6 @@ class UpdateWalletFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

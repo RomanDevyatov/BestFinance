@@ -21,4 +21,7 @@ object Constants {
 
     const val ADD_NEW_WALLET: String = "Add new wallet"
 
+    const val GROUPS_AND_SUB_GROUPS_CATEGORY: String = "Groups and Sub Groups"
+    const val WALLETS_CATEGORY: String = "Wallets"
+
 }

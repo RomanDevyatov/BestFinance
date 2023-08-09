@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.expense
+package com.romandevyatov.bestfinance.ui.fragments.add.group
 
 import android.app.Dialog
 import android.content.Context
@@ -18,19 +18,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
+import com.romandevyatov.bestfinance.utils.WindowUtil
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddExpenseGroupFragment : Fragment() {
+class AddIncomeGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddExpenseGroupBinding? = null
+    private var _binding: FragmentAddIncomeGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
+    private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
 
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
@@ -43,8 +44,10 @@ class AddExpenseGroupFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 val action =
-                    AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                action.expenseGroupName = null
+                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                action.incomeGroupName = null
+                action.incomeSubGroupName = null
+                action.walletName = null
                 findNavController().navigate(action)
             }
         }
@@ -56,14 +59,14 @@ class AddExpenseGroupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddExpenseGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNewExpenseGroupNameButton.setOnClickListener {
+        binding.addNewGroupButton.setOnClickListener {
             handleButtonClick(view)
         }
     }
@@ -73,36 +76,38 @@ class AddExpenseGroupFragment : Fragment() {
         isButtonClickable = false
         view.isEnabled = false
 
-        val groupNameBinding = binding.newExpenseGroupName.text.toString().trim()
-        val descriptionBinding = binding.descriptionEditText.text.toString().trim()
+        val groupNameBinding = binding.groupNameInputEditText.text.toString()
+        val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
+        val isPassiveBinding = binding.isPassiveCheckBox.isChecked
 
         val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
-        binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+        binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
         if (nameEmptyValidation.isSuccess) {
-            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { expenseGroup ->
-                if (expenseGroup == null) {
-                    addGroupViewModel.insertExpenseGroup(
-                        ExpenseGroup(
+            addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
+                if (incomeGroup == null) {
+                    addGroupViewModel.insertIncomeGroup(
+                        IncomeGroup(
                             name = groupNameBinding,
-                            description = descriptionBinding
+                            description = groupDescriptionBinding,
+                            isPassive = isPassiveBinding
                         )
                     )
-
                     val action =
-                        AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                    action.expenseGroupName = groupNameBinding
+                        AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                    action.incomeGroupName = groupNameBinding
                     findNavController().navigate(action)
-                } else if (expenseGroup.archivedDate == null) {
-                    showExistingDialog(
+                } else if (incomeGroup.archivedDate == null) {
+                    WindowUtil.showExistingDialog(
                         requireContext(),
                         "This group `$groupNameBinding` is already existing."
                     )
                 } else {
-                    showWalletDialog(
+                    showUnarchiveDialog(
                         requireContext(),
-                        expenseGroup,
-                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
+                        incomeGroup,
+                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
+                    )
                 }
             }
         }
@@ -119,7 +124,7 @@ class AddExpenseGroupFragment : Fragment() {
         _binding = null
     }
 
-    private fun showWalletDialog(context: Context, group: ExpenseGroup, message: String?) {
+    private fun showUnarchiveDialog(context: Context, group: IncomeGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -133,34 +138,15 @@ class AddExpenseGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveExpenseGroup(group)
+            addGroupViewModel.unarchiveIncomeGroup(group)
             dialog.dismiss()
             val action =
-                AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-            action.expenseGroupName = group.name
+                AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+            action.incomeGroupName = group.name
             findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

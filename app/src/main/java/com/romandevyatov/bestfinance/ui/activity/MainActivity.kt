@@ -18,7 +18,7 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity() : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -34,6 +34,10 @@ class MainActivity() : AppCompatActivity() {
 
         setNavigationTopBar()
         setNavigationBottomBar()
+    }
+
+    override fun onExitApp() {
+        finish()
     }
 
     // for default app bar, navigate up fixing
@@ -58,6 +62,14 @@ class MainActivity() : AppCompatActivity() {
             }
             R.id.add_expense_sub_group_fragment -> {
                 navController.navigate(R.id.add_expense_fragment)
+                true
+            }
+            R.id.groups_and_sub_groups_settings_fragment -> {
+                navController.navigate(R.id.settings_fragment)
+                true
+            }
+            R.id.wallets_settings_fragment -> {
+                navController.navigate(R.id.settings_fragment)
                 true
             }
             else -> navController.navigateUp()
@@ -111,9 +123,12 @@ class MainActivity() : AppCompatActivity() {
             R.id.analyze_fragment,
             R.id.add_wallet_fragment,
             R.id.wallets_settings_fragment,
+            R.id.update_wallet_fragment,
             R.id.groups_and_sub_groups_settings_fragment,
             R.id.update_expense_group_fragment,
-            R.id.update_income_group_fragment
+            R.id.update_income_group_fragment,
+            R.id.update_expense_sub_group_fragment,
+            R.id.update_income_sub_group_fragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

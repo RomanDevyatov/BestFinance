@@ -122,6 +122,9 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.updateArchivedDateById(id, date)
     }
 
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups> {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id)
+    }
 
 
 }

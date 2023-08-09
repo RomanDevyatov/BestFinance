@@ -1,15 +1,20 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
+import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
@@ -28,18 +33,57 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
+    private var singleBack = false
+    private val clickDelayMs = 1000
+
+    private var exitAppListener: OnExitAppListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnExitAppListener) {
+            exitAppListener = context
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        exitAppListener = null
+    }
+
+    private fun exitApp() {
+        exitAppListener?.onExitApp()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMenuHomeBinding.inflate(inflater, container, false)
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+        setOnBackPressedHandler()
 
         return binding.root
+    }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (singleBack) {
+                    return
+                }
+
+                singleBack = true
+                Toast.makeText(requireContext(), "Double Back to exit", Toast.LENGTH_SHORT).show()
+
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({
+                    exitApp()
+                    singleBack = false
+                }, clickDelayMs.toLong())
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

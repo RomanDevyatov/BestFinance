@@ -19,7 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.Gr
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
-import com.romandevyatov.bestfinance.ui.fragments.add.income.AddIncomeSubGroupFragmentDirections
+import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddIncomeSubGroupFragmentDirections
 import com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragmentDirections
 
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
@@ -52,6 +52,13 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
             generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroupItem.id)
         }
+
+        override fun navigateToUpdateSubGroup(id: Long) {
+            val action =
+                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseSubGroupFragment()
+            action.expenseSubGroupId = id
+            findNavController().navigate(action)
+        }
     }
 
     private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
@@ -71,7 +78,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
             generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
         }
 
-        override fun navigate(name: String) {
+        override fun navigateToUpdateGroup(name: String) {
             val action =
                 GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseGroupFragment()
             action.expenseGroupName = name
@@ -109,7 +116,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         groupWithSubGroupsItemMutableList.addAll(
             groupsWithSubGroups.map { groupWithSubGroup ->
                 val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                    SubGroupItem(it.id, it.name, it.expenseGroupId, it.archivedDate == null)
+                    SubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
                 }.toMutableList()
                 GroupWithSubGroupsItem(
                     groupWithSubGroup.expenseGroup.id,

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.expense
+package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -545,21 +545,16 @@ class AddExpenseHistoryFragment : Fragment() {
         val timeBinding = binding.timeEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
 
-        val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
-        binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
-
-        if (amountBindingValidation.isSuccess) {
-            val addTransactionForm = AddTransactionForm(
-                groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
-                subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
-                walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
-                amount = amountBinding,
-                date = dateBinding,
-                time = timeBinding,
-                comment = commentBinding
-            )
-            sharedModViewModel.set(addTransactionForm)
-        }
+        val addTransactionForm = AddTransactionForm(
+            groupSpinnerValue = groupSpinnerValueGlobalBeforeAdd,
+            subGroupSpinnerValue = subGroupSpinnerValueGlobalBeforeAdd,
+            walletSpinnerValue = walletSpinnerValueGlobalBeforeAdd,
+            amount = amountBinding,
+            date = dateBinding,
+            time = timeBinding,
+            comment = commentBinding
+        )
+        sharedModViewModel.set(addTransactionForm)
     }
 
     private fun resetSubGroupSpinner() {

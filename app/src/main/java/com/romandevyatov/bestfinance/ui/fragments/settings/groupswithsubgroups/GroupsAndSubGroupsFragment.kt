@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.SettingsFragmentGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,8 +30,20 @@ class GroupsAndSubGroupsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = SettingsFragmentGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+
+        setOnBackPressedHandler()
         setupViewPagerAndTabLayout()
+
         return binding.root
+    }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_groups_and_sub_groups_settings_fragment_to_settings_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setupViewPagerAndTabLayout() {

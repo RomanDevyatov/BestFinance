@@ -28,6 +28,7 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMEN
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_TRANSFER_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.WALLETS_FRAGMENT
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,36 +45,24 @@ class AddWalletFragment : Fragment() {
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-
-//        val callback = object : OnBackPressedCallback(
-//            true
-//        ) {
-//            override fun handleOnBackPressed() {
-//                performNavigation(args.source, null)
-//            }
-//        }
-//        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddWalletBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 performNavigation(args.source, null)
             }
         })
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.addButton.setOnClickListener {
             if (!isButtonClickable) return@setOnClickListener
@@ -104,7 +93,7 @@ class AddWalletFragment : Fragment() {
                         walletViewModel.insertWallet(newWallet)
                         performNavigation(args.source, walletNameBinding)
                     } else if (wallet.archivedDate == null) {
-                        showExistingDialog(
+                        WindowUtil.showExistingDialog(
                             requireContext(),
                             "This wallet `$walletNameBinding` is already existing."
                         )
@@ -182,25 +171,6 @@ class AddWalletFragment : Fragment() {
         }
 
         bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 

@@ -99,4 +99,8 @@ interface ExpenseGroupDao {
     @Query("UPDATE expense_group SET archived_date = NULL WHERE id = :id")
     fun unarchiveExpenseGroupById(id: Long?)
 
+    @Transaction
+    @Query("SELECT * FROM expense_group WHERE id = :id")
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups>
+
 }

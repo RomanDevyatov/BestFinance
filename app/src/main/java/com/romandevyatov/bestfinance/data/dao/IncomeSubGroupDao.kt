@@ -18,7 +18,7 @@ interface IncomeSubGroupDao {
     suspend fun delete(incomeSubGroup: IncomeSubGroup)
 
     @Update
-    suspend fun update(incomeSubGroup: IncomeSubGroup)
+    fun update(incomeSubGroup: IncomeSubGroup)
 
     @Query("DELETE FROM income_sub_group")
     suspend fun deleteAll()

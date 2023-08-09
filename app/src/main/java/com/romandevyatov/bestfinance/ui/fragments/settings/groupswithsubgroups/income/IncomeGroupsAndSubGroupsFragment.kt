@@ -50,6 +50,13 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
             generalGroupsAndSubGroupsViewModel.deleteIncomeSubGroupById(subGroupItem.id)
         }
+
+        override fun navigateToUpdateSubGroup(id: Long) {
+            val action =
+                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateIncomeSubGroupFragment()
+            action.incomeSubGroupId = id
+            findNavController().navigate(action)
+        }
     }
 
     private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
@@ -73,7 +80,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
             generalGroupsAndSubGroupsViewModel.deleteIncomeGroupById(groupWithSubGroupsItem.id)
         }
 
-        override fun navigate(name: String) {
+        override fun navigateToUpdateGroup(name: String) {
             val action =
                 GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateIncomeGroupFragment()
             action.incomeGroupName = name
@@ -111,7 +118,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         groupWithSubGroupsItemMutableList.addAll(
             groupsWithSubGroups.map { groupWithSubGroup ->
                 val subGroupsForAdapterItem = groupWithSubGroup.incomeSubGroups.map {
-                    SubGroupItem(it.id, it.name, it.incomeGroupId, it.archivedDate == null)
+                    SubGroupItem(it.id!!, it.name, it.incomeGroupId, it.archivedDate == null)
                 }.toMutableList()
                 GroupWithSubGroupsItem(
                     groupWithSubGroup.incomeGroup.id,

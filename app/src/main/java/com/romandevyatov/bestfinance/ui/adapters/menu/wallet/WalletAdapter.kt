@@ -6,17 +6,18 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemWalletBinding
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
+
 
 class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
 
-    private val differentCallback = object: DiffUtil.ItemCallback<Wallet>() {
+    private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
 
-        override fun areItemsTheSame(oldItem: Wallet, newItem: Wallet): Boolean {
+        override fun areItemsTheSame(oldItem: WalletItem, newItem: WalletItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Wallet, newItem: Wallet): Boolean {
+        override fun areContentsTheSame(oldItem: WalletItem, newItem: WalletItem): Boolean {
             return oldItem == newItem
         }
     }
@@ -32,7 +33,7 @@ class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adap
         private val binding: CardItemWalletBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(wallet: Wallet) {
+        fun bind(wallet: WalletItem) {
             binding.walletNameTextView.text = wallet.name
             binding.balanceTextView.text = wallet.balance.toString()
 
@@ -57,7 +58,7 @@ class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adap
         return walletDiffer.currentList.size
     }
 
-    fun submitList(wallets: List<Wallet>) {
+    fun submitList(wallets: MutableList<WalletItem>) {
         walletDiffer.submitList(wallets)
     }
 }

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.income
+package com.romandevyatov.bestfinance.ui.fragments.add.group
 
 import android.app.Dialog
 import android.content.Context
@@ -14,26 +14,26 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.HandlerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
+import com.romandevyatov.bestfinance.utils.WindowUtil
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddIncomeGroupFragment : Fragment() {
+class AddExpenseGroupFragment : Fragment() {
 
-    private var _binding: FragmentAddIncomeGroupBinding? = null
+    private var _binding: FragmentAddExpenseGroupBinding? = null
     private val binding get() = _binding!!
 
-    private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
+    private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onAttach(context: Context) {
@@ -44,10 +44,8 @@ class AddIncomeGroupFragment : Fragment() {
         ) {
             override fun handleOnBackPressed() {
                 val action =
-                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                action.incomeGroupName = null
-                action.incomeSubGroupName = null
-                action.walletName = null
+                    AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                action.expenseGroupName = null
                 findNavController().navigate(action)
             }
         }
@@ -59,14 +57,14 @@ class AddIncomeGroupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
+        _binding = FragmentAddExpenseGroupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNewGroupButton.setOnClickListener {
+        binding.addNewExpenseGroupNameButton.setOnClickListener {
             handleButtonClick(view)
         }
     }
@@ -76,37 +74,36 @@ class AddIncomeGroupFragment : Fragment() {
         isButtonClickable = false
         view.isEnabled = false
 
-        val groupNameBinding = binding.groupNameInputEditText.text.toString()
-        val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
-        val isPassiveBinding = binding.isPassiveCheckBox.isChecked
+        val groupNameBinding = binding.newExpenseGroupName.text.toString().trim()
+        val descriptionBinding = binding.descriptionEditText.text.toString().trim()
 
         val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()
-        binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
+        binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
         if (nameEmptyValidation.isSuccess) {
-            addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
-                if (incomeGroup == null) {
-                    addGroupViewModel.insertIncomeGroup(
-                        IncomeGroup(
+            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { expenseGroup ->
+                if (expenseGroup == null) {
+                    addGroupViewModel.insertExpenseGroup(
+                        ExpenseGroup(
                             name = groupNameBinding,
-                            description = groupDescriptionBinding,
-                            isPassive = isPassiveBinding
+                            description = descriptionBinding
                         )
                     )
-                    val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                    action.incomeGroupName = groupNameBinding
+
+                    val action =
+                        AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                    action.expenseGroupName = groupNameBinding
                     findNavController().navigate(action)
-                } else if (incomeGroup.archivedDate == null) {
-                    showExistingDialog(
+                } else if (expenseGroup.archivedDate == null) {
+                    WindowUtil.showExistingDialog(
                         requireContext(),
                         "This group `$groupNameBinding` is already existing."
                     )
                 } else {
-                    showUnarchiveDialog(
+                    showWalletDialog(
                         requireContext(),
-                        incomeGroup,
-                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
-                    )
+                        expenseGroup,
+                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
                 }
             }
         }
@@ -115,7 +112,7 @@ class AddIncomeGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelay.toLong())
+        }, clickDelayMs.toLong())
     }
 
     override fun onDestroyView() {
@@ -123,7 +120,7 @@ class AddIncomeGroupFragment : Fragment() {
         _binding = null
     }
 
-    private fun showUnarchiveDialog(context: Context, group: IncomeGroup, message: String?) {
+    private fun showWalletDialog(context: Context, group: ExpenseGroup, message: String?) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -137,34 +134,15 @@ class AddIncomeGroupFragment : Fragment() {
         tvMessage.text = message
 
         btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveIncomeGroup(group)
+            addGroupViewModel.unarchiveExpenseGroup(group)
             dialog.dismiss()
             val action =
-                AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-            action.incomeGroupName = group.name
+                AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+            action.expenseGroupName = group.name
             findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showExistingDialog(context: Context, message: String?) {
-        val dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_info)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnOk: Button = dialog.findViewById(R.id.btnOk)
-
-        tvMessage.text = message
-
-        btnOk.setOnClickListener {
             dialog.dismiss()
         }
 
