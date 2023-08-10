@@ -59,37 +59,42 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
-    // material
+
+    // MATERIAL
     implementation 'com.google.android.material:material:1.8.0'
-    // layouts
+
+    // CONSTRAINT LAYOUT
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    // navigation
+
+    // NAVIGATION
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    // viewModel and livedata
+
+    // VIEW MODELS and LIVE DATA
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation "androidx.lifecycle:lifecycle-common-java8:2.5.1"
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    // junit
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
     implementation "androidx.preference:preference:1.1.1"
 
     // kotlin annotation processing tool (kapt)
     kapt 'androidx.room:room-compiler:2.5.0'
 
-    // room
+    // ROOM
     implementation 'androidx.room:room-runtime:2.5.0'
+
     // Kotlin Extensions and Coroutines support for Room
     implementation 'androidx.room:room-ktx:2.5.0'
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
+
     // To use Kotlin Symbol Processing (KSP)
     ksp 'androidx.room:room-compiler:2.5.0'
+
     // optional - Test helpers
     testImplementation 'androidx.room:room-testing:2.5.0'
+
+    // KSP
+    implementation "com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6"
 
     // room optional
     // kapt 'androidx.room:room-compiler:2.5.0'
@@ -110,9 +115,6 @@ dependencies {
     annotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
     kapt 'com.google.dagger:hilt-android-compiler:2.44.2'
 
-    // KSP
-    implementation "com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6"
-
     // For instrumentation tests
     androidTestImplementation  'com.google.dagger:hilt-android-testing:2.44.2'
     androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
@@ -121,8 +123,17 @@ dependencies {
     testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
     testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
 
-//    implementation("it.czerwinski.android.hilt:hilt-extensions:1.1.0")
-//    kapt("it.czerwinski.android.hilt:hilt-processor:1.1.0")
+    // MockK for mocking objects and behavior
+    testImplementation "io.mockk:mockk:1.12.0"
+
+    // For using Kotlin's coroutines in tests
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+
+    // For testing LiveData
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    // For testing ViewModel
+    testImplementation "androidx.lifecycle:lifecycle-viewmodel-testing:2.1.0"
 
 }
 

@@ -1,5 +1,9 @@
 package com.romandevyatov.bestfinance
 
+import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
+import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
+import io.mockk.mockk
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -10,6 +14,8 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)

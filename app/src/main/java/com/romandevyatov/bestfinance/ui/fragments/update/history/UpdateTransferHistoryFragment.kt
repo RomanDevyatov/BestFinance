@@ -322,61 +322,6 @@ class UpdateTransferHistoryFragment : Fragment() {
         )
     }
 
-    private fun updateWalletTo(walletTo: Wallet, amount: Double) {
-        val updatedWalletToInput = walletTo.input.plus(amount)
-        val updatedWalletToBalance = walletTo.balance.plus(amount)
-
-        val updatedWalletTo = Wallet(
-            id = walletTo.id,
-            name = walletTo.name,
-            balance = updatedWalletToBalance,
-            input = updatedWalletToInput,
-            output = walletTo.output,
-            description = walletTo.description,
-            archivedDate = walletTo.archivedDate
-        )
-        updateTransferHistoryViewModel.updateWallet(updatedWalletTo)
-    }
-
-    private fun updateWalletFrom(walletFrom: Wallet, amount: Double) {
-        val updatedWalletFromOutput = walletFrom.output.plus(amount)
-        val updatedWalletFromBalance = walletFrom.balance.minus(amount)
-
-        val updatedWalletFrom = Wallet(
-            id = walletFrom.id,
-            name = walletFrom.name,
-            balance = updatedWalletFromBalance,
-            input = walletFrom.input,
-            output = updatedWalletFromOutput,
-            description = walletFrom.description,
-            archivedDate = walletFrom.archivedDate
-        )
-
-        updateTransferHistoryViewModel.updateWallet(updatedWalletFrom)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateTransferHistoryAndWallets(
-        comment: String,
-        walletFrom: Wallet,
-        walletTo: Wallet,
-        amount: Double,
-        parsedLocalDateTime: LocalDateTime) {
-        val transferHistory = TransferHistory(
-            amount = amount,
-            fromWalletId = walletFrom.id!!,
-            toWalletId = walletTo.id!!,
-            date = parsedLocalDateTime,
-            comment = comment,
-            createdDate = LocalDateTime.now()
-        )
-        updateTransferHistoryViewModel.updateTransferHistory(transferHistory)
-    }
-
-    private fun navigateToHistory() {
-        findNavController().navigate(R.id.action_update_transfer_history_fragment_to_history_fragment)
-    }
-
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
