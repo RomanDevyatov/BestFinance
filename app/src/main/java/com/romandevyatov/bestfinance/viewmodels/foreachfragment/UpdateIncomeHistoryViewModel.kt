@@ -32,10 +32,6 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         return incomeHistoryRepository.getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(incomeHistoryId)
     }
 
-    fun getIncomeHistoryByIdLiveData(incomeHistoryId: Long): LiveData<IncomeHistory> {
-        return incomeHistoryRepository.getIncomeHistoryByIdLiveData(incomeHistoryId)
-    }
-
     fun updateIncomeHistoryAndWallet(updatedIncomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
         incomeHistoryRepository.updateIncomeHistory(
             updatedIncomeHistory
