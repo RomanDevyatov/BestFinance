@@ -36,11 +36,31 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         return incomeHistoryRepository.getIncomeHistoryByIdLiveData(incomeHistoryId)
     }
 
-    fun updateIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO){
+    fun updateIncomeHistoryAndWallet(updatedIncomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
         incomeHistoryRepository.updateIncomeHistory(
-            incomeHistory
+            updatedIncomeHistory
+        )
+
+        val wallet = walletRepository.getWalletById(updatedIncomeHistory.walletId)
+        updateWallet(
+            Wallet(
+                id = wallet.id,
+                name = wallet.name,
+                balance = wallet.balance + updatedIncomeHistory.amount,
+                input = wallet.input + updatedIncomeHistory.amount,
+                output = wallet.output,
+                description = wallet.description,
+                archivedDate = wallet.archivedDate
+            )
         )
     }
+
+    fun updateWallet(updatedWallet: Wallet) = viewModelScope.launch(Dispatchers.IO){
+        walletRepository.updateWallet(
+            updatedWallet
+        )
+    }
+
 
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)

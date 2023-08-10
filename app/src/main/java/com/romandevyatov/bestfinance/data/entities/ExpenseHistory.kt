@@ -35,8 +35,8 @@ class ExpenseHistory (
     @ColumnInfo(name = "amount")
     val amount: Double,
 
-    @ColumnInfo(name = "description")
-    val description: String? = null,
+    @ColumnInfo(name = "comment")
+    val comment: String? = null,
 
     @ColumnInfo(name = "date")
     val date: LocalDateTime? = null,

@@ -30,4 +30,8 @@ interface ExpenseHistoryDao {
     @Query("SELECT * FROM expense_history")
     fun getAllWithExpenseGroupAndWalletLiveData(): LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>>
 
+    @Transaction
+    @Query("SELECT * FROM expense_history WHERE id = :id LIMIT 1")
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet>
+
 }

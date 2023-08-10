@@ -8,7 +8,8 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
 import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
 
 class TransferItemViewHolder(
-    private val binding: CardHistoryTransferBinding
+    private val binding: CardHistoryTransferBinding,
+    private val listener: TransferHistoryAdapter.ItemClickListener?
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -22,5 +23,9 @@ class TransferItemViewHolder(
         binding.dateIncomeTextView.text = transferHistory.createdDate?.format(
             LocalDateTimeRoomTypeConverter.dateTimeFormatter
         )
+
+        binding.root.setOnClickListener {
+            listener?.navigate(transferHistory.id!!)
+        }
     }
 }

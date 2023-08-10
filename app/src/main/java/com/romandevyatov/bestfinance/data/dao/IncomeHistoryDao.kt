@@ -5,7 +5,6 @@ import androidx.room.*
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 
-
 @Dao
 interface IncomeHistoryDao {
 

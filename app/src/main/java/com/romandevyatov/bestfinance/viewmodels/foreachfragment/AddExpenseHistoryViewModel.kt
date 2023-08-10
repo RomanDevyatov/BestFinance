@@ -99,7 +99,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             ExpenseHistory(
                 expenseSubGroupId = expenseGroupId,
                 amount = amountBinding,
-                description = commentBinding,
+                comment = commentBinding,
                 date = parsedLocalDateTime,
                 walletId = walletId,
                 createdDate = LocalDateTime.now()
@@ -114,7 +114,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 name = wallet.name,
                 balance = wallet.balance + amountBinding,
                 archivedDate = wallet.archivedDate,
-                input = wallet.input + amountBinding,
+                input = wallet.input - amountBinding,
                 output = wallet.output,
                 description = wallet.description
             )

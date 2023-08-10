@@ -9,8 +9,9 @@ import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithE
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import java.util.*
 
-class ExpenseHistoryItemViewHolder (
-    private val binding: CardHistoryExpenseBinding
+class ExpenseHistoryItemViewHolder(
+    private val binding: CardHistoryExpenseBinding,
+    private val listener: ExpenseHistoryAdapter.ItemClickListener?
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -25,5 +26,9 @@ class ExpenseHistoryItemViewHolder (
         binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup.name
 
         binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(dateTimeFormatter)
+
+        binding.root.setOnClickListener {
+            listener?.navigate(expenseHistory.expenseHistory.id!!)
+        }
     }
 }

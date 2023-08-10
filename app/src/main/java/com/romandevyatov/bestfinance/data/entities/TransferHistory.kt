@@ -2,10 +2,27 @@ package com.romandevyatov.bestfinance.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-@Entity(tableName = "transfer_history")
+@Entity(
+    tableName = "transfer_history",
+    foreignKeys = [
+        ForeignKey(
+            entity = Wallet::class,
+            parentColumns = ["id"],
+            childColumns = ["from_wallet_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Wallet::class,
+            parentColumns = ["id"],
+            childColumns = ["to_wallet_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class TransferHistory (
 
     @PrimaryKey(autoGenerate = true)

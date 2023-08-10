@@ -10,7 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
 
-class TransferHistoryAdapter : RecyclerView.Adapter<TransferItemViewHolder>() {
+class TransferHistoryAdapter(private val listener: ItemClickListener? = null) : RecyclerView.Adapter<TransferItemViewHolder>() {
+
+    interface ItemClickListener {
+
+        fun navigate(id: Long)
+    }
 
     private val differentCallback = object: DiffUtil.ItemCallback<TransferHistory>() {
 
@@ -28,7 +33,7 @@ class TransferHistoryAdapter : RecyclerView.Adapter<TransferItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = CardHistoryTransferBinding.inflate(from, parent, false)
-        return TransferItemViewHolder(binding)
+        return TransferItemViewHolder(binding, listener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

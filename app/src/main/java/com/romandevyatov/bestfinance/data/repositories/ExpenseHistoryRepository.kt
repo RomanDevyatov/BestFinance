@@ -7,6 +7,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.exp
 
 @Singleton
 class ExpenseHistoryRepository @Inject constructor(
@@ -23,6 +24,14 @@ class ExpenseHistoryRepository @Inject constructor(
 
     suspend fun insertExpenseHistory(expenseHistory: ExpenseHistory) {
         expenseHistoryDao.insert(expenseHistory)
+    }
+
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet> {
+        return expenseHistoryDao.getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id)
+    }
+
+    suspend fun updateExpenseHistory(expenseHistory: ExpenseHistory) {
+        return expenseHistoryDao.update(expenseHistory)
     }
 
 }

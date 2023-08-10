@@ -24,9 +24,9 @@ class TransferHistoryViewModel @Inject constructor(
         transferHistoryRepository.insertTransferHistory(transferHistory)
     }
 
-    fun updateTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.updateTransferHistory(transferHistory)
-    }
+//    fun updateTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
+//        transferHistoryRepository.updateTransferHistory(transferHistory)
+//    }
 
     fun deleteTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
         transferHistoryRepository.deleteTransferHistory(transferHistory)

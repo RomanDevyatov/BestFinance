@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.transfer.TransferHistoryAdapter
+import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +22,17 @@ class TransferHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val transferHistoryViewModel: TransferHistoryViewModel by viewModels()
-    private val transferHistoryAdapter: TransferHistoryAdapter = TransferHistoryAdapter()
+
+    private val listener = object : TransferHistoryAdapter.ItemClickListener {
+
+        override fun navigate(id: Long) {
+            val action = HistoryFragmentDirections.actionHistoryFragmentToUpdateTransferHistoryFragment()
+            action.transferHistoryId = id
+            findNavController().navigate(action)
+        }
+    }
+
+    private val transferHistoryAdapter: TransferHistoryAdapter = TransferHistoryAdapter(listener)
 
     override fun onCreateView(
         inflater: LayoutInflater,

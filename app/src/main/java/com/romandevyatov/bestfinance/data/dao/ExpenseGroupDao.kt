@@ -103,4 +103,10 @@ interface ExpenseGroupDao {
     @Query("SELECT * FROM expense_group WHERE id = :id")
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups>
 
+    @Query("SELECT * FROM expense_group WHERE archived_date IS NULL")
+    fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>>
+
+    @Query("SELECT * FROM expense_group WHERE id = :id")
+    fun getByIdLiveData(id: Long): LiveData<ExpenseGroup>?
+
 }

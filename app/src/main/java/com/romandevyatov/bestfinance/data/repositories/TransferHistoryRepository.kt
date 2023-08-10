@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.data.repositories
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.TransferHistoryDao
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
+import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -23,8 +24,11 @@ class TransferHistoryRepository @Inject constructor(
         transferHistoryDao.delete(transferHistory)
     }
 
-    suspend fun updateTransferHistory(transferHistory: TransferHistory) {
+    fun updateTransferHistory(transferHistory: TransferHistory) {
         transferHistoryDao.update(transferHistory)
     }
 
+    fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets> {
+        return transferHistoryDao.getWithWalletsByIdLiveData(id)
+    }
 }

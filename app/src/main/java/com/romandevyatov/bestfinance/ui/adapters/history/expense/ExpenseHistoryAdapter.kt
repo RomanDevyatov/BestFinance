@@ -11,7 +11,15 @@ import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 
-class ExpenseHistoryAdapter(private val expenseGroupMap: Map<Long?, ExpenseGroup>) : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>() {
+class ExpenseHistoryAdapter(
+    private val expenseGroupMap: Map<Long?, ExpenseGroup>,
+    private val listener: ItemClickListener? = null
+    ) : RecyclerView.Adapter<ExpenseHistoryItemViewHolder>() {
+
+    interface ItemClickListener {
+
+        fun navigate(id: Long)
+    }
 
     private val differentCallback = object: DiffUtil.ItemCallback<ExpenseHistoryWithExpenseSubGroupAndWallet>() {
         override fun areItemsTheSame(oldItem: ExpenseHistoryWithExpenseSubGroupAndWallet, newItem: ExpenseHistoryWithExpenseSubGroupAndWallet): Boolean {
@@ -28,7 +36,7 @@ class ExpenseHistoryAdapter(private val expenseGroupMap: Map<Long?, ExpenseGroup
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseHistoryItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = CardHistoryExpenseBinding.inflate(from, parent, false)
-        return ExpenseHistoryItemViewHolder(binding)
+        return ExpenseHistoryItemViewHolder(binding, listener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

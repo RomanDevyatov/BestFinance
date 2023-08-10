@@ -18,7 +18,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
         ExpenseHistory::class,
         TransferHistory::class
     ],
-    version = 31,
+    version = 33,
     exportSchema = true
 )
 @TypeConverters(LocalDateTimeRoomTypeConverter::class)
