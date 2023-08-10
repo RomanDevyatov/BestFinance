@@ -12,40 +12,40 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
-import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
-import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
 
 @AndroidEntryPoint
 class UpdateIncomeHistoryFragment : Fragment() {
+
     private var _binding: FragmentUpdateIncomeHistoryBinding? = null
     private val binding get() = _binding!!
 
     private val updateIncomeHistoryViewModel: UpdateIncomeHistoryViewModel by viewModels()
 
-    private var groupSpinnerValueGlobalBeforeAdd: String? = null
-    private var incomeHistoryGlobal: IncomeHistory? = null
+    private var prevGroupSpinnerValueGlobal: String? = null
+
+    private lateinit var historyWithSubGroupAndWalletGlobal: IncomeHistoryWithIncomeSubGroupAndWallet
     private var incomeGroupGlobal: IncomeGroup? = null
 
     private var spinnerSubGroupItemsGlobal: MutableList<SpinnerItem>? = null
@@ -60,6 +60,9 @@ class UpdateIncomeHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUpdateIncomeHistoryBinding.inflate(inflater, container, false)
+
+        binding.reusable.addHistoryButton.text = "Update"
+
         return binding.root
     }
 
@@ -67,26 +70,25 @@ class UpdateIncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.reusable.addHistoryButton.text = "Update"
         setOnBackPressedHandler()
 
-        updateIncomeHistoryViewModel.getIncomeHistoryByIdLiveData(args.incomeHistoryId)
-            ?.observe(viewLifecycleOwner) { incomeHistory ->
-                incomeHistoryGlobal = IncomeHistory(
-                    incomeHistory.id,
-                    incomeHistory.incomeSubGroupId,
-                    incomeHistory.amount,
-                    incomeHistory.comment,
-                    incomeHistory.date,
-                    incomeHistory.walletId,
-                    incomeHistory.archivedDate,
-                    incomeHistory.createdDate
+        updateIncomeHistoryViewModel.getIncomeHistoryWithIncomeSubGroupAndWalletById(args.incomeHistoryId)
+            .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
+                historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
+
+                setupSpinnersValues(historyWithSubGroupAndWallet.incomeSubGroup,
+                    historyWithSubGroupAndWallet.wallet
                 )
 
+                setupSpinners()
+
+                setupDateTimeFiledValues()
+
+                val incomeHistory = historyWithSubGroupAndWallet.incomeHistory
                 binding.reusable.commentEditText.setText(incomeHistory.comment)
                 binding.reusable.amountEditText.setText(incomeHistory.amount.toString())
 
-                setGroupAndSubGroupFields(incomeHistory.incomeSubGroupId, view)
+                setupButtonClickListeners(view)
             }
     }
 
@@ -96,35 +98,27 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setGroupAndSubGroupFields(incomeSubGroupId: Long, view: View) {
-        updateIncomeHistoryViewModel.getIncomeSubGroupByIdLiveData(incomeSubGroupId)
-            ?.observe(viewLifecycleOwner) { incomeSubGroup ->
-                binding.reusable.subGroupSpinner.setText(incomeSubGroup.name, false)
-
-                bindGroupField(incomeSubGroup.incomeGroupId, view)
-            }
+    private fun setupSpinnersValues(incomeSubGroup: IncomeSubGroup, wallet: Wallet) {
+        setSubGroupSpinnerValue(incomeSubGroup)
+        setGroupSpinnerValue(incomeSubGroup.incomeGroupId)
+        setWalletSpinnerValue(wallet)
     }
 
-    private fun setOnBackPressedHandler() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    private fun setSubGroupSpinnerValue(incomeSubGroup: IncomeSubGroup) {
+        binding.reusable.subGroupSpinner.setText(incomeSubGroup.name, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun bindGroupField(incomeGroupId: Long, view: View) {
+    private fun setGroupSpinnerValue(incomeGroupId: Long) {
         updateIncomeHistoryViewModel.getIncomeGroupById(incomeGroupId)?.observe(viewLifecycleOwner) { incomeGroup ->
             incomeGroupGlobal = incomeGroup.copy()
 
             binding.reusable.groupSpinner.setText(incomeGroup.name, false)
-
-            setupSpinners()
-            setupDateTimeInputs()
-            setupButtonClickListeners(view)
         }
+    }
+
+    private fun setWalletSpinnerValue(wallet: Wallet) {
+        binding.reusable.walletSpinner.setText(wallet.name, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -165,15 +159,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems, null, null)
 
             binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
-
-            setIfAvailableWalletSpinnerValue()
         }
-    }
-
-    private fun setIfAvailableWalletSpinnerValue() {
-        val name = walletSpinnerItemsGlobal?.find { it.id == incomeHistoryGlobal?.walletId }?.name
-
-        binding.reusable.walletSpinner.setText(name, false)
     }
 
     private fun setGroupSpinnerOnClickListener() {
@@ -183,7 +169,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
             val selectedGroupName =
                 binding.reusable.groupSpinner.text.toString()
 
-            if (selectedGroupName != groupSpinnerValueGlobalBeforeAdd) {
+            if (selectedGroupName != prevGroupSpinnerValueGlobal) {
                 resetSubGroupSpinner()
 
                 updateIncomeHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
@@ -200,7 +186,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 }
             }
 
-            groupSpinnerValueGlobalBeforeAdd = selectedGroupName
+            prevGroupSpinnerValueGlobal = selectedGroupName
         }
     }
 
@@ -300,7 +286,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupDateTimeInputs() {
+    private fun setupDateTimeFiledValues() {
         setDateEditText()
         setTimeEditText()
     }
@@ -309,7 +295,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
         selectedDate.timeInMillis =
-            incomeHistoryGlobal?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal?.incomeHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
         val datePickerListener = DatePickerDialog.OnDateSetListener() {
                 _, year, month, dayOfMonth ->
             selectedDate.set(Calendar.YEAR, year)
@@ -336,7 +322,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setTimeEditText() {
         val selectedTime = Calendar.getInstance()
         selectedTime.timeInMillis =
-            incomeHistoryGlobal?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal?.incomeHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -395,16 +381,17 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                 val parsedLocalDateTime = LocalDateTime.from(LocalDateTimeRoomTypeConverter.dateTimeFormatter.parse(fullDateTime))
 
+                val incomeHistory = historyWithSubGroupAndWalletGlobal?.incomeHistory
                 updateIncomeHistoryViewModel.updateIncomeHistory(
                     IncomeHistory(
-                        id = incomeHistoryGlobal?.id,
+                        id = incomeHistory?.id,
                         incomeSubGroupId = spinnerSubGroupItemsGlobal?.find { it.name == subGroupNameBinding }?.id!!,
                         amount = amountBinding.toDouble(),
                         comment = commentBinding,
                         date = parsedLocalDateTime,
                         walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding }?.id!!,
-                        archivedDate = incomeHistoryGlobal?.archivedDate,
-                        createdDate = incomeHistoryGlobal?.createdDate
+                        archivedDate = incomeHistory?.archivedDate,
+                        createdDate = incomeHistory?.createdDate
                     ))
 
                 navigateToHistory()
@@ -420,5 +407,14 @@ class UpdateIncomeHistoryFragment : Fragment() {
 
     private fun navigateToHistory() {
         findNavController().navigate(R.id.action_update_income_history_fragment_to_history_fragment)
+    }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.history_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 }

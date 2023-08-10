@@ -8,6 +8,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
@@ -15,7 +16,6 @@ import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +27,10 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
 ): ViewModel() {
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+
+    fun getIncomeHistoryWithIncomeSubGroupAndWalletById(incomeHistoryId: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet> {
+        return incomeHistoryRepository.getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(incomeHistoryId)
+    }
 
     fun getIncomeHistoryByIdLiveData(incomeHistoryId: Long): LiveData<IncomeHistory> {
         return incomeHistoryRepository.getIncomeHistoryByIdLiveData(incomeHistoryId)
