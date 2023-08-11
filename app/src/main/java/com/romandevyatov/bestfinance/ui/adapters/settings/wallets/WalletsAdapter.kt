@@ -10,7 +10,8 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletI
 
 class WalletsAdapter(
     private val onWalletItemCheckedChangeListener: OnWalletItemCheckedChangeListener? = null,
-    private val walletItemDeleteListener: OnWalletItemDeleteListener
+    private val walletItemDeleteListener: OnWalletItemDeleteListener? = null,
+    private val walletItemClickedListener: OnWalletItemClickedListener? = null
 ) : RecyclerView.Adapter<WalletsAdapter.WalletItemViewHolder>() {
 
     interface OnWalletItemCheckedChangeListener {
@@ -19,6 +20,10 @@ class WalletsAdapter(
 
     interface OnWalletItemDeleteListener {
         fun onWalletItemDelete(walletItem: WalletItem)
+    }
+
+    interface OnWalletItemClickedListener {
+        fun navigateToUpdateSubGroup(wallet: WalletItem)
     }
 
     private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
@@ -54,13 +59,17 @@ class WalletsAdapter(
             binding.walletTextView.text = walletItem.name
 
             binding.deleteButton.setOnClickListener {
-                walletItemDeleteListener.onWalletItemDelete(walletItem)
+                walletItemDeleteListener?.onWalletItemDelete(walletItem)
             }
 
             binding.switchCompat.isChecked = walletItem.isExist
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
                 onWalletItemCheckedChangeListener?.onWalletChecked(walletItem, isChecked)
+            }
+
+            binding.root.setOnClickListener {
+                walletItemClickedListener?.navigateToUpdateSubGroup(walletItem)
             }
         }
     }

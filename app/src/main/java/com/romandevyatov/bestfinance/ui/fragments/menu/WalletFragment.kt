@@ -21,7 +21,6 @@ import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Double
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
@@ -91,6 +90,7 @@ class WalletFragment : Fragment() {
             override fun navigate(name: String) {
                 val action = WalletFragmentDirections.actionNavigationWalletToUpdateWallet()
                 action.walletName = name
+                action.source = Constants.MENU_WALLET_FRAGMENT
                 findNavController().navigate(action)
             }
         }

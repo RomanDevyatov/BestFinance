@@ -11,14 +11,14 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,9 +72,10 @@ class UpdateWalletFragment : Fragment() {
 
                     walletViewModel.updateWalletById(updatedWallet)
 
-                    val action =
-                        UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-                    findNavController().navigate(action)
+                    performNavigation(args.source.toString())
+//                    val action =
+//                        UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
+//                    findNavController().navigate(action)
                 } else if (wallet.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -113,9 +114,10 @@ class UpdateWalletFragment : Fragment() {
         btnYes.setOnClickListener {
             dialog.dismiss()
             walletViewModel.unarchiveWallet(wallet)
-            val action =
-                UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-            findNavController().navigate(action)
+            performNavigation(args.source.toString())
+//            val action =
+//                UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
+//            findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {
@@ -123,5 +125,20 @@ class UpdateWalletFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun performNavigation(prevFragmentString: String?) {
+        when (prevFragmentString) {
+            Constants.MENU_WALLET_FRAGMENT -> {
+                val action =
+                    UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
+                findNavController().navigate(action)
+            }
+            Constants.WALLETS_SETTINGS_FRAGMENT -> {
+                val action =
+                    UpdateWalletFragmentDirections.actionUpdateWalletFragmentToWalletsSettingsFragment()
+                findNavController().navigate(action)
+            }
+        }
     }
 }

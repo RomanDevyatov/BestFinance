@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,19 +28,6 @@ class SettingsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,6 +39,16 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.home_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         setupRecyclerView()
     }
 

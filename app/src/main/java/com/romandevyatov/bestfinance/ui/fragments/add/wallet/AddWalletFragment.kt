@@ -52,17 +52,17 @@ class AddWalletFragment : Fragment() {
     ): View {
         _binding = FragmentAddWalletBinding.inflate(inflater, container, false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                performNavigation(args.source, null)
-            }
-        })
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                performNavigation(args.source, null)
+            }
+        })
 
         binding.addButton.setOnClickListener {
             if (!isButtonClickable) return@setOnClickListener

@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.WalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletItem
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +41,7 @@ class SettingsWalletsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        walletsAdapter = WalletsAdapter(walletItemCheckedChangeListener, walletItemDeleteListener)
+        walletsAdapter = WalletsAdapter(walletItemCheckedChangeListener, walletItemDeleteListener, walletItemClickedListener)
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletsAdapter
     }
@@ -91,6 +93,16 @@ class SettingsWalletsFragment : Fragment() {
             walletItemMutableList.remove(walletItem)
             walletsAdapter.removeItem(walletItem)
             settingsWalletsViewModel.deleteWalletById(walletItem.id)
+        }
+    }
+
+    private val walletItemClickedListener = object : WalletsAdapter.OnWalletItemClickedListener {
+        override fun navigateToUpdateSubGroup(walletItem: WalletItem) {
+            val action =
+                SettingsWalletsFragmentDirections.actionWalletsSettingsFragmentToUpdateWalletFragment()
+            action.source = Constants.WALLETS_SETTINGS_FRAGMENT
+            action.walletName = walletItem.name
+            findNavController().navigate(action)
         }
     }
 

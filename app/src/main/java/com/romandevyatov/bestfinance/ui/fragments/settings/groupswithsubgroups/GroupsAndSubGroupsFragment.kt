@@ -31,10 +31,15 @@ class GroupsAndSubGroupsFragment : Fragment() {
     ): View {
         _binding = SettingsFragmentGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
-        setOnBackPressedHandler()
         setupViewPagerAndTabLayout()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setOnBackPressedHandler()
     }
 
     private fun setOnBackPressedHandler() {

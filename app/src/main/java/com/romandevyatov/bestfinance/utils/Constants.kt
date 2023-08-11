@@ -12,6 +12,8 @@ object Constants {
     const val INCOMES = "Incomes"
     const val ADD_INCOME_HISTORY_FRAGMENT = "add_income_history_fragment"
     const val ADD_EXPENSE_HISTORY_FRAGMENT = "add_expense_history_fragment"
+    const val MENU_WALLET_FRAGMENT = "wallet_fragment"
+    const val WALLETS_SETTINGS_FRAGMENT = "wallets_settings_fragment"
     const val ADD_NEW_INCOME_SUB_GROUP = "Add new income sub group"
     const val ADD_NEW_INCOME_GROUP = "Add new income group"
     const val DATABASE_NAME = "bestfinance_database"

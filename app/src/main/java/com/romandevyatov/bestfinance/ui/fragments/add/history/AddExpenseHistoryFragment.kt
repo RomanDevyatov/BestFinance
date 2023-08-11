@@ -2,7 +2,6 @@ package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -19,17 +18,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
@@ -41,7 +40,6 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class AddExpenseHistoryFragment : Fragment() {
@@ -116,12 +114,24 @@ class AddExpenseHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddExpenseHistoryBinding.inflate(inflater, container, false)
+
         return binding.root
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                sharedModViewModel.set(null)
+                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         setSpinners()
 
@@ -136,20 +146,6 @@ class AddExpenseHistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
-            override fun handleOnBackPressed() {
-                sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setSpinners() {
@@ -276,22 +272,23 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData()?.observe(viewLifecycleOwner) { groups ->
-            val spinnerGroupItems = getGroupItemsForSpinner(groups)
+        addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData()
+            .observe(viewLifecycleOwner) { groups ->
+                val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-            val groupSpinnerAdapter = SpinnerAdapter(
-                requireContext(),
-                R.layout.item_with_del,
-                spinnerGroupItems,
-                ADD_NEW_EXPENSE_GROUP,
-                archiveGroupListener)
+                val groupSpinnerAdapter = SpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerGroupItems,
+                    ADD_NEW_EXPENSE_GROUP,
+                    archiveGroupListener)
 
-            binding.groupSpinner.setAdapter(groupSpinnerAdapter)
+                binding.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-            setIfAvailableGroupSpinnersValue(groupSpinnerAdapter)
+                setIfAvailableGroupSpinnersValue(groupSpinnerAdapter)
 
-            setSubGroupSpinnerAdapter()
-        }
+                setSubGroupSpinnerAdapter()
+            }
     }
 
     private fun setSubGroupSpinnerAdapter() {

@@ -36,8 +36,18 @@ class AddExpenseGroupFragment : Fragment() {
     private val clickDelayMs = 1000
     private var isButtonClickable = true
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAddExpenseGroupBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val callback = object : OnBackPressedCallback(
             true
@@ -49,20 +59,7 @@ class AddExpenseGroupFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddExpenseGroupBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.addNewExpenseGroupNameButton.setOnClickListener {
             handleButtonClick(view)

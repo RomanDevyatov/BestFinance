@@ -241,12 +241,21 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment"
         android:label="Update wallet"
         tools:layout="@layout/fragment_update_wallet" >
+
         <action
             android:id="@+id/action_navigation_update_wallet_to_navigation_wallet"
             app:destination="@id/wallet_fragment" />
+        <action
+            android:id="@+id/action_update_wallet_fragment_to_wallets_settings_fragment"
+            app:destination="@id/wallets_settings_fragment" />
 
         <argument
             android:name="walletName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="source"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
@@ -306,7 +315,11 @@
         android:id="@+id/wallets_settings_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.SettingsWalletsFragment"
         android:label="Wallets"
-        tools:layout="@layout/fragment_settings_wallets" />
+        tools:layout="@layout/fragment_settings_wallets" >
+        <action
+            android:id="@+id/action_wallets_settings_fragment_to_update_wallet_fragment"
+            app:destination="@id/update_wallet_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/update_expense_group_fragment"

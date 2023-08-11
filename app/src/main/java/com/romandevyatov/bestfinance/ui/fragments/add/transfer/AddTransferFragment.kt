@@ -2,7 +2,6 @@ package com.romandevyatov.bestfinance.ui.fragments.add.transfer
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -19,17 +18,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_FROM
@@ -104,19 +103,6 @@ class AddTransferFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
-            override fun handleOnBackPressed() {
-                sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_add_transfer_fragment_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -129,6 +115,14 @@ class AddTransferFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                sharedModViewModel.set(null)
+                findNavController().navigate(R.id.action_add_transfer_fragment_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         setSpinners()
 

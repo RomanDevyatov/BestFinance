@@ -124,6 +124,14 @@ class AddIncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                sharedModViewModel.set(null)
+                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         setSpinners()
 
         setDateEditText()
@@ -137,18 +145,6 @@ class AddIncomeHistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setSpinners() {

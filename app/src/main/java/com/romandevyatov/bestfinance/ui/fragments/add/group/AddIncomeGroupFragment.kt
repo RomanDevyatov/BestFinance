@@ -36,12 +36,20 @@ class AddIncomeGroupFragment : Fragment() {
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
 
-        val callback = object : OnBackPressedCallback(
-            true
-        ) {
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val action =
                     AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
@@ -51,20 +59,7 @@ class AddIncomeGroupFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddIncomeGroupBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.addNewGroupButton.setOnClickListener {
             handleButtonClick(view)
