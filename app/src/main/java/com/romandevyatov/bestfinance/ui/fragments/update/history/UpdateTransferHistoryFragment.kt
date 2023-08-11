@@ -264,8 +264,7 @@ class UpdateTransferHistoryFragment : Fragment() {
                     )
                     updateTransferHistoryViewModel.updateTransferHistoryAndWallets(updatedTransferHistory)
 
-                    val action = UpdateTransferHistoryFragmentDirections.actionUpdateTransferHistoryFragmentToHistoryFragment()
-                    findNavController().navigate(action)
+                    navigateToHistory()
             }
 
             val handler = Handler(Looper.getMainLooper())
@@ -274,6 +273,12 @@ class UpdateTransferHistoryFragment : Fragment() {
                 view.isEnabled = true
             }, clickDelayMs.toLong())
         }
+    }
+
+    private fun navigateToHistory() {
+        val action = UpdateTransferHistoryFragmentDirections.actionUpdateTransferHistoryFragmentToHistoryFragment()
+        action.initialTabIndex = 1
+        findNavController().navigate(action)
     }
 
     private fun updateOldWallets(walletFrom: Wallet, walletTo: Wallet, amount: Double) {
@@ -325,7 +330,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.history_fragment)
+                navigateToHistory()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

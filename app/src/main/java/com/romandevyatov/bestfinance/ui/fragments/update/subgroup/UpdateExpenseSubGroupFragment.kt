@@ -76,9 +76,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val action =
-                    UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                findNavController().navigate(action)
+                navigateToSettingGroupsAndSubGroups()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -133,6 +131,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private fun navigateToSettingGroupsAndSubGroups() {
         val action =
             UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        action.initialTabIndex = 1
         findNavController().navigate(action)
     }
 

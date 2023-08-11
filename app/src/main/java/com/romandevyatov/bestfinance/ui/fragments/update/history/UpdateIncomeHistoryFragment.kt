@@ -29,6 +29,7 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -433,13 +434,15 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        findNavController().navigate(R.id.action_update_income_history_fragment_to_history_fragment)
+        val action = UpdateIncomeHistoryFragmentDirections.actionUpdateIncomeHistoryFragmentToHistoryFragment()
+        action.initialTabIndex = 0
+        findNavController().navigate(action)
     }
 
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.history_fragment)
+                navigateToHistory()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

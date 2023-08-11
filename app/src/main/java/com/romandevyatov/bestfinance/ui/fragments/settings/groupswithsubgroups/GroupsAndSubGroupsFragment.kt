@@ -53,6 +53,9 @@ class GroupsAndSubGroupsFragment : Fragment() {
         val adapter = GroupsAndSubGroupsViewPagerAdapter(this)
         viewPager.adapter = adapter
 
+        val initialTabIndex = arguments?.getInt("initialTabIndex") ?: 0
+        viewPager.setCurrentItem(initialTabIndex, false)
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = groupTypeArray[position]
         }.attach()

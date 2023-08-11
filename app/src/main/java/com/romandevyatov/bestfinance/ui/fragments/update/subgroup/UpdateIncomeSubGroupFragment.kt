@@ -78,9 +78,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                val action =
-                    UpdateIncomeSubGroupFragmentDirections.actionNavigationUpdateIncomeSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                findNavController().navigate(action)
+                navigateToSettingGroupsAndSubGroups()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -135,6 +133,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     private fun navigateToSettingGroupsAndSubGroups() {
         val action =
             UpdateIncomeSubGroupFragmentDirections.actionNavigationUpdateIncomeSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        action.initialTabIndex = 0
         findNavController().navigate(action)
     }
 

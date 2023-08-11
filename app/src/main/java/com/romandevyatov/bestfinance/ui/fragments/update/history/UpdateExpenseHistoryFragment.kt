@@ -433,13 +433,15 @@ class UpdateExpenseHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        findNavController().navigate(R.id.action_update_expense_history_fragment_to_history_fragment)
+        val action = UpdateExpenseHistoryFragmentDirections.actionUpdateExpenseHistoryFragmentToHistoryFragment()
+        action.initialTabIndex = 2
+        findNavController().navigate(action)
     }
 
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.history_fragment)
+                navigateToHistory()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

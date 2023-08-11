@@ -267,6 +267,11 @@
         <action
             android:id="@+id/action_history_fragment_to_update_transfer_history_fragment"
             app:destination="@id/update_transfer_history_fragment" />
+
+        <argument
+            android:name="initialTabIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 
     <fragment
@@ -290,6 +295,11 @@
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_settings_fragment"
             app:destination="@id/settings_fragment" />
+
+        <argument
+            android:name="initialTabIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 
     <fragment

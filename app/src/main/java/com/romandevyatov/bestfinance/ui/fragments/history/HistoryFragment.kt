@@ -45,6 +45,9 @@ class HistoryFragment : Fragment() {
         val adapter = HistoryViewPagerAdapter(this)
         viewPager.adapter = adapter
 
+        val initialTabIndex = arguments?.getInt("initialTabIndex") ?: 0
+        viewPager.setCurrentItem(initialTabIndex, false)
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = historyTypeArray[position]
         }.attach()
