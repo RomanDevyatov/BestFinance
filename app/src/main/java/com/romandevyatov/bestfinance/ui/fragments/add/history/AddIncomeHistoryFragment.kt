@@ -245,7 +245,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                 val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
-                addHistoryViewModel.addIncomeHistory(
+                addHistoryViewModel.addIncomeHistoryAndUpdateWallet(
                     subGroupNameBinding,
                     amountBinding.toDouble(),
                     commentBinding,
@@ -270,7 +270,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { groups ->
+        addHistoryViewModel.getAllIncomeGroupNotArchived()?.observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
             val groupSpinnerAdapter = SpinnerAdapter(

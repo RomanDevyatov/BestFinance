@@ -252,7 +252,7 @@ class AddExpenseHistoryFragment : Fragment() {
             val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
             val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
-            addHistoryViewModel.addExpenseHistory(
+            addHistoryViewModel.addExpenseHistoryAndUpdateWallet(
                 subGroupNameBinding,
                 amountBinding.toDouble(),
                 commentBinding,
@@ -276,7 +276,7 @@ class AddExpenseHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData().observe(viewLifecycleOwner) { groups ->
+        addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData()?.observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
             val groupSpinnerAdapter = SpinnerAdapter(

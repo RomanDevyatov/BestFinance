@@ -17,19 +17,8 @@ class TransferHistoryViewModel @Inject constructor(
 
     val allTransferHistoriesLiveData: LiveData<List<TransferHistory>> = transferHistoryRepository.getAllTransferHistories()
 
-    val notArchivedTransferHistoriesLiveData: LiveData<List<TransferHistory>>
-        = transferHistoryRepository.getAllTransferHistoriesByArchivedDate(null)
-
     fun insertTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
         transferHistoryRepository.insertTransferHistory(transferHistory)
-    }
-
-//    fun updateTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-//        transferHistoryRepository.updateTransferHistory(transferHistory)
-//    }
-
-    fun deleteTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.deleteTransferHistory(transferHistory)
     }
 
 }

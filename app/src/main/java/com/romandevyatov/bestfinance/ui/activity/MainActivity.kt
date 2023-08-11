@@ -72,6 +72,22 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
                 navController.navigate(R.id.settings_fragment)
                 true
             }
+            R.id.update_expense_group_fragment -> {
+                navController.navigate(R.id.groups_and_sub_groups_settings_fragment)
+                true
+            }
+            R.id.update_income_group_fragment -> {
+                navController.navigate(R.id.groups_and_sub_groups_settings_fragment)
+                true
+            }
+            R.id.update_income_sub_group_fragment -> {
+                navController.navigate(R.id.groups_and_sub_groups_settings_fragment)
+                true
+            }
+            R.id.update_expense_sub_group_fragment -> {
+                navController.navigate(R.id.groups_and_sub_groups_settings_fragment)
+                true
+            }
             else -> navController.navigateUp()
         }
     }

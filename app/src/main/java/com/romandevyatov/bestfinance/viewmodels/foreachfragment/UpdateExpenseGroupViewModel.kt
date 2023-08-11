@@ -23,5 +23,4 @@ class UpdateExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.updateExpenseGroup(updatedExpenseGroup)
     }
 
-
 }

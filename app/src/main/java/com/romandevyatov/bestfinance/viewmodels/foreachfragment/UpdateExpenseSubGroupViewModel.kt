@@ -22,7 +22,7 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id)
     }
 
-    fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>> {
+    fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>>? {
         return expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
     }
 
@@ -30,10 +30,6 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroup)
         }
-    }
-
-    fun getExpenseSubGroupByNameLiveData(name: String): LiveData<ExpenseSubGroup> {
-        return expenseSubGroupRepository.getExpenseSubGroupByNameLiveData(name)
     }
 
     fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>? {

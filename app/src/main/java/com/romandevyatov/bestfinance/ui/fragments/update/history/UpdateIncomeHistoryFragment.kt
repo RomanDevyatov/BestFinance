@@ -134,7 +134,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { groups ->
+        updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived()?.observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
             val groupSpinnerAdapter = GroupSpinnerAdapter(

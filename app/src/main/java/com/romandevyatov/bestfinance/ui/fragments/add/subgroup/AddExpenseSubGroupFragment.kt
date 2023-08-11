@@ -11,17 +11,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +39,9 @@ class AddExpenseSubGroupFragment : Fragment() {
 
     private val args: AddExpenseSubGroupFragmentArgs by navArgs()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
+    private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
+
+    private val clickDelay = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -45,6 +50,7 @@ class AddExpenseSubGroupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddExpenseSubGroupBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -71,33 +77,30 @@ class AddExpenseSubGroupFragment : Fragment() {
             if (subGroupNameValidation.isSuccess
                 && groupMaterialSpinnerValidation.isSuccess
             ) {
-                addSubGroupViewModel.getExpenseGroupNotArchivedByNameLiveData(
-                    selectedGroupNameBinding
-                ).observe(viewLifecycleOwner) {
-                    val groupId = it.id!!
+                val groupId = spinnerItemsGlobal.find { it.name == selectedGroupNameBinding }?.id!!
 
-                    addSubGroupViewModel.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(
-                        subGroupNameBinding, groupId
-                    )?.observe(viewLifecycleOwner) { subGroup ->
+                addSubGroupViewModel.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(
+                    subGroupNameBinding, groupId
+                )?.observe(viewLifecycleOwner) { subGroup ->
 
-                        if (subGroup == null) {
-                            addIncomeSubGroup(subGroupNameBinding, descriptionBinding, groupId)
+                    if (subGroup == null) {
+                        addIncomeSubGroup(subGroupNameBinding, descriptionBinding, groupId)
 
-                            navigateToAddExpense(selectedGroupNameBinding, subGroupNameBinding)
-                        } else if (subGroup.archivedDate == null) {
-                            WindowUtil.showExistingDialog(
-                                requireContext(),
-                                "This sub group `$subGroupNameBinding` is already existing."
-                            )
-                        } else {
-                            showUnarchiveDialog(
-                                requireContext(),
-                                subGroup,
-                                "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
-                        }
+                        navigateToAddExpense(selectedGroupNameBinding, subGroupNameBinding)
+                    } else if (subGroup.archivedDate == null) {
+                        WindowUtil.showExistingDialog(
+                            requireContext(),
+                            "This sub group `$subGroupNameBinding` is already existing."
+                        )
+                    } else {
+                        showUnarchiveDialog(
+                            requireContext(),
+                            subGroup,
+                            "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
                     }
                 }
             }
+
 
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
@@ -142,24 +145,29 @@ class AddExpenseSubGroupFragment : Fragment() {
         addSubGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             val spinnerItems = getExpenseGroupList(expenseGroupList)
 
-            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+            spinnerItemsGlobal.clear()
+            spinnerItemsGlobal.addAll(spinnerItems)
+
+            val spinnerAdapter = GroupSpinnerAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                spinnerItems,
+                null,
+                null
+            )
 
             binding.groupSpinner.setAdapter(spinnerAdapter)
 
             if (args.expenseGroupName?.isNotBlank() == true) {
-                binding.groupSpinner.setText(args.expenseGroupName.toString(), false) //.setSelection(spinnerPosition)
+                binding.groupSpinner.setText(args.expenseGroupName.toString(), false)
             }
         }
     }
 
-    private fun getExpenseGroupList(groups: List<ExpenseSubGroup>): ArrayList<String> {
-        val spinnerItems = ArrayList<String>()
-
-        groups.forEach {
-            spinnerItems.add(it.name)
-        }
-
-        return spinnerItems
+    private fun getExpenseGroupList(groups: List<ExpenseGroup>): MutableList<SpinnerItem> {
+        return groups.map {
+            SpinnerItem(it.id, it.name)
+        }.toMutableList()
     }
 
     private fun showUnarchiveDialog(

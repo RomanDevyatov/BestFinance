@@ -29,7 +29,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     // income group zone
-    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>>? {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
@@ -79,7 +79,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addIncomeHistory(incomeSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
+    fun addIncomeHistoryAndUpdateWallet(incomeSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(incomeSubGroupNameBinding)
             val incomeGroupId = incomeSubGroup.id!!.toLong()

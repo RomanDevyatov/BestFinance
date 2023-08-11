@@ -57,17 +57,12 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         )
     }
 
-
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>>? {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
-    }
-
-    fun getIncomeSubGroupByIdLiveData(incomeSubGroupId: Long?): LiveData<IncomeSubGroup>? {
-        return incomeSubGroupRepository.getIncomeSubGroupByIdLiveData(incomeSubGroupId)
     }
 
     fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup>? {

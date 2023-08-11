@@ -39,7 +39,7 @@ class IncomeGroupViewModel @Inject constructor(
             incomeGroupRepository.deleteAllIncomeGroups()
     }
 
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>>? {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 

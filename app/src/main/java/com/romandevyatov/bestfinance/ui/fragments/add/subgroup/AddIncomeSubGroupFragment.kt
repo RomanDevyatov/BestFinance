@@ -24,6 +24,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBindin
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,8 @@ class AddIncomeSubGroupFragment : Fragment() {
     private val addSubGroupViewModel: AddIncomeSubGroupViewModel by viewModels()
 
     private val args: AddIncomeSubGroupFragmentArgs by navArgs()
+
+    private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
@@ -91,39 +95,35 @@ class AddIncomeSubGroupFragment : Fragment() {
             if (subGroupNameValidation.isSuccess
                 && groupSpinnerValidation.isSuccess
             ) {
-                addSubGroupViewModel.getIncomeGroupNotArchivedByNameLiveData(
-                    selectedGroupNameBinding
-                ).observe(viewLifecycleOwner) {
-                    val groupId = it.id!!
+                val groupId = spinnerItemsGlobal.find { it.name == selectedGroupNameBinding }?.id!!
 
-                    addSubGroupViewModel.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(
-                        subGroupNameBinding, groupId
-                    )?.observe(viewLifecycleOwner) { subGroup ->
-                        if (subGroup == null) {
-                            val newIncomeSubGroup = IncomeSubGroup(
-                                name = subGroupNameBinding,
-                                description = descriptionBinding,
-                                incomeGroupId = groupId
-                            )
+                addSubGroupViewModel.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(
+                    subGroupNameBinding, groupId
+                )?.observe(viewLifecycleOwner) { subGroup ->
+                    if (subGroup == null) {
+                        val newIncomeSubGroup = IncomeSubGroup(
+                            name = subGroupNameBinding,
+                            description = descriptionBinding,
+                            incomeGroupId = groupId
+                        )
 
-                            addSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
-                            val action =
-                                AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-                            action.incomeGroupName = selectedGroupNameBinding
-                            action.incomeSubGroupName = subGroupNameBinding
-                            findNavController().navigate(action)
-                        } else if (subGroup.archivedDate == null) {
-                            WindowUtil.showExistingDialog(
-                                requireContext(),
-                                "This sub group `$subGroupNameBinding` is already existing."
-                            )
-                        } else {
-                            showUnarchiveSubGroupDialog(
-                                requireContext(),
-                                selectedGroupNameBinding,
-                                subGroup,
-                                "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` income sub group?")
-                        }
+                        addSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
+                        val action =
+                            AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
+                        action.incomeGroupName = selectedGroupNameBinding
+                        action.incomeSubGroupName = subGroupNameBinding
+                        findNavController().navigate(action)
+                    } else if (subGroup.archivedDate == null) {
+                        WindowUtil.showExistingDialog(
+                            requireContext(),
+                            "This sub group `$subGroupNameBinding` is already existing."
+                        )
+                    } else {
+                        showUnarchiveSubGroupDialog(
+                            requireContext(),
+                            selectedGroupNameBinding,
+                            subGroup,
+                            "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` income sub group?")
                     }
                 }
             }
@@ -142,10 +142,19 @@ class AddIncomeSubGroupFragment : Fragment() {
     }
 
     private fun initGroupSpinner() {
-        addSubGroupViewModel.getAllIncomeGroupNotArchivedLiveData().observe(viewLifecycleOwner) { incomeGroupList ->
+        addSubGroupViewModel.incomeGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
             val spinnerItems = getIncomeGroupList(incomeGroupList)
 
-            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+            spinnerItemsGlobal.clear()
+            spinnerItemsGlobal.addAll(spinnerItems)
+
+            val spinnerAdapter = GroupSpinnerAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                spinnerItems,
+                null,
+                null
+            )
 
             binding.groupSpinner.setAdapter(spinnerAdapter)
 
@@ -155,14 +164,10 @@ class AddIncomeSubGroupFragment : Fragment() {
         }
     }
 
-    private fun getIncomeGroupList(groups: List<IncomeGroup>?): ArrayList<String> {
-        val spinnerItems = ArrayList<String>()
-
-        groups?.forEach {
-            spinnerItems.add(it.name)
-        }
-
-        return spinnerItems
+    private fun getIncomeGroupList(groups: List<IncomeGroup>): MutableList<SpinnerItem> {
+        return groups.map {
+            SpinnerItem(it.id, it.name)
+        }.toMutableList()
     }
 
     private fun showUnarchiveSubGroupDialog(

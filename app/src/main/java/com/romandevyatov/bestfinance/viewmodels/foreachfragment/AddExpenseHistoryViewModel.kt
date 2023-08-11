@@ -78,7 +78,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addExpenseHistory(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
+    fun addExpenseHistoryAndUpdateWallet(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameNotArchived(expenseSubGroupNameBinding)
             val expenseSubGroupId = expenseSubGroup.id!!.toLong()
