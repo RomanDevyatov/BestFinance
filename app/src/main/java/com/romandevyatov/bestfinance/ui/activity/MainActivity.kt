@@ -43,7 +43,10 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
     // for default app bar, navigate up fixing
     override fun onSupportNavigateUp(): Boolean {
         return when(navController.currentDestination?.id) {
-            R.id.add_income_fragment, R.id.add_expense_fragment, R.id.add_transfer_fragment -> {
+            R.id.add_income_fragment,
+            R.id.add_expense_fragment,
+            R.id.add_transfer_fragment,
+            R.id.history_fragment -> {
                 sharedModViewModel.set(null)
                 navController.navigate(R.id.home_fragment)
                 true
@@ -52,22 +55,6 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
                 navController.navigate(R.id.settings_fragment)
                 true
             }
-//            R.id.add_income_group_fragment -> {
-//                navController.navigate(R.id.add_income_fragment)
-//                true
-//            }
-//            R.id.add_income_sub_group_fragment -> {
-//                navController.navigate(R.id.add_income_fragment)
-//                true
-//            }
-//            R.id.add_expense_group_fragment -> {
-//                navController.navigate(R.id.add_expense_fragment)
-//                true
-//            }
-//            R.id.add_expense_sub_group_fragment -> {
-//                navController.navigate(R.id.add_expense_fragment)
-//                true
-//            }
             else -> navController.navigateUp()
         }
     }
