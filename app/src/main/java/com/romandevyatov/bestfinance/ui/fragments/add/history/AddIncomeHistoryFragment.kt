@@ -30,6 +30,7 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
@@ -57,7 +58,6 @@ class AddIncomeHistoryFragment : Fragment() {
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
@@ -257,7 +257,7 @@ class AddIncomeHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.clickDelayMs.toLong())
         }
     }
 

@@ -26,31 +26,23 @@ import java.time.LocalDateTime
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
 
-    private lateinit var binding: FragmentMenuWalletBinding
+    private var _binding: FragmentMenuWalletBinding? = null
+    private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
-
-        setOnBackPressedHandler()
+        _binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
 
         return binding.root
     }
 
-    private fun setOnBackPressedHandler() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentMenuWalletBinding.bind(view)
+//        binding = FragmentMenuWalletBinding.bind(view)
+
+        setOnBackPressedHandler()
 
         binding.addButton.setOnClickListener {
             val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
@@ -67,6 +59,16 @@ class WalletFragment : Fragment() {
 
         initWalletRecyclerView()
     }
+
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.home_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
 
     // алгоритмы требуют ли обучения илинет
     // хотим скажем вложить в акции - прогноз например
