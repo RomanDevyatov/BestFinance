@@ -173,36 +173,6 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
-
-    <fragment
-        android:id="@+id/add_wallet_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.wallet.AddWalletFragment"
-        android:label="Add Wallet"
-        tools:layout="@layout/fragment_add_wallet" >
-        <action
-            android:id="@+id/action_navigation_add_wallet_to_navigation_wallet"
-            app:destination="@id/wallet_fragment" />
-        <action
-            android:id="@+id/action_navigation_add_wallet_to_navigation_add_income"
-            app:destination="@id/add_income_fragment" />
-        <action
-            android:id="@+id/action_navigation_add_wallet_to_navigation_add_transfer"
-            app:destination="@id/add_transfer_fragment" />
-        <action
-            android:id="@+id/action_navigation_add_wallet_to_navigation_add_expense"
-            app:destination="@id/add_expense_fragment" />
-
-        <argument
-            android:name="source"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="spinnerType"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
     <fragment
         android:id="@+id/add_transfer_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment"
@@ -236,31 +206,6 @@
             android:id="@+id/action_navigation_analyze_to_navigation_home"
             app:destination="@id/home_fragment" />
     </fragment>
-    <fragment
-        android:id="@+id/update_wallet_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment"
-        android:label="Update wallet"
-        tools:layout="@layout/fragment_update_wallet" >
-
-        <action
-            android:id="@+id/action_navigation_update_wallet_to_navigation_wallet"
-            app:destination="@id/wallet_fragment" />
-        <action
-            android:id="@+id/action_update_wallet_fragment_to_wallets_settings_fragment"
-            app:destination="@id/wallets_settings_fragment" />
-
-        <argument
-            android:name="walletName"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
-            android:name="source"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
-
     <fragment
         android:id="@+id/history_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragment"
@@ -316,9 +261,13 @@
         android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.SettingsWalletsFragment"
         android:label="Wallets"
         tools:layout="@layout/fragment_settings_wallets" >
+
         <action
             android:id="@+id/action_wallets_settings_fragment_to_update_wallet_fragment"
             app:destination="@id/update_wallet_fragment" />
+        <action
+            android:id="@+id/action_wallets_settings_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
     </fragment>
 
     <fragment
@@ -430,6 +379,59 @@
             android:name="transferHistoryId"
             app:argType="long"
             android:defaultValue="0L" />
+    </fragment>
+    <fragment
+        android:id="@+id/update_wallet_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment"
+        android:label="Update wallet"
+        tools:layout="@layout/fragment_update_wallet" >
+
+        <action
+            android:id="@+id/action_navigation_update_wallet_to_navigation_wallet"
+            app:destination="@id/wallet_fragment" />
+        <action
+            android:id="@+id/action_navigation_update_wallet_to_wallets_settings"
+            app:destination="@id/wallets_settings_fragment" />
+
+        <argument
+            android:name="walletName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/add_wallet_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.wallet.AddWalletFragment"
+        android:label="Add Wallet"
+        tools:layout="@layout/fragment_add_wallet" >
+        <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_wallet"
+            app:destination="@id/wallet_fragment" />
+        <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_income"
+            app:destination="@id/add_income_fragment" />
+        <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_transfer"
+            app:destination="@id/add_transfer_fragment" />
+        <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_add_expense"
+            app:destination="@id/add_expense_fragment" />
+
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="spinnerType"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
 </navigation>

@@ -73,9 +73,6 @@ class UpdateWalletFragment : Fragment() {
                     walletViewModel.updateWalletById(updatedWallet)
 
                     performNavigation(args.source.toString())
-//                    val action =
-//                        UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-//                    findNavController().navigate(action)
                 } else if (wallet.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -115,9 +112,6 @@ class UpdateWalletFragment : Fragment() {
             dialog.dismiss()
             walletViewModel.unarchiveWallet(wallet)
             performNavigation(args.source.toString())
-//            val action =
-//                UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-//            findNavController().navigate(action)
         }
 
         bntNo.setOnClickListener {
@@ -136,7 +130,7 @@ class UpdateWalletFragment : Fragment() {
             }
             Constants.WALLETS_SETTINGS_FRAGMENT -> {
                 val action =
-                    UpdateWalletFragmentDirections.actionUpdateWalletFragmentToWalletsSettingsFragment()
+                    UpdateWalletFragmentDirections.actionNavigationUpdateWalletToWalletsSettings()
                 findNavController().navigate(action)
             }
         }

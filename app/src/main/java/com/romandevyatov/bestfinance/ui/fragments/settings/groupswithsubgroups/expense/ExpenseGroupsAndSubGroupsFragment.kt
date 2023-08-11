@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -86,6 +87,15 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
     }
 
+    private fun setOnBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.settings_fragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,6 +103,8 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         _binding = SettingsFragmentExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
+
+        setOnBackPressedHandler()
 
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->

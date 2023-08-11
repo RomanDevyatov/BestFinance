@@ -45,7 +45,7 @@ class GroupsAndSubGroupsFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_groups_and_sub_groups_settings_fragment_to_settings_fragment)
+                findNavController().navigate(R.id.settings_fragment)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

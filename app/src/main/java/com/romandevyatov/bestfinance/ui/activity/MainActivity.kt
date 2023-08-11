@@ -48,6 +48,10 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
                 navController.navigate(R.id.home_fragment)
                 true
             }
+            R.id.groups_and_sub_groups_settings_fragment, R.id.wallets_settings_fragment -> {
+                navController.navigate(R.id.settings_fragment)
+                true
+            }
 //            R.id.add_income_group_fragment -> {
 //                navController.navigate(R.id.add_income_fragment)
 //                true
@@ -62,14 +66,6 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
 //            }
 //            R.id.add_expense_sub_group_fragment -> {
 //                navController.navigate(R.id.add_expense_fragment)
-//                true
-//            }
-//            R.id.groups_and_sub_groups_settings_fragment -> {
-//                navController.navigate(R.id.settings_fragment)
-//                true
-//            }
-//            R.id.wallets_settings_fragment -> {
-//                navController.navigate(R.id.settings_fragment)
 //                true
 //            }
             else -> navController.navigateUp()
