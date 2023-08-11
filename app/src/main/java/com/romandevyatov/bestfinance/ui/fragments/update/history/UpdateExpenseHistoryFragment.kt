@@ -54,6 +54,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
     private var isButtonClickable = true
     private val args: UpdateExpenseHistoryFragmentArgs by navArgs()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,15 +63,6 @@ class UpdateExpenseHistoryFragment : Fragment() {
         _binding = FragmentUpdateExpenseHistoryBinding.inflate(inflater, container, false)
 
         binding.reusable.addHistoryButton.text = "Update"
-
-        return binding.root
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setOnBackPressedHandler()
 
         updateExpenseHistoryViewModel.getExpenseHistoryWithExpenseSubGroupAndWalletById(args.expenseHistoryId)
             .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
@@ -87,9 +79,18 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 val expenseHistory = historyWithSubGroupAndWallet.expenseHistory
                 binding.reusable.commentEditText.setText(expenseHistory.comment)
                 binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
-
-                setupButtonClickListeners(view)
             }
+
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setOnBackPressedHandler()
+
+        setupButtonClickListeners(view)
     }
 
     override fun onDestroyView() {

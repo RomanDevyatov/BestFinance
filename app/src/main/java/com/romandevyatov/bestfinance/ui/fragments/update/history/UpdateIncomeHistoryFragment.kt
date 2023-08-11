@@ -55,6 +55,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private var isButtonClickable = true
     private val args: UpdateIncomeHistoryFragmentArgs by navArgs()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,15 +64,6 @@ class UpdateIncomeHistoryFragment : Fragment() {
         _binding = FragmentUpdateIncomeHistoryBinding.inflate(inflater, container, false)
 
         binding.reusable.addHistoryButton.text = "Update"
-
-        return binding.root
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setOnBackPressedHandler()
 
         updateIncomeHistoryViewModel.getIncomeHistoryWithIncomeSubGroupAndWalletById(args.incomeHistoryId)
             .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
@@ -88,9 +80,19 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 val incomeHistory = historyWithSubGroupAndWallet.incomeHistory
                 binding.reusable.commentEditText.setText(incomeHistory.comment)
                 binding.reusable.amountEditText.setText(incomeHistory.amount.toString())
-
-                setupButtonClickListeners(view)
             }
+
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setOnBackPressedHandler()
+
+        setupButtonClickListeners(view)
+
     }
 
     override fun onDestroyView() {
