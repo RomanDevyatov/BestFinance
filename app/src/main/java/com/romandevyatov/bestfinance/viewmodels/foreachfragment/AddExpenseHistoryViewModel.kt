@@ -112,10 +112,10 @@ class AddExpenseHistoryViewModel @Inject constructor(
             Wallet(
                 id = walletId,
                 name = wallet.name,
-                balance = wallet.balance + amountBinding,
+                balance = wallet.balance - amountBinding,
                 archivedDate = wallet.archivedDate,
-                input = wallet.input - amountBinding,
-                output = wallet.output,
+                input = wallet.input,
+                output = wallet.output + amountBinding,
                 description = wallet.description
             )
         )
