@@ -150,7 +150,7 @@ class AddExpenseSubGroupFragment : Fragment() {
 
             val spinnerAdapter = GroupSpinnerAdapter(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
+                R.layout.item_with_del,
                 spinnerItems,
                 null,
                 null
