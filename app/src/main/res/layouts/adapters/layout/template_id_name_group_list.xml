@@ -7,6 +7,7 @@
 
     <TextView
         android:id="@+id/text_view_id"
+        style="@style/CustomTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Id"
@@ -15,6 +16,7 @@
 
     <TextView
         android:id="@+id/text_view_name"
+        style="@style/CustomTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Name"

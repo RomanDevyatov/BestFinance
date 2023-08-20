@@ -49,7 +49,10 @@ class SettingsWalletsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        walletsAdapter = WalletsAdapter(walletItemCheckedChangeListener, walletItemDeleteListener, walletItemClickedListener)
+        walletsAdapter = WalletsAdapter(
+            walletItemCheckedChangeListener,
+            walletItemDeleteListener,
+            walletItemClickedListener)
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.walletRecyclerView.adapter = walletsAdapter
     }

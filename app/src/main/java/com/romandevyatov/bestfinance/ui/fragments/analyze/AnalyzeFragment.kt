@@ -84,5 +84,4 @@ class AnalyzeFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
 }

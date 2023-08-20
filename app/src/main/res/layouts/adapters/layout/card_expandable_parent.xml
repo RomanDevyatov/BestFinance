@@ -21,13 +21,13 @@
 
             <TextView
                 android:id="@+id/label_global_group"
+                style="@style/CustomTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:text="Incomes or Expenses"
-                android:textColor="@color/purple_700"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -47,6 +47,7 @@
 
             <TextView
                 android:id="@+id/global_summa_text_view"
+                style="@style/CustomTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"

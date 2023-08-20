@@ -309,7 +309,12 @@ class AddExpenseHistoryFragment : Fragment() {
                 getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
             val subGroupSpinnerAdapter =
-                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, ADD_NEW_EXPENSE_SUB_GROUP, archiveSubGroupListener)
+                SpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerSubItems,
+                    ADD_NEW_EXPENSE_SUB_GROUP,
+                    archiveSubGroupListener)
 
             binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 

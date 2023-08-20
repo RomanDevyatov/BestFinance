@@ -9,6 +9,7 @@
 
     <TextView
         android:id="@+id/expandable_child_textview"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Example"
@@ -19,6 +20,7 @@
 
     <TextView
         android:id="@+id/category_summa_of_expandable_child"
+        style="@style/CustomTextViewStyle"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"

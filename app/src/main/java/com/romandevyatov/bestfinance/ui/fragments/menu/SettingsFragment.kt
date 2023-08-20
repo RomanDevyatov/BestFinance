@@ -83,7 +83,7 @@ class SettingsFragment : Fragment() {
                 "Categories",
                 R.drawable.ic_archive,
                 listOf(
-                    SubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_wallet),
+                    SubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
                     SubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
                 )
             ),
