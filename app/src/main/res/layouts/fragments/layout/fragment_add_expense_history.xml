@@ -85,6 +85,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/amountLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -105,6 +106,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
@@ -129,6 +131,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/timeLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -151,6 +154,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/commentLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
@@ -167,8 +171,9 @@
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addHistoryButton"
+        style="@style/MaterialButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"

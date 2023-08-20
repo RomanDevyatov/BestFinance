@@ -12,6 +12,7 @@
 
                 <TextView
                     android:id="@+id/subgroupNameTextView"
+                    style="@style/CustomTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Text"
@@ -20,8 +21,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/deleteButton"
+                    style="@style/MaterialButtonStyle"
                     android:layout_width="55dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="8dp"
@@ -31,7 +33,6 @@
                     app:layout_constraintEnd_toStartOf="@+id/switchCompat"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchCompat"
                     android:layout_width="55dp"
@@ -40,8 +41,5 @@
                     android:layout_gravity="center_vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>

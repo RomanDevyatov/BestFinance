@@ -32,8 +32,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNo"
+                style="@style/MaterialButtonStyle"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"
@@ -43,8 +44,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnYes"
+                style="@style/MaterialButtonStyle"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"

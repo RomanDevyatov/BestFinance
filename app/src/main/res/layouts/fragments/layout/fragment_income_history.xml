@@ -10,7 +10,6 @@
     android:id="@+id/incomeHistoryFragment"
     tools:context=".ui.fragments.history.IncomeHistoryFragment">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/incomeHistoryRecyclerView"
             android:layout_width="match_parent"

@@ -12,6 +12,7 @@
 
     <TextView
         android:id="@+id/capitalTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
@@ -24,6 +25,7 @@
 
     <TextView
         android:id="@+id/passiveIncomeTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -35,6 +37,7 @@
 
     <TextView
         android:id="@+id/totalIncomeTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -46,6 +49,7 @@
 
     <TextView
         android:id="@+id/totalExpensesTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -57,6 +61,7 @@
 
     <TextView
         android:id="@+id/moneyFlowTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -66,32 +71,9 @@
         app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
 
-    <Button
-        android:id="@+id/goToAnalyzeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="Analyze"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/goToHistoryButton"
-        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
-
-    <Button
-        android:id="@+id/goToHistoryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="History"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/goToAnalyzeButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
-
     <TextView
         android:id="@+id/passiveIncomeValueTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -104,6 +86,7 @@
 
     <TextView
         android:id="@+id/totalExpensesValueTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -116,6 +99,7 @@
 
     <TextView
         android:id="@+id/totalCapitalTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="192dp"
@@ -127,6 +111,7 @@
 
     <TextView
         android:id="@+id/totalIncomeValueTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -139,6 +124,7 @@
 
     <TextView
         android:id="@+id/moneyFlowValueTextView"
+        style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -149,8 +135,35 @@
         app:layout_constraintStart_toStartOf="@+id/totalExpensesValueTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesValueTextView" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToAnalyzeButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Analyze"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/goToHistoryButton"
+        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToHistoryButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="History"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/goToAnalyzeButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addTransferButton"
+        style="@style/MaterialButtonStyle"
         android:layout_width="136dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -161,8 +174,9 @@
         app:layout_constraintStart_toEndOf="@+id/goToAddIncomeButton"
         app:layout_constraintTop_toBottomOf="@+id/goToHistoryButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/goToAddExpenseButton"
+        style="@style/MaterialButtonStyle"
         android:layout_width="136dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -173,8 +187,9 @@
         app:layout_constraintStart_toEndOf="@+id/addTransferButton"
         app:layout_constraintTop_toBottomOf="@+id/goToAnalyzeButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/goToAddIncomeButton"
+        style="@style/MaterialButtonStyle"
         android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -186,6 +201,5 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/goToHistoryButton" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
