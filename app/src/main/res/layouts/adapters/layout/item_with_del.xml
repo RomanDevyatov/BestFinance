@@ -3,14 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_weight="9"
+        android:layout_weight="1"
         android:gravity="left|center_vertical"
-
         android:orientation="horizontal" >
 
         <TextView
@@ -32,5 +31,4 @@
             android:text="X"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-
 </LinearLayout>
