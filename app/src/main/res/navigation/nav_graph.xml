@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_more_fragment_to_groups_and_sub_groups_settings_fragment"
             app:destination="@id/groups_and_sub_groups_settings_fragment" />
+        <action
+            android:id="@+id/action_more_fragment_to_settingsFragment"
+            app:destination="@id/settings_fragment" />
     </fragment>
 
     <fragment
@@ -230,7 +233,7 @@
 
     <fragment
         android:id="@+id/groups_and_sub_groups_settings_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.GroupsAndSubGroupsFragment"
         android:label="Groups and Sub groups"
         tools:layout="@layout/settings_fragment_groups_and_sub_groups" >
 
@@ -258,7 +261,7 @@
 
     <fragment
         android:id="@+id/wallets_settings_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.settings.wallets.SettingsWalletsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.wallets.SettingsWalletsFragment"
         android:label="Wallets"
         tools:layout="@layout/fragment_settings_wallets" >
 
@@ -432,6 +435,16 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" >
+
+        <action
+            android:id="@+id/action_settings_fragment_to_more_fragment"
+            app:destination="@id/more_fragment" />
     </fragment>
 
 </navigation>

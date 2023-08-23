@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.settings.wallets
+package com.romandevyatov.bestfinance.ui.fragments.more.wallets
 
 import android.os.Build
 import android.os.Bundle

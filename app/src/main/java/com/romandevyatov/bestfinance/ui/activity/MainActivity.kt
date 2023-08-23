@@ -40,25 +40,6 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
     }
 
-    var showActionIcon = false
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.action_settings)?.isVisible = showActionIcon
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.action_settings, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> Toast.makeText(this, "go to settings", Toast.LENGTH_SHORT).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onExitApp() {
         finish()
     }
@@ -140,7 +121,8 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             R.id.update_expense_group_fragment,
             R.id.update_income_group_fragment,
             R.id.update_expense_sub_group_fragment,
-            R.id.update_income_sub_group_fragment
+            R.id.update_income_sub_group_fragment,
+            R.id.settings_fragment
         )
 
         if (bottomNavViewExcludedArray.contains(destinationId)) {
@@ -148,6 +130,25 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         } else {
             bottomNavigationView.visibility = View.VISIBLE
         }
+    }
+
+    var showActionIcon = false
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.action_settings)?.isVisible = showActionIcon
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.action_settings, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> navController.navigate(R.id.settings_fragment)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setVisabilityOfSettingsAction(destinationId: Int) {

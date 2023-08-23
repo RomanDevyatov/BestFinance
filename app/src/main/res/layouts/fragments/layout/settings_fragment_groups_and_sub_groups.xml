@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/historyFragment"
-    tools:context=".ui.fragments.settings.groupswithsubgroups.GroupsAndSubGroupsFragment">
+    tools:context=".ui.fragments.more.groupswithsubgroups.GroupsAndSubGroupsFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/groupTabLayout"
