@@ -1,7 +1,10 @@
 package com.romandevyatov.bestfinance.ui.activity
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -34,6 +37,26 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
         setNavigationTopBar()
         setNavigationBottomBar()
+        setOnDestinationChangedListener()
+    }
+
+    var showActionIcon = false
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.action_settings)?.isVisible = showActionIcon
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.action_settings, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> Toast.makeText(this, "go to settings", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onExitApp() {
@@ -89,11 +112,17 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         bottomNavigationView = binding.bottomNavigationView
 
         bottomNavigationView.setupWithNavController(navController)
-
-        hideBottomNavigationBar()
     }
 
-    private fun hideBottomNavigationBar() {
+    private fun setOnDestinationChangedListener() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            setVisabilityOfBottomNavigationBar(destination.id)
+
+            setVisabilityOfSettingsAction(destination.id)
+        }
+    }
+
+    private fun setVisabilityOfBottomNavigationBar(destinationId: Int) {
         val bottomNavViewExcludedArray = arrayOf(
             R.id.add_income_fragment,
             R.id.add_income_group_fragment,
@@ -114,12 +143,15 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             R.id.update_income_sub_group_fragment
         )
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (bottomNavViewExcludedArray.contains(destination.id)) {
-                bottomNavigationView.visibility = View.GONE
-            } else {
-                bottomNavigationView.visibility = View.VISIBLE
-            }
+        if (bottomNavViewExcludedArray.contains(destinationId)) {
+            bottomNavigationView.visibility = View.GONE
+        } else {
+            bottomNavigationView.visibility = View.VISIBLE
         }
+    }
+
+    private fun setVisabilityOfSettingsAction(destinationId: Int) {
+        showActionIcon = destinationId == R.id.settings_fragment
+        invalidateOptionsMenu()
     }
 }
