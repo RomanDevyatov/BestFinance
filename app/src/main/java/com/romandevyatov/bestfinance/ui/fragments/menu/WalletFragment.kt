@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentMenuWalletBinding
+import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
@@ -26,15 +26,14 @@ import java.time.LocalDateTime
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
 
-    private var _binding: FragmentMenuWalletBinding? = null
+    private var _binding: FragmentBottomMenuWalletsBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
     private lateinit var walletAdapter: WalletAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentMenuWalletBinding.inflate(inflater, container, false)
-
+        _binding = FragmentBottomMenuWalletsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

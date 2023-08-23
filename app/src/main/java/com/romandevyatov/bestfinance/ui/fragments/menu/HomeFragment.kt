@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.romandevyatov.bestfinance.databinding.FragmentMenuHomeBinding
+import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuHomeBinding
 import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentMenuHomeBinding? = null
+    private var _binding: FragmentBottomMenuHomeBinding? = null
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMenuHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentBottomMenuHomeBinding.inflate(inflater, container, false)
 
         setOnBackPressedHandler()
 

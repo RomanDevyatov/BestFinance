@@ -9,7 +9,7 @@
         android:id="@+id/home_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_menu_home" >
+        tools:layout="@layout/fragment_bottom_menu_home" >
         <action
             android:id="@+id/action_navigation_home_to_navigation_add_income"
             app:destination="@id/add_income_fragment" />
@@ -30,7 +30,7 @@
         android:id="@+id/wallet_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.menu.WalletFragment"
         android:label="Wallet"
-        tools:layout="@layout/fragment_menu_wallet" >
+        tools:layout="@layout/fragment_bottom_menu_wallets" >
         <action
             android:id="@+id/action_navigation_wallet_to_navigation_add_wallet"
             app:destination="@id/add_wallet_fragment" />
@@ -39,15 +39,15 @@
             app:destination="@id/update_wallet_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/settings_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.SettingsFragment"
-        android:label="Settings"
-        tools:layout="@layout/fragment_menu_settings" >
+        android:id="@+id/more_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.menu.MoreFragment"
+        android:label="More"
+        tools:layout="@layout/fragment_bottom_menu_more" >
         <action
-            android:id="@+id/action_settings_fragment_to_archived_wallets_fragment"
+            android:id="@+id/action_more_fragment_to_archived_wallets_fragment"
             app:destination="@id/wallets_settings_fragment" />
         <action
-            android:id="@+id/action_settings_fragment_to_groups_and_sub_groups_settings_fragment"
+            android:id="@+id/action_more_fragment_to_groups_and_sub_groups_settings_fragment"
             app:destination="@id/groups_and_sub_groups_settings_fragment" />
     </fragment>
 
@@ -247,8 +247,8 @@
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_expense_sub_group_fragment"
             app:destination="@id/update_expense_sub_group_fragment" />
         <action
-            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_settings_fragment"
-            app:destination="@id/settings_fragment" />
+            android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_more_fragment"
+            app:destination="@id/more_fragment" />
 
         <argument
             android:name="initialTabIndex"
@@ -266,8 +266,8 @@
             android:id="@+id/action_wallets_settings_fragment_to_update_wallet_fragment"
             app:destination="@id/update_wallet_fragment" />
         <action
-            android:id="@+id/action_wallets_settings_fragment_to_settings_fragment"
-            app:destination="@id/settings_fragment" />
+            android:id="@+id/action_wallets_settings_fragment_to_more_fragment"
+            app:destination="@id/more_fragment" />
     </fragment>
 
     <fragment

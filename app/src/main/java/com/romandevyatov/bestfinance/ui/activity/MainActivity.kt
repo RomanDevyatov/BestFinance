@@ -75,7 +75,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
                 true
             }
             R.id.groups_and_sub_groups_settings_fragment, R.id.wallets_settings_fragment -> {
-                navController.navigate(R.id.settings_fragment)
+                navController.navigate(R.id.more_fragment)
                 true
             }
             else -> navController.navigateUp()
@@ -102,7 +102,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             setOf(
                 R.id.home_fragment,
                 R.id.wallet_fragment,
-                R.id.settings_fragment
+                R.id.more_fragment
             )
         )
         setupActionBarWithNavController(this, navController, appBarConfiguration)
@@ -151,7 +151,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
     }
 
     private fun setVisabilityOfSettingsAction(destinationId: Int) {
-        showActionIcon = destinationId == R.id.settings_fragment
+        showActionIcon = destinationId == R.id.more_fragment
         invalidateOptionsMenu()
     }
 }

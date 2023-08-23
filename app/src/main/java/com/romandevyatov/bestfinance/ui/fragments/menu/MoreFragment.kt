@@ -7,8 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentMenuSettingsBinding
-import com.romandevyatov.bestfinance.ui.activity.MainActivity
+import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuMoreBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryAdapter
@@ -19,9 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SettingsFragment : Fragment() {
+class MoreFragment : Fragment() {
 
-    private var _binding: FragmentMenuSettingsBinding? = null
+    private var _binding: FragmentBottomMenuMoreBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -29,7 +28,7 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMenuSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentBottomMenuMoreBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,8 +67,8 @@ class SettingsFragment : Fragment() {
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
         val action = when (subCategory.name) {
-            GROUPS_AND_SUB_GROUPS_CATEGORY   -> SettingsFragmentDirections.actionSettingsFragmentToGroupsAndSubGroupsSettingsFragment()
-            WALLETS_CATEGORY    -> SettingsFragmentDirections.actionSettingsFragmentToArchivedWalletsFragment()
+            GROUPS_AND_SUB_GROUPS_CATEGORY   -> MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
+            WALLETS_CATEGORY    -> MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
 //                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
 //                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
             else -> return

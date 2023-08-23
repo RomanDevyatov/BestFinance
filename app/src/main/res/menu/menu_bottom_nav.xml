@@ -12,8 +12,8 @@
         android:icon="@drawable/ic_wallet"/>
 
     <item
-        android:id="@+id/settings_fragment"
-        android:title="Profile"
+        android:id="@+id/more_fragment"
+        android:title="More"
         android:icon="@drawable/ic_settings"/>
 
 </menu>
