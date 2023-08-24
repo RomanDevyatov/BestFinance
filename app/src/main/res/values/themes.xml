@@ -18,6 +18,13 @@
         <item name="backgroundTint">@color/grey_100</item>
     </style>
 
+    <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">
+<!--        <item name="cardBackgroundColor">@color/your_card_background_color</item>-->
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <!-- Add more card attributes as needed -->
+    </style>
+
     <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="android:textColorHint">@color/grey_700</item>
         <item name="boxBackgroundColor">@color/white</item>
