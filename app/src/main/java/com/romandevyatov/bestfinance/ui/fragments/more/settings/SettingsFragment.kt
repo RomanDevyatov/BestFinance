@@ -32,7 +32,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 //        sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
         val darkModePreference = findPreference<SwitchPreferenceCompat>("darkOrLightTheme")
-        darkModePreference?.setDefaultValue(false)
+        darkModePreference!!.setDefaultValue(false)
         darkModePreference?.setOnPreferenceChangeListener { _, newValue ->
             val isDarkModeEnabled = newValue as Boolean
             updateTheme(isDarkModeEnabled)
