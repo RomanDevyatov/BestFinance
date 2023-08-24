@@ -1,57 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-       <PreferenceCategory android:title="Game Settings">
-           <SeekBarPreference
-              android:defaultValue="10"
-              android:key="pennyCount"
-              android:max="20"
-              android:summary="starting_penny_count_new_game"
-              android:title="starting_penny_count"
-              app:min="1"
-              app:showSeekBarValue="true" />
+       <PreferenceCategory android:title="Style">
 
            <SwitchPreferenceCompat
-              android:key="fastAI"
-              android:summary="fast_ai_summary"
-              android:title="fast_ai" />
+              android:key="darkOrLightTheme"
+              android:title="Dark mode"
+              android:summary="Enable dark mode"
+              android:defaultValue="false" />
        </PreferenceCategory>
-        
-           <PreferenceCategory android:title="Theme Settings">
-             <!-- This will contain the Theme and Light/Dark Mode preferences -->
-           </PreferenceCategory>
-    
-       <PreferenceCategory android:title="About the App">
-         <!-- This will contain an "About the App" link -->
-       </PreferenceCategory>
-
-<!--    <PreferenceCategory app:title="Basics">-->
-
-<!--        <EditTextPreference-->
-<!--            android:key="signature"-->
-<!--            android:title="Kox"-->
-<!--            app:useSimpleSummaryProvider="true" />-->
-
-<!--        <CheckBoxPreference-->
-<!--            android:key="pref_sync"-->
-<!--            android:title="@string/sync_pref"-->
-<!--            android:summary="@string/sync_pref_summary"-->
-<!--            android:defaultValue="true" />-->
-
-<!--        <ListPreference-->
-<!--            key="pref_sync_connection_type"-->
-<!--            android:title="@string/pref_syncConnectionType"-->
-<!--            android:entries="@array/pref_syncConnectionType_entries"-->
-<!--            android:entryValues="@array/pref_syncConnectionType_values"-->
-<!--            android:defaultValue="@string/pref_syncConnectionType_summary" />-->
-
-<!--        <SwitchPreferenceCompat-->
-<!--            android:defaultValue="true"-->
-<!--            android:key="switch"-->
-<!--            android:summary="Click to switch On or Off"-->
-<!--            android:title="Switch Preferences" />-->
-<!--    </PreferenceCategory>-->
-
 </PreferenceScreen>
