@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -16,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
+import com.romandevyatov.bestfinance.utils.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,18 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         setNavigationTopBar()
         setNavigationBottomBar()
         setOnDestinationChangedListener()
+
+        applySavedTheme()
+    }
+
+    fun applySavedTheme() {
+        val isDarkModeEnabled = ThemeHelper.isDarkModeEnabled(this)
+        val nightMode = if (isDarkModeEnabled) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
+        }
+        AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
     override fun onExitApp() {

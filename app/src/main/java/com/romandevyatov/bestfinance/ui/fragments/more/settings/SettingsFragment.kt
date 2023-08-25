@@ -1,15 +1,16 @@
 package com.romandevyatov.bestfinance.ui.fragments.more.settings
 
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.ui.activity.MainActivity
+import com.romandevyatov.bestfinance.utils.ThemeHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -27,26 +28,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         // Access preferences and listen for changes
-//        val preferenceManager = preferenceManager
+        val preferenceManager = preferenceManager
 //        val sharedPreferences = preferenceManager.sharedPreferences
-//        sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
-        val darkModePreference = findPreference<SwitchPreferenceCompat>("darkOrLightTheme")
-        darkModePreference!!.setDefaultValue(false)
-        darkModePreference?.setOnPreferenceChangeListener { _, newValue ->
+        (requireActivity() as MainActivity).applySavedTheme()
+
+        findPreference<SwitchPreferenceCompat>("darkOrLightTheme")?.setOnPreferenceChangeListener { _, newValue ->
             val isDarkModeEnabled = newValue as Boolean
-            updateTheme(isDarkModeEnabled)
+
+            ThemeHelper.setDarkModeEnabled(requireContext(), isDarkModeEnabled)
+            (requireActivity() as MainActivity).applySavedTheme()
+
             true
         }
-    }
-
-    private fun updateTheme(isDarkModeEnabled: Boolean) {
-        val nightMode = if (isDarkModeEnabled) {
-            AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            AppCompatDelegate.MODE_NIGHT_NO
-        }
-        AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
     //    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
