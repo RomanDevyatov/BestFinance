@@ -1,7 +1,6 @@
 package com.romandevyatov.bestfinance.utils
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 
 object ThemeHelper {
     private const val THEME_PREFS_NAME = "theme_prefs"

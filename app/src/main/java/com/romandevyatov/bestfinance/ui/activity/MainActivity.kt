@@ -146,10 +146,13 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         }
     }
 
-    var showActionIcon = false
+    private var showSettingsActionIcon = false
+    private var showVoiceActionIcon = false
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.action_settings)?.isVisible = showActionIcon
+        menu?.findItem(R.id.action_settings)?.isVisible = showSettingsActionIcon
+        menu?.findItem(R.id.action_voice)?.isVisible = showVoiceActionIcon
+
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -158,15 +161,26 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> navController.navigate(R.id.settings_fragment)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> {
+            navController.navigate(R.id.settings_fragment)
+            true
         }
-        return super.onOptionsItemSelected(item)
+
+        R.id.action_voice -> {
+            Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setVisabilityOfSettingsAction(destinationId: Int) {
-        showActionIcon = destinationId == R.id.more_fragment
+        showSettingsActionIcon = destinationId == R.id.more_fragment
+        showVoiceActionIcon = destinationId == R.id.add_income_fragment
+        showVoiceActionIcon = destinationId == R.id.add_expense_fragment
         invalidateOptionsMenu()
     }
 }
