@@ -2,11 +2,15 @@ package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.RecognitionListener
+import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,17 +23,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
@@ -42,7 +46,6 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
@@ -59,6 +62,8 @@ class AddIncomeHistoryFragment : Fragment() {
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
 
     private var isButtonClickable = true
+
+    private var textToSpeech: TextToSpeech? = null
 
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
@@ -111,13 +116,40 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         }
 
+    private lateinit var speechRecognizer: SpeechRecognizer
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddIncomeHistoryBinding.inflate(inflater, container, false)
+
+        setUpSpeechRecognizer()
+
+        setUpTextToSpeech()
+
         return binding.root
+    }
+
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val result = textToSpeech?.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setUpSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+
+        val recognitionListener = getSpeechRecognitionListener()
+        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -144,6 +176,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+        speechRecognizer.destroy()
         _binding = null
     }
 
@@ -550,4 +585,81 @@ class AddIncomeHistoryFragment : Fragment() {
         binding.subGroupSpinner.text = null
     }
 
+    private fun getSpeechRecognitionListener(): RecognitionListener {
+        return object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                // Called when the speech recognizer is ready for speech input
+            }
+
+            override fun onBeginningOfSpeech() {
+                binding.commentEditText.setText("Listening")
+            }
+
+            override fun onRmsChanged(rmsdB: Float) {
+                // Called when the RMS dB (sound level) changes during speech input
+            }
+
+            override fun onBufferReceived(buffer: ByteArray?) {
+                // Called when the audio buffer is received
+            }
+
+            override fun onEndOfSpeech() {
+                // Called when the user stops speaking
+            }
+
+            override fun onError(error: Int) {
+                // Called if there is an error during speech recognition
+                // Handle errors appropriately (e.g., display an error message)
+            }
+
+            override fun onResults(results: Bundle?) {
+                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
+                    val recognizedText = recognizedStrings[0]
+                    binding.commentEditText.setText(recognizedText)
+                    handleRecognizedText(recognizedText)
+                }
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {
+                // Called when partial recognition results are available
+            }
+
+            override fun onEvent(eventType: Int, params: Bundle?) {
+                // Called for various speech recognition events
+            }
+        }
+    }
+
+    private fun handleRecognizedText(recognizedText: String) {
+        // Implement your logic to process the recognized text and update your finance tracker here
+        // For example, you can parse the recognized text for specific financial commands or transactions
+        // and perform the corresponding actions in your finance tracker.
+    }
+
+    fun speakAndStartRecognition(intent: Intent) {
+        val textToSpeak = "Choose income group"
+        textToSpeech?.speak(
+            textToSpeak,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            null)
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            try {
+                speechRecognizer.startListening(intent)
+            } catch (e: Exception) {
+                Log.e("SpeechRecognizer", "Error starting speech recognition: ${e.message}")
+            }
+        }, calculateSpeechDuration(textToSpeak))
+    }
+
+    private fun calculateSpeechDuration(text: String): Long {
+        // Estimate the speech duration based on the number of words
+        val words = text.split(" ")
+        val estimatedWordsPerMinute = 150 // Adjust as needed
+        val millisecondsPerWord = (60 * 1000 / estimatedWordsPerMinute).toLong()
+        return words.size * millisecondsPerWord
+    }
 }

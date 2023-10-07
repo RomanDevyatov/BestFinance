@@ -1,26 +1,32 @@
 package com.romandevyatov.bestfinance.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
+import com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+
 
 @AndroidEntryPoint
 class MainActivity() : AppCompatActivity(), OnExitAppListener {
@@ -42,6 +48,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
 
         applySavedTheme()
+
     }
 
     fun applySavedTheme() {
@@ -81,7 +88,11 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+//        navController = navHostFragment.navController
         navController = findNavController(R.id.nav_host_fragment_activity_main)
+
 //        val appBarConfiguration = AppBarConfiguration(navController.graph)
 //        toolbar.setupWithNavController(navController, appBarConfiguration)
 //        toolbar.setNavigationOnClickListener {
@@ -168,7 +179,20 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         }
 
         R.id.action_voice -> {
-            Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+
+            val fragment = navHostFragment.childFragmentManager.fragments.first()
+            if (fragment is AddIncomeHistoryFragment) {
+                fragment.speakAndStartRecognition(intent)
+            }
+            if (fragment is AddExpenseHistoryFragment) {
+
+            }
+
             true
         }
 
@@ -179,8 +203,15 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
     private fun setVisabilityOfSettingsAction(destinationId: Int) {
         showSettingsActionIcon = destinationId == R.id.more_fragment
-        showVoiceActionIcon = destinationId == R.id.add_income_fragment
-        showVoiceActionIcon = destinationId == R.id.add_expense_fragment
+
+        showVoiceActionIcon = when (destinationId) {
+            R.id.add_income_fragment -> true
+            R.id.add_expense_fragment -> true
+            else -> {
+                false
+            }
+        }
+
         invalidateOptionsMenu()
     }
 }

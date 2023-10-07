@@ -5,6 +5,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id "com.google.devtools.ksp" version "1.6.21-1.0.6"
     id 'androidx.navigation.safeargs'
+    id 'kotlin-android-extensions'
 }
 
 android {
