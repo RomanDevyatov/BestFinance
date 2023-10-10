@@ -65,6 +65,12 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private var textToSpeech: TextToSpeech? = null
 
+    private var spokenGroupName: String? = null
+    private var inputType: Int = 0
+    private lateinit var intentGlob: Intent
+
+    private lateinit var handler: Handler
+
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private val archiveGroupListener =
@@ -116,7 +122,8 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         }
 
-    private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var firstSpeechRecognizer: SpeechRecognizer
+    private lateinit var secondSpeechRecognizer: SpeechRecognizer
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -130,26 +137,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
         setUpTextToSpeech()
 
+        handler = Handler(Looper.getMainLooper())
+
         return binding.root
-    }
-
-    private fun setUpTextToSpeech() {
-        textToSpeech = TextToSpeech(requireContext()) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                val result = textToSpeech?.setLanguage(Locale.getDefault())
-                if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun setUpSpeechRecognizer() {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
-
-        val recognitionListener = getSpeechRecognitionListener()
-        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -174,11 +164,30 @@ class AddIncomeHistoryFragment : Fragment() {
         restoreAmountDateCommentValues()
     }
 
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val result = textToSpeech?.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setUpSpeechRecognizer() {
+        firstSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+
+        val recognitionListener = getFirstSpeechRecognitionListener()
+        firstSpeechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         textToSpeech?.stop()
         textToSpeech?.shutdown()
-        speechRecognizer.destroy()
+        firstSpeechRecognizer.destroy()
         _binding = null
     }
 
@@ -288,7 +297,6 @@ class AddIncomeHistoryFragment : Fragment() {
                 navigateToHome()
             }
 
-            val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
@@ -585,7 +593,7 @@ class AddIncomeHistoryFragment : Fragment() {
         binding.subGroupSpinner.text = null
     }
 
-    private fun getSpeechRecognitionListener(): RecognitionListener {
+    private fun getFirstSpeechRecognitionListener(): RecognitionListener {
         return object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 // Called when the speech recognizer is ready for speech input
@@ -615,9 +623,67 @@ class AddIncomeHistoryFragment : Fragment() {
             override fun onResults(results: Bundle?) {
                 val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val recognizedText = recognizedStrings[0]
-                    binding.commentEditText.setText(recognizedText)
-                    handleRecognizedText(recognizedText)
+                    val currentSpokenText = recognizedStrings[0]
+
+                    when (inputType) {
+                        0 -> {
+                            if (spokenGroupName == null) {
+                                val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
+
+                                if (groupList.contains(currentSpokenText)) { // success
+                                    binding.groupSpinner.setText("$spokenGroupName")
+                                } else {
+                                    spokenGroupName = currentSpokenText
+
+                                    val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new income group with this name? (Yes/No)"
+                                    speakText(ask)
+                                    val delay1 = calculateSpeechDuration(ask)
+                                    recognizeText(delay1, intentGlob)
+                                }
+                            } else if (!spokenGroupName.equals("-1")) {
+                                when (currentSpokenText.lowercase()) {
+                                    "yes" -> { // create new
+                                        speakText("Adding $spokenGroupName group")
+                                        addHistoryViewModel.insertIncomeGroup(
+                                            IncomeGroup(
+                                                name = spokenGroupName!!.capitalize(Locale.ROOT),
+                                                isPassive = false
+                                            )
+                                        )
+                                        binding.groupSpinner.setText("$spokenGroupName")
+
+                                        spokenGroupName = null
+                                        inputType += 1
+//                                        startVoiceAssistance(intentGlob, inputType)
+                                    }
+                                    "no" -> { // then ask exit or start again?
+                                        spokenGroupName = "-1" // any
+                                        val ask = "Do you want to continue and call name one more time? (Yes/No)"
+                                        speakText(ask)
+                                        val delay = calculateSpeechDuration(ask)
+                                        recognizeText(delay, intentGlob)
+                                    }
+                                    else -> {
+                                        speakText("You sad $currentSpokenText. Exiting")
+                                    }
+                                }
+                            } else if (spokenGroupName.equals("-1")) {
+                                when (currentSpokenText.lowercase()) {
+                                    "yes" -> { // start again
+                                        startVoiceAssistance(intentGlob)
+                                    }
+                                    "no" -> { // exit
+                                    }
+                                    else -> {
+                                        speakText("You sad $currentSpokenText. Exiting")
+                                    }
+                                }
+                                spokenGroupName = null
+                            }
+                        }
+                    }
+
+                    handleRecognizedText(currentSpokenText)
                 }
             }
 
@@ -631,35 +697,86 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun handleRecognizedText(recognizedText: String) {
-        // Implement your logic to process the recognized text and update your finance tracker here
-        // For example, you can parse the recognized text for specific financial commands or transactions
-        // and perform the corresponding actions in your finance tracker.
+    private enum class SpeechRecognitionState {
+        INITIAL,
+        GROUP_NAME,
+        CREATE_NEW_GROUP,
+        SET_NEW_GROUP_NAME,
+        FINISH
     }
 
-    fun speakAndStartRecognition(intent: Intent) {
-        val textToSpeak = "Choose income group"
+    private var currentState = SpeechRecognitionState.INITIAL
+
+//    private fun getPromptForCurrentState(): String {
+//        return when (currentState) {
+//            SpeechRecognitionState.GROUP_NAME -> "Ask group name"
+//            SpeechRecognitionState.CREATE_NEW_GROUP -> "Create a new income group with this name?"
+//            SpeechRecognitionState.SET_NEW_GROUP_NAME -> "Do you want to set a new group name?"
+//            else -> "Unknown state"
+//        }
+//    }
+
+    private fun handleRecognizedText(recognizedText: String) { }
+
+    fun startVoiceAssistance(intent: Intent, inputType_: Int = 0) {
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
+        intentGlob = intent
+        inputType = inputType_
+
+        val chooseGroupString = "Choose income group"
+        speakText(chooseGroupString)
+        val d = calculateSpeechDuration(chooseGroupString)
+        recognizeText(d, intent)
+    }
+
+    private fun speakText(textToSpeak: String) {
         textToSpeech?.speak(
             textToSpeak,
             TextToSpeech.QUEUE_FLUSH,
             null,
             null)
+    }
 
-        val handler = Handler(Looper.getMainLooper())
+    private fun recognizeText(delay: Long, intent: Intent) {
         handler.postDelayed({
             try {
-                speechRecognizer.startListening(intent)
+                println("delay: $delay")
+                firstSpeechRecognizer.startListening(intent)
             } catch (e: Exception) {
                 Log.e("SpeechRecognizer", "Error starting speech recognition: ${e.message}")
             }
-        }, calculateSpeechDuration(textToSpeak))
+        }, delay)
     }
 
-    private fun calculateSpeechDuration(text: String): Long {
-        // Estimate the speech duration based on the number of words
-        val words = text.split(" ")
-        val estimatedWordsPerMinute = 150 // Adjust as needed
-        val millisecondsPerWord = (60 * 1000 / estimatedWordsPerMinute).toLong()
-        return words.size * millisecondsPerWord
+    private fun calculateSpeechDuration(text: String, averageSpeakingRateWPM: Int = 110): Long {
+        // Calculate the approximate duration in milliseconds
+        val words = text.split("\\s+".toRegex()).size
+        val millisecondsPerWord = 60000 / averageSpeakingRateWPM // 60,000 ms per minute
+        return words.toLong() * millisecondsPerWord
     }
+
+    private fun countWords(text: String): Int {
+        val words = text.split("\\s+".toRegex())
+        return words.size
+    }
+
+    private fun calculateSpeechDurationMillis(wordCount: Int, averageSpeakingRate: Int): Long {
+        // Calculate the duration in milliseconds based on word count and average speaking rate
+        val millisecondsPerWord = 60000 / averageSpeakingRate // 60,000 milliseconds per minute
+        return wordCount.toLong() * millisecondsPerWord
+    }
+
+    private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {
+        val adapter = autoCompleteTextView.adapter
+        val allItems = mutableListOf<String>()
+
+        if (adapter is ArrayAdapter<*>) {
+            for (i in 0 until adapter.count) {
+                allItems.add(adapter.getItem(i).toString())
+            }
+        }
+
+        return allItems
+    }
+
 }
