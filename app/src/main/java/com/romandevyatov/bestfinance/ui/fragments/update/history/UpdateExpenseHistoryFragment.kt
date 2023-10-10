@@ -411,7 +411,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.clickDelayMs.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
 

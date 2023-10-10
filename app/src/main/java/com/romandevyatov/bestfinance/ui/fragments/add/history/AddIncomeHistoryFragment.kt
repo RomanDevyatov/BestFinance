@@ -10,13 +10,13 @@ import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
-import android.util.Log
+import android.speech.tts.UtteranceProgressListener
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
-import android.widget.AutoCompleteTextView
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -49,9 +49,8 @@ import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.Locale
-import java.util.Calendar
-import kotlin.collections.ArrayList
+import java.util.*
+
 
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
@@ -68,8 +67,6 @@ class AddIncomeHistoryFragment : Fragment() {
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
     private var isButtonClickable = true
-
-    private val DESIRED_SPEECH_RATE: Int = 100
 
     private var textToSpeech: TextToSpeech? = null
 
@@ -129,19 +126,12 @@ class AddIncomeHistoryFragment : Fragment() {
         intentGlob = intent
     }
 
-    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, customChooseDelay: Long? = null) {
+    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, customChooseDelay: Double? = null) {
 //        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
         inputType = currentInputState
 
         val chooseGroupString = "Choose $currentInputState"
-        speakText(chooseGroupString)
-
-        var delay = calculateSpeechDuration(chooseGroupString)
-        if (customChooseDelay != null) {
-            delay = customChooseDelay
-        }
-
-        recognizeText(delay, intentGlob)
+        speakTextAndRecognize(chooseGroupString)
     }
 
     private fun setOnBackPressedCallback() {
@@ -152,35 +142,6 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
-    private fun setUpTextToSpeech() {
-        textToSpeech = TextToSpeech(requireContext()) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
-                val speechRateResult = textToSpeech?.setSpeechRate(DESIRED_SPEECH_RATE.toFloat() / 100)
-
-                if (languageResult == TextToSpeech.LANG_MISSING_DATA
-                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
-                }
-
-                if (speechRateResult == TextToSpeech.ERROR) {
-                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun setUpSpeechRecognizer() {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
-
-        val recognitionListener = getFirstSpeechRecognitionListener()
-        speechRecognizer.setRecognitionListener(recognitionListener)
-    }
-
-    private fun stopListening() {
-        speechRecognizer.stopListening()
     }
 
     private fun setSpinners() {
@@ -292,7 +253,7 @@ class AddIncomeHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.clickDelayMs.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
 
@@ -595,7 +556,62 @@ class AddIncomeHistoryFragment : Fragment() {
         GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT
     }
 
-    private fun getFirstSpeechRecognitionListener(): RecognitionListener {
+    private var isTextToSpeechDone = false
+
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
+                if (languageResult == TextToSpeech.LANG_MISSING_DATA
+                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+
+                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
+                if (speechRateResult == TextToSpeech.ERROR) {
+                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
+                }
+
+                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {
+                        // Utterance started
+                    }
+
+                    override fun onDone(utteranceId: String?) {
+                        // Utterance is done, initiate speech recognition
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (!isTextToSpeechDone) {
+                                isTextToSpeechDone = true
+                                speechRecognizer.startListening(intentGlob)
+                            }
+                        }, Constants.DELAY_AFTER_SPOKEN_TEXT)
+                    }
+
+                    override fun onError(utteranceId: String?) {
+                        // Utterance error
+                    }
+                })
+            }
+        }
+    }
+
+    private fun setUpSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+
+        val recognitionListener = getSpeechRecognitionListener()
+        speechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
+    private fun speakTextAndRecognize(textToSpeak: String) {
+        isTextToSpeechDone = false
+        textToSpeech?.speak(
+            textToSpeak,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            "uniqueUtteranceId")
+    }
+
+    private fun getSpeechRecognitionListener(): RecognitionListener {
         return object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 // Called when the speech recognizer is ready for speech input
@@ -654,29 +670,25 @@ class AddIncomeHistoryFragment : Fragment() {
             if (groupList.contains(currentSpokenText)) { // success
                 binding.groupSpinner.setText(currentSpokenText, false)
                 updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
-                startVoiceAssistance(InputState.SUB_GROUP, 2000L)
+                startVoiceAssistance(InputState.SUB_GROUP)
             } else {
                 spokenValue = currentSpokenText
 
                 val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
-                speakText(ask)
-                val delay1 = calculateSpeechDuration(ask)
-                recognizeText(delay1, intentGlob)
+                speakTextAndRecognize(ask)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // create new
                     handleCreateNewGroup()
-                    startVoiceAssistance(InputState.SUB_GROUP, 2000L)
+                    startVoiceAssistance(InputState.SUB_GROUP)
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call group name one more time? (Yes/No)"
-                    speakText(ask)
-                    val delay = calculateSpeechDuration(ask)
-                    recognizeText(delay, intentGlob)
+                    speakTextAndRecognize(ask)
                 }
-                else -> speakText("You sad $currentSpokenText. Exiting")
+                else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -684,16 +696,16 @@ class AddIncomeHistoryFragment : Fragment() {
                     startVoiceAssistance(InputState.GROUP)
                 }
                 "no" -> { // exit
-                    speakText("Terminated")
+                    speakTextAndRecognize("Terminated")
                 }
-                else -> speakText("You sad $currentSpokenText. Exiting")
+                else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
             spokenValue = null
         }
     }
 
     private fun handleCreateNewGroup() {
-        speakText("Adding $spokenValue group")
+        speakTextAndRecognize("Adding $spokenValue group")
         addHistoryViewModel.insertIncomeGroup(
             IncomeGroup(
                 name = spokenValue!!.capitalize(Locale.ROOT),
@@ -712,29 +724,25 @@ class AddIncomeHistoryFragment : Fragment() {
 
             if (subGroupList.contains(currentSpokenText)) { // success
                 binding.subGroupSpinner.setText(currentSpokenText, false)
-                startVoiceAssistance(InputState.WALLET, 2000L) // move further
+                startVoiceAssistance(InputState.WALLET) // move further
             } else {
                 spokenValue = currentSpokenText
 
                 val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
-                speakText(ask)
-                val delay1 = calculateSpeechDuration(ask)
-                recognizeText(delay1, intentGlob)
+                speakTextAndRecognize(ask)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     handleCreateNewSubGroup()
-                    startVoiceAssistance(InputState.WALLET, 2000L) // move further
+                    startVoiceAssistance(InputState.WALLET) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
-                    speakText(ask)
-                    val delay = calculateSpeechDuration(ask)
-                    recognizeText(delay, intentGlob)
+                    speakTextAndRecognize(ask)
                 }
-                else -> speakText("You sad $currentSpokenText. Exiting")
+                else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -742,10 +750,10 @@ class AddIncomeHistoryFragment : Fragment() {
                     startVoiceAssistance(InputState.SUB_GROUP)
                 }
                 "no" -> { // exit
-                    speakText("Terminated")
+                    speakTextAndRecognize("Terminated")
                 }
                 else -> {
-                    speakText("You sad $currentSpokenText. Exiting")
+                    speakTextAndRecognize("You sad $currentSpokenText. Exiting")
                 }
             }
 
@@ -754,7 +762,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun handleCreateNewSubGroup() { // create new subgroup
-        speakText("Adding $spokenValue subgroup")
+        speakTextAndRecognize("Adding $spokenValue subgroup")
 
         val groupId = spinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
 
@@ -781,9 +789,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 spokenValue = currentSpokenText
 
                 val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
-                speakText(ask)
-                val delay1 = calculateSpeechDuration(ask)
-                recognizeText(delay1, intentGlob)
+                speakTextAndRecognize(ask)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -794,26 +800,24 @@ class AddIncomeHistoryFragment : Fragment() {
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakText(ask)
-                    val delay = calculateSpeechDuration(ask)
-                    recognizeText(delay, intentGlob)
+                    speakTextAndRecognize(ask)
                 }
-                else -> speakText("You sad $currentSpokenText. Exiting")
+                else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> startVoiceAssistance(InputState.WALLET) // start again
                 "no" -> { // exit
-                    speakText("Terminated")
+                    speakTextAndRecognize("Terminated")
                 }
-                else -> speakText("You sad $currentSpokenText. Exiting")
+                else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
             spokenValue = null
         }
     }
 
     private fun handleCreateNewWallet() { // create new
-        speakText("Adding $spokenValue wallet")
+        speakTextAndRecognize("Adding $spokenValue wallet")
 
         // TODO: correct balance input - additional voice recognize
         val newWallet = Wallet(
@@ -837,6 +841,7 @@ class AddIncomeHistoryFragment : Fragment() {
             binding.amountEditText.setText(numbers)
             startVoiceAssistance(InputState.COMMENT)
         } else {
+            speakTextAndRecognize("No numbers found")
             binding.amountEditText.setText("No numbers found")
             inputType = InputState.GROUP
         }
@@ -844,7 +849,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun handleCommentInput(spokenComment: String) { // comment
         if (spokenComment.isNotEmpty()) {
-            speakText("Adding comment")
+            speakTextAndRecognize("Adding comment")
             binding.commentEditText.setText(spokenComment)
         }
         inputType = InputState.GROUP
@@ -856,35 +861,6 @@ class AddIncomeHistoryFragment : Fragment() {
                 Locale.getDefault()
             ) else it.toString()
         }
-    }
-
-    private fun speakText(textToSpeak: String) {
-        textToSpeech?.speak(
-            textToSpeak,
-            TextToSpeech.QUEUE_FLUSH,
-            null,
-            null)
-    }
-
-    private fun recognizeText(delay: Long, intent: Intent) {
-        handler.postDelayed({
-            try {
-                println("delay: $delay")
-                speechRecognizer.startListening(intent)
-
-                handler.postDelayed({
-                    stopListening()
-                }, 3000L) // 3 seconds
-            } catch (e: Exception) {
-                Log.e("SpeechRecognizer", "Error starting speech recognition: ${e.message}")
-            }
-        }, delay)
-    }
-
-    private fun calculateSpeechDuration(text: String, averageSpeakingRateWPM: Int = DESIRED_SPEECH_RATE): Long {
-        val words = text.split("\\s+".toRegex()).size
-        val millisecondsPerWord = 60000 / averageSpeakingRateWPM // 60,000 ms per minute
-        return words.toLong() * millisecondsPerWord
     }
 
     private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {

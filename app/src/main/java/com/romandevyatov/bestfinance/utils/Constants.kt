@@ -17,15 +17,15 @@ object Constants {
     const val ADD_NEW_INCOME_SUB_GROUP = "Add new income sub group"
     const val ADD_NEW_INCOME_GROUP = "Add new income group"
     const val DATABASE_NAME = "bestfinance_database"
-
     const val INCOMINGS_PARENT_TYPE = "INCOMINGS_PARENT_TYPE"
-    const val EXPENSES_PARENT_TYPE = "EXPENSES_PARENT_TYPE"
 
+    const val EXPENSES_PARENT_TYPE = "EXPENSES_PARENT_TYPE"
     const val ADD_NEW_WALLET: String = "Add new wallet"
 
     const val GROUPS_AND_SUB_GROUPS_CATEGORY: String = "Groups and Sub Groups"
+
     const val WALLETS_CATEGORY: String = "Wallets"
 
-    const val clickDelayMs = 1000
-
+    const val DELAY_AFTER_SPOKEN_TEXT: Long = 0
+    const val CLICK_DELAY_MS = 1000
 }

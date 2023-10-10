@@ -29,7 +29,6 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
-import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -413,7 +412,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.clickDelayMs.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
 

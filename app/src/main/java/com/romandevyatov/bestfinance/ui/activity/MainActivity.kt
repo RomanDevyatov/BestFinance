@@ -1,6 +1,8 @@
 package com.romandevyatov.bestfinance.ui.activity
 
+import android.Manifest.permission.RECORD_AUDIO
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.Menu
@@ -10,6 +12,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -19,7 +23,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
-import com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
@@ -179,6 +182,12 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         }
 
         R.id.action_voice -> {
+            if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
+            }
+
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
