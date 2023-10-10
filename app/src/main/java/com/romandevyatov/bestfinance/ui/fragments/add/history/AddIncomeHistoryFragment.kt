@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -65,7 +66,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private var textToSpeech: TextToSpeech? = null
 
-    private var spokenGroupName: String? = null
+    private var spokenValue: String? = null
     private var inputType: Int = 0
     private lateinit var intentGlob: Intent
 
@@ -626,38 +627,36 @@ class AddIncomeHistoryFragment : Fragment() {
                     val currentSpokenText = recognizedStrings[0]
 
                     when (inputType) {
-                        0 -> {
-                            if (spokenGroupName == null) {
+                        0 -> { // income group name
+                            if (spokenValue == null) {
                                 val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
 
                                 if (groupList.contains(currentSpokenText)) { // success
-                                    binding.groupSpinner.setText("$spokenGroupName")
+                                    binding.groupSpinner.setText("$spokenValue")
                                 } else {
-                                    spokenGroupName = currentSpokenText
+                                    spokenValue = currentSpokenText
 
                                     val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new income group with this name? (Yes/No)"
                                     speakText(ask)
                                     val delay1 = calculateSpeechDuration(ask)
                                     recognizeText(delay1, intentGlob)
                                 }
-                            } else if (!spokenGroupName.equals("-1")) {
+                            } else if (!spokenValue.equals("-1")) {
                                 when (currentSpokenText.lowercase()) {
                                     "yes" -> { // create new
-                                        speakText("Adding $spokenGroupName group")
+                                        speakText("Adding $spokenValue group")
                                         addHistoryViewModel.insertIncomeGroup(
                                             IncomeGroup(
-                                                name = spokenGroupName!!.capitalize(Locale.ROOT),
+                                                name = spokenValue!!.capitalize(Locale.ROOT),
                                                 isPassive = false
                                             )
                                         )
-                                        binding.groupSpinner.setText("$spokenGroupName")
+                                        binding.groupSpinner.setText("$spokenValue")
 
-                                        spokenGroupName = null
-                                        inputType += 1
-//                                        startVoiceAssistance(intentGlob, inputType)
+                                        spokenValue = null
                                     }
                                     "no" -> { // then ask exit or start again?
-                                        spokenGroupName = "-1" // any
+                                        spokenValue = "-1" // any
                                         val ask = "Do you want to continue and call name one more time? (Yes/No)"
                                         speakText(ask)
                                         val delay = calculateSpeechDuration(ask)
@@ -667,7 +666,7 @@ class AddIncomeHistoryFragment : Fragment() {
                                         speakText("You sad $currentSpokenText. Exiting")
                                     }
                                 }
-                            } else if (spokenGroupName.equals("-1")) {
+                            } else if (spokenValue.equals("-1")) {
                                 when (currentSpokenText.lowercase()) {
                                     "yes" -> { // start again
                                         startVoiceAssistance(intentGlob)
@@ -678,7 +677,30 @@ class AddIncomeHistoryFragment : Fragment() {
                                         speakText("You sad $currentSpokenText. Exiting")
                                     }
                                 }
-                                spokenGroupName = null
+                                spokenValue = null
+                            }
+                        }
+                        1 -> { // income sub group
+
+                        }
+                        2 -> { // wallet
+
+                        }
+                        3 -> { // amount
+                            val numbers = currentSpokenText.split(" ")
+                                .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
+                                .joinToString(" ")
+
+                            // Display extracted numbers
+                            if (numbers.isNotEmpty()) {
+                                binding.amountEditText.setText(numbers)
+                            } else {
+                                binding.amountEditText.setText("No numbers found")
+                            }
+                        }
+                        4 -> { // comment
+                            if (currentSpokenText.isNotEmpty()) {
+                                binding.amountEditText.setText(currentSpokenText)
                             }
                         }
                     }
@@ -697,36 +719,25 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private enum class SpeechRecognitionState {
-        INITIAL,
-        GROUP_NAME,
-        CREATE_NEW_GROUP,
-        SET_NEW_GROUP_NAME,
-        FINISH
-    }
-
-    private var currentState = SpeechRecognitionState.INITIAL
-
-//    private fun getPromptForCurrentState(): String {
-//        return when (currentState) {
-//            SpeechRecognitionState.GROUP_NAME -> "Ask group name"
-//            SpeechRecognitionState.CREATE_NEW_GROUP -> "Create a new income group with this name?"
-//            SpeechRecognitionState.SET_NEW_GROUP_NAME -> "Do you want to set a new group name?"
-//            else -> "Unknown state"
-//        }
-//    }
-
     private fun handleRecognizedText(recognizedText: String) { }
 
     fun startVoiceAssistance(intent: Intent, inputType_: Int = 0) {
 //        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
         intentGlob = intent
+
         inputType = inputType_
 
         val chooseGroupString = "Choose income group"
         speakText(chooseGroupString)
         val d = calculateSpeechDuration(chooseGroupString)
         recognizeText(d, intent)
+
+//        inputType += 1
+//        val chooseSubGroupString = "Choose income sub group"
+//        speakText(chooseSubGroupString)
+//        val d2 = calculateSpeechDuration(chooseSubGroupString)
+//        recognizeText(d2, intent)
+
     }
 
     private fun speakText(textToSpeak: String) {
@@ -753,17 +764,6 @@ class AddIncomeHistoryFragment : Fragment() {
         val words = text.split("\\s+".toRegex()).size
         val millisecondsPerWord = 60000 / averageSpeakingRateWPM // 60,000 ms per minute
         return words.toLong() * millisecondsPerWord
-    }
-
-    private fun countWords(text: String): Int {
-        val words = text.split("\\s+".toRegex())
-        return words.size
-    }
-
-    private fun calculateSpeechDurationMillis(wordCount: Int, averageSpeakingRate: Int): Long {
-        // Calculate the duration in milliseconds based on word count and average speaking rate
-        val millisecondsPerWord = 60000 / averageSpeakingRate // 60,000 milliseconds per minute
-        return wordCount.toLong() * millisecondsPerWord
     }
 
     private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {
