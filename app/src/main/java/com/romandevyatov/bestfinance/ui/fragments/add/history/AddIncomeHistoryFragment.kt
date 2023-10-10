@@ -129,14 +129,19 @@ class AddIncomeHistoryFragment : Fragment() {
         intentGlob = intent
     }
 
-    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP) {
+    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, customChooseDelay: Long? = null) {
 //        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
         inputType = currentInputState
 
         val chooseGroupString = "Choose $currentInputState"
         speakText(chooseGroupString)
-        val d = calculateSpeechDuration(chooseGroupString)
-        recognizeText(d, intentGlob)
+
+        var delay = calculateSpeechDuration(chooseGroupString)
+        if (customChooseDelay != null) {
+            delay = customChooseDelay
+        }
+
+        recognizeText(delay, intentGlob)
     }
 
     private fun setOnBackPressedCallback() {
@@ -649,7 +654,7 @@ class AddIncomeHistoryFragment : Fragment() {
             if (groupList.contains(currentSpokenText)) { // success
                 binding.groupSpinner.setText(currentSpokenText, false)
                 updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
-                startVoiceAssistance(InputState.SUB_GROUP)
+                startVoiceAssistance(InputState.SUB_GROUP, 2000L)
             } else {
                 spokenValue = currentSpokenText
 
@@ -662,7 +667,7 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // create new
                     handleCreateNewGroup()
-                    startVoiceAssistance(InputState.SUB_GROUP)
+                    startVoiceAssistance(InputState.SUB_GROUP, 2000L)
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -707,7 +712,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             if (subGroupList.contains(currentSpokenText)) { // success
                 binding.subGroupSpinner.setText(currentSpokenText, false)
-                startVoiceAssistance(InputState.WALLET) // move further
+                startVoiceAssistance(InputState.WALLET, 2000L) // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -720,7 +725,7 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     handleCreateNewSubGroup()
-                    startVoiceAssistance(InputState.WALLET) // move further
+                    startVoiceAssistance(InputState.WALLET, 2000L) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -840,7 +845,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun handleCommentInput(spokenComment: String) { // comment
         if (spokenComment.isNotEmpty()) {
             speakText("Adding comment")
-            binding.amountEditText.setText(spokenComment)
+            binding.commentEditText.setText(spokenComment)
         }
         inputType = InputState.GROUP
     }
