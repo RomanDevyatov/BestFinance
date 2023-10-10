@@ -41,6 +41,20 @@ class AddIncomeHistoryViewModel @Inject constructor(
         incomeGroupRepository.insertIncomeGroup(incomeGroup)
     }
 
+    fun insertIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
+        val existingIncomeSubGroup = incomeSubGroupRepository.getIncomeSubGroupByNameAndIncomeGroupId(incomeSubGroup.name, incomeSubGroup.incomeGroupId)
+
+        if (existingIncomeSubGroup == null) {
+            incomeSubGroupRepository.insertIncomeSubGroup(incomeSubGroup)
+        } else if (existingIncomeSubGroup.archivedDate != null) {
+            incomeSubGroupRepository.unarchiveIncomeSubGroup(existingIncomeSubGroup)
+        }
+    }
+
+    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(wallet)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveIncomeGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val incomeGroupWithIncomeSubGroups = getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(name)
@@ -204,6 +218,10 @@ class AddIncomeHistoryViewModel @Inject constructor(
 //            show()
 //        }
 
+    }
+
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>? {
+        return incomeSubGroupRepository.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
     }
 
 }
