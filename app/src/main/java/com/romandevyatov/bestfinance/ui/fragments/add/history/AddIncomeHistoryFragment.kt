@@ -13,8 +13,10 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
+import android.widget.AutoCompleteTextView
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -47,7 +49,9 @@ import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Locale
+import java.util.Calendar
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
@@ -56,79 +60,26 @@ class AddIncomeHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val addHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
-
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
-    private val DESIRED_SPEECH_RATE: Int = 150
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
-
     private var isButtonClickable = true
+
+    private val DESIRED_SPEECH_RATE: Int = 100
 
     private var textToSpeech: TextToSpeech? = null
 
     private var spokenValue: String? = null
     private var inputType: InputState = InputState.GROUP
-    private lateinit var intentGlob: Intent
-
-    private lateinit var handler: Handler
-
     private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
-    private val archiveGroupListener =
-        object : SpinnerAdapter.DeleteItemClickListener {
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun archive(name: String) {
-                addHistoryViewModel.archiveIncomeGroup(name)
-                if (binding.groupSpinner.text.toString() == name) {
-                    resetSubGroupSpinner()
-                    binding.groupSpinner.text = null
-                    groupSpinnerValueGlobalBeforeAdd = null
-                }
-                sharedModViewModel.set(null)
-
-                dismissAndDropdownSpinner(binding.groupSpinner)
-            }
-        }
-
-    private val archiveSubGroupListener =
-        object : SpinnerAdapter.DeleteItemClickListener {
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun archive(name: String) {
-                addHistoryViewModel.archiveIncomeSubGroup(name)
-                if (binding.subGroupSpinner.text.toString() == name) {
-                    binding.subGroupSpinner.text = null
-                    subGroupSpinnerValueGlobalBeforeAdd = null
-                }
-                sharedModViewModel.set(null)
-
-                dismissAndDropdownSpinner(binding.subGroupSpinner)
-            }
-        }
-
-    private val archiveWalletListener =
-        object : SpinnerAdapter.DeleteItemClickListener {
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun archive(name: String) {
-                addHistoryViewModel.archiveWallet(name)
-                if (binding.walletSpinner.text.toString() == name) {
-                    binding.walletSpinner.text = null
-                    walletSpinnerValueGlobalBeforeAdd = null
-                }
-                sharedModViewModel.set(null)
-
-                dismissAndDropdownSpinner(binding.walletSpinner)
-            }
-        }
-
-    private lateinit var firstSpeechRecognizer: SpeechRecognizer
-    private lateinit var secondSpeechRecognizer: SpeechRecognizer
+    private lateinit var intentGlob: Intent
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var handler: Handler
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -151,13 +102,7 @@ class AddIncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        setOnBackPressedCallback()
 
         setSpinners()
 
@@ -167,6 +112,41 @@ class AddIncomeHistoryFragment : Fragment() {
         setButtonOnClickListener(view)
 
         restoreAmountDateCommentValues()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+
+        speechRecognizer.destroy()
+
+        _binding = null
+    }
+
+    fun setIntentGlob(intent: Intent) {
+        intentGlob = intent
+    }
+
+    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP) {
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
+        inputType = currentInputState
+
+        val chooseGroupString = "Choose $currentInputState"
+        speakText(chooseGroupString)
+        val d = calculateSpeechDuration(chooseGroupString)
+        recognizeText(d, intentGlob)
+    }
+
+    private fun setOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                sharedModViewModel.set(null)
+                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setUpTextToSpeech() {
@@ -188,18 +168,14 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setUpSpeechRecognizer() {
-        firstSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
 
         val recognitionListener = getFirstSpeechRecognitionListener()
-        firstSpeechRecognizer.setRecognitionListener(recognitionListener)
+        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        textToSpeech?.stop()
-        textToSpeech?.shutdown()
-        firstSpeechRecognizer.destroy()
-        _binding = null
+    private fun stopListening() {
+        speechRecognizer.stopListening()
     }
 
     private fun setSpinners() {
@@ -419,8 +395,6 @@ class AddIncomeHistoryFragment : Fragment() {
                 findNavController().navigate(action)
             } else {
                 updateSubGroupSpinnerByGroupSpinnerValue(selectedGroupName)
-
-                groupSpinnerValueGlobalBeforeAdd = selectedGroupName
             }
         }
     }
@@ -436,6 +410,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
         }
+        groupSpinnerValueGlobalBeforeAdd = selectedGroupName
     }
 
     private fun setPrevValue(value: String?, spinner: AutoCompleteTextView) {
@@ -645,16 +620,15 @@ class AddIncomeHistoryFragment : Fragment() {
                 val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
                     val currentSpokenText = recognizedStrings[0]
+                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
 
                     when (inputType) {
-                        InputState.GROUP -> handleGroupInput(currentSpokenText)
-                        InputState.SUB_GROUP -> handleSubGroupInput(currentSpokenText)
-                        InputState.WALLET -> handleWalletInput(currentSpokenText)
-                        InputState.AMOUNT -> handleAmountInput(currentSpokenText)
-                        InputState.COMMENT -> handleCommentInput(currentSpokenText)
+                        InputState.GROUP -> handleGroupInput(handledSpokenValue)
+                        InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
+                        InputState.WALLET -> handleWalletInput(handledSpokenValue)
+                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
                     }
-
-                    handleRecognizedText(currentSpokenText)
                 }
             }
 
@@ -668,23 +642,127 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun handleCommentInput(spokenComment: String) { // comment
-        if (spokenComment.isNotEmpty()) {
-            binding.amountEditText.setText(spokenComment)
+    private fun handleGroupInput(currentSpokenText: String) { // income group name
+        if (spokenValue == null) {
+            val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
+
+            if (groupList.contains(currentSpokenText)) { // success
+                binding.groupSpinner.setText(currentSpokenText, false)
+                updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
+                startVoiceAssistance(InputState.SUB_GROUP)
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
+                speakText(ask)
+                val delay1 = calculateSpeechDuration(ask)
+                recognizeText(delay1, intentGlob)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // create new
+                    handleCreateNewGroup()
+                    startVoiceAssistance(InputState.SUB_GROUP)
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val ask = "Do you want to continue and call group name one more time? (Yes/No)"
+                    speakText(ask)
+                    val delay = calculateSpeechDuration(ask)
+                    recognizeText(delay, intentGlob)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.GROUP)
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+            spokenValue = null
         }
     }
 
-    private fun handleAmountInput(currentSpokenText: String) { // amount
-        val numbers = currentSpokenText.split(" ")
-            .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
-            .joinToString(" ")
+    private fun handleCreateNewGroup() {
+        speakText("Adding $spokenValue group")
+        addHistoryViewModel.insertIncomeGroup(
+            IncomeGroup(
+                name = spokenValue!!.capitalize(Locale.ROOT),
+                isPassive = false
+            )
+        )
+        binding.groupSpinner.setText(spokenValue, false)
+        updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
 
-        // Display extracted numbers
-        if (numbers.isNotEmpty()) {
-            binding.amountEditText.setText(numbers)
-        } else {
-            binding.amountEditText.setText("No numbers found")
+        spokenValue = null
+    }
+
+    private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
+        if (spokenValue == null) {
+            val subGroupList = getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
+
+            if (subGroupList.contains(currentSpokenText)) { // success
+                binding.subGroupSpinner.setText(currentSpokenText, false)
+                startVoiceAssistance(InputState.WALLET) // move further
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
+                speakText(ask)
+                val delay1 = calculateSpeechDuration(ask)
+                recognizeText(delay1, intentGlob)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> {
+                    handleCreateNewSubGroup()
+                    startVoiceAssistance(InputState.WALLET) // move further
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
+                    speakText(ask)
+                    val delay = calculateSpeechDuration(ask)
+                    recognizeText(delay, intentGlob)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.SUB_GROUP)
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> {
+                    speakText("You sad $currentSpokenText. Exiting")
+                }
+            }
+
+            spokenValue = null
         }
+    }
+
+    private fun handleCreateNewSubGroup() { // create new subgroup
+        speakText("Adding $spokenValue subgroup")
+
+        val groupId = spinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
+
+        val newIncomeSubGroup = IncomeSubGroup(
+            name = spokenValue!!,
+            incomeGroupId = groupId
+        )
+        addHistoryViewModel.insertIncomeSubGroup(
+            newIncomeSubGroup
+        )
+        binding.subGroupSpinner.setText(spokenValue, false)
+
+        spokenValue = null
     }
 
     private fun handleWalletInput(currentSpokenText: String) { // wallet
@@ -692,7 +770,8 @@ class AddIncomeHistoryFragment : Fragment() {
             val wallets = getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
 
             if (wallets.contains(currentSpokenText)) { // success
-                binding.walletSpinner.text = spokenValue
+                binding.walletSpinner.setText(currentSpokenText, false)
+                startVoiceAssistance(InputState.AMOUNT) // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -703,7 +782,10 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
-                "yes" -> handleCreateNewWallet()
+                "yes" -> {
+                    handleCreateNewWallet()
+                    startVoiceAssistance(InputState.AMOUNT) // move further
+                }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
@@ -715,8 +797,9 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
-                "yes" -> startVoiceAssistance(intentGlob, InputState.GROUP) // start again
+                "yes" -> startVoiceAssistance(InputState.WALLET) // start again
                 "no" -> { // exit
+                    speakText("Terminated")
                 }
                 else -> speakText("You sad $currentSpokenText. Exiting")
             }
@@ -734,143 +817,40 @@ class AddIncomeHistoryFragment : Fragment() {
         )
         addHistoryViewModel.insertWallet(newWallet)
 
-        binding.walletSpinner.setText(spokenValue)
+        binding.walletSpinner.setText(spokenValue, false)
 
         spokenValue = null
     }
 
-    private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
-        if (spokenValue == null) {
-            val subGroupList = getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
+    private fun handleAmountInput(currentSpokenText: String) { // amount
+        val numbers = currentSpokenText.split(" ")
+            .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
+            .joinToString(" ")
 
-            if (subGroupList.contains(currentSpokenText)) { // success
-                binding.subGroupSpinner.text = spokenValue
-            } else {
-                spokenValue = currentSpokenText
-
-                val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
-                speakText(ask)
-                val delay1 = calculateSpeechDuration(ask)
-                recognizeText(delay1, intentGlob)
-            }
-        } else if (!spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> handleCreateNewSubGroup()
-                "no" -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
-                    speakText(ask)
-                    val delay = calculateSpeechDuration(ask)
-                    recognizeText(delay, intentGlob)
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-        } else if (spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> { // start again
-                    startVoiceAssistance(intentGlob, InputState.SUB_GROUP)
-                }
-                "no" -> { // exit
-                }
-                else -> {
-                    speakText("You sad $currentSpokenText. Exiting")
-                }
-            }
-
-            spokenValue = null
+        // Display extracted numbers
+        if (numbers.isNotEmpty()) {
+            binding.amountEditText.setText(numbers)
+            startVoiceAssistance(InputState.COMMENT)
+        } else {
+            binding.amountEditText.setText("No numbers found")
+            inputType = InputState.GROUP
         }
     }
 
-    private fun handleCreateNewSubGroup() { // create new subgroup
-        speakText("Adding $spokenValue Subgroup")
-
-        val groupId = spinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
-
-        val newIncomeSubGroup = IncomeSubGroup(
-            name = spokenValue!!,
-            incomeGroupId = groupId
-        )
-        addHistoryViewModel.insertIncomeSubGroup(
-            newIncomeSubGroup
-        )
-        binding.subGroupSpinner.setText(spokenValue)
-
-        spokenValue = null
-    }
-
-    private fun handleGroupInput(currentSpokenText: String) { // income group name
-        if (spokenValue == null) {
-            val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
-
-            if (groupList.contains(currentSpokenText)) { // success
-                binding.groupSpinner.text = spokenValue
-                updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
-            } else {
-                spokenValue = currentSpokenText
-
-                val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
-                speakText(ask)
-                val delay1 = calculateSpeechDuration(ask)
-                recognizeText(delay1, intentGlob)
-            }
-        } else if (!spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> handleCreateNewGroup() // create new
-                "no" -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call group name one more time? (Yes/No)"
-                    speakText(ask)
-                    val delay = calculateSpeechDuration(ask)
-                    recognizeText(delay, intentGlob)
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-        } else if (spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> { // start again
-                    startVoiceAssistance(intentGlob, InputState.GROUP)
-                }
-                "no" -> { // exit
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-            spokenValue = null
+    private fun handleCommentInput(spokenComment: String) { // comment
+        if (spokenComment.isNotEmpty()) {
+            speakText("Adding comment")
+            binding.amountEditText.setText(spokenComment)
         }
+        inputType = InputState.GROUP
     }
 
-    private fun handleCreateNewGroup() {
-        speakText("Adding $spokenValue group")
-        addHistoryViewModel.insertIncomeGroup(
-            IncomeGroup(
-                name = spokenValue!!.capitalize(Locale.ROOT),
-                isPassive = false
-            )
-        )
-        binding.groupSpinner.setText(spokenValue)
-        updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
-
-        spokenValue = null
-    }
-
-    private fun handleRecognizedText(recognizedText: String) { }
-
-    fun startVoiceAssistance(intent: Intent, customInputState: InputState) {
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
-        intentGlob = intent
-
-        inputType = customInputState
-
-        val chooseGroupString = "Choose income group"
-        speakText(chooseGroupString)
-        val d = calculateSpeechDuration(chooseGroupString)
-        recognizeText(d, intent)
-
-//        inputType += 1
-//        val chooseSubGroupString = "Choose income sub group"
-//        speakText(chooseSubGroupString)
-//        val d2 = calculateSpeechDuration(chooseSubGroupString)
-//        recognizeText(d2, intent)
-
+    private fun handleRecognizedText(recognizedText: String): String {
+        return recognizedText.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
     }
 
     private fun speakText(textToSpeak: String) {
@@ -885,7 +865,11 @@ class AddIncomeHistoryFragment : Fragment() {
         handler.postDelayed({
             try {
                 println("delay: $delay")
-                firstSpeechRecognizer.startListening(intent)
+                speechRecognizer.startListening(intent)
+
+                handler.postDelayed({
+                    stopListening()
+                }, 3000L) // 3 seconds
             } catch (e: Exception) {
                 Log.e("SpeechRecognizer", "Error starting speech recognition: ${e.message}")
             }
@@ -893,7 +877,6 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun calculateSpeechDuration(text: String, averageSpeakingRateWPM: Int = DESIRED_SPEECH_RATE): Long {
-        // Calculate the approximate duration in milliseconds
         val words = text.split("\\s+".toRegex()).size
         val millisecondsPerWord = 60000 / averageSpeakingRateWPM // 60,000 ms per minute
         return words.toLong() * millisecondsPerWord
@@ -912,4 +895,52 @@ class AddIncomeHistoryFragment : Fragment() {
         return allItems
     }
 
+    private val archiveGroupListener =
+        object : SpinnerAdapter.DeleteItemClickListener {
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun archive(name: String) {
+                addHistoryViewModel.archiveIncomeGroup(name)
+                if (binding.groupSpinner.text.toString() == name) {
+                    resetSubGroupSpinner()
+                    binding.groupSpinner.text = null
+                    groupSpinnerValueGlobalBeforeAdd = null
+                }
+                sharedModViewModel.set(null)
+
+                dismissAndDropdownSpinner(binding.groupSpinner)
+            }
+        }
+
+    private val archiveSubGroupListener =
+        object : SpinnerAdapter.DeleteItemClickListener {
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun archive(name: String) {
+                addHistoryViewModel.archiveIncomeSubGroup(name)
+                if (binding.subGroupSpinner.text.toString() == name) {
+                    binding.subGroupSpinner.text = null
+                    subGroupSpinnerValueGlobalBeforeAdd = null
+                }
+                sharedModViewModel.set(null)
+
+                dismissAndDropdownSpinner(binding.subGroupSpinner)
+            }
+        }
+
+    private val archiveWalletListener =
+        object : SpinnerAdapter.DeleteItemClickListener {
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun archive(name: String) {
+                addHistoryViewModel.archiveWallet(name)
+                if (binding.walletSpinner.text.toString() == name) {
+                    binding.walletSpinner.text = null
+                    walletSpinnerValueGlobalBeforeAdd = null
+                }
+                sharedModViewModel.set(null)
+
+                dismissAndDropdownSpinner(binding.walletSpinner)
+            }
+        }
 }

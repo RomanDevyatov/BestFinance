@@ -187,7 +187,8 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
             val fragment = navHostFragment.childFragmentManager.fragments.first()
             if (fragment is AddIncomeHistoryFragment) {
-                fragment.startVoiceAssistance(intent)
+                fragment.setIntentGlob(intent)
+                fragment.startVoiceAssistance()
             }
 
             true
