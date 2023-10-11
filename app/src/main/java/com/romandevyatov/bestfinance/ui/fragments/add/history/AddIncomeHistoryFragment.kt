@@ -703,9 +703,9 @@ class AddIncomeHistoryFragment : Fragment() {
 
             if (groupList.contains(currentSpokenText)) { // success
                 binding.groupSpinner.setText(currentSpokenText, false)
-                speakText("Group is set")
+                resetSubGroupSpinner()
                 updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
-                startVoiceAssistance(InputState.SUB_GROUP, "Set subgroup")
+                startVoiceAssistance(InputState.SUB_GROUP, "Group is set, set subgroup")
             } else {
                 spokenValue = currentSpokenText
 
@@ -716,8 +716,7 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // create new
                     handleCreateNewGroup()
-                    speakText("Group is set")
-                    startVoiceAssistance(InputState.SUB_GROUP, "Set subgroup")
+                    startVoiceAssistance(InputState.SUB_GROUP, "Created group is set. Set subgroup")
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -750,7 +749,7 @@ class AddIncomeHistoryFragment : Fragment() {
             )
         )
         binding.groupSpinner.setText(spokenValue, false)
-        speakText("Created group is set")
+        resetSubGroupSpinner()
         updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
 
         spokenValue = null
@@ -896,14 +895,12 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun handleAmountInput(spokenAmountText: String) { // amount
         if (spokenValue == null) {
-            val numbers = spokenAmountText.replace(",", "")
-                .split(" ")
-                .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
-                .joinToString("")
+            val textNumbers = spokenAmountText.replace(",", "")
 
-            // Display extracted numbers
-            if (numbers.isNotEmpty()) {
-                binding.amountEditText.setText(numbers)
+            val convertedNumber = convertSpokenTextToNumber(textNumbers)
+
+            if (convertedNumber != null) {
+                binding.amountEditText.setText(convertedNumber.toString())
                 startVoiceAssistance(InputState.COMMENT, "Set comment")
             } else {
                 spokenValue = spokenAmountText
@@ -917,8 +914,6 @@ class AddIncomeHistoryFragment : Fragment() {
                     startVoiceAssistance(InputState.AMOUNT, "Set amount") // move further
                 }
                 "no" -> { // exit
-                    spokenValue = null
-
                     speakText("Terminated")
                 }
                 else -> speakText("You sad $spokenAmountText. Exiting")
