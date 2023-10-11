@@ -124,17 +124,15 @@ class AddIncomeHistoryFragment : Fragment() {
         intentGlob = intent
     }
 
-    fun startVoiceAssistance(currentInputState: InputState = InputState.WALLET, cleanSpokenValue: Boolean = false) {
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
-
+    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, cleanSpokenValue: Boolean = false) {
         if (cleanSpokenValue) {
             spokenValue = null
         }
 
-        val chooseGroupString = "Choose $currentInputState"
+        val textToSpeakStart = if (currentInputState == InputState.CONFIRM) "Confirm transaction adding (Yes/No)" else "Set $currentInputState"
 
         inputType = currentInputState
-        speakTextAndRecognize(chooseGroupString, false)
+        speakTextAndRecognize(textToSpeakStart, false)
     }
 
     private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
@@ -223,53 +221,58 @@ class AddIncomeHistoryFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val subGroupNameBinding = binding.subGroupSpinner.text.toString()
-            val amountBinding = binding.amountEditText.text.toString().trim()
-            val commentBinding = binding.commentEditText.text.toString().trim()
-            val walletNameBinding = binding.walletSpinner.text.toString()
-            val dateBinding = binding.dateEditText.text.toString().trim()
-            val timeBinding = binding.timeEditText.text.toString().trim()
-
-            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
-
-            val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
-            binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
-
-            val walletNameBindingValidation = EmptyValidator(walletNameBinding).validate()
-            binding.walletSpinnerLayout.error = if (!walletNameBindingValidation.isSuccess) getString(walletNameBindingValidation.message) else null
-
-            val dateBindingValidation = EmptyValidator(dateBinding).validate()
-            binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
-
-            val timeBindingValidation = EmptyValidator(timeBinding).validate()
-            binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
-
-            if (subGroupNameBindingValidation.isSuccess
-                && amountBindingValidation.isSuccess
-                && walletNameBindingValidation.isSuccess
-                && dateBindingValidation.isSuccess
-                && timeBindingValidation.isSuccess) {
-
-                val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
-                val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
-
-                addHistoryViewModel.addIncomeHistoryAndUpdateWallet(
-                    subGroupNameBinding,
-                    amountBinding.toDouble(),
-                    commentBinding,
-                    parsedLocalDateTime,
-                    walletNameBinding
-                )
-
-                sharedModViewModel.set(null)
-                navigateToHome()
-            }
+            sendIncomeHistory()
 
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
             }, Constants.CLICK_DELAY_MS.toLong())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sendIncomeHistory() {
+        val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+        val amountBinding = binding.amountEditText.text.toString().trim()
+        val commentBinding = binding.commentEditText.text.toString().trim()
+        val walletNameBinding = binding.walletSpinner.text.toString()
+        val dateBinding = binding.dateEditText.text.toString().trim()
+        val timeBinding = binding.timeEditText.text.toString().trim()
+
+        val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+        binding.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+
+        val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
+        binding.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
+
+        val walletNameBindingValidation = EmptyValidator(walletNameBinding).validate()
+        binding.walletSpinnerLayout.error = if (!walletNameBindingValidation.isSuccess) getString(walletNameBindingValidation.message) else null
+
+        val dateBindingValidation = EmptyValidator(dateBinding).validate()
+        binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+
+        val timeBindingValidation = EmptyValidator(timeBinding).validate()
+        binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
+
+        if (subGroupNameBindingValidation.isSuccess
+            && amountBindingValidation.isSuccess
+            && walletNameBindingValidation.isSuccess
+            && dateBindingValidation.isSuccess
+            && timeBindingValidation.isSuccess) {
+
+            val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
+            val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
+
+            addHistoryViewModel.addIncomeHistoryAndUpdateWallet(
+                subGroupNameBinding,
+                amountBinding.toDouble(),
+                commentBinding,
+                parsedLocalDateTime,
+                walletNameBinding
+            )
+
+            sharedModViewModel.set(null)
+            navigateToHome()
         }
     }
 
@@ -569,7 +572,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     enum class InputState {
-        GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT, SET_BALANCE
+        GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT, SET_BALANCE, CONFIRM
     }
 
     private var isTextToSpeechDone = true
@@ -639,6 +642,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 // Handle errors appropriately (e.g., display an error message)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResults(results: Bundle?) {
                 val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
@@ -652,6 +656,7 @@ class AddIncomeHistoryFragment : Fragment() {
                         InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
                         InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
                         InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
                     }
                 }
             }
@@ -664,6 +669,21 @@ class AddIncomeHistoryFragment : Fragment() {
                 // Called for various speech recognition events
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleConfirmInput(sentSpokenValue: String) {
+        when (sentSpokenValue.lowercase()) {
+            "yes" -> { // sent
+                sendIncomeHistory()
+            }
+            "no" -> { // no
+                speakText("Terminated")
+            }
+            else -> speakText("You sad $sentSpokenValue. Exiting")
+        }
+        spokenValue = null
+        inputType = InputState.GROUP
     }
 
     private fun handleGroupInput(currentSpokenText: String) { // income group name
@@ -878,7 +898,7 @@ class AddIncomeHistoryFragment : Fragment() {
             binding.commentEditText.setText(spokenComment)
             speakText("Comment is set")
         }
-        inputType = InputState.GROUP
+        startVoiceAssistance(InputState.CONFIRM)
     }
 
     private fun handleRecognizedText(recognizedText: String): String {
