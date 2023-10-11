@@ -599,6 +599,7 @@ class AddIncomeHistoryFragment : Fragment() {
                         }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
                     }
 
+                    @Deprecated("Deprecated in Java")
                     override fun onError(utteranceId: String?) { }
                 })
             }
