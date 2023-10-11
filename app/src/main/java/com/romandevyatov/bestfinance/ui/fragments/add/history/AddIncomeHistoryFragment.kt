@@ -50,6 +50,9 @@ import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistory
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_add_income_history.*
+import kotlinx.android.synthetic.main.fragment_add_income_history.view.*
+import kotlinx.android.synthetic.main.fragment_add_income_sub_group.view.*
 import java.time.LocalDateTime
 import java.util.*
 
@@ -126,7 +129,16 @@ class AddIncomeHistoryFragment : Fragment() {
         intentGlob = intent
     }
 
-    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, textToSpeak: String) {
+    fun startAddingTransaction(textToSpeak: String) {
+        if (steps.size == 0) {
+            steps.addAll(getNotSetSteps())
+            stepIndex = 0
+        }
+
+        startVoiceAssistance(steps[stepIndex], textToSpeak + "Set ${steps[stepIndex].description}")
+    }
+
+    private fun startVoiceAssistance(currentInputState: InputState, textToSpeak: String) {
         spokenValue = null
 
         inputType = currentInputState
@@ -144,6 +156,533 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun speakText(text: String) {
         speakTextAndRecognize(text, true)
+    }
+
+    private var steps: MutableList<InputState> = mutableListOf()
+    private var stepIndex: Int = -1
+
+    private fun getNotSetSteps(): MutableList<InputState> {
+        val steps: MutableList<InputState> = mutableListOf()
+
+        if (binding.groupSpinner.text.isEmpty()) {
+            steps.add(InputState.GROUP)
+        }
+
+        if (binding.subGroupSpinner.text.isEmpty()) {
+            steps.add(InputState.SUB_GROUP)
+        }
+
+        if (binding.walletSpinner.text.isEmpty()) {
+            steps.add(InputState.WALLET)
+        }
+
+        if (binding.amountEditText.text.toString().isEmpty()) {
+            steps.add(InputState.AMOUNT)
+        }
+
+        if (binding.commentEditText.text.toString().isEmpty()) {
+            steps.add(InputState.COMMENT)
+        }
+
+        steps.add(InputState.CONFIRM)
+
+        return steps
+    }
+
+    private fun setUpSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+
+        val recognitionListener = getSpeechRecognitionListener()
+        speechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
+    private fun getSpeechRecognitionListener(): RecognitionListener {
+        return object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                // Called when the speech recognizer is ready for speech input
+            }
+
+            override fun onBeginningOfSpeech() {
+            }
+
+            override fun onRmsChanged(rmsdB: Float) {
+                // Called when the RMS dB (sound level) changes during speech input
+            }
+
+            override fun onBufferReceived(buffer: ByteArray?) {
+                // Called when the audio buffer is received
+            }
+
+            override fun onEndOfSpeech() {
+                // Called when the user stops speaking
+            }
+
+            override fun onError(error: Int) {
+                val errorMessage = when (error) {
+                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
+                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
+                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
+                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
+                    SpeechRecognizer.ERROR_SERVER -> "Server error"
+                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
+                    else -> "Unknown error"
+                }
+
+                Log.e(TAG, "Speech recognition error: $errorMessage")
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResults(results: Bundle?) {
+                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
+                    val currentSpokenText = recognizedStrings[0]
+                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
+
+                    when (inputType) {
+                        InputState.GROUP -> handleGroupInput(handledSpokenValue)
+                        InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
+                        InputState.WALLET -> handleWalletInput(handledSpokenValue)
+                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+                    }
+                }
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {
+                // Called when partial recognition results are available
+            }
+
+            override fun onEvent(eventType: Int, params: Bundle?) {
+                // Called for various speech recognition events
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleConfirmInput(sentSpokenValue: String) {
+        when (sentSpokenValue.lowercase()) {
+            "yes" -> { // sent
+                sendIncomeHistory()
+                speakText("History record is added")
+            }
+            "no" -> { // no
+                speakText("Terminated")
+            }
+            else -> speakText("You sad $sentSpokenValue. Exiting")
+        }
+        spokenValue = null
+    }
+
+    private fun handleGroupInput(currentSpokenText: String) { // income group name
+        if (spokenValue == null) {
+            val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
+
+            if (groupList.contains(currentSpokenText)) { // success
+                binding.groupSpinner.setText(currentSpokenText, false)
+                resetSubGroupSpinner()
+                updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
+                stepIndex++
+                startVoiceAssistance(InputState.SUB_GROUP, "Group is set, set subgroup")
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
+                speakTextAndRecognize(ask, false)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // create new
+                    handleCreateNewGroup()
+                    stepIndex++
+                    startVoiceAssistance(InputState.SUB_GROUP, "Created group is set. Set subgroup")
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val ask = "Do you want to continue and call group name one more time? (Yes/No)"
+                    speakTextAndRecognize(ask, false)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.GROUP, "Set group")
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+
+            spokenValue = null
+        }
+    }
+
+    private fun handleCreateNewGroup() {
+        speakText("Adding $spokenValue group")
+        addHistoryViewModel.insertIncomeGroup(
+            IncomeGroup(
+                name = spokenValue!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                isPassive = false
+            )
+        )
+        binding.groupSpinner.setText(spokenValue, false)
+        resetSubGroupSpinner()
+        updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
+
+        spokenValue = null
+    }
+
+    private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
+        if (spokenValue == null) {
+            val subGroupList = getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
+
+            if (subGroupList.contains(currentSpokenText)) { // success
+                binding.subGroupSpinner.setText(currentSpokenText, false)
+                stepIndex++
+                startVoiceAssistance(steps[stepIndex], "Subgroup is set. Set ${steps[stepIndex].name}") // move further
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
+                speakTextAndRecognize(ask, false)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> {
+                    speakText("Adding $spokenValue subgroup")
+
+                    val groupId = spinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
+
+                    val newIncomeSubGroup = IncomeSubGroup(
+                        name = spokenValue!!,
+                        incomeGroupId = groupId
+                    )
+                    addHistoryViewModel.insertIncomeSubGroup(
+                        newIncomeSubGroup
+                    )
+                    binding.subGroupSpinner.setText(spokenValue, false)
+
+                    spokenValue = null
+
+                    stepIndex++
+                    startVoiceAssistance(steps[stepIndex], "Created subgroup is set. Set ${steps[stepIndex].name}") // move further
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
+                    speakTextAndRecognize(ask, false)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.SUB_GROUP, "Set subgroup")
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> {
+                    speakText("You sad $currentSpokenText. Exiting")
+                }
+            }
+
+            spokenValue = null
+        }
+    }
+
+    private fun handleWalletInput(currentSpokenText: String) { // wallet
+        if (spokenValue == null) {
+            val wallets = getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
+
+            if (wallets.contains(currentSpokenText)) { // success
+                binding.walletSpinner.setText(currentSpokenText, false)
+                stepIndex++
+                startVoiceAssistance(steps[stepIndex], "Set ${steps[stepIndex].name}") // move further
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
+                speakTextAndRecognize(ask, false)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> {
+                    inputType = InputState.SET_BALANCE
+                    speakTextAndRecognize("Adding $spokenValue wallet, set wallet balance", false) // move further
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
+                    speakTextAndRecognize(ask, false)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> startVoiceAssistance(InputState.WALLET, "Set wallet") // start again
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+            spokenValue = null
+        }
+    }
+
+    private fun handleWalletBalanceInput(spokenBalanceText: String) {
+        val textNumbers = spokenBalanceText.replace(",", "")
+
+        val convertedNumber = convertSpokenTextToNumber(textNumbers)
+
+        // Display extracted numbers
+        if (convertedNumber != null && spokenValue != null) {
+            val newWallet = Wallet(
+                name = spokenValue!!,
+                balance = convertedNumber
+            )
+            addHistoryViewModel.insertWallet(newWallet)
+
+            binding.walletSpinner.setText(spokenValue, false)
+
+            spokenValue = null
+
+            stepIndex++
+            startVoiceAssistance(steps[stepIndex], "Set ${steps[stepIndex].name}")
+        } else if (!spokenValue.equals("-1") || convertedNumber == null) {
+            spokenValue = "-1"
+            val ask = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
+            speakTextAndRecognize(ask , false)
+        } else if (spokenValue.equals("-1")) {
+            when (spokenBalanceText.lowercase()) {
+                "yes" -> { // start again setting balance
+                    val ask = "Set wallet balance"
+                    speakTextAndRecognize(ask , false)
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $spokenBalanceText. Exiting")
+            }
+            spokenValue = null
+        }
+    }
+
+    private fun handleAmountInput(spokenAmountText: String) { // amount
+        if (spokenValue == null) {
+            val textNumbers = spokenAmountText.replace(",", "")
+
+            val convertedNumber = convertSpokenTextToNumber(textNumbers)
+
+            if (convertedNumber != null) {
+                binding.amountEditText.setText(convertedNumber.toString())
+                stepIndex++
+                startVoiceAssistance(steps[stepIndex], "Set ${steps[stepIndex].name}")
+            } else {
+                spokenValue = spokenAmountText
+
+                val ask = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
+                speakTextAndRecognize(ask , false)
+            }
+        } else {
+            when (spokenAmountText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.AMOUNT, "Set amount")
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $spokenAmountText. Exiting")
+            }
+        }
+    }
+
+    private fun handleCommentInput(spokenComment: String) { // comment
+        var speakText = "Comment is set."
+        if (spokenComment.isNotEmpty()) {
+            binding.commentEditText.setText(spokenComment)
+        } else speakText = "Comment is empty."
+
+        stepIndex++
+        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].description}")
+    }
+
+    private fun handleRecognizedText(recognizedText: String): String {
+        return recognizedText.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
+    }
+
+    enum class InputState(val description: String) {
+        GROUP("group"), SUB_GROUP("subgroup"), WALLET("wallet"), AMOUNT("amount"), COMMENT("comment"), SET_BALANCE("wallet balance"), CONFIRM("Confirm transaction (Yes/No)")
+    }
+
+    private var isTextToSpeechDone = true
+
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
+                if (languageResult == TextToSpeech.LANG_MISSING_DATA
+                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+
+                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
+                if (speechRateResult == TextToSpeech.ERROR) {
+                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
+                }
+
+                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) { }
+
+                    override fun onDone(utteranceId: String?) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (!isTextToSpeechDone) {
+                                isTextToSpeechDone = true
+                                speechRecognizer.startListening(intentGlob)
+                            }
+                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
+                    }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(utteranceId: String?) { }
+                })
+            }
+        }
+    }
+
+    private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {
+        val adapter = autoCompleteTextView.adapter
+        val allItems = mutableListOf<String>()
+
+        if (adapter is ArrayAdapter<*>) {
+            for (i in 0 until adapter.count) {
+                allItems.add(adapter.getItem(i).toString())
+            }
+        }
+
+        return allItems
+    }
+
+    private fun replaceTextNumberToRealDigit(spokenText: String): MutableList<String> {
+        val numberMap = mapOf(
+            "zero" to "0",
+            "one" to "1",
+            "two" to "2",
+            "three" to "3",
+            "four" to "4",
+            "five" to "5",
+            "six" to "6",
+            "seven" to "7",
+            "eight" to "8",
+            "nine" to "9",
+            "ten" to "10",
+            "eleven" to "11",
+            "twelve" to "12",
+            "thirteen" to "13",
+            "fourteen" to "14",
+            "fifteen" to "15",
+            "sixteen" to "16",
+            "seventeen" to "17",
+            "eighteen" to "18",
+            "nineteen" to "19",
+            "twenty" to "20",
+            "thirty" to "30",
+            "forty" to "40",
+            "fifty" to "50",
+            "sixty" to "60",
+            "seventy" to "70",
+            "eighty" to "80",
+            "ninety" to "90"
+        )
+
+        val numberWords = spokenText.split(" ")
+
+        val digitList = mutableListOf<String>()
+
+        for (word in numberWords) {
+            val digit = numberMap.get(word.lowercase(Locale.ROOT))
+            if (digit != null) {
+                digitList.add(digit)
+            } else {
+                digitList.add(word)  // If the word is not a recognized number word, keep it as is.
+            }
+        }
+
+        return digitList
+    }
+
+    private fun convertSpokenTextToNumber(spokenText: String): Double? {
+        var result = 0.0  // Initialize as a double for handling decimal parts
+        var isDecimal = false
+        var decimalMultiplier = 0.1  // Start with one decimal place
+        var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
+        var nextMultiplier = 1.0
+
+        val digitOrLevelList = replaceTextNumberToRealDigit(spokenText)
+
+        val validWords = setOf(
+            "point", "hundred", "thousand", "billion"
+        )
+
+        for (digitOrLevel in digitOrLevelList) {
+            val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
+
+            if (isDouble(digitOrLevel) || digitOrLevel.lowercase() in validWords) {
+                if (digitOrLevel.equals("point", ignoreCase = true)) {
+                    isDecimal = true
+                    continue  // Skip "point" in the final output
+                }
+
+                when {
+                    digitOrLevel.equals("hundred", ignoreCase = true) -> {
+                        nextMultiplier = 100.0
+                    }
+                    digitOrLevel.equals("thousand", ignoreCase = true) -> {
+                        nextMultiplier = 1000.0
+                    }
+                    digitOrLevel.equals("billion", ignoreCase = true) -> {
+                        nextMultiplier = 1000000.0
+                    }
+                    else -> {
+                        if (isDecimal) {
+                            // Accumulate the decimal - after point
+                            result += number * decimalMultiplier
+                            decimalMultiplier *= 0.1
+                        } else {
+                            if (nextMultiplier > 1) {
+                                multiplier = nextMultiplier
+                                nextMultiplier = 1.0
+                            }
+                            // Accumulate the integer part with appropriate multiplier - before point
+                            result += number * multiplier
+                        }
+                    }
+                }
+            } else {
+                return null
+            }
+        }
+
+        return result
+    }
+
+    private fun isDouble(str: String): Boolean {
+        return try {
+            str.toDouble()
+            true
+        } catch (e: NumberFormatException) {
+            false
+        }
     }
 
     private fun setOnBackPressedCallback() {
@@ -569,387 +1108,6 @@ class AddIncomeHistoryFragment : Fragment() {
         binding.subGroupSpinner.text = null
     }
 
-    enum class InputState {
-        GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT, SET_BALANCE, CONFIRM
-    }
-
-    private var isTextToSpeechDone = true
-
-    private fun setUpTextToSpeech() {
-        textToSpeech = TextToSpeech(requireContext()) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
-                if (languageResult == TextToSpeech.LANG_MISSING_DATA
-                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
-                }
-
-                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
-                if (speechRateResult == TextToSpeech.ERROR) {
-                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
-                }
-
-                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                    override fun onStart(utteranceId: String?) { }
-
-                    override fun onDone(utteranceId: String?) {
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            if (!isTextToSpeechDone) {
-                                isTextToSpeechDone = true
-                                speechRecognizer.startListening(intentGlob)
-                            }
-                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
-                    }
-
-                    @Deprecated("Deprecated in Java")
-                    override fun onError(utteranceId: String?) { }
-                })
-            }
-        }
-    }
-
-    private fun setUpSpeechRecognizer() {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
-
-        val recognitionListener = getSpeechRecognitionListener()
-        speechRecognizer.setRecognitionListener(recognitionListener)
-    }
-
-    private fun getSpeechRecognitionListener(): RecognitionListener {
-        return object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {
-                // Called when the speech recognizer is ready for speech input
-            }
-
-            override fun onBeginningOfSpeech() {
-            }
-
-            override fun onRmsChanged(rmsdB: Float) {
-                // Called when the RMS dB (sound level) changes during speech input
-            }
-
-            override fun onBufferReceived(buffer: ByteArray?) {
-                // Called when the audio buffer is received
-            }
-
-            override fun onEndOfSpeech() {
-                // Called when the user stops speaking
-            }
-
-            override fun onError(error: Int) {
-                val errorMessage = when (error) {
-                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
-                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
-                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
-                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
-                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
-                    SpeechRecognizer.ERROR_SERVER -> "Server error"
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
-                    else -> "Unknown error"
-                }
-
-                Log.e(TAG, "Speech recognition error: $errorMessage")
-            }
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResults(results: Bundle?) {
-                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val currentSpokenText = recognizedStrings[0]
-                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
-
-                    when (inputType) {
-                        InputState.GROUP -> handleGroupInput(handledSpokenValue)
-                        InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
-                        InputState.WALLET -> handleWalletInput(handledSpokenValue)
-                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
-                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
-                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
-                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
-                    }
-                }
-            }
-
-            override fun onPartialResults(partialResults: Bundle?) {
-                // Called when partial recognition results are available
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {
-                // Called for various speech recognition events
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun handleConfirmInput(sentSpokenValue: String) {
-        when (sentSpokenValue.lowercase()) {
-            "yes" -> { // sent
-                sendIncomeHistory()
-            }
-            "no" -> { // no
-                speakText("Terminated")
-            }
-            else -> speakText("You sad $sentSpokenValue. Exiting")
-        }
-        spokenValue = null
-        inputType = InputState.GROUP
-    }
-
-    private fun handleGroupInput(currentSpokenText: String) { // income group name
-        if (spokenValue == null) {
-            val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
-
-            if (groupList.contains(currentSpokenText)) { // success
-                binding.groupSpinner.setText(currentSpokenText, false)
-                resetSubGroupSpinner()
-                updateSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
-                startVoiceAssistance(InputState.SUB_GROUP, "Group is set, set subgroup")
-            } else {
-                spokenValue = currentSpokenText
-
-                val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
-                speakTextAndRecognize(ask, false)
-            }
-        } else if (!spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> { // create new
-                    handleCreateNewGroup()
-                    startVoiceAssistance(InputState.SUB_GROUP, "Created group is set. Set subgroup")
-                }
-                "no" -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call group name one more time? (Yes/No)"
-                    speakTextAndRecognize(ask, false)
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-        } else if (spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> { // start again
-                    startVoiceAssistance(InputState.GROUP, "Set group")
-                }
-                "no" -> { // exit
-                    speakText("Terminated")
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-
-            spokenValue = null
-        }
-    }
-
-    private fun handleCreateNewGroup() {
-        speakText("Adding $spokenValue group")
-        addHistoryViewModel.insertIncomeGroup(
-            IncomeGroup(
-                name = spokenValue!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
-                isPassive = false
-            )
-        )
-        binding.groupSpinner.setText(spokenValue, false)
-        resetSubGroupSpinner()
-        updateSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
-
-        spokenValue = null
-    }
-
-    private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
-        if (spokenValue == null) {
-            val subGroupList = getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
-
-            if (subGroupList.contains(currentSpokenText)) { // success
-                binding.subGroupSpinner.setText(currentSpokenText, false)
-                speakText("Subgroup is set")
-                startVoiceAssistance(InputState.WALLET, "Set wallet") // move further
-            } else {
-                spokenValue = currentSpokenText
-
-                val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
-                speakTextAndRecognize(ask, false)
-            }
-        } else if (!spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> {
-                    handleCreateNewSubGroup()
-                    startVoiceAssistance(InputState.WALLET, "Set wallet") // move further
-                }
-                "no" -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
-                    speakTextAndRecognize(ask, false)
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-        } else if (spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> { // start again
-                    startVoiceAssistance(InputState.SUB_GROUP, "Set subgroup")
-                }
-                "no" -> { // exit
-                    speakText("Terminated")
-                }
-                else -> {
-                    speakText("You sad $currentSpokenText. Exiting")
-                }
-            }
-
-            spokenValue = null
-        }
-    }
-
-    private fun handleCreateNewSubGroup() { // create new subgroup
-        speakText("Adding $spokenValue subgroup")
-
-        val groupId = spinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
-
-        val newIncomeSubGroup = IncomeSubGroup(
-            name = spokenValue!!,
-            incomeGroupId = groupId
-        )
-        addHistoryViewModel.insertIncomeSubGroup(
-            newIncomeSubGroup
-        )
-        binding.subGroupSpinner.setText(spokenValue, false)
-        speakText("Created subgroup is set")
-
-        spokenValue = null
-    }
-
-    private fun handleWalletInput(currentSpokenText: String) { // wallet
-        if (spokenValue == null) {
-            val wallets = getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
-
-            if (wallets.contains(currentSpokenText)) { // success
-                binding.walletSpinner.setText(currentSpokenText, false)
-                startVoiceAssistance(InputState.AMOUNT, "Set amount") // move further
-            } else {
-                spokenValue = currentSpokenText
-
-                val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
-                speakTextAndRecognize(ask, false)
-            }
-        } else if (!spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> {
-                    inputType = InputState.SET_BALANCE
-                    val ask = "Adding $spokenValue wallet, set wallet balance"
-                    speakTextAndRecognize(ask, false) // move further
-                }
-                "no" -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakTextAndRecognize(ask, false)
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-        } else if (spokenValue.equals("-1")) {
-            when (currentSpokenText.lowercase()) {
-                "yes" -> startVoiceAssistance(InputState.WALLET, "Set wallet") // start again
-                "no" -> { // exit
-                    speakText("Terminated")
-                }
-                else -> speakText("You sad $currentSpokenText. Exiting")
-            }
-            spokenValue = null
-        }
-    }
-
-    private fun handleWalletBalanceInput(spokenBalanceText: String) {
-        val textNumbers = spokenBalanceText.replace(",", "")
-
-        val convertedNumber = convertSpokenTextToNumber(textNumbers)
-
-        // Display extracted numbers
-        if (convertedNumber != null && spokenValue != null) {
-            val newWallet = Wallet(
-                name = spokenValue!!,
-                balance = convertedNumber
-            )
-            addHistoryViewModel.insertWallet(newWallet)
-
-            binding.walletSpinner.setText(spokenValue, false)
-
-            spokenValue = null
-
-            startVoiceAssistance(InputState.AMOUNT, "Set amount")
-        } else if (!spokenValue.equals("-1") || convertedNumber == null) {
-            spokenValue = "-1"
-            val ask = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
-            speakTextAndRecognize(ask , false)
-        } else if (spokenValue.equals("-1")) {
-            when (spokenBalanceText.lowercase()) {
-                "yes" -> { // start again setting balance
-                    val ask = "Set wallet balance"
-                    speakTextAndRecognize(ask , false)
-                }
-                "no" -> { // exit
-                    speakText("Terminated")
-                }
-                else -> speakText("You sad $spokenBalanceText. Exiting")
-            }
-            spokenValue = null
-        }
-    }
-
-    private fun handleAmountInput(spokenAmountText: String) { // amount
-        if (spokenValue == null) {
-            val textNumbers = spokenAmountText.replace(",", "")
-
-            val convertedNumber = convertSpokenTextToNumber(textNumbers)
-
-            if (convertedNumber != null) {
-                binding.amountEditText.setText(convertedNumber.toString())
-                startVoiceAssistance(InputState.COMMENT, "Set comment")
-            } else {
-                spokenValue = spokenAmountText
-
-                val ask = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
-                speakTextAndRecognize(ask , false)
-            }
-        } else {
-            when (spokenAmountText.lowercase()) {
-                "yes" -> { // start again
-                    startVoiceAssistance(InputState.AMOUNT, "Set amount") // move further
-                }
-                "no" -> { // exit
-                    speakText("Terminated")
-                }
-                else -> speakText("You sad $spokenAmountText. Exiting")
-            }
-        }
-    }
-
-    private fun handleCommentInput(spokenComment: String) { // comment
-        if (spokenComment.isNotEmpty()) {
-            binding.commentEditText.setText(spokenComment)
-            speakText("Comment is set")
-        }
-        startVoiceAssistance(InputState.CONFIRM, "Confirm transaction (Yes/No)")
-    }
-
-    private fun handleRecognizedText(recognizedText: String): String {
-        return recognizedText.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(
-                Locale.getDefault()
-            ) else it.toString()
-        }
-    }
-
-    private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {
-        val adapter = autoCompleteTextView.adapter
-        val allItems = mutableListOf<String>()
-
-        if (adapter is ArrayAdapter<*>) {
-            for (i in 0 until adapter.count) {
-                allItems.add(adapter.getItem(i).toString())
-            }
-        }
-
-        return allItems
-    }
-
     private val archiveGroupListener =
         object : SpinnerAdapter.DeleteItemClickListener {
 
@@ -998,110 +1156,4 @@ class AddIncomeHistoryFragment : Fragment() {
                 dismissAndDropdownSpinner(binding.walletSpinner)
             }
         }
-
-    private fun replaceTextNumberToRealDigit(spokenText: String): MutableList<String> {
-        val numberMap = mapOf(
-            "zero" to "0",
-            "one" to "1",
-            "two" to "2",
-            "three" to "3",
-            "four" to "4",
-            "five" to "5",
-            "six" to "6",
-            "seven" to "7",
-            "eight" to "8",
-            "nine" to "9",
-            "ten" to "10",
-            "eleven" to "11",
-            "twelve" to "12",
-            "thirteen" to "13",
-            "fourteen" to "14",
-            "fifteen" to "15",
-            "sixteen" to "16",
-            "seventeen" to "17",
-            "eighteen" to "18",
-            "nineteen" to "19",
-            "twenty" to "20",
-            "thirty" to "30",
-            "forty" to "40",
-            "fifty" to "50",
-            "sixty" to "60",
-            "seventy" to "70",
-            "eighty" to "80",
-            "ninety" to "90"
-        )
-
-        val numberWords = spokenText.split(" ")
-
-        val digitList = mutableListOf<String>()
-
-        for (word in numberWords) {
-            val digit = numberMap.get(word.lowercase(Locale.ROOT))
-            if (digit != null) {
-                digitList.add(digit)
-            } else {
-                digitList.add(word)  // If the word is not a recognized number word, keep it as is.
-            }
-        }
-
-        return digitList
-    }
-
-    private fun convertSpokenTextToNumber(spokenText: String): Double? {
-        var result = 0.0  // Initialize as a double for handling decimal parts
-        var isDecimal = false
-        var decimalMultiplier = 0.1  // Start with one decimal place
-        var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
-        var nextMultiplier = 1.0
-
-        val digitOrLevelList = replaceTextNumberToRealDigit(spokenText)
-
-        val validWords = setOf(
-            "point", "hundred", "thousand", "billion", "zero", "ten", "eleven",
-            "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
-            "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty",
-            "sixty", "seventy", "eighty", "ninety"
-        )
-
-        for (digitOrLevel in digitOrLevelList) {
-            val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
-
-            if (digitOrLevel.lowercase() in validWords) {
-                if (digitOrLevel.equals("point", ignoreCase = true)) {
-                    isDecimal = true
-                    continue  // Skip "point" in the final output
-                }
-
-                when {
-                    digitOrLevel.equals("hundred", ignoreCase = true) -> {
-                        nextMultiplier = 100.0
-                    }
-                    digitOrLevel.equals("thousand", ignoreCase = true) -> {
-                        nextMultiplier = 1000.0
-                    }
-                    digitOrLevel.equals("billion", ignoreCase = true) -> {
-                        nextMultiplier = 1000000.0
-                    }
-                    else -> {
-                        if (isDecimal) {
-                            // Accumulate the decimal - after point
-                            result += number * decimalMultiplier
-                            decimalMultiplier *= 0.1
-                        } else {
-                            if (nextMultiplier > 1) {
-                                multiplier = nextMultiplier
-                                nextMultiplier = 1.0
-                            }
-                            // Accumulate the integer part with appropriate multiplier - before point
-                            result += number * multiplier
-                        }
-                    }
-                }
-            } else {
-                return null
-            }
-        }
-
-        return result
-    }
 }
