@@ -554,7 +554,7 @@ class AddIncomeHistoryFragment : Fragment() {
         GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT
     }
 
-    private var isTextToSpeechDone = false
+    private var isTextToSpeechDone = true
 
     private fun setUpTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext()) { status ->
@@ -595,7 +595,8 @@ class AddIncomeHistoryFragment : Fragment() {
         speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
-    private fun speakTextAndRecognize(textToSpeak: String, isTextToSpeechDone: Boolean = true) {
+    private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
+        isTextToSpeechDone = onlySpeechText
         textToSpeech?.speak(
             textToSpeak,
             TextToSpeech.QUEUE_FLUSH,
