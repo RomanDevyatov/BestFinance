@@ -124,12 +124,30 @@ class AddIncomeHistoryFragment : Fragment() {
         intentGlob = intent
     }
 
-    fun startVoiceAssistance(currentInputState: InputState = InputState.GROUP, customChooseDelay: Double? = null) {
+    fun startVoiceAssistance(currentInputState: InputState = InputState.WALLET, cleanSpokenValue: Boolean = false) {
 //        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPromptForCurrentState())
-        inputType = currentInputState
+
+        if (cleanSpokenValue) {
+            spokenValue = null
+        }
 
         val chooseGroupString = "Choose $currentInputState"
+
+        inputType = currentInputState
         speakTextAndRecognize(chooseGroupString, false)
+    }
+
+    private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
+        isTextToSpeechDone = onlySpeechText
+        textToSpeech?.speak(
+            textToSpeak,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            "uniqueUtteranceId")
+    }
+
+    private fun speakText(text: String) {
+        speakTextAndRecognize(text, true)
     }
 
     private fun setOnBackPressedCallback() {
@@ -551,7 +569,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     enum class InputState {
-        GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT
+        GROUP, SUB_GROUP, WALLET, AMOUNT, COMMENT, SET_BALANCE
     }
 
     private var isTextToSpeechDone = true
@@ -579,7 +597,7 @@ class AddIncomeHistoryFragment : Fragment() {
                                 isTextToSpeechDone = true
                                 speechRecognizer.startListening(intentGlob)
                             }
-                        }, Constants.DELAY_AFTER_SPOKEN_TEXT)
+                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
                     }
 
                     override fun onError(utteranceId: String?) { }
@@ -594,20 +612,6 @@ class AddIncomeHistoryFragment : Fragment() {
         val recognitionListener = getSpeechRecognitionListener()
         speechRecognizer.setRecognitionListener(recognitionListener)
     }
-
-    private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
-        isTextToSpeechDone = onlySpeechText
-        textToSpeech?.speak(
-            textToSpeak,
-            TextToSpeech.QUEUE_FLUSH,
-            null,
-            "uniqueUtteranceId")
-    }
-
-    private fun speakText(text: String) {
-        speakTextAndRecognize(text)
-    }
-
 
     private fun getSpeechRecognitionListener(): RecognitionListener {
         return object : RecognitionListener {
@@ -645,6 +649,7 @@ class AddIncomeHistoryFragment : Fragment() {
                         InputState.GROUP -> handleGroupInput(handledSpokenValue)
                         InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
                         InputState.WALLET -> handleWalletInput(handledSpokenValue)
+                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
                         InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
                         InputState.COMMENT -> handleCommentInput(handledSpokenValue)
                     }
@@ -798,7 +803,7 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     handleCreateNewWallet()
-                    startVoiceAssistance(InputState.AMOUNT) // move further
+//                    startVoiceAssistance(InputState.AMOUNT) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -822,30 +827,47 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun handleCreateNewWallet() { // create new
         speakText("Adding $spokenValue wallet")
 
-        // TODO: correct balance input - additional voice recognize
-        val newWallet = Wallet(
-            name = spokenValue!!,
-            balance = 1000.0
-        )
-        addHistoryViewModel.insertWallet(newWallet)
-
-        binding.walletSpinner.setText(spokenValue, false)
-        speakText("Created wallet is set")
-
-        spokenValue = null
+        inputType = InputState.SET_BALANCE
+        speakTextAndRecognize("Set balance", false)
     }
 
-    private fun handleAmountInput(currentSpokenText: String) { // amount
-        val numbers = currentSpokenText.split(" ")
+    private fun handleWalletBalanceInput(spokenBalanceText: String) {
+        val numbers = spokenBalanceText.replace(",", "")
+            .split(" ")
             .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
-            .joinToString(" ")
+            .joinToString("")
+
+        // Display extracted numbers
+        if (numbers.isNotEmpty()) {
+            val newWallet = Wallet(
+                name = spokenValue!!,
+                balance = numbers.toDouble()
+            )
+            addHistoryViewModel.insertWallet(newWallet)
+
+            binding.walletSpinner.setText(spokenValue, false)
+
+            spokenValue = null
+
+            startVoiceAssistance(InputState.AMOUNT)
+        } else {
+            speakText("Incorrect wallet balance")
+            inputType = InputState.GROUP
+        }
+    }
+
+    private fun handleAmountInput(spokenAmountText: String) { // amount
+        val numbers = spokenAmountText.replace(",", "")
+            .split(" ")
+            .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
+            .joinToString("")
 
         // Display extracted numbers
         if (numbers.isNotEmpty()) {
             binding.amountEditText.setText(numbers)
             startVoiceAssistance(InputState.COMMENT)
         } else {
-            speakTextAndRecognize("No numbers found")
+            speakText("No numbers found")
             binding.amountEditText.setText("No numbers found")
             inputType = InputState.GROUP
         }
