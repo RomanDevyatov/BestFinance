@@ -197,7 +197,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             val fragment = navHostFragment.childFragmentManager.fragments.first()
             if (fragment is AddIncomeHistoryFragment) {
                 fragment.setIntentGlob(intent)
-                fragment.startVoiceAssistance(cleanSpokenValue = true)
+                fragment.startVoiceAssistance(AddIncomeHistoryFragment.InputState.GROUP,"Start adding transaction, set group")
             }
 
             true
