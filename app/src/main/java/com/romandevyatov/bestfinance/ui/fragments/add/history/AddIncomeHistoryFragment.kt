@@ -2,6 +2,7 @@ package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -635,8 +637,20 @@ class AddIncomeHistoryFragment : Fragment() {
             }
 
             override fun onError(error: Int) {
-                // Called if there is an error during speech recognition
-                // Handle errors appropriately (e.g., display an error message)
+                val errorMessage = when (error) {
+                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
+                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
+                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
+                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
+                    SpeechRecognizer.ERROR_SERVER -> "Server error"
+                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
+                    else -> "Unknown error"
+                }
+
+                Log.e(TAG, "Speech recognition error: $errorMessage")
             }
 
             @RequiresApi(Build.VERSION_CODES.O)
@@ -844,16 +858,15 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun handleWalletBalanceInput(spokenBalanceText: String) {
-        val numbers = spokenBalanceText.replace(",", "")
-            .split(" ")
-            .filter { it.matches(Regex("-?\\d+(\\.\\d+)?")) }
-            .joinToString("")
+        val textNumbers = spokenBalanceText.replace(",", "")
+
+        val convertedNumber = convertSpokenTextToNumber(textNumbers)
 
         // Display extracted numbers
-        if (numbers.isNotEmpty()) {
+        if (convertedNumber != null && spokenValue != null) {
             val newWallet = Wallet(
                 name = spokenValue!!,
-                balance = numbers.toDouble()
+                balance = convertedNumber
             )
             addHistoryViewModel.insertWallet(newWallet)
 
@@ -862,7 +875,7 @@ class AddIncomeHistoryFragment : Fragment() {
             spokenValue = null
 
             startVoiceAssistance(InputState.AMOUNT, "Set amount")
-        } else if (!spokenValue.equals("-1")) {
+        } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
             val ask = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
             speakTextAndRecognize(ask , false)
@@ -990,4 +1003,110 @@ class AddIncomeHistoryFragment : Fragment() {
                 dismissAndDropdownSpinner(binding.walletSpinner)
             }
         }
+
+    private fun replaceTextNumberToRealDigit(spokenText: String): MutableList<String> {
+        val numberMap = mapOf(
+            "zero" to "0",
+            "one" to "1",
+            "two" to "2",
+            "three" to "3",
+            "four" to "4",
+            "five" to "5",
+            "six" to "6",
+            "seven" to "7",
+            "eight" to "8",
+            "nine" to "9",
+            "ten" to "10",
+            "eleven" to "11",
+            "twelve" to "12",
+            "thirteen" to "13",
+            "fourteen" to "14",
+            "fifteen" to "15",
+            "sixteen" to "16",
+            "seventeen" to "17",
+            "eighteen" to "18",
+            "nineteen" to "19",
+            "twenty" to "20",
+            "thirty" to "30",
+            "forty" to "40",
+            "fifty" to "50",
+            "sixty" to "60",
+            "seventy" to "70",
+            "eighty" to "80",
+            "ninety" to "90"
+        )
+
+        val numberWords = spokenText.split(" ")
+
+        val digitList = mutableListOf<String>()
+
+        for (word in numberWords) {
+            val digit = numberMap.get(word.lowercase(Locale.ROOT))
+            if (digit != null) {
+                digitList.add(digit)
+            } else {
+                digitList.add(word)  // If the word is not a recognized number word, keep it as is.
+            }
+        }
+
+        return digitList
+    }
+
+    private fun convertSpokenTextToNumber(spokenText: String): Double? {
+        var result = 0.0  // Initialize as a double for handling decimal parts
+        var isDecimal = false
+        var decimalMultiplier = 0.1  // Start with one decimal place
+        var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
+        var nextMultiplier = 1.0
+
+        val digitOrLevelList = replaceTextNumberToRealDigit(spokenText)
+
+        val validWords = setOf(
+            "point", "hundred", "thousand", "billion", "zero", "ten", "eleven",
+            "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+            "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty",
+            "sixty", "seventy", "eighty", "ninety"
+        )
+
+        for (digitOrLevel in digitOrLevelList) {
+            val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
+
+            if (digitOrLevel.lowercase() in validWords) {
+                if (digitOrLevel.equals("point", ignoreCase = true)) {
+                    isDecimal = true
+                    continue  // Skip "point" in the final output
+                }
+
+                when {
+                    digitOrLevel.equals("hundred", ignoreCase = true) -> {
+                        nextMultiplier = 100.0
+                    }
+                    digitOrLevel.equals("thousand", ignoreCase = true) -> {
+                        nextMultiplier = 1000.0
+                    }
+                    digitOrLevel.equals("billion", ignoreCase = true) -> {
+                        nextMultiplier = 1000000.0
+                    }
+                    else -> {
+                        if (isDecimal) {
+                            // Accumulate the decimal - after point
+                            result += number * decimalMultiplier
+                            decimalMultiplier *= 0.1
+                        } else {
+                            if (nextMultiplier > 1) {
+                                multiplier = nextMultiplier
+                                nextMultiplier = 1.0
+                            }
+                            // Accumulate the integer part with appropriate multiplier - before point
+                            result += number * multiplier
+                        }
+                    }
+                }
+            } else {
+                return null
+            }
+        }
+
+        return result
+    }
 }
