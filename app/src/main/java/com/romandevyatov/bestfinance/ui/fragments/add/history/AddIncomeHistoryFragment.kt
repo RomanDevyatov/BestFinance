@@ -81,6 +81,9 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var handler: Handler
     private lateinit var inputType: InputState
 
+    private var steps: MutableList<InputState> = mutableListOf()
+    private var stepIndex: Int = -1
+
     enum class InputState(val description: String) {
         GROUP("group"), SUB_GROUP("subgroup"), WALLET("wallet"), AMOUNT("amount"), COMMENT("comment"), SET_BALANCE("wallet balance"), CONFIRM("Confirm transaction (Yes/No)")
     }
@@ -163,9 +166,6 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun speakText(text: String) {
         speakTextAndRecognize(text, true)
     }
-
-    private var steps: MutableList<InputState> = mutableListOf()
-    private var stepIndex: Int = -1
 
     private fun getNotSetSteps(): MutableList<InputState> {
         val steps: MutableList<InputState> = mutableListOf()
