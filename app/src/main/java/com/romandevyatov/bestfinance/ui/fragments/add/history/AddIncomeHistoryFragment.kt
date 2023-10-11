@@ -821,7 +821,7 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     inputType = InputState.SET_BALANCE
-                    val ask = "Adding $spokenValue wallet, set balance"
+                    val ask = "Adding $spokenValue wallet, set wallet balance"
                     speakTextAndRecognize(ask, false) // move further
                 }
                 "no" -> { // then ask exit or start again?
@@ -862,9 +862,22 @@ class AddIncomeHistoryFragment : Fragment() {
             spokenValue = null
 
             startVoiceAssistance(InputState.AMOUNT, "Set amount")
-        } else {
-            speakText("Incorrect wallet balance")
-            inputType = InputState.GROUP
+        } else if (!spokenValue.equals("-1")) {
+            spokenValue = "-1"
+            val ask = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
+            speakTextAndRecognize(ask , false)
+        } else if (spokenValue.equals("-1")) {
+            when (spokenBalanceText.lowercase()) {
+                "yes" -> { // start again setting balance
+                    val ask = "Set wallet balance"
+                    speakTextAndRecognize(ask , false)
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $spokenBalanceText. Exiting")
+            }
+            spokenValue = null
         }
     }
 
@@ -882,7 +895,6 @@ class AddIncomeHistoryFragment : Fragment() {
             } else {
                 spokenValue = spokenAmountText
 
-                speakText("No numbers found")
                 val ask = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
                 speakTextAndRecognize(ask , false)
             }
