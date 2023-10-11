@@ -81,6 +81,12 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var handler: Handler
     private lateinit var inputType: InputState
 
+    enum class InputState(val description: String) {
+        GROUP("group"), SUB_GROUP("subgroup"), WALLET("wallet"), AMOUNT("amount"), COMMENT("comment"), SET_BALANCE("wallet balance"), CONFIRM("Confirm transaction (Yes/No)")
+    }
+
+    private var isTextToSpeechDone = true
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -415,12 +421,13 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     inputType = InputState.SET_BALANCE
-                    speakTextAndRecognize("Adding $spokenValue wallet, set wallet balance", false) // move further
+                    val speechText = "Adding $spokenValue wallet, set wallet balance"
+                    speakTextAndRecognize(speechText, false) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
-                    val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakTextAndRecognize(ask, false)
+                    val speechText = "Do you want to continue and call wallet name one more time? (Yes/No)"
+                    speakTextAndRecognize(speechText, false)
                 }
                 else -> speakText("You sad $currentSpokenText. Exiting")
             }
@@ -457,8 +464,8 @@ class AddIncomeHistoryFragment : Fragment() {
             startVoiceAssistance(steps[stepIndex], "Set ${steps[stepIndex].name}")
         } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
-            val ask = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
-            speakTextAndRecognize(ask , false)
+            val askSpeechText = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
+            speakTextAndRecognize(askSpeechText , false)
         } else if (spokenValue.equals("-1")) {
             when (spokenBalanceText.lowercase()) {
                 "yes" -> { // start again setting balance
@@ -487,8 +494,8 @@ class AddIncomeHistoryFragment : Fragment() {
             } else {
                 spokenValue = spokenAmountText
 
-                val ask = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
-                speakTextAndRecognize(ask , false)
+                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
+                speakTextAndRecognize(askSpeechText , false)
             }
         } else {
             when (spokenAmountText.lowercase()) {
@@ -520,12 +527,6 @@ class AddIncomeHistoryFragment : Fragment() {
             ) else it.toString()
         }
     }
-
-    enum class InputState(val description: String) {
-        GROUP("group"), SUB_GROUP("subgroup"), WALLET("wallet"), AMOUNT("amount"), COMMENT("comment"), SET_BALANCE("wallet balance"), CONFIRM("Confirm transaction (Yes/No)")
-    }
-
-    private var isTextToSpeechDone = true
 
     private fun setUpTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext()) { status ->
