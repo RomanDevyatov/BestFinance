@@ -51,7 +51,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.*
 
-
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {
 
@@ -60,23 +59,22 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private val addHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
+    private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
-
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
+
     private var isButtonClickable = true
 
     private var textToSpeech: TextToSpeech? = null
-
     private var spokenValue: String? = null
-    private var inputType: InputState = InputState.GROUP
-    private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private lateinit var intentGlob: Intent
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var handler: Handler
+    private lateinit var inputType: InputState
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -131,7 +129,7 @@ class AddIncomeHistoryFragment : Fragment() {
         inputType = currentInputState
 
         val chooseGroupString = "Choose $currentInputState"
-        speakTextAndRecognize(chooseGroupString)
+        speakTextAndRecognize(chooseGroupString, false)
     }
 
     private fun setOnBackPressedCallback() {
@@ -385,7 +383,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun setSubGroupSpinnerOnClickListener() {
         binding.subGroupSpinner.setOnItemClickListener {
-                _, _, position, _ ->
+                _, _, _, _ ->
 
             val selectedSubGroupName = binding.subGroupSpinner.text.toString()
 
@@ -406,7 +404,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun setWalletSpinnerOnItemClickListener() {
         binding.walletSpinner.setOnItemClickListener {
-                _, _, position, _ ->
+                _, _, _, _ ->
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
@@ -527,7 +525,7 @@ class AddIncomeHistoryFragment : Fragment() {
         spinner.dismissDropDown()
         spinner.postDelayed({
             spinner.showDropDown()
-        }, 30)
+        }, Constants.SHOW_DROP_DOWN_DELAY_MS)
     }
 
     private fun saveAddTransactionForm() {
@@ -573,12 +571,9 @@ class AddIncomeHistoryFragment : Fragment() {
                 }
 
                 textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                    override fun onStart(utteranceId: String?) {
-                        // Utterance started
-                    }
+                    override fun onStart(utteranceId: String?) { }
 
                     override fun onDone(utteranceId: String?) {
-                        // Utterance is done, initiate speech recognition
                         Handler(Looper.getMainLooper()).postDelayed({
                             if (!isTextToSpeechDone) {
                                 isTextToSpeechDone = true
@@ -587,9 +582,7 @@ class AddIncomeHistoryFragment : Fragment() {
                         }, Constants.DELAY_AFTER_SPOKEN_TEXT)
                     }
 
-                    override fun onError(utteranceId: String?) {
-                        // Utterance error
-                    }
+                    override fun onError(utteranceId: String?) { }
                 })
             }
         }
@@ -602,8 +595,7 @@ class AddIncomeHistoryFragment : Fragment() {
         speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
-    private fun speakTextAndRecognize(textToSpeak: String) {
-        isTextToSpeechDone = false
+    private fun speakTextAndRecognize(textToSpeak: String, isTextToSpeechDone: Boolean = true) {
         textToSpeech?.speak(
             textToSpeak,
             TextToSpeech.QUEUE_FLUSH,
@@ -675,7 +667,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 spokenValue = currentSpokenText
 
                 val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
-                speakTextAndRecognize(ask)
+                speakTextAndRecognize(ask, false)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -686,7 +678,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call group name one more time? (Yes/No)"
-                    speakTextAndRecognize(ask)
+                    speakTextAndRecognize(ask, false)
                 }
                 else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
@@ -729,7 +721,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 spokenValue = currentSpokenText
 
                 val ask = "Subgroup name '$currentSpokenText' doesn't exist. Do you want to create a new subgroup with this name? (Yes/No)"
-                speakTextAndRecognize(ask)
+                speakTextAndRecognize(ask, false)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -740,7 +732,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call subgroup one more time? (Yes/No)"
-                    speakTextAndRecognize(ask)
+                    speakTextAndRecognize(ask, false)
                 }
                 else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
@@ -789,7 +781,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 spokenValue = currentSpokenText
 
                 val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
-                speakTextAndRecognize(ask)
+                speakTextAndRecognize(ask, false)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
@@ -800,7 +792,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
                     val ask = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakTextAndRecognize(ask)
+                    speakTextAndRecognize(ask, false)
                 }
                 else -> speakTextAndRecognize("You sad $currentSpokenText. Exiting")
             }
