@@ -18,7 +18,7 @@ class SettingsWalletsViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    val allWalletsLiveData: LiveData<List<Wallet>>? = walletRepository.getAllWalletLiveData()
+    val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
 
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
@@ -35,18 +35,13 @@ class SettingsWalletsViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWalletById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val wallet = walletRepository.getWalletById(id)
+        if (wallet != null) {
+            val walletArchived = wallet.copy(
+                archivedDate = LocalDateTime.now()
+            )
 
-        val walletArchived = Wallet(
-            id = wallet.id,
-            name = wallet.name,
-            balance = wallet.balance,
-            archivedDate = LocalDateTime.now(),
-            input = wallet.input,
-            output = wallet.output,
-            description = wallet.description
-        )
-
-        walletRepository.updateWallet(walletArchived)
+            walletRepository.updateWallet(walletArchived)
+        }
     }
 
 }

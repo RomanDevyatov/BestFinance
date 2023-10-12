@@ -35,17 +35,13 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
         )
 
         val wallet = walletRepository.getWalletById(updatedExpenseHistory.walletId)
-        updateWallet(
-            Wallet(
-                id = wallet.id,
-                name = wallet.name,
+        if (wallet != null) {
+            val updatedWallet = wallet.copy(
                 balance = wallet.balance - updatedExpenseHistory.amount,
-                input = wallet.input,
-                output = wallet.output + updatedExpenseHistory.amount,
-                description = wallet.description,
-                archivedDate = wallet.archivedDate
+                output = wallet.output + updatedExpenseHistory.amount
             )
-        )
+            walletRepository.updateWallet(updatedWallet)
+        }
     }
 
     fun updateExpenseHistory(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {

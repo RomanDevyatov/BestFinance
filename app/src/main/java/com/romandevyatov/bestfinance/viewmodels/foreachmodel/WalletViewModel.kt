@@ -16,8 +16,6 @@ class WalletViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    val walletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
-
     val allWalletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
@@ -26,10 +24,6 @@ class WalletViewModel @Inject constructor(
 
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
-    }
-
-    fun deleteWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.deleteWallet(wallet)
     }
 
     fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
@@ -53,20 +47,18 @@ class WalletViewModel @Inject constructor(
         updateWallet(updatedWallet)
     }
 
-    fun updateWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateNameAndDescriptionAndBalanceWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
 
-        val updatedWallet = Wallet(
-            id = wallet.id,
-            name = updatedWalletBinding.name,
-            description = updatedWalletBinding.description,
-            balance = updatedWalletBinding.balance,
-            input = wallet.input,
-            output = wallet.output,
-            archivedDate = wallet.archivedDate
-        )
+        if (wallet != null) {
+            val updatedWallet = wallet.copy(
+                name = updatedWalletBinding.name,
+                description = updatedWalletBinding.description,
+                balance = updatedWalletBinding.balance
+            )
 
-        updateWallet(updatedWallet)
+            updateWallet(updatedWallet)
+        }
     }
 
     fun archiveWalletById(id: Long?, date: LocalDateTime) = viewModelScope.launch(Dispatchers.IO) {

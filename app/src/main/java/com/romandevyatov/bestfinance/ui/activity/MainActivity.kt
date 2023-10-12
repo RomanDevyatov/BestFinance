@@ -30,7 +30,6 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
-
 @AndroidEntryPoint
 class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
@@ -182,29 +181,29 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         }
 
         R.id.action_voice -> {
-            if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
-            }
-
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-
-            val fragment = navHostFragment.childFragmentManager.fragments.first()
-            if (fragment is AddIncomeHistoryFragment) {
-                fragment.setIntentGlob(intent)
-                fragment.startAddingTransaction("Start adding transaction.")
-            }
-
+            startVoiceRecognition()
             true
         }
 
         else -> {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun startVoiceRecognition() {
+        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
+        }
+
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments.first()
+        if (fragment is AddIncomeHistoryFragment) {
+            fragment.setIntentGlob(intent)
+            fragment.startAddingTransaction("Start adding transaction.")
         }
     }
 

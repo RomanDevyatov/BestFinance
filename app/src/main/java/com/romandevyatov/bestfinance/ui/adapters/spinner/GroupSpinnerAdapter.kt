@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.TextView
 import androidx.core.view.isVisible
-import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ItemWithDelBinding
 
 class GroupSpinnerAdapter(
@@ -17,12 +15,12 @@ class GroupSpinnerAdapter(
     private val resourceId: Int,
     private var items: MutableList<SpinnerItem>,
     private val addItemText: String? = null,
-    var listener: DeleteItemClickListener? = null
+    var deleteItemClickListener: DeleteItemClickListener? = null
 ) : ArrayAdapter<SpinnerItem>(context, resourceId, items), Filterable {
 
     interface DeleteItemClickListener {
 
-        fun archive(name: String)
+        fun archive(spinnerItem: SpinnerItem)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -34,15 +32,16 @@ class GroupSpinnerAdapter(
 
         val binding = ItemWithDelBinding.bind(spinnerView)
 
-        val itemText = items[position].name
+        val spinnerItem = items[position]
+        val itemText = spinnerItem.name
         binding.itemNameTextView.text = itemText
 
-        val hasListener = listener != null
+        val hasListener = deleteItemClickListener != null
         val isAddItem = addItemText != null && itemText == addItemText
         binding.itemDelTextView.isVisible = hasListener && !isAddItem
 
         binding.itemDelTextView.setOnClickListener {
-            listener?.archive(itemText)
+            deleteItemClickListener?.archive(spinnerItem)
         }
 
         return spinnerView
@@ -95,7 +94,12 @@ class GroupSpinnerAdapter(
         }
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            adapter.updateData(results?.values as MutableList<SpinnerItem>)
+            if (results != null && results.values is MutableList<*>) {
+                val filteredData = results.values as? MutableList<SpinnerItem>
+                if (filteredData != null) {
+                    adapter.updateData(filteredData)
+                }
+            }
         }
     }
 

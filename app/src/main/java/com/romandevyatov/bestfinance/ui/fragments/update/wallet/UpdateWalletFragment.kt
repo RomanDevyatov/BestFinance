@@ -70,7 +70,7 @@ class UpdateWalletFragment : Fragment() {
                         description = walletDescriptionBinding
                     )
 
-                    walletViewModel.updateWalletById(updatedWallet)
+                    walletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
 
                     performNavigation(args.source.toString())
                 } else if (wallet.archivedDate == null) {

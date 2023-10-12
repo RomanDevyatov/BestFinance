@@ -40,32 +40,24 @@ class UpdateTransferHistoryViewModel @Inject constructor(
         val to = walletRepository.getWalletById(updatedTransferHistory.toWalletId)
         val from = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
 
-        val updatedWalletToBalance = to.balance.plus(amount)
-        val updatedWalletToInput = to.input.plus(amount)
+        if (to != null && from != null) {
+            val updatedWalletToBalance = to.balance.plus(amount)
+            val updatedWalletToInput = to.input.plus(amount)
 
-        val updatedWalletTo = Wallet(
-            id = to.id,
-            name = to.name,
-            balance = updatedWalletToBalance,
-            input = updatedWalletToInput,
-            output = to.output,
-            description = to.description,
-            archivedDate = to.archivedDate
-        )
-        updateWallet(updatedWalletTo)
+            val updatedWalletTo = to.copy(
+                balance = updatedWalletToBalance,
+                input = updatedWalletToInput
+            )
+            updateWallet(updatedWalletTo)
 
-        val updatedWalletFromBalance = from.balance.minus(amount)
-        val updatedWalletFromOutput = from.output.plus(amount)
+            val updatedWalletFromBalance = from.balance.minus(amount)
+            val updatedWalletFromOutput = from.output.plus(amount)
 
-        val updatedWalletFrom = Wallet(
-            id = from.id,
-            name = from.name,
-            balance = updatedWalletFromBalance,
-            input = from.input,
-            output = updatedWalletFromOutput,
-            description = from.description,
-            archivedDate = from.archivedDate
-        )
-        updateWallet(updatedWalletFrom)
+            val updatedWalletFrom = from.copy(
+                balance = updatedWalletFromBalance,
+                output = updatedWalletFromOutput
+            )
+            updateWallet(updatedWalletFrom)
+        }
     }
 }

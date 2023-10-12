@@ -15,10 +15,6 @@ class IncomeGroupRepository @Inject constructor(
 
     fun getAllLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
 
-    fun getIncomeGroupByName(name: String): IncomeGroup {
-        return incomeGroupDao.getByName(name)
-    }
-
     suspend fun insertIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupDao.insert(incomeGroup)
     }
@@ -59,14 +55,6 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getAllNotArchivedLiveData()
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupNameNotArchived(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
-        return incomeGroupDao.getByNameNotArchivedWithIncomeSubGroups(incomeGroupName)
-    }
-
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName: String): IncomeGroupWithIncomeSubGroups {
-        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupName(incomeGroupName)
-    }
-
     fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
         return incomeGroupDao.getByIdNotArchived(incomeGroupId)
     }
@@ -102,10 +90,6 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.getAllWithIncomeSubGroupsLiveData()
     }
 
-    fun getIncomeGroupById(id: Long): IncomeGroup {
-        return incomeGroupDao.getById(id)
-    }
-
     fun getIncomeGroupByIdLiveData(id: Long?): LiveData<IncomeGroup>? {
         return incomeGroupDao.getByIdLiveData(id)
     }
@@ -120,6 +104,10 @@ class IncomeGroupRepository @Inject constructor(
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups> {
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id)
+    }
+
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id: Long): IncomeGroupWithIncomeSubGroups? {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id)
     }
 
 

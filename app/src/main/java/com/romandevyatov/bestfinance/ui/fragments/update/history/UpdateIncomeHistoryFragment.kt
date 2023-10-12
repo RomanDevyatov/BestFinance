@@ -65,20 +65,23 @@ class UpdateIncomeHistoryFragment : Fragment() {
         binding.reusable.addHistoryButton.text = "Update"
 
         updateIncomeHistoryViewModel.getIncomeHistoryWithIncomeSubGroupAndWalletById(args.incomeHistoryId)
-            .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
-                historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
+            ?.observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
+                if (historyWithSubGroupAndWallet != null) {
+                    historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
 
-                setupSpinnersValues(historyWithSubGroupAndWallet.incomeSubGroup,
-                    historyWithSubGroupAndWallet.wallet
-                )
+                    setupSpinnersValues(
+                        historyWithSubGroupAndWallet.incomeSubGroup,
+                        historyWithSubGroupAndWallet.wallet
+                    )
 
-                setupSpinners()
+                    setupSpinners()
 
-                setupDateTimeFiledValues()
+                    setupDateTimeFiledValues()
 
-                val incomeHistory = historyWithSubGroupAndWallet.incomeHistory
-                binding.reusable.commentEditText.setText(incomeHistory.comment)
-                binding.reusable.amountEditText.setText(incomeHistory.amount.toString())
+                    val incomeHistory = historyWithSubGroupAndWallet.incomeHistory
+                    binding.reusable.commentEditText.setText(incomeHistory.comment)
+                    binding.reusable.amountEditText.setText(incomeHistory.amount.toString())
+                }
             }
 
         return binding.root
@@ -136,20 +139,21 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived()?.observe(viewLifecycleOwner) { groups ->
-            val spinnerGroupItems = getGroupItemsForSpinner(groups)
+        updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived()
+            .observe(viewLifecycleOwner) { groups ->
+                val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-            val groupSpinnerAdapter = GroupSpinnerAdapter(
-                requireContext(),
-                R.layout.item_with_del,
-                spinnerGroupItems,
-                null,
-                null)
+                val groupSpinnerAdapter = GroupSpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerGroupItems,
+                    null,
+                    null)
 
-            binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
+                binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-            setSubGroupSpinnerAdapter()
-        }
+                setSubGroupSpinnerAdapter()
+            }
     }
 
     private fun setWalletSpinnerAdapter() {
@@ -297,7 +301,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
         selectedDate.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.incomeHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.incomeHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
         val datePickerListener = DatePickerDialog.OnDateSetListener() {
                 _, year, month, dayOfMonth ->
             selectedDate.set(Calendar.YEAR, year)
@@ -324,7 +328,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setTimeEditText() {
         val selectedTime = Calendar.getInstance()
         selectedTime.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.incomeHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.incomeHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)

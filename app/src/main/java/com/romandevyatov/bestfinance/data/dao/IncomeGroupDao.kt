@@ -106,6 +106,23 @@ interface IncomeGroupDao {
     fun getAllNotArchivedWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
 
     @Transaction
+    @Query("SELECT " +
+            "ig.id, ig.name, ig.is_passive, ig.description, ig.archived_date, " +
+            "isg.id, isg.name, isg.description, isg.income_group_id, isg.archived_date " +
+            "FROM income_group ig " +
+            "INNER JOIN income_sub_group isg " +
+            "ON ig.id = isg.income_group_id " +
+            "WHERE ig.id = :incomeGroupId " +
+            "AND ig.archived_date IS NULL " +
+            "AND isg.archived_date IS NULL " +
+            "LIMIT 1")
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupIdLiveData(incomeGroupId: Long): LiveData<IncomeGroupWithIncomeSubGroups>?
+
+    @Transaction
+    @Query("SELECT * FROM income_group WHERE id = :id")
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id: Long): IncomeGroupWithIncomeSubGroups?
+
+    @Transaction
     @Query("SELECT * FROM income_group")
     fun getAllWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>?
 
@@ -123,5 +140,6 @@ interface IncomeGroupDao {
 
     @Query("UPDATE income_group SET archived_date = :date WHERE id = :id")
     fun archiveById(id: Long?, date: String)
+
 
 }

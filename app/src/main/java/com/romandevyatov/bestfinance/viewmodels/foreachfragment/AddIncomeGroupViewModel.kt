@@ -19,7 +19,7 @@ class AddIncomeGroupViewModel @Inject constructor(
         incomeGroupRepository.insertIncomeGroup(incomeGroup)
     }
 
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>>? {
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 

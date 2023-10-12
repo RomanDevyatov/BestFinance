@@ -1,18 +1,11 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.subgroup
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,7 +34,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
     private var incomeSubGroupOldGlobal: IncomeSubGroup? = null
 
-    private var incomeGroupsGlobal: List<SpinnerItem>? = emptyList()
+    private var incomeGroupsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
     private val clickDelayMs = 1000
     private var isButtonClickable = true
@@ -166,7 +159,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     }
 
     private fun getGroupSpinnerItemByName(nameGroup: String): SpinnerItem? {
-        return incomeGroupsGlobal?.find { it.name == nameGroup }
+        return incomeGroupsGlobal.find { it.name == nameGroup }
     }
 
     override fun onDestroyView() {
@@ -180,14 +173,20 @@ class UpdateIncomeSubGroupFragment : Fragment() {
                 val spinnerItems = getIncomeGroupList(incomeGroups)
 
                 val spinnerAdapter =
-                    GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,
-                        Constants.ADD_NEW_INCOME_GROUP)
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerItems,
+                        Constants.ADD_NEW_INCOME_GROUP
+                    )
 
-                incomeGroupsGlobal = spinnerItems
+                incomeGroupsGlobal.clear()
+                incomeGroupsGlobal.addAll(spinnerItems)
 
                 binding.reusable.groupSpinner.setAdapter(spinnerAdapter)
 
-                val groupName = spinnerItems.find { it.id == incomeSubGroupOldGlobal?.incomeGroupId }?.name
+                val groupName =
+                    spinnerItems.find { it.id == incomeSubGroupOldGlobal?.incomeGroupId }?.name
                 binding.reusable.groupSpinner.setText(groupName, false)
             }
     }

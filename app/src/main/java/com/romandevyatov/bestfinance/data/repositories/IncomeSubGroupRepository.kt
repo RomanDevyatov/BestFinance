@@ -31,13 +31,11 @@ class IncomeSubGroupRepository @Inject constructor(
 
     suspend fun deleteAllIncomeSubGroups() = incomeSubGroupDao.deleteAll()
 
-    fun getIncomeSubGroupByNameLiveData(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getByNameLiveData(name)
-
     fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> = incomeSubGroupDao.getByNameNotArchivedLiveData(name)
 
     fun getByNameNotArchived(name: String): IncomeSubGroup = incomeSubGroupDao.getByNameNotArchived(name)
 
-    suspend fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
+    fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
         val incomeSubGroupNotArchived = IncomeSubGroup(
             id = incomeSubGroup.id,
             name = incomeSubGroup.name,
@@ -48,11 +46,7 @@ class IncomeSubGroupRepository @Inject constructor(
         updateIncomeSubGroup(incomeSubGroupNotArchived)
     }
 
-    fun getIncomeSubGroupByName(name: String): IncomeSubGroup {
-        return incomeSubGroupDao.getByName(name)
-    }
-
-    fun getIncomeSubGroupByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup {
+    fun getIncomeSubGroupByNameAndIncomeGroupId(name: String, incomeGroupId: Long): IncomeSubGroup? {
         return incomeSubGroupDao.getByNameAndGroupId(name, incomeGroupId)
     }
 
@@ -74,6 +68,10 @@ class IncomeSubGroupRepository @Inject constructor(
 
     fun updateArchivedDateById(id: Long?, date: String?) {
         return incomeSubGroupDao.updateArchivedDateById(id, date)
+    }
+
+    fun getByIdNotArchived(id: Long?): IncomeSubGroup? {
+        return incomeSubGroupDao.getByIdNotArchived(id)
     }
 
 }
