@@ -24,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
@@ -202,6 +203,9 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val fragment = navHostFragment.childFragmentManager.fragments.first()
         if (fragment is AddIncomeHistoryFragment) {
+            fragment.setIntentGlob(intent)
+            fragment.startAddingTransaction("Start adding transaction.")
+        } else if (fragment is AddTransferFragment) {
             fragment.setIntentGlob(intent)
             fragment.startAddingTransaction("Start adding transaction.")
         }

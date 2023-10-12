@@ -2,14 +2,22 @@ package com.romandevyatov.bestfinance.ui.fragments.add.transfer
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.RecognitionListener
+import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -33,6 +41,9 @@ import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_FROM
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
+import com.romandevyatov.bestfinance.utils.SpinnerUtil
+import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
+import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -63,6 +74,367 @@ class AddTransferFragment : Fragment() {
 
     private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
+
+    private var steps: MutableList<InputState> = mutableListOf()
+    private var stepIndex: Int = -1
+    private lateinit var intentGlob: Intent
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var handler: Handler
+    private var isTextToSpeechDone = true
+    private var textToSpeech: TextToSpeech? = null
+    private var spokenValue: String? = null
+    private lateinit var inputType: InputState
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAddTransferBinding.inflate(inflater, container, false)
+
+        setUpSpeechRecognizer()
+
+        setUpTextToSpeech()
+
+        handler = Handler(Looper.getMainLooper())
+
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                sharedModViewModel.set(null)
+                findNavController().navigate(R.id.action_add_transfer_fragment_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+        setSpinners()
+
+        setDateEditText()
+        setTimeEditText()
+
+        setButtonOnClickListener(view)
+
+        restoreAmountDateCommentValues()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        walletViewModel.allWalletsNotArchivedLiveData.removeObservers(viewLifecycleOwner)
+    }
+
+    fun setIntentGlob(intent: Intent) {
+        intentGlob = intent
+    }
+
+    fun startAddingTransaction(textToSpeak: String) {
+        if (steps.size == 0) {
+            steps.addAll(getSteps())
+            stepIndex = 0
+        }
+
+        startVoiceAssistance(steps[stepIndex], textToSpeak + steps[stepIndex].description)
+    }
+
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
+                if (languageResult == TextToSpeech.LANG_MISSING_DATA
+                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+
+                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
+                if (speechRateResult == TextToSpeech.ERROR) {
+                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
+                }
+
+                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) { }
+
+                    override fun onDone(utteranceId: String?) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (!isTextToSpeechDone) {
+                                isTextToSpeechDone = true
+                                speechRecognizer.startListening(intentGlob)
+                            }
+                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
+                    }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(utteranceId: String?) { }
+                })
+            }
+        }
+    }
+
+    private fun setUpSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+
+        val recognitionListener = getSpeechRecognitionListener()
+        speechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
+    private fun getSteps(): MutableList<InputState> {
+        val steps: MutableList<InputState> = mutableListOf()
+
+        if (binding.fromWalletNameSpinner .text.isEmpty()) {
+            steps.add(InputState.WALLET_FROM)
+        }
+
+        if (binding.toWalletNameSpinner.text.isEmpty()) {
+            steps.add(InputState.WALLET_TO)
+        }
+
+        if (binding.amountEditText.text.toString().isEmpty()) {
+            steps.add(InputState.AMOUNT)
+        }
+
+        if (binding.commentEditText.text.toString().isEmpty()) {
+            steps.add(InputState.COMMENT)
+        }
+
+        steps.add(InputState.CONFIRM)
+
+        return steps
+    }
+
+    private fun startVoiceAssistance(currentInputState: InputState, textToSpeak: String) {
+        spokenValue = null
+
+        inputType = currentInputState
+        speakTextAndRecognize(textToSpeak, false)
+    }
+
+    private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
+        isTextToSpeechDone = onlySpeechText
+        textToSpeech?.speak(
+            textToSpeak,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            "uniqueUtteranceId")
+    }
+
+    private fun speakText(text: String) {
+        speakTextAndRecognize(text, true)
+    }
+
+    private fun getSpeechRecognitionListener(): RecognitionListener {
+        return object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                // Called when the speech recognizer is ready for speech input
+            }
+
+            override fun onBeginningOfSpeech() {
+            }
+
+            override fun onRmsChanged(rmsdB: Float) {
+                // Called when the RMS dB (sound level) changes during speech input
+            }
+
+            override fun onBufferReceived(buffer: ByteArray?) {
+                // Called when the audio buffer is received
+            }
+
+            override fun onEndOfSpeech() {
+                // Called when the user stops speaking
+            }
+
+            override fun onError(error: Int) {
+                val errorMessage = when (error) {
+                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
+                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
+                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
+                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
+                    SpeechRecognizer.ERROR_SERVER -> "Server error"
+                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
+                    else -> "Unknown error"
+                }
+
+                Log.e(ContentValues.TAG, "Speech recognition error: $errorMessage")
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResults(results: Bundle?) {
+                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
+                    val currentSpokenText = recognizedStrings[0]
+                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
+
+                    when (inputType) {
+                        InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
+                        InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
+                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+                        else -> {}
+                    }
+                }
+            }
+
+            override fun onPartialResults(partialResults: Bundle?) {
+                // Called when partial recognition results are available
+            }
+
+            override fun onEvent(eventType: Int, params: Bundle?) {
+                // Called for various speech recognition events
+            }
+        }
+    }
+
+    private fun handleRecognizedText(recognizedText: String): String {
+        return recognizedText.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
+    }
+
+    private fun handleWalletBalanceInput(spokenBalanceText: String) {
+        val textNumbers = spokenBalanceText.replace(",", "")
+
+        val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
+
+        if (convertedNumber != null && spokenValue != null) {
+            val newWallet = Wallet(
+                name = spokenValue!!,
+                balance = convertedNumber
+            )
+            addTransferViewModel.insertWallet(newWallet)
+
+            if (inputType == InputState.WALLET_FROM) {
+                binding.fromWalletNameSpinner.setText(spokenValue, false)
+            } else if (inputType == InputState.WALLET_TO) {
+                binding.toWalletNameSpinner.setText(spokenValue, false)
+            }
+
+            spokenValue = null
+
+            stepIndex++
+            startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+        } else if (!spokenValue.equals("-1") || convertedNumber == null) {
+            spokenValue = "-1"
+
+            val askSpeechText = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
+            speakTextAndRecognize(askSpeechText , false)
+        } else if (spokenValue.equals("-1")) {
+            when (spokenBalanceText.lowercase()) {
+                "yes" -> { // start again setting balance
+                    val ask = "Set wallet balance"
+                    speakTextAndRecognize(ask , false)
+                }
+                "no" -> { // exit
+                    speakText("Exiting")
+                }
+                else -> speakText("You sad $spokenBalanceText. Exiting")
+            }
+            spokenValue = null
+        }
+    }
+
+    private fun handleAmountInput(spokenAmountText: String) { // amount
+        if (spokenValue == null) {
+            val textNumbers = spokenAmountText.replace(",", "")
+
+            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
+
+            if (convertedNumber != null) {
+                binding.amountEditText.setText(convertedNumber.toString())
+                stepIndex++
+                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+            } else {
+                spokenValue = spokenAmountText
+
+                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
+                speakTextAndRecognize(askSpeechText , false)
+            }
+        } else {
+            when (spokenAmountText.lowercase()) {
+                "yes" -> { // start again
+                    startVoiceAssistance(InputState.AMOUNT, "Set amount")
+                }
+                "no" -> { // exit
+                    speakText("Terminated")
+                }
+                else -> speakText("You sad $spokenAmountText. Exiting")
+            }
+        }
+    }
+
+    private fun handleCommentInput(spokenComment: String) { // comment
+        var speakText = "Comment is set."
+        if (spokenComment.isNotEmpty()) {
+            binding.commentEditText.setText(spokenComment)
+        } else speakText = "Comment is empty."
+
+        stepIndex++
+        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].description}")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleConfirmInput(sentSpokenValue: String) {
+        when (sentSpokenValue.lowercase()) {
+            "yes" -> { // sent
+                sendTransferHistory()
+                speakText("History record is added")
+            }
+            "no" -> { // no
+                speakText("Terminated")
+            }
+            else -> speakText("You sad $sentSpokenValue. Exiting")
+        }
+        spokenValue = null
+    }
+
+    private fun handleWalletInput(currentSpokenText: String, bindingWalletSpinner: AutoCompleteTextView) { // wallet
+        if (spokenValue == null) {
+            val wallets = SpinnerUtil.getAllItemsFromAutoCompleteTextView(bindingWalletSpinner)
+
+            if (wallets.contains(currentSpokenText)) { // success
+                bindingWalletSpinner.setText(currentSpokenText, false)
+                stepIndex++
+                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description) // move further
+            } else {
+                spokenValue = currentSpokenText
+
+                val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
+                speakTextAndRecognize(ask, false)
+            }
+        } else if (!spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> {
+                    inputType = InputState.SET_BALANCE
+                    val speechText = "Adding $spokenValue wallet, set wallet balance"
+                    speakTextAndRecognize(speechText, false) // move further
+                }
+                "no" -> { // then ask exit or start again?
+                    spokenValue = "-1" // any
+                    val speechText = "Do you want to continue and call wallet name one more time? (Yes/No)"
+                    speakTextAndRecognize(speechText, false)
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+        } else if (spokenValue.equals("-1")) {
+            when (currentSpokenText.lowercase()) {
+                "yes" -> startVoiceAssistance(inputType, "Set wallet") // start again
+                "no" -> { // exit
+                    speakText("Exiting")
+                }
+                else -> speakText("You sad $currentSpokenText. Exiting")
+            }
+            spokenValue = null
+        }
+    }
 
     private val archiveFromWalletListener =
         object : SpinnerAdapter.DeleteItemClickListener {
@@ -101,42 +473,6 @@ class AddTransferFragment : Fragment() {
             binding.fromWalletNameSpinner.text = null
             fromSpinnerValueGlobalBeforeAdd = null
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddTransferBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_add_transfer_fragment_to_navigation_home)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-        setSpinners()
-
-        setDateEditText()
-        setTimeEditText()
-
-        setButtonOnClickListener(view)
-
-        restoreAmountDateCommentValues()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        walletViewModel.allWalletsNotArchivedLiveData.removeObservers(viewLifecycleOwner)
     }
 
     private fun setSpinners() {
@@ -249,7 +585,6 @@ class AddTransferFragment : Fragment() {
         return subGroupSpinnerAdapter.getPosition(savedSubGroupName) > -1
     }
 
-
     private fun restoreAmountDateCommentValues() {
         val mod = sharedModViewModel.modelForm
 
@@ -331,55 +666,60 @@ class AddTransferFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-                val amountBinding = binding.amountEditText.text.toString().trim()
-                val dateBinding = binding.dateEditText.text.toString().trim()
-                val timeBinding = binding.timeEditText.text.toString().trim()
-                val comment = binding.commentEditText.text.toString().trim()
-
-                val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
-                val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
-
-                val isEqualSpinnerNamesValidation = IsEqualValidator(walletFromNameBinding, walletToNameBinding).validate()
-                binding.fromWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
-                binding.toWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
-
-                val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
-                binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
-
-                val dateBindingValidation = EmptyValidator(dateBinding).validate()
-                binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
-
-                val timeBindingValidation = EmptyValidator(timeBinding).validate()
-                binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
-
-                if (isEqualSpinnerNamesValidation.isSuccess
-                    && amountValidation.isSuccess
-                    && dateBindingValidation.isSuccess
-                    && timeBindingValidation.isSuccess
-                ) {
-                    val walletFrom = wallets.find { it.name == walletFromNameBinding }
-                    updateWalletFrom(walletFrom!!, amountBinding.toDouble())
-
-                    val walletTo = wallets.find { it.name == walletToNameBinding }
-                    updateWalletTo(walletTo!!, amountBinding.toDouble())
-
-                    val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
-                    val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
-
-                    insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble(), parsedLocalDateTime)
-
-                    sharedModViewModel.set(null)
-                    val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
-                    findNavController().navigate(action)
-                }
-            }
+            sendTransferHistory()
 
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
             }, clickDelay.toLong())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sendTransferHistory() {
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+            val amountBinding = binding.amountEditText.text.toString().trim()
+            val dateBinding = binding.dateEditText.text.toString().trim()
+            val timeBinding = binding.timeEditText.text.toString().trim()
+            val comment = binding.commentEditText.text.toString().trim()
+
+            val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
+            val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
+
+            val isEqualSpinnerNamesValidation = IsEqualValidator(walletFromNameBinding, walletToNameBinding).validate()
+            binding.fromWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
+            binding.toWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
+
+            val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
+            binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
+
+            val dateBindingValidation = EmptyValidator(dateBinding).validate()
+            binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+
+            val timeBindingValidation = EmptyValidator(timeBinding).validate()
+            binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
+
+            if (isEqualSpinnerNamesValidation.isSuccess
+                && amountValidation.isSuccess
+                && dateBindingValidation.isSuccess
+                && timeBindingValidation.isSuccess
+            ) {
+                val walletFrom = wallets.find { it.name == walletFromNameBinding }
+                updateWalletFrom(walletFrom!!, amountBinding.toDouble())
+
+                val walletTo = wallets.find { it.name == walletToNameBinding }
+                updateWalletTo(walletTo!!, amountBinding.toDouble())
+
+                val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
+                val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
+
+                insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble(), parsedLocalDateTime)
+
+                sharedModViewModel.set(null)
+                val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -414,7 +754,11 @@ class AddTransferFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertTransferHistoryRecord(comment: String, walletFrom: Wallet, walletTo: Wallet, amount: Double, parsedLocalDateTime: LocalDateTime) {
+    private fun insertTransferHistoryRecord(comment: String,
+                                            walletFrom: Wallet,
+                                            walletTo: Wallet,
+                                            amount: Double,
+                                            parsedLocalDateTime: LocalDateTime) {
         val transferHistory = TransferHistory(
             amount = amount,
             fromWalletId = walletFrom.id!!,
@@ -430,14 +774,9 @@ class AddTransferFragment : Fragment() {
         val updatedWalletToInput = walletTo.input.plus(amount)
         val updatedWalletToBalance = walletTo.balance.plus(amount)
 
-        val updatedWalletTo = Wallet(
-            id = walletTo.id,
-            name = walletTo.name,
+        val updatedWalletTo = walletTo.copy(
             balance = updatedWalletToBalance,
-            input = updatedWalletToInput,
-            output = walletTo.output,
-            description = walletTo.description,
-            archivedDate = walletTo.archivedDate
+            input = updatedWalletToInput
         )
         walletViewModel.updateWallet(updatedWalletTo)
     }
@@ -446,14 +785,9 @@ class AddTransferFragment : Fragment() {
         val updatedWalletFromOutput = walletFrom.output.plus(amount)
         val updatedWalletFromBalance = walletFrom.balance.minus(amount)
 
-        val updatedWalletFrom = Wallet(
-            id = walletFrom.id,
-            name = walletFrom.name,
+        val updatedWalletFrom = walletFrom.copy(
             balance = updatedWalletFromBalance,
-            input = walletFrom.input,
-            output = updatedWalletFromOutput,
-            description = walletFrom.description,
-            archivedDate = walletFrom.archivedDate
+            output = updatedWalletFromOutput
         )
 
         walletViewModel.updateWallet(updatedWalletFrom)

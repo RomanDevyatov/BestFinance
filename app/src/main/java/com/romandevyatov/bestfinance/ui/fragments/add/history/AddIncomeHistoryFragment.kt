@@ -16,7 +16,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -45,6 +44,9 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
+import com.romandevyatov.bestfinance.utils.SpinnerUtil
+import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
+import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
@@ -86,10 +88,6 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private var steps: MutableList<InputState> = mutableListOf()
     private var stepIndex: Int = -1
-
-    enum class InputState(val description: String) {
-        GROUP("Set group."), SUB_GROUP("Set subgroup."), WALLET("Set wallet."), AMOUNT("Set amount."), COMMENT("Set comment."), SET_BALANCE("Set wallet balance."), CONFIRM("Confirm transaction (Yes/No)")
-    }
 
     private var isTextToSpeechDone = true
 
@@ -258,6 +256,7 @@ class AddIncomeHistoryFragment : Fragment() {
                         InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
                         InputState.COMMENT -> handleCommentInput(handledSpokenValue)
                         InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+                        else -> {}
                     }
                 }
             }
@@ -289,7 +288,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun handleGroupInput(currentSpokenText: String) { // income group name
         if (spokenValue == null) {
-            val groupList = getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
+            val groupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
 
             if (groupList.contains(currentSpokenText)) { // success
                 binding.groupSpinner.setText(currentSpokenText, false)
@@ -349,7 +348,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
         if (spokenValue == null) {
-            val subGroupList = getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
+            val subGroupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
 
             if (subGroupList.contains(currentSpokenText)) { // success
                 binding.subGroupSpinner.setText(currentSpokenText, false)
@@ -408,7 +407,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun handleWalletInput(currentSpokenText: String) { // wallet
         if (spokenValue == null) {
-            val wallets = getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
+            val wallets = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
 
             if (wallets.contains(currentSpokenText)) { // success
                 binding.walletSpinner.setText(currentSpokenText, false)
@@ -449,7 +448,7 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun handleWalletBalanceInput(spokenBalanceText: String) {
         val textNumbers = spokenBalanceText.replace(",", "")
 
-        val convertedNumber = convertSpokenTextToNumber(textNumbers)
+        val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
 
         // Display extracted numbers
         if (convertedNumber != null && spokenValue != null) {
@@ -488,7 +487,7 @@ class AddIncomeHistoryFragment : Fragment() {
         if (spokenValue == null) {
             val textNumbers = spokenAmountText.replace(",", "")
 
-            val convertedNumber = convertSpokenTextToNumber(textNumbers)
+            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
 
             if (convertedNumber != null) {
                 binding.amountEditText.setText(convertedNumber.toString())
@@ -561,134 +560,6 @@ class AddIncomeHistoryFragment : Fragment() {
                     override fun onError(utteranceId: String?) { }
                 })
             }
-        }
-    }
-
-    private fun getAllItemsFromAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView): List<String> {
-        val adapter = autoCompleteTextView.adapter
-        val allItems = mutableListOf<String>()
-
-        if (adapter is ArrayAdapter<*>) {
-            for (i in 0 until adapter.count) {
-                allItems.add(adapter.getItem(i).toString())
-            }
-        }
-
-        return allItems
-    }
-
-    private fun replaceTextNumberToRealDigit(spokenText: String): MutableList<String> {
-        val numberMap = mapOf(
-            "zero" to "0",
-            "one" to "1",
-            "two" to "2",
-            "three" to "3",
-            "four" to "4",
-            "five" to "5",
-            "six" to "6",
-            "seven" to "7",
-            "eight" to "8",
-            "nine" to "9",
-            "ten" to "10",
-            "eleven" to "11",
-            "twelve" to "12",
-            "thirteen" to "13",
-            "fourteen" to "14",
-            "fifteen" to "15",
-            "sixteen" to "16",
-            "seventeen" to "17",
-            "eighteen" to "18",
-            "nineteen" to "19",
-            "twenty" to "20",
-            "thirty" to "30",
-            "forty" to "40",
-            "fifty" to "50",
-            "sixty" to "60",
-            "seventy" to "70",
-            "eighty" to "80",
-            "ninety" to "90"
-        )
-
-        val numberWords = spokenText.split(" ")
-
-        val digitList = mutableListOf<String>()
-
-        for (word in numberWords) {
-            val digit = numberMap[word.lowercase(Locale.ROOT)]
-            if (digit != null) {
-                digitList.add(digit)
-            } else {
-                digitList.add(word)  // If the word is not a recognized number word, keep it as is.
-            }
-        }
-
-        return digitList
-    }
-
-    private fun convertSpokenTextToNumber(spokenText: String): Double? {
-        var result = 0.0  // Initialize as a double for handling decimal parts
-        var isDecimal = false
-        var decimalMultiplier = 0.1  // Start with one decimal place
-        var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
-        var nextMultiplier = 1.0
-
-        val digitOrLevelList = replaceTextNumberToRealDigit(spokenText)
-
-        val validWords = setOf(
-            "point", "hundred", "thousand", "million", "billion"
-        )
-
-        for (digitOrLevel in digitOrLevelList) {
-            if (isDouble(digitOrLevel) || digitOrLevel.lowercase() in validWords) {
-                val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
-
-                if (digitOrLevel.equals("point", ignoreCase = true)) {
-                    isDecimal = true
-                    continue  // Skip "point" in the final output
-                }
-
-                when {
-                    digitOrLevel.equals("hundred", ignoreCase = true) -> {
-                        nextMultiplier = 100.0
-                    }
-                    digitOrLevel.equals("thousand", ignoreCase = true) -> {
-                        nextMultiplier = 1000.0
-                    }
-                    digitOrLevel.equals("million", ignoreCase = true) -> {
-                        nextMultiplier = 1000000.0
-                    }
-                    digitOrLevel.equals("billion", ignoreCase = true) -> {
-                        nextMultiplier = 1000000000.0
-                    }
-                    else -> {
-                        if (isDecimal) {
-                            // Accumulate the decimal - after point
-                            result += number * decimalMultiplier
-                            decimalMultiplier *= 0.1
-                        } else {
-                            if (nextMultiplier > 1) {
-                                multiplier = nextMultiplier
-                                nextMultiplier = 1.0
-                            }
-                            // Accumulate the integer part with appropriate multiplier - before point
-                            result += number * multiplier
-                        }
-                    }
-                }
-            } else {
-                return null
-            }
-        }
-
-        return result
-    }
-
-    private fun isDouble(str: String): Boolean {
-        return try {
-            str.toDouble()
-            true
-        } catch (e: NumberFormatException) {
-            false
         }
     }
 

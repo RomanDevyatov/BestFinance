@@ -33,4 +33,20 @@ class AddTransferViewModel @Inject constructor(
 
         walletRepository.updateWallet(selectedWalletArchived)
     }
+
+    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(wallet)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
