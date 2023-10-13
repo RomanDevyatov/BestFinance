@@ -8,25 +8,15 @@ import android.util.Log
 import java.util.*
 
 open class CustomSpeechRecognitionListener: RecognitionListener {
-    override fun onReadyForSpeech(params: Bundle?) {
-        TODO("Not yet implemented")
-    }
+    override fun onReadyForSpeech(params: Bundle?) { }
 
-    override fun onBeginningOfSpeech() {
-        TODO("Not yet implemented")
-    }
+    override fun onBeginningOfSpeech() { }
 
-    override fun onRmsChanged(rmsdB: Float) {
-        TODO("Not yet implemented")
-    }
+    override fun onRmsChanged(rmsdB: Float) { }
 
-    override fun onBufferReceived(buffer: ByteArray?) {
-        TODO("Not yet implemented")
-    }
+    override fun onBufferReceived(buffer: ByteArray?) { }
 
-    override fun onEndOfSpeech() {
-        TODO("Not yet implemented")
-    }
+    override fun onEndOfSpeech() { }
 
     override fun onError(error: Int) {
         val errorMessage = when (error) {
@@ -45,17 +35,11 @@ open class CustomSpeechRecognitionListener: RecognitionListener {
         Log.e(ContentValues.TAG, "Speech recognition error: $errorMessage")
     }
 
-    override fun onResults(results: Bundle?) {
-        TODO("Not yet implemented")
-    }
+    override fun onResults(results: Bundle?) { }
 
-    override fun onPartialResults(partialResults: Bundle?) {
-        TODO("Not yet implemented")
-    }
+    override fun onPartialResults(partialResults: Bundle?) { }
 
-    override fun onEvent(eventType: Int, params: Bundle?) {
-        TODO("Not yet implemented")
-    }
+    override fun onEvent(eventType: Int, params: Bundle?) { }
 
     companion object {
         fun handleRecognizedText(recognizedText: String): String {
