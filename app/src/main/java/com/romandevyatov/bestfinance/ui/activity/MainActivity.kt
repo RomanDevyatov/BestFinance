@@ -216,6 +216,7 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
 
         showVoiceActionIcon = when (destinationId) {
             R.id.add_income_fragment -> true
+            R.id.add_transfer_fragment -> true
             R.id.add_expense_fragment -> true
             else -> {
                 false
