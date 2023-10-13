@@ -334,8 +334,7 @@ class AddTransferFragment : Fragment() {
         } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
 
-            val askSpeechText = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
-            speakTextAndRecognize(askSpeechText , false)
+            speakTextAndRecognize("Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)" , false)
         } else if (spokenValue.equals("-1")) {
             when (spokenBalanceText.lowercase()) {
                 "yes" -> { // start again setting balance
@@ -364,8 +363,7 @@ class AddTransferFragment : Fragment() {
             } else {
                 spokenValue = spokenAmountText
 
-                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
-                speakTextAndRecognize(askSpeechText , false)
+                speakTextAndRecognize("Incorrect number. Do you want to continue and call amount one more time? (Yes/No)" , false)
             }
         } else {
             when (spokenAmountText.lowercase()) {
@@ -414,20 +412,19 @@ class AddTransferFragment : Fragment() {
             } else {
                 spokenValue = currentSpokenText
 
-                val ask = "Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)"
-                speakTextAndRecognize(ask, false)
+                speakTextAndRecognize("Wallet '$currentSpokenText' doesn't exist. Do you want to create a new wallet with this name? (Yes/No)", false)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     currentStageName = InputState.SET_BALANCE
-                    val speechText = "Adding $spokenValue wallet, set wallet balance"
-                    speakTextAndRecognize(speechText, false) // move further
+
+                    speakTextAndRecognize("Adding $spokenValue wallet, set wallet balance", false) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
-                    val speechText = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakTextAndRecognize(speechText, false)
+
+                    speakTextAndRecognize("Do you want to continue and call wallet name one more time? (Yes/No)", false)
                 }
                 else -> speakText("You sad $currentSpokenText. Exiting")
             }
