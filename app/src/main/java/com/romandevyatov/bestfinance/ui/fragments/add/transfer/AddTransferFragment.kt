@@ -321,6 +321,7 @@ class AddTransferFragment : Fragment() {
             )
             addTransferViewModel.insertWallet(newWallet)
 
+            currentStageName = steps[currentStageIndex]
             if (currentStageName == InputState.WALLET_FROM) {
                 binding.fromWalletNameSpinner.setText(spokenValue, false)
             } else if (currentStageName == InputState.WALLET_TO) {
