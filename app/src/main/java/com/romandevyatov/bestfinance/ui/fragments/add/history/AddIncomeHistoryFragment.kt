@@ -2,17 +2,14 @@ package com.romandevyatov.bestfinance.ui.fragments.add.history
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +42,7 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
+import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognitionListener
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.*
@@ -199,51 +197,11 @@ class AddIncomeHistoryFragment : Fragment() {
     private fun setUpSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
 
-        val recognitionListener = getSpeechRecognitionListener()
-        speechRecognizer.setRecognitionListener(recognitionListener)
-    }
-
-    private fun getSpeechRecognitionListener(): RecognitionListener {
-        return object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {
-                // Called when the speech recognizer is ready for speech input
-            }
-
-            override fun onBeginningOfSpeech() {
-            }
-
-            override fun onRmsChanged(rmsdB: Float) {
-                // Called when the RMS dB (sound level) changes during speech input
-            }
-
-            override fun onBufferReceived(buffer: ByteArray?) {
-                // Called when the audio buffer is received
-            }
-
-            override fun onEndOfSpeech() {
-                // Called when the user stops speaking
-            }
-
-            override fun onError(error: Int) {
-                val errorMessage = when (error) {
-                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
-                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
-                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
-                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
-                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
-                    SpeechRecognizer.ERROR_SERVER -> "Server error"
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
-                    else -> "Unknown error"
-                }
-
-                Log.e(TAG, "Speech recognition error: $errorMessage")
-            }
-
+        val recognitionListener = object : CustomSpeechRecognitionListener() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResults(results: Bundle?) {
                 val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
                 if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
                     val currentSpokenText = recognizedStrings[0]
                     val handledSpokenValue = handleRecognizedText(currentSpokenText)
@@ -260,15 +218,9 @@ class AddIncomeHistoryFragment : Fragment() {
                     }
                 }
             }
-
-            override fun onPartialResults(partialResults: Bundle?) {
-                // Called when partial recognition results are available
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {
-                // Called for various speech recognition events
-            }
         }
+
+        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -423,13 +375,13 @@ class AddIncomeHistoryFragment : Fragment() {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
                     inputType = InputState.SET_BALANCE
-                    val speechText = "Adding $spokenValue wallet, set wallet balance"
-                    speakTextAndRecognize(speechText, false) // move further
+
+                    speakTextAndRecognize("Adding $spokenValue wallet, set wallet balance", false) // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
-                    val speechText = "Do you want to continue and call wallet name one more time? (Yes/No)"
-                    speakTextAndRecognize(speechText, false)
+
+                    speakTextAndRecognize("Do you want to continue and call wallet name one more time? (Yes/No)", false)
                 }
                 else -> speakText("You sad $currentSpokenText. Exiting")
             }
@@ -496,8 +448,7 @@ class AddIncomeHistoryFragment : Fragment() {
             } else {
                 spokenValue = spokenAmountText
 
-                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
-                speakTextAndRecognize(askSpeechText , false)
+                speakTextAndRecognize("Incorrect number. Do you want to continue and call amount one more time? (Yes/No)" , false)
             }
         } else {
             when (spokenAmountText.lowercase()) {
@@ -520,14 +471,6 @@ class AddIncomeHistoryFragment : Fragment() {
 
         stepIndex++
         startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].setText}")
-    }
-
-    private fun handleRecognizedText(recognizedText: String): String {
-        return recognizedText.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(
-                Locale.getDefault()
-            ) else it.toString()
-        }
     }
 
     private fun setUpTextToSpeech() {

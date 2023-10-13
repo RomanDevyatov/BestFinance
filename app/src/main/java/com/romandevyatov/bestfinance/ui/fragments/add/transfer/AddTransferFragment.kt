@@ -2,17 +2,14 @@ package com.romandevyatov.bestfinance.ui.fragments.add.transfer
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +40,7 @@ import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_FROM
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
+import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognitionListener
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
@@ -185,7 +183,26 @@ class AddTransferFragment : Fragment() {
     private fun setUpSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
 
-        val recognitionListener = getSpeechRecognitionListener()
+        val recognitionListener = object : CustomSpeechRecognitionListener() {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResults(results: Bundle?) {
+                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
+                    val currentSpokenText = recognizedStrings[0]
+                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
+
+                    when (currentStageName) {
+                        InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
+                        InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
+                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+                        else -> {}
+                    }
+                }
+            }
+        }
         speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
@@ -232,81 +249,6 @@ class AddTransferFragment : Fragment() {
 
     private fun speakText(text: String) {
         speakTextAndRecognize(text, true)
-    }
-
-    private fun getSpeechRecognitionListener(): RecognitionListener {
-        return object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {
-                // Called when the speech recognizer is ready for speech input
-            }
-
-            override fun onBeginningOfSpeech() {
-            }
-
-            override fun onRmsChanged(rmsdB: Float) {
-                // Called when the RMS dB (sound level) changes during speech input
-            }
-
-            override fun onBufferReceived(buffer: ByteArray?) {
-                // Called when the audio buffer is received
-            }
-
-            override fun onEndOfSpeech() {
-                // Called when the user stops speaking
-            }
-
-            override fun onError(error: Int) {
-                val errorMessage = when (error) {
-                    SpeechRecognizer.ERROR_AUDIO -> "Audio error"
-                    SpeechRecognizer.ERROR_CLIENT -> "Client error"
-                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
-                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
-                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer is busy"
-                    SpeechRecognizer.ERROR_SERVER -> "Server error"
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
-                    else -> "Unknown error"
-                }
-
-                Log.e(ContentValues.TAG, "Speech recognition error: $errorMessage")
-            }
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResults(results: Bundle?) {
-                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val currentSpokenText = recognizedStrings[0]
-                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
-
-                    when (currentStageName) {
-                        InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
-                        InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
-                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
-                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
-                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
-                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
-                        else -> {}
-                    }
-                }
-            }
-
-            override fun onPartialResults(partialResults: Bundle?) {
-                // Called when partial recognition results are available
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {
-                // Called for various speech recognition events
-            }
-        }
-    }
-
-    private fun handleRecognizedText(recognizedText: String): String {
-        return recognizedText.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(
-                Locale.getDefault()
-            ) else it.toString()
-        }
     }
 
     private fun handleWalletBalanceInput(spokenBalanceText: String) {
