@@ -76,14 +76,14 @@ class AddTransferFragment : Fragment() {
     private var isButtonClickable = true
 
     private var steps: MutableList<InputState> = mutableListOf()
-    private var stepIndex: Int = -1
+    private var currentStageIndex: Int = -1
+    private lateinit var currentStageName: InputState
     private lateinit var intentGlob: Intent
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var handler: Handler
     private var isTextToSpeechDone = true
     private var textToSpeech: TextToSpeech? = null
     private var spokenValue: String? = null
-    private lateinit var inputType: InputState
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -126,6 +126,13 @@ class AddTransferFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         walletViewModel.allWalletsNotArchivedLiveData.removeObservers(viewLifecycleOwner)
+
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+
+        speechRecognizer.destroy()
+
+        _binding = null
     }
 
     fun setIntentGlob(intent: Intent) {
@@ -135,10 +142,10 @@ class AddTransferFragment : Fragment() {
     fun startAddingTransaction(textToSpeak: String) {
         if (steps.size == 0) {
             steps.addAll(getSteps())
-            stepIndex = 0
+            currentStageIndex = 0
         }
 
-        startVoiceAssistance(steps[stepIndex], textToSpeak + steps[stepIndex].description)
+        startVoiceAssistance(textToSpeak)
     }
 
     private fun setUpTextToSpeech() {
@@ -205,15 +212,16 @@ class AddTransferFragment : Fragment() {
         return steps
     }
 
-    private fun startVoiceAssistance(currentInputState: InputState, textToSpeak: String) {
+    private fun startVoiceAssistance(textToSpeakBeforeSetText: String = "") {
         spokenValue = null
 
-        inputType = currentInputState
-        speakTextAndRecognize(textToSpeak, false)
+        currentStageName = steps[currentStageIndex]
+
+        speakTextAndRecognize(textToSpeakBeforeSetText + currentStageName.setText, false)
     }
 
-    private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
-        isTextToSpeechDone = onlySpeechText
+    private fun speakTextAndRecognize(textToSpeak: String, speakTextOnly: Boolean = true) {
+        isTextToSpeechDone = speakTextOnly
         textToSpeech?.speak(
             textToSpeak,
             TextToSpeech.QUEUE_FLUSH,
@@ -270,7 +278,7 @@ class AddTransferFragment : Fragment() {
                     val currentSpokenText = recognizedStrings[0]
                     val handledSpokenValue = handleRecognizedText(currentSpokenText)
 
-                    when (inputType) {
+                    when (currentStageName) {
                         InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
                         InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
                         InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
@@ -312,16 +320,15 @@ class AddTransferFragment : Fragment() {
             )
             addTransferViewModel.insertWallet(newWallet)
 
-            if (inputType == InputState.WALLET_FROM) {
+            if (currentStageName == InputState.WALLET_FROM) {
                 binding.fromWalletNameSpinner.setText(spokenValue, false)
-            } else if (inputType == InputState.WALLET_TO) {
+            } else if (currentStageName == InputState.WALLET_TO) {
                 binding.toWalletNameSpinner.setText(spokenValue, false)
             }
 
             spokenValue = null
 
-            stepIndex++
-            startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+            nextStage()
         } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
 
@@ -346,22 +353,35 @@ class AddTransferFragment : Fragment() {
         if (spokenValue == null) {
             val textNumbers = spokenAmountText.replace(",", "")
 
-            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
+            try {
+                val convertedNumber = textNumbers.toInt()
 
-            if (convertedNumber != null) {
                 binding.amountEditText.setText(convertedNumber.toString())
-                stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
-            } else {
+
+                nextStage()
+            } catch (e: NumberFormatException) {
                 spokenValue = spokenAmountText
 
                 val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
                 speakTextAndRecognize(askSpeechText , false)
             }
+
+//            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
+
+//            if (convertedNumber != null) {
+//                binding.amountEditText.setText(convertedNumber.toString())
+//                stepIndex++
+//                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+//            } else {
+//                spokenValue = spokenAmountText
+//
+//                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
+//                speakTextAndRecognize(askSpeechText , false)
+//            }
         } else {
             when (spokenAmountText.lowercase()) {
                 "yes" -> { // start again
-                    startVoiceAssistance(InputState.AMOUNT, "Set amount")
+                    startVoiceAssistance()
                 }
                 "no" -> { // exit
                     speakText("Terminated")
@@ -377,8 +397,7 @@ class AddTransferFragment : Fragment() {
             binding.commentEditText.setText(spokenComment)
         } else speakText = "Comment is empty."
 
-        stepIndex++
-        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].description}")
+        nextStage(speakText)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -402,8 +421,7 @@ class AddTransferFragment : Fragment() {
 
             if (wallets.contains(currentSpokenText)) { // success
                 bindingWalletSpinner.setText(currentSpokenText, false)
-                stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description) // move further
+                nextStage() // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -413,7 +431,7 @@ class AddTransferFragment : Fragment() {
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
-                    inputType = InputState.SET_BALANCE
+                    currentStageName = InputState.SET_BALANCE
                     val speechText = "Adding $spokenValue wallet, set wallet balance"
                     speakTextAndRecognize(speechText, false) // move further
                 }
@@ -426,7 +444,7 @@ class AddTransferFragment : Fragment() {
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
-                "yes" -> startVoiceAssistance(inputType, "Set wallet") // start again
+                "yes" -> startVoiceAssistance() // start again
                 "no" -> { // exit
                     speakText("Exiting")
                 }
@@ -434,6 +452,11 @@ class AddTransferFragment : Fragment() {
             }
             spokenValue = null
         }
+    }
+
+    private fun nextStage(speakTextBefore: String = "") {
+        currentStageIndex++
+        startVoiceAssistance(speakTextBefore)
     }
 
     private val archiveFromWalletListener =

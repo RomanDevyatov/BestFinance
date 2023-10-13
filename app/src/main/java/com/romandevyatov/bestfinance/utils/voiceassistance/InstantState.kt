@@ -1,6 +1,6 @@
 package com.romandevyatov.bestfinance.utils.voiceassistance
 
-enum class InputState(val description: String) {
+enum class InputState(val setText: String) {
     GROUP("Set group."),
     SUB_GROUP("Set subgroup."),
     WALLET("Set wallet."),

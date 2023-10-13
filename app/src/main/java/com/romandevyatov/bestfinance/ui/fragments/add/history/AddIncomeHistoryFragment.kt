@@ -145,7 +145,7 @@ class AddIncomeHistoryFragment : Fragment() {
             stepIndex = 0
         }
 
-        startVoiceAssistance(steps[stepIndex], textToSpeak + steps[stepIndex].description)
+        startVoiceAssistance(steps[stepIndex], textToSpeak + steps[stepIndex].setText)
     }
 
     private fun startVoiceAssistance(currentInputState: InputState, textToSpeak: String) {
@@ -353,7 +353,7 @@ class AddIncomeHistoryFragment : Fragment() {
             if (subGroupList.contains(currentSpokenText)) { // success
                 binding.subGroupSpinner.setText(currentSpokenText, false)
                 stepIndex++
-                startVoiceAssistance(steps[stepIndex], "Subgroup is set. ${steps[stepIndex].description}") // move further
+                startVoiceAssistance(steps[stepIndex], "Subgroup is set. ${steps[stepIndex].setText}") // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -379,7 +379,7 @@ class AddIncomeHistoryFragment : Fragment() {
                     spokenValue = null
 
                     stepIndex++
-                    startVoiceAssistance(steps[stepIndex], "Created subgroup is set. ${steps[stepIndex].description}") // move further
+                    startVoiceAssistance(steps[stepIndex], "Created subgroup is set. ${steps[stepIndex].setText}") // move further
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -412,7 +412,7 @@ class AddIncomeHistoryFragment : Fragment() {
             if (wallets.contains(currentSpokenText)) { // success
                 binding.walletSpinner.setText(currentSpokenText, false)
                 stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description) // move further
+                startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText) // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -463,7 +463,7 @@ class AddIncomeHistoryFragment : Fragment() {
             spokenValue = null
 
             stepIndex++
-            startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+            startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText)
         } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
             val askSpeechText = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
@@ -492,7 +492,7 @@ class AddIncomeHistoryFragment : Fragment() {
             if (convertedNumber != null) {
                 binding.amountEditText.setText(convertedNumber.toString())
                 stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
+                startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText)
             } else {
                 spokenValue = spokenAmountText
 
@@ -519,7 +519,7 @@ class AddIncomeHistoryFragment : Fragment() {
         } else speakText = "Comment is empty."
 
         stepIndex++
-        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].description}")
+        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].setText}")
     }
 
     private fun handleRecognizedText(recognizedText: String): String {
