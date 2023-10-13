@@ -39,6 +39,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
+import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_FROM
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
@@ -212,12 +213,12 @@ class AddTransferFragment : Fragment() {
         return steps
     }
 
-    private fun startVoiceAssistance(textToSpeakBeforeSetText: String = "") {
+    private fun startVoiceAssistance(textBefore: String = "") {
         spokenValue = null
 
         currentStageName = steps[currentStageIndex]
 
-        speakTextAndRecognize(textToSpeakBeforeSetText + currentStageName.setText, false)
+        speakTextAndRecognize(textBefore + currentStageName.setText, false)
     }
 
     private fun speakTextAndRecognize(textToSpeak: String, speakTextOnly: Boolean = true) {
@@ -315,7 +316,7 @@ class AddTransferFragment : Fragment() {
 
         if (convertedNumber != null && spokenValue != null) {
             val newWallet = Wallet(
-                name = spokenValue!!,
+                name = spokenValue.toString(),
                 balance = convertedNumber
             )
             addTransferViewModel.insertWallet(newWallet)
@@ -353,31 +354,18 @@ class AddTransferFragment : Fragment() {
         if (spokenValue == null) {
             val textNumbers = spokenAmountText.replace(",", "")
 
-            try {
-                val convertedNumber = textNumbers.toInt()
+            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
 
+            if (convertedNumber != null) {
                 binding.amountEditText.setText(convertedNumber.toString())
-
-                nextStage()
-            } catch (e: NumberFormatException) {
+                currentStageIndex++
+                startVoiceAssistance()
+            } else {
                 spokenValue = spokenAmountText
 
                 val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
                 speakTextAndRecognize(askSpeechText , false)
             }
-
-//            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
-
-//            if (convertedNumber != null) {
-//                binding.amountEditText.setText(convertedNumber.toString())
-//                stepIndex++
-//                startVoiceAssistance(steps[stepIndex], steps[stepIndex].description)
-//            } else {
-//                spokenValue = spokenAmountText
-//
-//                val askSpeechText = "Incorrect number. Do you want to continue and call amount one more time? (Yes/No)"
-//                speakTextAndRecognize(askSpeechText , false)
-//            }
         } else {
             when (spokenAmountText.lowercase()) {
                 "yes" -> { // start again
@@ -397,7 +385,7 @@ class AddTransferFragment : Fragment() {
             binding.commentEditText.setText(spokenComment)
         } else speakText = "Comment is empty."
 
-        nextStage(speakText)
+        nextStage(speakTextBefore = speakText)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -820,7 +808,7 @@ class AddTransferFragment : Fragment() {
         spinner.dismissDropDown()
         spinner.postDelayed({
             spinner.showDropDown()
-        }, 30)
+        }, SHOW_DROP_DOWN_DELAY_MS)
     }
 
 }
