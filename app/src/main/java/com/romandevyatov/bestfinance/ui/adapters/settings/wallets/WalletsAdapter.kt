@@ -23,7 +23,7 @@ class WalletsAdapter(
     }
 
     interface OnWalletItemClickedListener {
-        fun navigateToUpdateSubGroup(wallet: WalletItem)
+        fun navigateToUpdateWallet(wallet: WalletItem)
     }
 
     private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
@@ -69,7 +69,7 @@ class WalletsAdapter(
             }
 
             binding.root.setOnClickListener {
-                walletItemClickedListener?.navigateToUpdateSubGroup(walletItem)
+                walletItemClickedListener?.navigateToUpdateWallet(walletItem)
             }
         }
     }

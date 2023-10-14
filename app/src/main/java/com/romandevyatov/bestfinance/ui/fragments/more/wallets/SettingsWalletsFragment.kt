@@ -58,7 +58,7 @@ class SettingsWalletsFragment : Fragment() {
     }
 
     private fun observeWallets() {
-        settingsWalletsViewModel.allWalletsLiveData?.observe(viewLifecycleOwner) { allWallets ->
+        settingsWalletsViewModel.allWalletsLiveData.observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
                 walletItemMutableList.clear()
                 walletItemMutableList.addAll(
@@ -108,11 +108,11 @@ class SettingsWalletsFragment : Fragment() {
     }
 
     private val walletItemClickedListener = object : WalletsAdapter.OnWalletItemClickedListener {
-        override fun navigateToUpdateSubGroup(walletItem: WalletItem) {
+        override fun navigateToUpdateWallet(wallet: WalletItem) {
             val action =
                 SettingsWalletsFragmentDirections.actionWalletsSettingsFragmentToUpdateWalletFragment()
             action.source = Constants.WALLETS_SETTINGS_FRAGMENT
-            action.walletName = walletItem.name
+            action.walletName = wallet.name
             findNavController().navigate(action)
         }
     }

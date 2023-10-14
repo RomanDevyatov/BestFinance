@@ -82,10 +82,10 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var intentGlob: Intent
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var handler: Handler
-    private lateinit var inputType: InputState
+    private lateinit var currentStageName: InputState
 
     private var steps: MutableList<InputState> = mutableListOf()
-    private var stepIndex: Int = -1
+    private var currentStageIndex: Int = -1
 
     private var isTextToSpeechDone = true
 
@@ -140,17 +140,57 @@ class AddIncomeHistoryFragment : Fragment() {
     fun startAddingTransaction(textToSpeak: String) {
         if (steps.size == 0) {
             steps.addAll(getNotSetSteps())
-            stepIndex = 0
+            currentStageIndex = 0
+            startVoiceAssistance(textToSpeak)
+        } else {
+            startVoiceAssistance()
         }
-
-        startVoiceAssistance(steps[stepIndex], textToSpeak + steps[stepIndex].setText)
     }
 
-    private fun startVoiceAssistance(currentInputState: InputState, textToSpeak: String) {
+    private fun setUpTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
+                if (languageResult == TextToSpeech.LANG_MISSING_DATA
+                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
+                }
+
+                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
+                if (speechRateResult == TextToSpeech.ERROR) {
+                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
+                }
+
+                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) { }
+
+                    override fun onDone(utteranceId: String?) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (!isTextToSpeechDone) {
+                                isTextToSpeechDone = true
+                                speechRecognizer.startListening(intentGlob)
+                            }
+                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
+                    }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(utteranceId: String?) { }
+                })
+            }
+        }
+    }
+
+    private fun startVoiceAssistance(textBefore: String = "") {
         spokenValue = null
 
-        inputType = currentInputState
-        speakTextAndRecognize(textToSpeak, false)
+        currentStageName = steps[currentStageIndex]
+
+        speakTextAndRecognize(textBefore + currentStageName.settingText, false)
+    }
+
+    private fun nextStage(speakTextBefore: String = "") {
+        currentStageIndex++
+        startVoiceAssistance(speakTextBefore)
     }
 
     private fun speakTextAndRecognize(textToSpeak: String, onlySpeechText: Boolean = true) {
@@ -206,7 +246,7 @@ class AddIncomeHistoryFragment : Fragment() {
                     val currentSpokenText = recognizedStrings[0]
                     val handledSpokenValue = handleRecognizedText(currentSpokenText)
 
-                    when (inputType) {
+                    when (currentStageName) {
                         InputState.GROUP -> handleGroupInput(handledSpokenValue)
                         InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
                         InputState.WALLET -> handleWalletInput(handledSpokenValue)
@@ -223,21 +263,6 @@ class AddIncomeHistoryFragment : Fragment() {
         speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun handleConfirmInput(sentSpokenValue: String) {
-        when (sentSpokenValue.lowercase()) {
-            "yes" -> { // sent
-                sendIncomeHistory()
-                speakText("History record is added")
-            }
-            "no" -> { // no
-                speakText("Terminated")
-            }
-            else -> speakText("You sad $sentSpokenValue. Exiting")
-        }
-        spokenValue = null
-    }
-
     private fun handleGroupInput(currentSpokenText: String) { // income group name
         if (spokenValue == null) {
             val groupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
@@ -246,20 +271,29 @@ class AddIncomeHistoryFragment : Fragment() {
                 binding.groupSpinner.setText(currentSpokenText, false)
                 resetSubGroupSpinner()
                 refreshSubGroupSpinnerByGroupSpinnerValue(currentSpokenText)
-                stepIndex++
-                startVoiceAssistance(InputState.SUB_GROUP, "Group is set, set subgroup")
+                nextStage(speakTextBefore = "Group is set.")
             } else {
                 spokenValue = currentSpokenText
 
-                val ask = "Group name '$currentSpokenText' doesn't exist. Do you want to create a new group with this name? (Yes/No)"
+                val ask = "Group name $currentSpokenText doesn't exist. Do you want to create a new group with this name? (Yes/No)"
                 speakTextAndRecognize(ask, false)
             }
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // create new
-                    handleCreateNewGroup()
-                    stepIndex++
-                    startVoiceAssistance(InputState.SUB_GROUP, "Created group is set. Set subgroup")
+                    addHistoryViewModel.insertIncomeGroup(
+                        IncomeGroup(
+                            name = spokenValue!!,
+                            isPassive = false
+                        )
+                    )
+                    binding.groupSpinner.setText(spokenValue, false)
+                    resetSubGroupSpinner()
+                    refreshSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
+
+                    spokenValue = null
+
+                    nextStage(speakTextBefore = "Created group is set.")
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -271,7 +305,7 @@ class AddIncomeHistoryFragment : Fragment() {
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // start again
-                    startVoiceAssistance(InputState.GROUP, "Set group")
+                    startVoiceAssistance()
                 }
                 "no" -> { // exit
                     speakText("Terminated")
@@ -283,29 +317,13 @@ class AddIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun handleCreateNewGroup() {
-        speakText("Adding $spokenValue group")
-        addHistoryViewModel.insertIncomeGroup(
-            IncomeGroup(
-                name = spokenValue!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
-                isPassive = false
-            )
-        )
-        binding.groupSpinner.setText(spokenValue, false)
-        resetSubGroupSpinner()
-        refreshSubGroupSpinnerByGroupSpinnerValue(spokenValue!!)
-
-        spokenValue = null
-    }
-
     private fun handleSubGroupInput(currentSpokenText: String) { // income sub group
         if (spokenValue == null) {
             val subGroupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
 
             if (subGroupList.contains(currentSpokenText)) { // success
                 binding.subGroupSpinner.setText(currentSpokenText, false)
-                stepIndex++
-                startVoiceAssistance(steps[stepIndex], "Subgroup is set. ${steps[stepIndex].setText}") // move further
+                nextStage(speakTextBefore = "Subgroup is set.")
             } else {
                 spokenValue = currentSpokenText
 
@@ -330,8 +348,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
                     spokenValue = null
 
-                    stepIndex++
-                    startVoiceAssistance(steps[stepIndex], "Created subgroup is set. ${steps[stepIndex].setText}") // move further
+                    nextStage(speakTextBefore = "Created subgroup is set.")
                 }
                 "no" -> { // then ask exit or start again?
                     spokenValue = "-1" // any
@@ -343,7 +360,7 @@ class AddIncomeHistoryFragment : Fragment() {
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> { // start again
-                    startVoiceAssistance(InputState.SUB_GROUP, "Set subgroup")
+                    startVoiceAssistance()
                 }
                 "no" -> { // exit
                     speakText("Terminated")
@@ -363,8 +380,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             if (wallets.contains(currentSpokenText)) { // success
                 binding.walletSpinner.setText(currentSpokenText, false)
-                stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText) // move further
+                nextStage() // move further
             } else {
                 spokenValue = currentSpokenText
 
@@ -374,7 +390,7 @@ class AddIncomeHistoryFragment : Fragment() {
         } else if (!spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
                 "yes" -> {
-                    inputType = InputState.SET_BALANCE
+                    currentStageName = InputState.SET_BALANCE
 
                     speakTextAndRecognize("Adding $spokenValue wallet, set wallet balance", false) // move further
                 }
@@ -387,9 +403,9 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         } else if (spokenValue.equals("-1")) {
             when (currentSpokenText.lowercase()) {
-                "yes" -> startVoiceAssistance(InputState.WALLET, "Set wallet") // start again
+                "yes" -> startVoiceAssistance() // start again
                 "no" -> { // exit
-                    speakText("Terminated")
+                    speakText("Exiting")
                 }
                 else -> speakText("You sad $currentSpokenText. Exiting")
             }
@@ -414,20 +430,20 @@ class AddIncomeHistoryFragment : Fragment() {
 
             spokenValue = null
 
-            stepIndex++
-            startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText)
+            nextStage()
         } else if (!spokenValue.equals("-1") || convertedNumber == null) {
             spokenValue = "-1"
+
             val askSpeechText = "Incorrect wallet balance. Do you want to continue and call wallet balance one more time? (Yes/No)"
             speakTextAndRecognize(askSpeechText , false)
         } else if (spokenValue.equals("-1")) {
             when (spokenBalanceText.lowercase()) {
                 "yes" -> { // start again setting balance
-                    val ask = "Set wallet balance"
+                    val ask = "Set wallet balance."
                     speakTextAndRecognize(ask , false)
                 }
                 "no" -> { // exit
-                    speakText("Terminated")
+                    speakText("Exiting")
                 }
                 else -> speakText("You sad $spokenBalanceText. Exiting")
             }
@@ -443,8 +459,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
             if (convertedNumber != null) {
                 binding.amountEditText.setText(convertedNumber.toString())
-                stepIndex++
-                startVoiceAssistance(steps[stepIndex], steps[stepIndex].setText)
+                nextStage()
             } else {
                 spokenValue = spokenAmountText
 
@@ -453,7 +468,7 @@ class AddIncomeHistoryFragment : Fragment() {
         } else {
             when (spokenAmountText.lowercase()) {
                 "yes" -> { // start again
-                    startVoiceAssistance(InputState.AMOUNT, "Set amount")
+                    startVoiceAssistance()
                 }
                 "no" -> { // exit
                     speakText("Terminated")
@@ -469,41 +484,22 @@ class AddIncomeHistoryFragment : Fragment() {
             binding.commentEditText.setText(spokenComment)
         } else speakText = "Comment is empty."
 
-        stepIndex++
-        startVoiceAssistance(steps[stepIndex], "$speakText ${steps[stepIndex].setText}")
+        nextStage(speakTextBefore = speakText)
     }
 
-    private fun setUpTextToSpeech() {
-        textToSpeech = TextToSpeech(requireContext()) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                val languageResult = textToSpeech?.setLanguage(Locale.getDefault())
-                if (languageResult == TextToSpeech.LANG_MISSING_DATA
-                    || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(requireContext(), "language is not supported", Toast.LENGTH_SHORT).show()
-                }
-
-                val speechRateResult = textToSpeech?.setSpeechRate(1.0.toFloat())
-                if (speechRateResult == TextToSpeech.ERROR) {
-                    Toast.makeText(requireContext(), "Error while setting speech rate", Toast.LENGTH_SHORT).show()
-                }
-
-                textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                    override fun onStart(utteranceId: String?) { }
-
-                    override fun onDone(utteranceId: String?) {
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            if (!isTextToSpeechDone) {
-                                isTextToSpeechDone = true
-                                speechRecognizer.startListening(intentGlob)
-                            }
-                        }, Constants.DEFAULT_DELAY_AFTER_SPOKEN_TEXT)
-                    }
-
-                    @Deprecated("Deprecated in Java")
-                    override fun onError(utteranceId: String?) { }
-                })
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleConfirmInput(sentSpokenValue: String) {
+        when (sentSpokenValue.lowercase()) {
+            "yes" -> { // sent
+                sendIncomeHistory()
+                speakText("History record is added")
             }
+            "no" -> { // no
+                speakText("Exiting")
+            }
+            else -> speakText("You sad $sentSpokenValue. Exiting")
         }
+        spokenValue = null
     }
 
     private fun setOnBackPressedCallback() {

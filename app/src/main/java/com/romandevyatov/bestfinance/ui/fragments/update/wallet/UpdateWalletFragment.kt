@@ -43,7 +43,7 @@ class UpdateWalletFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateWalletBinding.inflate(inflater, container, false)
 
-        walletViewModel.getWalletByNameNotArchivedLiveData(args.walletName.toString()).observe(viewLifecycleOwner) { wallet ->
+        walletViewModel.getWalletByNameLiveData(args.walletName.toString())?.observe(viewLifecycleOwner) { wallet ->
             binding.nameEditText.setText(wallet.name)
             binding.balanceEditText.setText(wallet.balance.toString())
             binding.descriptionEditText.setText(wallet.description)
@@ -72,7 +72,7 @@ class UpdateWalletFragment : Fragment() {
 
                     walletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
 
-                    performNavigation(args.source.toString())
+                    performBackNavigation(args.source.toString())
                 } else if (wallet.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -111,7 +111,7 @@ class UpdateWalletFragment : Fragment() {
         btnYes.setOnClickListener {
             dialog.dismiss()
             walletViewModel.unarchiveWallet(wallet)
-            performNavigation(args.source.toString())
+            performBackNavigation(args.source.toString())
         }
 
         bntNo.setOnClickListener {
@@ -121,7 +121,7 @@ class UpdateWalletFragment : Fragment() {
         dialog.show()
     }
 
-    private fun performNavigation(prevFragmentString: String?) {
+    private fun performBackNavigation(prevFragmentString: String?) {
         when (prevFragmentString) {
             Constants.MENU_WALLET_FRAGMENT -> {
                 val action =
@@ -135,4 +135,15 @@ class UpdateWalletFragment : Fragment() {
             }
         }
     }
+
+//    val navController = findNavController()
+//    if (navController.popBackStack()) {
+//        val previousBackStackEntry = navController.previousBackStackEntry
+//        // Now you can access information about the previous destination
+//        val previousDestinationId = previousBackStackEntry?.destination?.id
+//        // Do something with the previous destination ID
+//        if (previousDestinationId != null) {
+//            navController.navigate(previousDestinationId)
+//        }
+//    }
 }
