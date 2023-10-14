@@ -139,9 +139,13 @@ class AddTransferFragment : Fragment() {
     }
 
     fun startAddingTransaction(textToSpeak: String) {
-        if (steps.size == 0) {
-            steps.addAll(getSteps())
-            currentStageIndex = 0
+        val isNull = steps.size == 0
+
+        steps.clear()
+        steps.addAll(getSteps())
+        currentStageIndex = 0
+
+        if (isNull) {
             startVoiceAssistance(textToSpeak)
         } else {
             startVoiceAssistance()
@@ -254,13 +258,48 @@ class AddTransferFragment : Fragment() {
         speakTextAndRecognize(text, true)
     }
 
+    private fun nextStage(speakTextBefore: String = "") {
+        currentStageIndex++
+        startVoiceAssistance(speakTextBefore)
+    }
+
     private fun handleWalletInput(currentSpokenText: String, bindingWalletSpinner: AutoCompleteTextView) { // wallet
-        if (spokenValue == null) {
+        if (spokenValue == null) { // WALLET_FROM, WALLET_TO
             val wallets = SpinnerUtil.getAllItemsFromAutoCompleteTextView(bindingWalletSpinner)
 
             if (wallets.contains(currentSpokenText)) { // success
                 bindingWalletSpinner.setText(currentSpokenText, false)
-                nextStage() // move further
+
+                val isReset: Boolean = when (currentStageName) {
+                    InputState.WALLET_FROM -> checkWalletFromSpinnersEqual(isResetFrom = false)
+                    InputState.WALLET_TO -> checkWalletFromSpinnersEqual(isResetFrom = true)
+                    else -> false
+                }
+
+                if (isReset) {
+                    when (currentStageName) {
+                        InputState.WALLET_FROM -> {
+                            val idTo = steps.indexOf(InputState.WALLET_TO)
+                            if (idTo == -1) {
+                                steps.add(1, InputState.WALLET_TO)
+                            }
+                            currentStageIndex = 1
+                        }
+                        InputState.WALLET_TO -> {
+                            val idFrom = steps.indexOf(InputState.WALLET_FROM)
+                            if (idFrom == -1) {
+                                steps.add(0, InputState.WALLET_FROM)
+                            } else {
+                                steps.removeAt(1)
+                            }
+                            currentStageIndex = 0
+                        }
+                        else -> {}
+                    }
+                    startVoiceAssistance()
+                } else {
+                    nextStage()
+                }
             } else {
                 spokenValue = currentSpokenText
 
@@ -384,11 +423,6 @@ class AddTransferFragment : Fragment() {
         spokenValue = null
     }
 
-    private fun nextStage(speakTextBefore: String = "") {
-        currentStageIndex++
-        startVoiceAssistance(speakTextBefore)
-    }
-
     private val archiveFromWalletListener =
         object : SpinnerAdapter.DeleteItemClickListener {
 
@@ -478,6 +512,8 @@ class AddTransferFragment : Fragment() {
         binding.fromWalletNameSpinner.setOnItemClickListener {
                 _, _, _, _ ->
 
+            checkWalletFromSpinnersEqual(isResetFrom = false)
+
             val selectedWalletNameFrom =
                 binding.fromWalletNameSpinner.text.toString()
 
@@ -497,6 +533,8 @@ class AddTransferFragment : Fragment() {
         binding.toWalletNameSpinner.setOnItemClickListener {
                 _, _, _, _ ->
 
+            checkWalletFromSpinnersEqual(isResetFrom = true)
+
             val selectedWalletNameTo =
                 binding.toWalletNameSpinner.text.toString()
 
@@ -510,6 +548,23 @@ class AddTransferFragment : Fragment() {
                 toSpinnerValueGlobalBeforeAdd = selectedWalletNameTo
             }
         }
+    }
+
+    private fun checkWalletFromSpinnersEqual(isResetFrom: Boolean): Boolean {
+        val from = binding.fromWalletNameSpinner.text.toString()
+        val to = binding.toWalletNameSpinner.text.toString()
+
+        if (from == to) {
+            return if (isResetFrom) {
+                binding.fromWalletNameSpinner.text = null
+                true
+            } else {
+                binding.toWalletNameSpinner.text = null
+                true
+            }
+        }
+
+        return false
     }
 
     private fun setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter: SpinnerAdapter) {
