@@ -1,10 +1,10 @@
 package com.romandevyatov.bestfinance.utils.voiceassistance
 
-import java.util.*
+import java.util.Locale
 
 object NumberConverter {
 
-    private fun replaceTextNumberToRealDigit(spokenText: String): MutableList<String> {
+    private fun replaceEnglishTextNumberToRealDigit(spokenText: String): MutableList<String> {
         val numberMap = mapOf(
             "zero" to "0",
             "one" to "1",
@@ -36,37 +36,37 @@ object NumberConverter {
             "ninety" to "90"
         )
 
-        val numberWords = spokenText.split(" ")
-
-        val digitList = mutableListOf<String>()
-
-        for (word in numberWords) {
-            val digit = numberMap[word.lowercase(Locale.ROOT)]
-            if (digit != null) {
-                digitList.add(digit)
-            } else {
-                digitList.add(word)  // If the word is not a recognized number word, keep it as is.
-            }
-        }
-
-        return digitList
+        return spokenText.split(" ").map { word ->
+            numberMap[word.lowercase(Locale.ROOT)] ?: word
+        }.toMutableList()
     }
 
     fun convertSpokenTextToNumber(spokenText: String): Double? {
+        return when (Locale.getDefault()) {
+            Locale.US -> {
+                handleEnglishNumbers(spokenText)
+            }
+            else -> {
+                spokenText.toDoubleOrNull()
+            }
+        }
+    }
+
+    private fun handleEnglishNumbers(spokenText: String): Double? {
         var result = 0.0  // Initialize as a double for handling decimal parts
         var isDecimal = false
         var decimalMultiplier = 0.1  // Start with one decimal place
         var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
         var nextMultiplier = 1.0
 
-        val digitOrLevelList = replaceTextNumberToRealDigit(spokenText)
+        val digitOrLevelList = replaceEnglishTextNumberToRealDigit(spokenText)
 
         val validWords = setOf(
             "point", "hundred", "thousand", "million", "billion"
         )
 
         for (digitOrLevel in digitOrLevelList) {
-            if (isDouble(digitOrLevel) || digitOrLevel.lowercase() in validWords) {
+            if (isDouble(digitOrLevel) || (digitOrLevel.lowercase() in validWords)) {
                 val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
 
                 if (digitOrLevel.equals("point", ignoreCase = true)) {
@@ -118,5 +118,4 @@ object NumberConverter {
             false
         }
     }
-
 }
