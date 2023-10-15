@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
        <PreferenceCategory android:title="Style">
-
            <SwitchPreferenceCompat
               android:key="darkOrLightTheme"
               android:title="Dark mode"
               android:summary="Enable dark mode"
               android:defaultValue="false" />
+       </PreferenceCategory>
+
+       <PreferenceCategory android:title="General">
+           <ListPreference
+               android:key="language"
+               android:title="Language"
+               android:summary="Select your preferred language"
+               android:defaultValue="en"
+               android:dialogTitle="Select Language"
+               android:entries="@array/languages"
+               android:showDefault="true"
+               android:showSilent="true"
+               android:entryValues="@array/language_values"
+               app:useSimpleSummaryProvider="true" />
        </PreferenceCategory>
 </PreferenceScreen>

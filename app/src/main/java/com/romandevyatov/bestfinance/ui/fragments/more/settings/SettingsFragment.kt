@@ -1,17 +1,18 @@
 package com.romandevyatov.bestfinance.ui.fragments.more.settings
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.ui.activity.MainActivity
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -27,10 +28,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
-        // Access preferences and listen for changes
-        val preferenceManager = preferenceManager
-//        val sharedPreferences = preferenceManager.sharedPreferences
-
         (requireActivity() as MainActivity).applySavedTheme()
 
         findPreference<SwitchPreferenceCompat>("darkOrLightTheme")?.setOnPreferenceChangeListener { _, newValue ->
@@ -41,22 +38,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             true
         }
+
+        findPreference<ListPreference>("language")?.setOnPreferenceChangeListener { _, newValue ->
+            val selectedLanguage = newValue.toString()
+
+            (requireActivity() as MainActivity).setLang(selectedLanguage)
+
+            Toast.makeText(requireContext(), R.string.add, Toast.LENGTH_SHORT).show()
+
+            true
+        }
     }
-
-    //    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
-//        when (key) {
-//            "night_or_light_theme" -> {
-//                val isNightModeEnabled = sharedPreferences.getBoolean(key, false)
-//                setAppTheme(isNightModeEnabled)
-//            }
-//            // Add more cases for other preferences if needed
-//        }
-//    }
-
-//    private fun setAppTheme(isDarkModeEnabled: Boolean) {
-//        val themeId = if (isDarkModeEnabled) R.style.Theme_BestFinance else R.style.Theme_BestFinance
-//        activity?.setTheme(themeId)
-        // You can also apply the theme to the entire application using AppCompatDelegate.setDefaultNightMode()
-        // AppCompatDelegate.setDefaultNightMode(if (isDarkModeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-//    }
 }

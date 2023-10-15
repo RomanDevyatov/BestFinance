@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.activity
 
 import android.Manifest.permission.RECORD_AUDIO
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
+import com.romandevyatov.bestfinance.utils.LocaleHelper
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
@@ -51,7 +53,6 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
 
         applySavedTheme()
-
     }
 
     fun applySavedTheme() {
@@ -62,6 +63,16 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
             AppCompatDelegate.MODE_NIGHT_NO
         }
         AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
+
+    fun setLang(selectedLanguage: String) {
+        LocaleHelper().setLocale(this@MainActivity, selectedLanguage)
+        recreate()
+    }
+
+    override fun attachBaseContext(base: Context) {
+        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
+        super.attachBaseContext(LocaleHelper().onAttach(base))
     }
 
     override fun onExitApp() {
