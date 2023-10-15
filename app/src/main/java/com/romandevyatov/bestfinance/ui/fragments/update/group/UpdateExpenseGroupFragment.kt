@@ -15,6 +15,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,6 @@ class UpdateExpenseGroupFragment : Fragment() {
 
     private var expenseGroupGlobal: ExpenseGroup? = null
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -44,7 +44,7 @@ class UpdateExpenseGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addNewExpenseGroupNameButton.text = "Update"
+        binding.reusable.addNewExpenseGroupNameButton.text = getString(R.string.update)
 
         updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
             ?.observe(viewLifecycleOwner) { expenseGroup ->
@@ -97,7 +97,7 @@ class UpdateExpenseGroupFragment : Fragment() {
                             // Group is already existing
                             WindowUtil.showExistingDialog(
                                 requireContext(),
-                                "This group `$nameBinding` is already existing."
+                                getString(R.string.error_existing_group, nameBinding)
                             )
                         }
                     }
@@ -107,7 +107,7 @@ class UpdateExpenseGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
 

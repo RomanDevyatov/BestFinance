@@ -79,7 +79,7 @@ class MoreFragment : Fragment() {
     private fun createCategoryData(): List<CategoryItem> {
         return listOf(
             CategoryItem(
-                "Categories",
+                getString(R.string.categories),
                 R.drawable.ic_archive,
                 listOf(
                     SubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),

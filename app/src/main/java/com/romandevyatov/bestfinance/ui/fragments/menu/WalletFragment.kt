@@ -119,7 +119,7 @@ class WalletFragment : Fragment() {
 
                 walletViewModel.archiveWalletById(selectedWalletItem.id, LocalDateTime.now())
 
-                Snackbar.make(viewHolder.itemView, "Wallet with name ${selectedWalletItem.name} is archived", Snackbar.LENGTH_LONG).apply {
+                Snackbar.make(viewHolder.itemView, getString(R.string.wallet_is_archived, selectedWalletItem.name), Snackbar.LENGTH_LONG).apply {
                     setAction("UNDO") {
                         walletViewModel.unarchiveWalletById(selectedWalletItem.id)
                     }

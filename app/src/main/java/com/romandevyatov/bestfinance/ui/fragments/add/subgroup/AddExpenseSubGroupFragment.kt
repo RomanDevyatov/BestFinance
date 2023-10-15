@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,11 +19,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +41,6 @@ class AddExpenseSubGroupFragment : Fragment() {
 
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
-    private val clickDelay = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -69,14 +68,12 @@ class AddExpenseSubGroupFragment : Fragment() {
             val selectedGroupNameBinding = binding.groupSpinner.text.toString()
 
             val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.subGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(subGroupNameValidation.message) else null
+            binding.subGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(R.string.error_empty_sub_group_name) else null
 
             val groupMaterialSpinnerValidation = EmptyValidator(selectedGroupNameBinding).validate()
-            binding.groupSpinnerLayout.error = if (!groupMaterialSpinnerValidation.isSuccess) getString(groupMaterialSpinnerValidation.message) else null
+            binding.groupSpinnerLayout.error = if (!groupMaterialSpinnerValidation.isSuccess) getString(R.string.error_empty_group_name) else null
 
-            if (subGroupNameValidation.isSuccess
-                && groupMaterialSpinnerValidation.isSuccess
-            ) {
+            if (subGroupNameValidation.isSuccess && groupMaterialSpinnerValidation.isSuccess) {
                 val groupId = spinnerItemsGlobal.find { it.name == selectedGroupNameBinding }?.id!!
 
                 addSubGroupViewModel.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(
@@ -90,25 +87,26 @@ class AddExpenseSubGroupFragment : Fragment() {
                     } else if (subGroup.archivedDate == null) {
                         WindowUtil.showExistingDialog(
                             requireContext(),
-                            "This sub group `$subGroupNameBinding` is already existing."
+                            getString(R.string.sub_group_exists_message, subGroupNameBinding)
                         )
                     } else {
                         showUnarchiveDialog(
                             requireContext(),
                             subGroup,
-                            "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` expense sub group?")
+                            getString(R.string.confirm_unarchive_message, subGroupNameBinding)
+                        )
                     }
                 }
             }
-
 
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
+
 
     private fun addIncomeSubGroup(
         subGroupNameBinding: String,

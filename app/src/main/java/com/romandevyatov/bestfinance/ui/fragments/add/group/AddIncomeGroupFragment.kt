@@ -21,6 +21,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,6 @@ class AddIncomeGroupFragment : Fragment() {
 
     private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -111,7 +111,7 @@ class AddIncomeGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelay.toLong())
+        }, Constants.CLICK_DELAY_MS.toLong())
     }
 
     override fun onDestroyView() {

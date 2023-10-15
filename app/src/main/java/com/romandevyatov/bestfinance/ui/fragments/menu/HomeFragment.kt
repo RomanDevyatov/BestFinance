@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuHomeBinding
 import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
@@ -34,7 +36,6 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     private var singleBack = false
-    private val clickDelayMs = 1000
 
     private var exitAppListener: OnExitAppListener? = null
 
@@ -74,13 +75,13 @@ class HomeFragment : Fragment() {
                 }
 
                 singleBack = true
-                Toast.makeText(requireContext(), "Double Back to exit", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.double_back_to_exit, Toast.LENGTH_SHORT).show()
 
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({
                     exitApp()
                     singleBack = false
-                }, clickDelayMs.toLong())
+                }, Constants.CLICK_DELAY_MS.toLong())
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

@@ -17,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class GroupsAndSubGroupsFragment : Fragment() {
 
     private val groupTypeArray = arrayOf(
-        "Income",
-        "Expense"
+        getString(R.string.income),
+        getString(R.string.expense)
     )
 
     private var _binding: SettingsFragmentGroupsAndSubGroupsBinding? = null

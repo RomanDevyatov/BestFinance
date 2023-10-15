@@ -62,7 +62,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateExpenseHistoryBinding.inflate(inflater, container, false)
 
-        binding.reusable.addHistoryButton.text = "Update"
+        binding.reusable.addHistoryButton.text = getString(R.string.update)
 
         updateExpenseHistoryViewModel.getExpenseHistoryWithExpenseSubGroupAndWalletById(args.expenseHistoryId)
             .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->

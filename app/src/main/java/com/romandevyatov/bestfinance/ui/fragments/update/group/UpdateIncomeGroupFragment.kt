@@ -1,9 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.group
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,9 +7,6 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -24,6 +17,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +37,6 @@ class UpdateIncomeGroupFragment : Fragment() {
 
     private var incomeGroupGlobal: IncomeGroup? = null
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -54,7 +47,7 @@ class UpdateIncomeGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addNewGroupButton.text = "Update"
+        binding.reusable.addNewGroupButton.text = getString(R.string.update)
 
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
             ?.observe(viewLifecycleOwner) { incomeGroup ->
@@ -120,7 +113,7 @@ class UpdateIncomeGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
 

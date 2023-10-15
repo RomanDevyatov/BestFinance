@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -20,12 +19,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeSubGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +42,6 @@ class AddIncomeSubGroupFragment : Fragment() {
 
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onAttach(context: Context) {
@@ -87,14 +86,12 @@ class AddIncomeSubGroupFragment : Fragment() {
             val selectedGroupNameBinding = binding.groupSpinner.text.toString()
 
             val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.incomeSubGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(subGroupNameValidation.message) else null
+            binding.incomeSubGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(R.string.error_empty_sub_group_name) else null
 
             val groupSpinnerValidation = EmptyValidator(selectedGroupNameBinding).validate()
-            binding.groupSpinnerLayout.error = if (!groupSpinnerValidation.isSuccess) getString(groupSpinnerValidation.message) else null
+            binding.groupSpinnerLayout.error = if (!groupSpinnerValidation.isSuccess) getString(R.string.error_empty_group_name) else null
 
-            if (subGroupNameValidation.isSuccess
-                && groupSpinnerValidation.isSuccess
-            ) {
+            if (subGroupNameValidation.isSuccess && groupSpinnerValidation.isSuccess) {
                 val groupId = spinnerItemsGlobal.find { it.name == selectedGroupNameBinding }?.id!!
 
                 addSubGroupViewModel.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(
@@ -116,14 +113,15 @@ class AddIncomeSubGroupFragment : Fragment() {
                     } else if (subGroup.archivedDate == null) {
                         WindowUtil.showExistingDialog(
                             requireContext(),
-                            "This sub group `$subGroupNameBinding` is already existing."
+                            getString(R.string.error_existing_sub_group, subGroupNameBinding)
                         )
                     } else {
                         showUnarchiveSubGroupDialog(
                             requireContext(),
                             selectedGroupNameBinding,
                             subGroup,
-                            "The sub group with this name is archived. Do you want to unarchive `${subGroupNameBinding}` income sub group?")
+                            getString(R.string.confirm_unarchive_sub_group, subGroupNameBinding)
+                        )
                     }
                 }
             }
@@ -132,9 +130,10 @@ class AddIncomeSubGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

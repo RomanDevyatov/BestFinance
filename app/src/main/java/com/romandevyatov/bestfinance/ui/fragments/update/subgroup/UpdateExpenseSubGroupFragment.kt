@@ -1,18 +1,11 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.subgroup
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,7 +36,6 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
     private var expenseGroupsGlobal: List<SpinnerItem>? = emptyList()
 
-    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -55,7 +47,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addSubGroupNameButton.text = "Update"
+        binding.reusable.addSubGroupNameButton.text = getString(R.string.update)
 
         updateSubGroupViewModel.getExpenseSubGroupByIdLiveData(args.expenseSubGroupId)
             ?.observe(viewLifecycleOwner) { expenseSubGroup ->
@@ -125,7 +117,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelayMs.toLong())
+        }, Constants.CLICK_DELAY_MS.toLong())
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {

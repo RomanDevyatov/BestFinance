@@ -62,7 +62,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateIncomeHistoryBinding.inflate(inflater, container, false)
 
-        binding.reusable.addHistoryButton.text = "Update"
+        binding.reusable.addHistoryButton.text = getString(R.string.update)
 
         updateIncomeHistoryViewModel.getIncomeHistoryWithIncomeSubGroupAndWalletById(args.incomeHistoryId)
             ?.observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->

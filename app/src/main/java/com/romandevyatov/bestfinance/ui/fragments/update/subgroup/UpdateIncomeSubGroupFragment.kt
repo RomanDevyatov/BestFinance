@@ -36,7 +36,6 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
     private var incomeGroupsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
-    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -48,7 +47,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addSubGroupButton.text = "Update"
+        binding.reusable.addSubGroupButton.text = getString(R.string.update)
 
         updateSubGroupViewModel.getIncomeSubGroupByIdLiveData(args.incomeSubGroupId)
             ?.observe(viewLifecycleOwner) { incomeSubGroup ->
@@ -120,7 +119,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelayMs.toLong())
+        }, Constants.CLICK_DELAY_MS.toLong())
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {

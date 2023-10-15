@@ -24,6 +24,7 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_TRANSFER_HISTORY_FRAGMENT
@@ -42,7 +43,6 @@ class AddWalletFragment : Fragment() {
 
     private val args: AddWalletFragmentArgs by navArgs()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -95,13 +95,14 @@ class AddWalletFragment : Fragment() {
                     } else if (wallet.archivedDate == null) {
                         WindowUtil.showExistingDialog(
                             requireContext(),
-                            "This wallet `$walletNameBinding` is already existing."
+                            getString(R.string.wallet_is_already_existing, walletNameBinding)
                         )
                     } else {
                         showUnarchiveDialog(
                             requireContext(),
                             wallet,
-                            "The wallet with this name is archived. Do you want to unarchive `$walletNameBinding` wallet?")
+                            getString(R.string.unarchive_wallet)
+                        )
                     }
                 }
             }
@@ -110,7 +111,7 @@ class AddWalletFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS.toLong())
         }
 
     }

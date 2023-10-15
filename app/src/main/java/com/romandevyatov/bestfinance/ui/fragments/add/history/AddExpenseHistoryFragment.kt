@@ -29,6 +29,7 @@ import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
@@ -57,7 +58,6 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     private val archiveGroupListener =
@@ -264,7 +264,7 @@ class AddExpenseHistoryFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelay.toLong())
+        }, Constants.CLICK_DELAY_MS.toLong())
     }
 
     private fun navigateToHome() {

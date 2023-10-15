@@ -36,8 +36,7 @@ class AnalyzeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnalyzeBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +74,6 @@ class AnalyzeFragment : Fragment() {
                     binding.analyzeGroupTextView.text =
                         ((totalIncomeValue.minus(totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
                 }
-
             }
         }
     }

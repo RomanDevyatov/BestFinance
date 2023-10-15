@@ -55,7 +55,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateTransferHistoryBinding.inflate(inflater, container, false)
 
-        binding.reusable.transferButton.text = "Update"
+        binding.reusable.transferButton.text = getString(R.string.update)
 
         return binding.root
     }

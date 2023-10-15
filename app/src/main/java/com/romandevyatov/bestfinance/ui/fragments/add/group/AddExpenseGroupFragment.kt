@@ -21,6 +21,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,6 @@ class AddExpenseGroupFragment : Fragment() {
 
     private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
 
-    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -109,7 +109,7 @@ class AddExpenseGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelayMs.toLong())
+        }, Constants.CLICK_DELAY_MS.toLong())
     }
 
     override fun onDestroyView() {
