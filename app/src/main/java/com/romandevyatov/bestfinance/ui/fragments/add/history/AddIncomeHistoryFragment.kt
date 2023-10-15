@@ -893,18 +893,6 @@ class AddIncomeHistoryFragment : Fragment() {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
-
-//        val spinnerItems = ArrayList<String>()
-//
-//        spinnerItemsGlobal.clear()
-//        groups?.forEach { it ->
-//            spinnerItems.add(it.name)
-//            spinnerItemsGlobal.add(SpinnerItem(it.id, it.name))
-//        }
-//        spinnerItems.add(ADD_NEW_INCOME_GROUP)
-//        spinnerItemsGlobal.add(SpinnerItem(-1, ADD_NEW_INCOME_GROUP))
-//
-//        return spinnerItems
     }
 
     private fun getSpinnerSubItemsNotArchived(groupWithSubGroups: IncomeGroupWithIncomeSubGroups): MutableList<SpinnerItem> {
@@ -913,18 +901,6 @@ class AddIncomeHistoryFragment : Fragment() {
         }.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
-
-//        val spinnerSubItems = ArrayList<String>()
-//
-//        groupWithSubGroups?.incomeSubGroups?.forEach {
-//            if (it.archivedDate == null) {
-//                spinnerSubItems.add(it.name)
-//            }
-//        }
-//
-//        spinnerSubItems.add(ADD_NEW_INCOME_SUB_GROUP)
-//
-//        return spinnerSubItems
     }
 
     private fun getWalletItemsForSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
@@ -932,14 +908,6 @@ class AddIncomeHistoryFragment : Fragment() {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
 
-//        val spinnerItems = ArrayList<String>()
-//
-//        walletList?.forEach { it ->
-//            spinnerItems.add(it.name)
-//        }
-//        spinnerItems.add(ADD_NEW_WALLET)
-//
-//        return spinnerItems
     }
 
     private fun dismissAndDropdownSpinner(spinner: AutoCompleteTextView) {
