@@ -649,6 +649,9 @@ class AddIncomeHistoryFragment : Fragment() {
                 spinnerGroupItems.addAll(getGroupItemsForSpinner(groups))
             }
 
+            groupSpinnerItemsGlobal.clear()
+            groupSpinnerItemsGlobal.addAll(spinnerGroupItems)
+
             spinnerGroupItems.add(SpinnerItem(null, ADD_NEW_INCOME_GROUP))
 
             val groupSpinnerAdapter = GroupSpinnerAdapter(
