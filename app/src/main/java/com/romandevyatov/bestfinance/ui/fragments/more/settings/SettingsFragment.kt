@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.more.settings
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -12,8 +11,6 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.ui.activity.MainActivity
 import com.romandevyatov.bestfinance.utils.ThemeHelper
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
-
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
