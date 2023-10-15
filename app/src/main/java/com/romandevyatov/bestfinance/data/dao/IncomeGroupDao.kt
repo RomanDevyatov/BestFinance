@@ -62,7 +62,7 @@ interface IncomeGroupDao {
             "AND ig.archived_date IS NULL " +
             "AND isg.archived_date IS NULL " +
             "LIMIT 1")
-    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups>?
 
     @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
     fun getByNameLiveData(name: String): LiveData<IncomeGroup>?

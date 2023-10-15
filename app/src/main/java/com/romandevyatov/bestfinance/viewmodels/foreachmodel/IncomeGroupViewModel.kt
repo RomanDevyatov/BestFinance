@@ -19,47 +19,9 @@ class IncomeGroupViewModel @Inject constructor(
 
     val allIncomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
-    fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.insertIncomeGroup(incomeGroup)
-    }
-
-    fun updateIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-            incomeGroupRepository.updateIncomeGroup(incomeGroup)
-    }
-
-    fun deleteIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-            incomeGroupRepository.deleteIncomeGroup(incomeGroup)
-    }
-
-    fun deleteIncomeGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-            incomeGroupRepository.deleteIncomeGroupById(id)
-    }
-
-    fun deleteAllIncomeGroup() = viewModelScope.launch(Dispatchers.IO) {
-            incomeGroupRepository.deleteAllIncomeGroups()
-    }
-
     fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>>? {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
-
-    fun getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
-    }
-
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
-        return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
-    }
-
-    suspend fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
-        return incomeGroupRepository.getIncomeGroupByIdNotArchived(incomeGroupId)
-    }
-
-    fun getIncomeGroupByNameAndNotArchivedLiveData(selectedExpenseGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupRepository.getIncomeGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
-    }
-
-    val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
 
     val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
 

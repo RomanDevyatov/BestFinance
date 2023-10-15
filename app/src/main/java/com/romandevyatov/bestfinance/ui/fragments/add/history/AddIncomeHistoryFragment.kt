@@ -643,24 +643,25 @@ class AddIncomeHistoryFragment : Fragment() {
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
         addHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { groups ->
+            val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
+
             if (groups.isNotEmpty()) {
-                val spinnerGroupItems = getGroupItemsForSpinner(groups)
+                spinnerGroupItems.addAll(getGroupItemsForSpinner(groups))
+            }
 
-                groupSpinnerItemsGlobal.clear()
-                groupSpinnerItemsGlobal.addAll(spinnerGroupItems)
+            spinnerGroupItems.add(SpinnerItem(null, ADD_NEW_INCOME_GROUP))
 
-                spinnerGroupItems.add(SpinnerItem(null, ADD_NEW_INCOME_GROUP))
+            val groupSpinnerAdapter = GroupSpinnerAdapter(
+                requireContext(),
+                R.layout.item_with_del,
+                spinnerGroupItems,
+                ADD_NEW_INCOME_GROUP,
+                archiveGroupListener
+            )
 
-                val groupSpinnerAdapter = GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerGroupItems,
-                    ADD_NEW_INCOME_GROUP,
-                    archiveGroupListener
-                )
+            binding.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-                binding.groupSpinner.setAdapter(groupSpinnerAdapter)
-
+            if (groups.isNotEmpty()) {
                 setIfAvailableGroupSpinnersValue(spinnerGroupItems)
             }
 
@@ -682,9 +683,12 @@ class AddIncomeHistoryFragment : Fragment() {
         // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
         addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
             groupSpinnerBinding
-        ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-            val spinnerSubItems =
-                getSpinnerSubItemsNotArchived(groupWithSubGroups)
+        )?.observe(viewLifecycleOwner) { groupWithSubGroups ->
+            val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
+
+            if (groupWithSubGroups != null) {
+                spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(groupWithSubGroups))
+            }
 
             subGroupSpinnerItemsGlobal.clear()
             subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)

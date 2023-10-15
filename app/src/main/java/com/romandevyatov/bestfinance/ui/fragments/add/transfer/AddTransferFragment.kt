@@ -476,7 +476,7 @@ class AddTransferFragment : Fragment() {
             val spinnerItems = getWalletItemsSpinner(wallets)
 
             val walletSpinnerAdapter =
-                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,ADD_NEW_WALLET, archiveFromWalletListener)
+                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, ADD_NEW_WALLET, archiveFromWalletListener)
 
             binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 

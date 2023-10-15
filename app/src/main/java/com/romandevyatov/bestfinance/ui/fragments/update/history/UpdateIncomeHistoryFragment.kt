@@ -48,7 +48,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private lateinit var historyWithSubGroupAndWalletGlobal: IncomeHistoryWithIncomeSubGroupAndWallet
     private var incomeGroupGlobal: IncomeGroup? = null
 
-    private var spinnerSubGroupItemsGlobal: MutableList<SpinnerItem>? = null
+    private val spinnerSubGroupItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
     private var walletSpinnerItemsGlobal: MutableList<SpinnerItem>? = null
 
     private var isButtonClickable = true
@@ -180,10 +180,11 @@ class UpdateIncomeHistoryFragment : Fragment() {
 
                 updateIncomeHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
                     selectedGroupName
-                ).observe(viewLifecycleOwner) { groupWithSubGroups ->
+                )?.observe(viewLifecycleOwner) { groupWithSubGroups ->
                     val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-                    spinnerSubGroupItemsGlobal = spinnerSubItems
+                    spinnerSubGroupItemsGlobal.clear()
+                    spinnerSubGroupItemsGlobal.addAll(spinnerSubItems)
 
                     val subGroupSpinnerAdapter =
                         GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
@@ -247,17 +248,17 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setSubGroupSpinnerAdapterByGroupName(groupSpinnerBinding: String) {
         updateIncomeHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
             groupSpinnerBinding
-        ).observe(viewLifecycleOwner) { groupWithSubGroups ->
+        )?.observe(viewLifecycleOwner) { groupWithSubGroups ->
             val spinnerSubItems =
                 getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-            spinnerSubGroupItemsGlobal = spinnerSubItems
+            spinnerSubGroupItemsGlobal.clear()
+            spinnerSubGroupItemsGlobal.addAll(spinnerSubItems)
 
             val subGroupSpinnerAdapter =
                 GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
 
             binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
-
         }
     }
 
@@ -399,7 +400,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 updateIncomeHistoryViewModel.updateIncomeHistoryAndWallet(
                     IncomeHistory(
                         id = incomeHistory.id,
-                        incomeSubGroupId = spinnerSubGroupItemsGlobal?.find { it.name == subGroupNameBinding }?.id!!,
+                        incomeSubGroupId = spinnerSubGroupItemsGlobal.find { it.name == subGroupNameBinding }?.id!!,
                         amount = amountBinding.toDouble(),
                         comment = commentBinding,
                         date = parsedLocalDateTime,
