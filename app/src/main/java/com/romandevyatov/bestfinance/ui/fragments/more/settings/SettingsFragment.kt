@@ -9,7 +9,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.ui.activity.MainActivity
-import com.romandevyatov.bestfinance.utils.ThemeHelper
+import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
+import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,11 +40,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<ListPreference>("language")?.setOnPreferenceChangeListener { _, newValue ->
             val selectedLanguage = newValue.toString()
 
-            (requireActivity() as MainActivity).setLang(selectedLanguage)
+//            (requireActivity() as MainActivity).setLang(selectedLanguage) first approach
+            (requireActivity() as MainActivity).updateAppLocale(selectedLanguage)
 
             Toast.makeText(requireContext(), R.string.add, Toast.LENGTH_SHORT).show()
 
             true
         }
     }
+
+
 }

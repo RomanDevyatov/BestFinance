@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.utils
+package com.romandevyatov.bestfinance.utils.theme
 
 import android.content.Context
 

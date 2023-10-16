@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.utils
+package com.romandevyatov.bestfinance.utils.localization.first_approach
 
 import android.annotation.TargetApi
 import android.content.Context

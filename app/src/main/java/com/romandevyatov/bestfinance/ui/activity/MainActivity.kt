@@ -1,7 +1,6 @@
 package com.romandevyatov.bestfinance.ui.activity
 
 import android.Manifest.permission.RECORD_AUDIO
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -26,15 +24,15 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
-import com.romandevyatov.bestfinance.utils.LocaleHelper
-import com.romandevyatov.bestfinance.utils.ThemeHelper
+import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
+import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity() : AppCompatActivity(), OnExitAppListener {
+class MainActivity() : BaseActivity(), OnExitAppListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -65,15 +63,22 @@ class MainActivity() : AppCompatActivity(), OnExitAppListener {
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
-    fun setLang(selectedLanguage: String) {
-        LocaleHelper().setLocale(this@MainActivity, selectedLanguage)
+    fun updateAppLocale(locale: String) {
+        storage.setPreferredLocale(locale)
+        LocaleUtil.applyLocalizedContext(applicationContext, locale)
         recreate()
     }
 
-    override fun attachBaseContext(base: Context) {
-        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
-        super.attachBaseContext(LocaleHelper().onAttach(base))
-    }
+// first approach language
+//    fun setLang(selectedLanguage: String) {
+//        LocaleHelper().setLocale(this@MainActivity, selectedLanguage)
+//        recreate()
+//    }
+//
+//    override fun attachBaseContext(base: Context) {
+//        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
+//        super.attachBaseContext(LocaleHelper().onAttach(base))
+//    }
 
     override fun onExitApp() {
         finish()
