@@ -46,7 +46,7 @@
     <string name="analyze">Анализ</string>
     <string name="history">История</string>
     <string name="transfer">Перевод</string>
-    <string name="expense">Траты</string>
+    <string name="expense">Трата</string>
     <string name="income">Доход</string>
 
     <!--  add income history fragment-->
@@ -127,5 +127,31 @@
 
     <string name="yes">да</string>
     <string name="no">нет</string>
+
+    <string name="groups_and_sub_groups">Группы и подгруппы</string>
+    <string name="wallets">Кошельки</string>
+    <string name="update_expense_group">Обновить группу трат</string>
+    <string name="update_income_group">Обновить группу доходов</string>
+    <string name="home">Главная</string>
+    <string name="more">Ещё</string>
+    <string name="add_income">Добавление дохода</string>
+    <string name="add_expense">Добавление траты</string>
+    <string name="new_income_group">Новая группа доходов</string>
+    <string name="new_income_sub_group">Новая подгруппа доходов</string>
+    <string name="new_expense_group">Новая группа трат</string>
+    <string name="new_expense_sub_group">Новая подгруппа трат</string>
+    <string name="update_income_sub_group">Обновить подгруппу доходов</string>
+    <string name="update_expense_sub_group">Обновить подгруппу трат</string>
+    <string name="update_income_history">Обновить запись истории доходов</string>
+    <string name="update_expense_history">Обновить запись истории трат</string>
+    <string name="update_transfer_history">Обновить запись историю</string>
+    <string name="update_wallet">Обновить кошелёк</string>
+    <string name="add_wallet">Добавить кошелёк</string>
+    <string name="settings">Настройки</string>
+    <string name="style">Стиль</string>
+    <string name="general">Общие</string>
+    <string name="language">Язык</string>
+    <string name="dark_mode">Ночная тема</string>
+    <string name="enable_dark_mode">Включить ночной режим</string>
 
 </resources>

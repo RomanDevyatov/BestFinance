@@ -1,7 +1,9 @@
 package com.romandevyatov.bestfinance.ui.fragments.menu
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -12,8 +14,6 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryItem
-import com.romandevyatov.bestfinance.utils.Constants.GROUPS_AND_SUB_GROUPS_CATEGORY
-import com.romandevyatov.bestfinance.utils.Constants.WALLETS_CATEGORY
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -23,12 +23,19 @@ class MoreFragment : Fragment() {
     private var _binding: FragmentBottomMenuMoreBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var GROUPS_AND_SUB_GROUPS_CATEGORY: String
+    private lateinit var WALLETS_CATEGORY: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBottomMenuMoreBinding.inflate(inflater, container, false)
+
+        GROUPS_AND_SUB_GROUPS_CATEGORY = getString(R.string.groups_and_sub_groups)
+        WALLETS_CATEGORY = getString(R.string.wallets)
+
         return binding.root
     }
 
@@ -66,14 +73,18 @@ class MoreFragment : Fragment() {
     }
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
-        val action = when (subCategory.name) {
-            GROUPS_AND_SUB_GROUPS_CATEGORY   -> MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
-            WALLETS_CATEGORY    -> MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
-//                    "Export"    -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
-//                    "Import"    -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
-            else -> return
+        when (subCategory.name) {
+            GROUPS_AND_SUB_GROUPS_CATEGORY -> {
+                findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment())
+            }
+            WALLETS_CATEGORY -> {
+                findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment())
+            }
+            // Add more cases as needed
+            // "Export" -> findNavController().navigate(SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment())
+            // "Import" -> findNavController().navigate(SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment())
+            else -> { }
         }
-        findNavController().navigate(action)
     }
 
     private fun createCategoryData(): List<CategoryItem> {

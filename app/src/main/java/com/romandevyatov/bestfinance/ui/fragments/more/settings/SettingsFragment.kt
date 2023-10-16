@@ -40,7 +40,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<ListPreference>("language")?.setOnPreferenceChangeListener { _, newValue ->
             val selectedLanguage = newValue.toString()
 
-//            (requireActivity() as MainActivity).setLang(selectedLanguage) first approach
             (requireActivity() as MainActivity).updateAppLocale(selectedLanguage)
 
             Toast.makeText(requireContext(), R.string.add, Toast.LENGTH_SHORT).show()

@@ -74,17 +74,6 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
         recreate()
     }
 
-// first approach language
-//    fun setLang(selectedLanguage: String) {
-//        LocaleHelper().setLocale(this@MainActivity, selectedLanguage)
-//        recreate()
-//    }
-//
-//    override fun attachBaseContext(base: Context) {
-//        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
-//        super.attachBaseContext(LocaleHelper().onAttach(base))
-//    }
-
     override fun onExitApp() {
         finish()
     }

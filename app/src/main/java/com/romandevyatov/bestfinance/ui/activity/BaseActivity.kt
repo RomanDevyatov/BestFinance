@@ -26,16 +26,11 @@ open class BaseActivity: AppCompatActivity() { //You can use your preferred acti
         } catch (e: PackageManager.NameNotFoundException) {}
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        oldPrefLocaleCode = Storage(newBase).getPreferredLocale()
+    override fun attachBaseContext(base: Context) {
+        oldPrefLocaleCode = Storage(base).getPreferredLocale()
         applyOverrideConfiguration(LocaleUtil.getLocalizedConfiguration(oldPrefLocaleCode))
-        super.attachBaseContext(newBase)
+        super.attachBaseContext(base)
     }
-
-//    override fun attachBaseContext(base: Context) {
-//        LocaleHelper().setLocale(base, LocaleHelper().getLanguage(base))
-//        super.attachBaseContext(LocaleHelper().onAttach(base))
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

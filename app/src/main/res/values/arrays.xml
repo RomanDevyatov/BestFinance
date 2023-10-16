@@ -2,10 +2,10 @@
 <resources>
     <string-array name="languages">
         <item>English</item>
-        <item>Russian</item>
+        <item>Русский</item>
     </string-array>
     <string-array name="language_values">
-        <item>en-US</item>
-        <item>ru-RU</item>
+        <item>en</item>
+        <item>ru</item>
     </string-array>
 </resources>
