@@ -240,7 +240,7 @@ class AddTransferFragment : Fragment() {
 
         currentStageName = steps[currentStageIndex]
 
-        speakTextAndRecognize(textBefore + currentStageName.settingText, false)
+        speakTextAndRecognize(textBefore + getString(currentStageName.settingTextResId), false)
     }
 
     private fun speakTextAndRecognize(textToSpeak: String, speakTextOnly: Boolean = true) {

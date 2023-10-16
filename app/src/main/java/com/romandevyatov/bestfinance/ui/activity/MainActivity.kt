@@ -25,11 +25,11 @@ import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
+import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class MainActivity() : BaseActivity(), OnExitAppListener {
@@ -43,6 +43,7 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -51,6 +52,10 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
 
         applySavedTheme()
+    }
+
+    fun getProtectedStorage(): Storage {
+        return storage
     }
 
     fun applySavedTheme() {
@@ -214,13 +219,13 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val fragment = navHostFragment.childFragmentManager.fragments.first()
         if (fragment is AddIncomeHistoryFragment) {
             fragment.setIntentGlob(intent)
-            fragment.startAddingTransaction("Start adding transaction.")
+            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
         } else if (fragment is AddTransferFragment) {
             fragment.setIntentGlob(intent)
             fragment.startAddingTransaction("Start adding transaction.")

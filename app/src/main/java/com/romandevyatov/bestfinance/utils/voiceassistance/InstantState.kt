@@ -1,13 +1,16 @@
 package com.romandevyatov.bestfinance.utils.voiceassistance
 
-enum class InputState(val settingText: String) {
-    GROUP("Set group."),
-    SUB_GROUP("Set subgroup."),
-    WALLET("Set wallet."),
-    WALLET_FROM("Set wallet from."),
-    WALLET_TO("Set wallet to."),
-    AMOUNT("Set amount."),
-    COMMENT("Set comment."),
-    SET_BALANCE("Set wallet balance."),
-    CONFIRM("Confirm transaction (Yes/No)")
+import androidx.annotation.StringRes
+import com.romandevyatov.bestfinance.R
+
+enum class InputState(@StringRes val settingTextResId: Int) {
+    GROUP(R.string.group_setting),
+    SUB_GROUP(R.string.sub_group_setting),
+    WALLET(R.string.wallet_setting),
+    WALLET_FROM(R.string.wallet_from_setting),
+    WALLET_TO(R.string.wallet_to_setting),
+    AMOUNT(R.string.amount_setting),
+    COMMENT(R.string.comment_setting),
+    SET_BALANCE(R.string.set_balance_setting),
+    CONFIRM(R.string.confirm_setting)
 }

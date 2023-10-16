@@ -15,6 +15,8 @@ class Storage(context: Context) {
     }
 
     fun setPreferredLocale(localeCode: String) {
-        preferences.edit().putString(SELECTED_LANGUAGE, localeCode).apply()
+        val editor = preferences.edit()
+        editor.putString(SELECTED_LANGUAGE, localeCode)
+        editor.apply()
     }
 }

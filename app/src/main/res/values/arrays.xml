@@ -5,7 +5,7 @@
         <item>Russian</item>
     </string-array>
     <string-array name="language_values">
-        <item>en</item>
-        <item>ru</item>
+        <item>en-US</item>
+        <item>ru-RU</item>
     </string-array>
 </resources>

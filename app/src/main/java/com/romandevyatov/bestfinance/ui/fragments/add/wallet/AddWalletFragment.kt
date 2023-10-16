@@ -101,7 +101,7 @@ class AddWalletFragment : Fragment() {
                         showUnarchiveDialog(
                             requireContext(),
                             wallet,
-                            getString(R.string.unarchive_wallet)
+                            getString(R.string.unarchive_wallet, wallet.name, wallet.name)
                         )
                     }
                 }

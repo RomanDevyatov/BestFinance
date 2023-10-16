@@ -12,7 +12,7 @@ class LocaleUtil {
 
     companion object {
 
-        private val supportedLocales = listOf("en", "ru", "be")
+        private val supportedLocales = listOf("en", "ru")
         const val DEFAULT_PHONE_LANGUAGE = "default_system"
 
         fun getLocalizedConfiguration(prefLocaleCode: String): Configuration {
@@ -24,6 +24,7 @@ class LocaleUtil {
             val currentLocale = getLocaleFromPrefCode(prefLocaleCode)
             val baseLocale = getLocaleFromConfiguration(baseContext.resources.configuration)
             Locale.setDefault(currentLocale)
+
             return if (!baseLocale.toString().equals(currentLocale.toString(), ignoreCase = true)) {
                 val config = getLocalizedConfiguration(currentLocale)
                 baseContext.createConfigurationContext(config)
@@ -50,10 +51,9 @@ class LocaleUtil {
          * when preference value = "sys_def" returns the locale of current system
          * else it returns the locale code e.g. "en", "bn" etc.
          */
-        private fun getLocaleFromPrefCode(prefCode: String): Locale {
+        fun getLocaleFromPrefCode(prefCode: String): Locale {
             val localeCode = when (prefCode) {
-                DEFAULT_PHONE_LANGUAGE -> prefCode
-                else -> {
+                DEFAULT_PHONE_LANGUAGE -> {
                     val systemLanguage = ConfigurationCompat
                         .getLocales(Resources.getSystem().configuration)
                         .get(0)!!
@@ -64,6 +64,9 @@ class LocaleUtil {
                     } else {
                         "en"
                     }
+                }
+                else -> {
+                    prefCode
                 }
             }
 
