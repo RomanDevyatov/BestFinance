@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
@@ -15,7 +16,6 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryItem
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MoreFragment : Fragment() {
@@ -73,18 +73,17 @@ class MoreFragment : Fragment() {
     }
 
     private fun navigateToSubCategory(subCategory: SubCategoryItem) {
-        when (subCategory.name) {
-            GROUPS_AND_SUB_GROUPS_CATEGORY -> {
-                findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment())
-            }
-            WALLETS_CATEGORY -> {
-                findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment())
-            }
+        val navDirections: NavDirections = when (subCategory.name) {
+            GROUPS_AND_SUB_GROUPS_CATEGORY ->
+                MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
+            WALLETS_CATEGORY ->
+                MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
             // Add more cases as needed
-            // "Export" -> findNavController().navigate(SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment())
-            // "Import" -> findNavController().navigate(SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment())
-            else -> { }
+            // "Export" -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
+            // "Import" -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
+            else -> return // Do nothing if it's not a recognized subcategory
         }
+        findNavController().navigate(navDirections)
     }
 
     private fun createCategoryData(): List<CategoryItem> {

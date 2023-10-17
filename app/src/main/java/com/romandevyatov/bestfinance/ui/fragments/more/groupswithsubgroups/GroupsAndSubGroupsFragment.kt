@@ -16,13 +16,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GroupsAndSubGroupsFragment : Fragment() {
 
-    private val groupTypeArray = arrayOf(
-        getString(R.string.income),
-        getString(R.string.expense)
-    )
+    private lateinit var groupTypeArray: Array<String>
 
     private var _binding: SettingsFragmentGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        groupTypeArray = resources.getStringArray(R.array.group_type_array)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

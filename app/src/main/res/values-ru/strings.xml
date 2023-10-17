@@ -153,5 +153,8 @@
     <string name="language">Язык</string>
     <string name="dark_mode">Ночная тема</string>
     <string name="enable_dark_mode">Включить ночной режим</string>
+    <string name="incomes">Доходы</string>
+    <string name="transfers">Переводы</string>
+    <string name="expenses">Траты</string>
 
 </resources>

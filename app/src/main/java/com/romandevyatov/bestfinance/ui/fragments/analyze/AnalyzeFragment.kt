@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentAnalyzeBinding
 import com.romandevyatov.bestfinance.ui.adapters.analyze.ExpandableGroupAdapter
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ParentData
@@ -49,14 +50,14 @@ class AnalyzeFragment : Fragment() {
                 viewLifecycleOwner
             ) { expenses ->
                 val apd = ParentData(
-                    analyzeParentTitle = Constants.INCOMES,
+                    analyzeParentTitle = getString(R.string.incomes),
                     type = Constants.INCOMINGS_PARENT_TYPE,
                     subParentNestedListIncomings = incomeGroupWithIncomeSubGroupsIncludingIncomeHistories
                 )
                 mList.add(apd)
 
                 val parentData = ParentData(
-                    analyzeParentTitle = Constants.EXPENSE,
+                    analyzeParentTitle = getString(R.string.expenses),
                     type = Constants.EXPENSES_PARENT_TYPE,
                     subParentNestedListExpenses = expenses
                 )

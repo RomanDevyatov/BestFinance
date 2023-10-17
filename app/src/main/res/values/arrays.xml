@@ -8,4 +8,14 @@
         <item>en</item>
         <item>ru</item>
     </string-array>
+    <string-array name="group_type_array">
+        <item>@string/income</item>
+        <item>@string/expense</item>
+    </string-array>
+    <string-array name="history_type_array">
+        <item>@string/incomes</item>
+        <item>@string/transfers</item>
+        <item>@string/expenses</item>
+    </string-array>
+
 </resources>

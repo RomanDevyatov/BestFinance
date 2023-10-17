@@ -154,5 +154,8 @@
     <string name="language">Language</string>
     <string name="dark_mode">Dark mode</string>
     <string name="enable_dark_mode">Enable dark mode</string>
+    <string name="incomes">Incomes</string>
+    <string name="transfers">Transfers</string>
+    <string name="expenses">Expenses</string>
 
 </resources>

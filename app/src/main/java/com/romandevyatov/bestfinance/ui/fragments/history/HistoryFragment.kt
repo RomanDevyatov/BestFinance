@@ -16,14 +16,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HistoryFragment : Fragment() {
 
-    private val historyTypeArray = arrayOf(
-        "Incomes",
-        "Transfers",
-        "Expenses"
-    )
+    private lateinit var historyTypeArray: Array<String>
 
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        historyTypeArray = resources.getStringArray(R.array.group_type_array)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
