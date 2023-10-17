@@ -23,7 +23,7 @@ class HistoryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        historyTypeArray = resources.getStringArray(R.array.group_type_array)
+        historyTypeArray = resources.getStringArray(R.array.history_type_array)
     }
 
     override fun onCreateView(
