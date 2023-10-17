@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.databinding.SettingsFragmentIncomeGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.databinding.FragmentSettingsIncomeGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class IncomeGroupsAndSubGroupsFragment : Fragment() {
 
-    private var _binding: SettingsFragmentIncomeGroupsAndSubGroupsBinding? = null
+    private var _binding: FragmentSettingsIncomeGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
     private val generalGroupsAndSubGroupsViewModel: IncomeGroupsAndSubGroupsViewModel by viewModels()
@@ -103,7 +103,7 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SettingsFragmentIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
 

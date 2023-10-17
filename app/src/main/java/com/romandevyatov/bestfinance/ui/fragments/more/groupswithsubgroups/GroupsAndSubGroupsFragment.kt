@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.SettingsFragmentGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.databinding.FragmentSettingsGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +18,7 @@ class GroupsAndSubGroupsFragment : Fragment() {
 
     private lateinit var groupTypeArray: Array<String>
 
-    private var _binding: SettingsFragmentGroupsAndSubGroupsBinding? = null
+    private var _binding: FragmentSettingsGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class GroupsAndSubGroupsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SettingsFragmentGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupViewPagerAndTabLayout()
 

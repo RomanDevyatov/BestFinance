@@ -235,7 +235,7 @@
         android:id="@+id/groups_and_sub_groups_settings_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.GroupsAndSubGroupsFragment"
         android:label="@string/groups_and_sub_groups"
-        tools:layout="@layout/settings_fragment_groups_and_sub_groups" >
+        tools:layout="@layout/fragment_settings_groups_and_sub_groups" >
 
         <action
             android:id="@+id/action_groups_and_sub_groups_settings_fragment_to_update_expense_group_fragment"

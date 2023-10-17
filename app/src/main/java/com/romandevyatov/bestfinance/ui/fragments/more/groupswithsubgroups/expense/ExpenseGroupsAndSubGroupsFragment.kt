@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.databinding.SettingsFragmentExpenseGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.databinding.FragmentSettingsExpenseGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ExpenseGroupsAndSubGroupsFragment : Fragment() {
 
-    private var _binding: SettingsFragmentExpenseGroupsAndSubGroupsBinding? = null
+    private var _binding: FragmentSettingsExpenseGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
     private val generalGroupsAndSubGroupsViewModel: ExpenseGroupsAndSubGroupsViewModel by viewModels()
@@ -98,7 +98,7 @@ class ExpenseGroupsAndSubGroupsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SettingsFragmentExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
 
