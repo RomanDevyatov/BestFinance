@@ -95,6 +95,4 @@ class ExpandableSubGroupAdapter (private val mList: List<SubParentData>) :
             notifyItemChanged(holder.adapterPosition)
         }
     }
-
-
 }

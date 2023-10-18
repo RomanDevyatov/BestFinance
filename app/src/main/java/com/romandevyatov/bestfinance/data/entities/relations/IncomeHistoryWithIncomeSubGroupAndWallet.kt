@@ -22,5 +22,4 @@ data class IncomeHistoryWithIncomeSubGroupAndWallet (
         parentColumn = "wallet_id",
         entityColumn = "id")
     var wallet: Wallet
-
 )

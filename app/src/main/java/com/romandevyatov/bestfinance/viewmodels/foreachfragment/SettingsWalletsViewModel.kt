@@ -43,5 +43,4 @@ class SettingsWalletsViewModel @Inject constructor(
             walletRepository.updateWallet(walletArchived)
         }
     }
-
 }

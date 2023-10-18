@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemWalletBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
 
-
 class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
@@ -41,7 +40,6 @@ class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adap
                 listener.navigate(wallet.name)
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletItemViewHolder {

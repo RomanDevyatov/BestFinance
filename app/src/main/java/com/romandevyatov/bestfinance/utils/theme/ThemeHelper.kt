@@ -18,6 +18,4 @@ object ThemeHelper {
         editor.putBoolean(KEY_DARK_MODE, isEnabled)
         editor.apply()
     }
-
-
 }

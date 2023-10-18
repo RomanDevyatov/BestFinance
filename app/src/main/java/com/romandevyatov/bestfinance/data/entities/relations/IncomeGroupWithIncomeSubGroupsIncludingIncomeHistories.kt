@@ -16,5 +16,4 @@ data class IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories (
         entityColumn = "income_group_id"
     )
     val incomeSubGroupWithIncomeHistories: List<IncomeSubGroupWithIncomeHistories>
-
 )

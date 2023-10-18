@@ -7,7 +7,6 @@ import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWith
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-
 class TransferHistoryRepository @Inject constructor(
     private val transferHistoryDao: TransferHistoryDao
 ) {

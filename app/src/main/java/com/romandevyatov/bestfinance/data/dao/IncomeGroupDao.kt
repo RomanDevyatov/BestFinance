@@ -140,6 +140,4 @@ interface IncomeGroupDao {
 
     @Query("UPDATE income_group SET archived_date = :date WHERE id = :id")
     fun archiveById(id: Long?, date: String)
-
-
 }

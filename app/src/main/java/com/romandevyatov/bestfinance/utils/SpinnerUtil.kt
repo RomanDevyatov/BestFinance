@@ -17,5 +17,4 @@ object SpinnerUtil {
 
         return allItems
     }
-
 }

@@ -55,5 +55,4 @@ interface ExpenseSubGroupDao {
 
     @Query("SELECT * FROM expense_sub_group WHERE id = :id LIMIT 1")
     fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>?
-
 }

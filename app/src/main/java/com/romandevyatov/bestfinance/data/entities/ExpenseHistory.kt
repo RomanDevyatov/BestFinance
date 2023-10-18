@@ -49,5 +49,4 @@ class ExpenseHistory (
 
     @ColumnInfo(name = "created_date")
     val createdDate: LocalDateTime? = null
-
 )

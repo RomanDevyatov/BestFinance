@@ -76,5 +76,4 @@ class CustomTextToSpeech(
         textToSpeech?.stop()
         textToSpeech?.shutdown()
     }
-
 }

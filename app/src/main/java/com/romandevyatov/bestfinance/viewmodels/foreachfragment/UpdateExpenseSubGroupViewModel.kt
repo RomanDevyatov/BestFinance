@@ -35,5 +35,4 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
     fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>? {
         return expenseSubGroupRepository.getExpenseSubGroupByIdLiveData(id)
     }
-    
 }

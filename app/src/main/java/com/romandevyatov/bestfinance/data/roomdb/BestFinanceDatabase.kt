@@ -39,5 +39,4 @@ abstract class BestFinanceDatabase : RoomDatabase() {
     abstract fun getExpenseHistoryDao(): ExpenseHistoryDao
 
     abstract fun getTransferHistoryDao(): TransferHistoryDao
-
 }

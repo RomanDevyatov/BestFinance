@@ -22,5 +22,4 @@ class UpdateExpenseGroupViewModel @Inject constructor(
     fun updateExpenseGroup(updatedExpenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.updateExpenseGroup(updatedExpenseGroup)
     }
-
 }

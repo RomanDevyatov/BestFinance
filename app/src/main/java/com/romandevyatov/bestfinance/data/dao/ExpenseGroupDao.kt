@@ -108,5 +108,4 @@ interface ExpenseGroupDao {
 
     @Query("SELECT * FROM expense_group WHERE id = :id")
     fun getByIdLiveData(id: Long): LiveData<ExpenseGroup>?
-
 }

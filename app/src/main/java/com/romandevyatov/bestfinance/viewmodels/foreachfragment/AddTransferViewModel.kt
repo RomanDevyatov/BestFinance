@@ -37,16 +37,4 @@ class AddTransferViewModel @Inject constructor(
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.insertWallet(wallet)
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

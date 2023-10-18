@@ -23,5 +23,4 @@ class UpdateIncomeGroupViewModel @Inject constructor(
     fun updateIncomeGroup(updatedExpenseGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
         incomeGroupRepository.updateIncomeGroup(updatedExpenseGroup)
     }
-
 }

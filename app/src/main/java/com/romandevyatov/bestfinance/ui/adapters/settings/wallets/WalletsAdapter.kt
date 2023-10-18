@@ -87,6 +87,4 @@ class WalletsAdapter(
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
-
 }

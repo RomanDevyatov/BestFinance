@@ -28,5 +28,4 @@ data class IncomeGroup(
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null
-
 )

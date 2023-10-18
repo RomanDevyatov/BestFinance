@@ -55,46 +55,6 @@ class SubGroupsAdapter(
             binding.root.setOnClickListener {
                 onSubGroupListener?.navigateToUpdateSubGroup(subGroupItem.id)
             }
-
         }
     }
 }
-
-//    private val onSubGroupCheckedChangeListener: OnSubGroupCheckedChangeListener? = null
-//) : RecyclerView.Adapter<SubGroupsAdapter.SubGroupViewHolder>() {
-//
-
-//
-//    private val differCallback = object : DiffUtil.ItemCallback<SubGroupItem>() {
-//        override fun areItemsTheSame(oldItem: SubGroupItem, newItem: SubGroupItem): Boolean {
-//            return oldItem.id == newItem.id
-//        }
-//
-//        override fun areContentsTheSame(oldItem: SubGroupItem, newItem: SubGroupItem): Boolean {
-//            return oldItem == newItem
-//        }
-//    }
-//
-//    private val differ = AsyncListDiffer(this, differCallback)
-//
-//    fun submitList(newSubgroups: List<SubGroupItem>) {
-//        differ.submitList(newSubgroups)
-//    }
-//
-
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubGroupViewHolder {
-//        val binding = CardSubGroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-//        return SubGroupViewHolder(binding)
-//    }
-//
-//    override fun onBindViewHolder(holder: SubGroupViewHolder, position: Int) {
-//        val subGroupItem = differ.currentList[position]
-//        holder.bind(subGroupItem)
-//        holder.binding.switchCompat.isChecked = subGroupItem.isExist
-//    }
-//
-//    override fun getItemCount(): Int {
-//        return differ.currentList.size
-//    }
-//}

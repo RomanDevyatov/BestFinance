@@ -70,5 +70,4 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     }
 
     val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>>? = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
-
 }

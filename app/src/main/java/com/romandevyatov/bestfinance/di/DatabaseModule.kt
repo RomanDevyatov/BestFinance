@@ -59,5 +59,4 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesTransferHistoryDao(db: BestFinanceDatabase) = db.getTransferHistoryDao()
-
 }

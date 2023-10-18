@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class WalletRepository @Inject constructor(
     private val walletDao: WalletDao
@@ -52,6 +51,4 @@ class WalletRepository @Inject constructor(
     fun archiveWalletById(id: Long?, date: LocalDateTime) {
         walletDao.updateArchivedDateById(id, date)
     }
-
-
 }

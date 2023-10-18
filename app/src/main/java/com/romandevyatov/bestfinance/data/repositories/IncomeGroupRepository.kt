@@ -109,6 +109,4 @@ class IncomeGroupRepository @Inject constructor(
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id: Long): IncomeGroupWithIncomeSubGroups? {
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id)
     }
-
-
 }

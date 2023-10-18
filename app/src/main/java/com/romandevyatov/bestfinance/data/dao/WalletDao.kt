@@ -64,5 +64,4 @@ interface WalletDao {
 
     @Query("UPDATE wallet SET archived_date = :date WHERE id = :id")
     fun updateArchivedDateById(id: Long?, date: LocalDateTime?)
-
 }

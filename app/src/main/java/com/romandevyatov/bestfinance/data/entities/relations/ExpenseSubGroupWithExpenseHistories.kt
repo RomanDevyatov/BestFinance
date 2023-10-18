@@ -16,5 +16,4 @@ data class ExpenseSubGroupWithExpenseHistories (
         entityColumn = "expense_sub_group_id"
     )
     var expenseHistory: List<ExpenseHistory>
-
 )

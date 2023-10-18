@@ -30,5 +30,4 @@ class AddIncomeGroupViewModel @Inject constructor(
     fun unarchiveIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
         incomeGroupRepository.unarchiveIncomeGroup(incomeGroup)
     }
-
 }

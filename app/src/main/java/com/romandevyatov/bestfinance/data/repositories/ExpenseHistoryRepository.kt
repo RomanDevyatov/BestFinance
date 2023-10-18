@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.data.repositories
 
-
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.ExpenseHistoryDao
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
@@ -33,5 +32,4 @@ class ExpenseHistoryRepository @Inject constructor(
     suspend fun updateExpenseHistory(expenseHistory: ExpenseHistory) {
         return expenseHistoryDao.update(expenseHistory)
     }
-
 }

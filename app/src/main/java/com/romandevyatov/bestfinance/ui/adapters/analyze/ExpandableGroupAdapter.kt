@@ -108,5 +108,4 @@ class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) : Recyc
             notifyItemChanged(holder.adapterPosition)
         }
     }
-
 }

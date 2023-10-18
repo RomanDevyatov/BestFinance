@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.data.repositories
 
-
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.ExpenseGroupDao
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
@@ -111,6 +110,4 @@ class ExpenseGroupRepository @Inject constructor(
     fun getExpenseGroupByIdLiveData(id: Long): LiveData<ExpenseGroup>? {
         return expenseGroupDao.getByIdLiveData(id)
     }
-
-
 }

@@ -71,5 +71,4 @@ class ExpenseSubGroupRepository @Inject constructor(
     fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>? {
         return expenseSubGroupDao.getExpenseSubGroupByIdLiveData(id)
     }
-
 }

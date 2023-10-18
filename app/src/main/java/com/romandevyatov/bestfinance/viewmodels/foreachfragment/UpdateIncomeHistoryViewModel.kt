@@ -61,5 +61,4 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
     fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup>? {
         return incomeGroupRepository.getIncomeGroupByIdLiveData(incomeGroupId)
     }
-
 }

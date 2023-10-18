@@ -65,5 +65,4 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     fun updateWallet(wallet: Wallet) = viewModelScope.launch (Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
     }
-
 }

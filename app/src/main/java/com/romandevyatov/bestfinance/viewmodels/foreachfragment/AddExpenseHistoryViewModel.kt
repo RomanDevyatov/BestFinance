@@ -189,14 +189,5 @@ class AddExpenseHistoryViewModel @Inject constructor(
         )
 
         walletRepository.updateWallet(selectedWalletArchived)
-
-//        Snackbar.make(viewHolder.itemView, "Wallet with name ${selectedWallet.name} is archived", Snackbar.LENGTH_LONG).apply {
-//            setAction("UNDO") {
-//                walletRepository.updateWallet(selectedWallet)
-//            }
-//            show()
-//        }
-
     }
-
 }

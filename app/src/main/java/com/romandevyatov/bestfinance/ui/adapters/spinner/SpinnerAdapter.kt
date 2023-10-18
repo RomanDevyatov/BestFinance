@@ -93,5 +93,4 @@ class SpinnerAdapter(
             adapter.updateData(results?.values as MutableList<String>)
         }
     }
-
 }

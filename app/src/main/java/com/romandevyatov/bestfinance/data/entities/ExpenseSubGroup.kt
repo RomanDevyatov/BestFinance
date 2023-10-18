@@ -30,5 +30,4 @@ data class ExpenseSubGroup(
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null
-
 )

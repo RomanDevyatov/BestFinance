@@ -1,12 +1,12 @@
 package com.romandevyatov.bestfinance.data.repositories
 
-
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.IncomeSubGroupDao
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class IncomeSubGroupRepository @Inject constructor(
     private val incomeSubGroupDao: IncomeSubGroupDao
 ) {
@@ -73,5 +73,4 @@ class IncomeSubGroupRepository @Inject constructor(
     fun getByIdNotArchived(id: Long?): IncomeSubGroup? {
         return incomeSubGroupDao.getByIdNotArchived(id)
     }
-
 }
