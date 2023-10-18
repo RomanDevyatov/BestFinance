@@ -9,7 +9,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.ui.activity.MainActivity
-import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
 import dagger.hilt.android.AndroidEntryPoint
 
