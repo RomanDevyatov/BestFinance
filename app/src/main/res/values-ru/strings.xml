@@ -156,5 +156,9 @@
     <string name="incomes">Доходы</string>
     <string name="transfers">Переводы</string>
     <string name="expenses">Траты</string>
+    <string name="changed_wallet_balance">Изменение баланса кошелька</string>
+    <string name="balance_is_changed_do_you_want_to_add_history_record">Баланс изменился, вы хотите добавить запись истории?</string>
+    <string name="wallet_name_already_exists">Кошелёк %s уже существует</string>
+    <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Кошелёк %1$s архивирован. Вы хотите разархивировать %2$s кошелёк и продолжить изменение?</string>
 
 </resources>
