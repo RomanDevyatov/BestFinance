@@ -13,13 +13,13 @@
     <string name="wallet_balance_hint">Баланс</string>
     <string name="wallet_description_hint">Описание</string>
     <string name="description">Описание</string>
-    <string name="expense_group_name">Имя группы трат</string>
-    <string name="expense_group_description">Описание группы трат</string>
-    <string name="expense_group">Группа трат</string>
-    <string name="expense_sub_group">Подгруппа трат</string>
-    <string name="sub_group_name">Имя подгруппы трат</string>
-    <string name="sub_group_description">Описание подгруппы трат</string>
-    <string name="expense_groups">Группы трат</string>
+    <string name="expense_group_name">Имя группы расходов</string>
+    <string name="expense_group_description">Описание группы расходов</string>
+    <string name="expense_group">Группа расходов</string>
+    <string name="expense_sub_group">Подгруппа расходов</string>
+    <string name="sub_group_name">Имя подгруппы расходов</string>
+    <string name="sub_group_description">Описание подгруппы расходов</string>
+    <string name="expense_groups">Группы расходов</string>
     <string name="income_group_name">Имя группы доходов</string>
     <string name="income_group_description">Описание группы доходов</string>
     <string name="passive">Пассивный</string>
@@ -42,11 +42,11 @@
     <string name="capital">Капитал</string>
     <string name="passive_income">Пассивный доход</string>
     <string name="total_income">Итоговый доход</string>
-    <string name="total_expenses">Итоговые траты</string>
+    <string name="total_expenses">Итоговые расходов</string>
     <string name="analyze">Анализ</string>
     <string name="history">История</string>
     <string name="transfer">Перевод</string>
-    <string name="expense">Трата</string>
+    <string name="expense">Расход</string>
     <string name="income">Доход</string>
 
     <!--  add income history fragment-->
@@ -97,11 +97,11 @@
     <string name="error_empty_sub_group_name">Имя подгруппы обязательно</string>
     <string name="error_empty_group_name">Имя группы обязательно</string>
     <string name="sub_group_exists_message">Подгруппа %s уже существует</string>
-    <string name="confirm_unarchive_message">Подгруппа с этим именем была архивирована. Вы хотите разархивировать подгруппу трат %s?</string>
+    <string name="confirm_unarchive_message">Подгруппа с этим именем была архивирована. Вы хотите разархивировать подгруппу расходов %s?</string>
 
     <!--    add income sub группа-->
     <string name="error_existing_sub_group">Подгруппа %s уже существует</string>
-    <string name="confirm_unarchive_sub_group">Подгруппа с таким именем была архивирована. Вы хотите разархивировать подгруппу трат %s?</string>
+    <string name="confirm_unarchive_sub_group">Подгруппа с таким именем была архивирована. Вы хотите разархивировать подгруппу расходов %s?</string>
 
     <!-- Other Strings -->
     <string name="confirm_added_history_record">Запись была добавлена</string>
@@ -130,20 +130,20 @@
 
     <string name="groups_and_sub_groups">Группы и подгруппы</string>
     <string name="wallets">Кошельки</string>
-    <string name="update_expense_group">Обновить группу трат</string>
+    <string name="update_expense_group">Обновить группу расходов</string>
     <string name="update_income_group">Обновить группу доходов</string>
     <string name="home">Главная</string>
     <string name="more">Ещё</string>
     <string name="add_income">Добавление дохода</string>
-    <string name="add_expense">Добавление траты</string>
+    <string name="add_expense">Добавление расхода</string>
     <string name="new_income_group">Новая группа доходов</string>
     <string name="new_income_sub_group">Новая подгруппа доходов</string>
-    <string name="new_expense_group">Новая группа трат</string>
-    <string name="new_expense_sub_group">Новая подгруппа трат</string>
+    <string name="new_expense_group">Новая группа расходов</string>
+    <string name="new_expense_sub_group">Новая подгруппа расходов</string>
     <string name="update_income_sub_group">Обновить подгруппу доходов</string>
-    <string name="update_expense_sub_group">Обновить подгруппу трат</string>
+    <string name="update_expense_sub_group">Обновить подгруппу расходов</string>
     <string name="update_income_history">Обновить запись истории доходов</string>
-    <string name="update_expense_history">Обновить запись истории трат</string>
+    <string name="update_expense_history">Обновить запись истории расходов</string>
     <string name="update_transfer_history">Обновить запись историю</string>
     <string name="update_wallet">Обновить кошелёк</string>
     <string name="add_wallet">Добавить кошелёк</string>
@@ -155,7 +155,7 @@
     <string name="enable_dark_mode">Включить ночной режим</string>
     <string name="incomes">Доходы</string>
     <string name="transfers">Переводы</string>
-    <string name="expenses">Траты</string>
+    <string name="expenses">Расходы</string>
     <string name="changed_wallet_balance">Изменение баланса кошелька</string>
     <string name="balance_is_changed_do_you_want_to_add_history_record">Баланс изменился, вы хотите добавить запись истории?</string>
     <string name="wallet_name_already_exists">Кошелёк %s уже существует</string>
