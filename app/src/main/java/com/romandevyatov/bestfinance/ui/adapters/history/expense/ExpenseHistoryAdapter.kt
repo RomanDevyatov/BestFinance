@@ -42,7 +42,7 @@ class ExpenseHistoryAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ExpenseHistoryItemViewHolder, position: Int) {
         val currentHistoryElement = differ.currentList[position]
-        val currentGroup = expenseGroupMap[currentHistoryElement.expenseSubGroup.expenseGroupId]
+        val currentGroup = expenseGroupMap[currentHistoryElement.expenseSubGroup?.expenseGroupId]
         holder.bindItem(differ.currentList[position], currentGroup)
     }
 

@@ -25,7 +25,7 @@ class ExpenseHistoryRepository @Inject constructor(
         expenseHistoryDao.insert(expenseHistory)
     }
 
-    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet> {
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet>? {
         return expenseHistoryDao.getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id)
     }
 

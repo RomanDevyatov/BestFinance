@@ -103,10 +103,15 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupSpinnersValues(incomeSubGroup: IncomeSubGroup, wallet: Wallet) {
-        setSubGroupSpinnerValue(incomeSubGroup)
-        setGroupSpinnerValue(incomeSubGroup.incomeGroupId)
-        setWalletSpinnerValue(wallet)
+    private fun setupSpinnersValues(incomeSubGroup: IncomeSubGroup?, wallet: Wallet?) {
+        if (incomeSubGroup != null) {
+            setSubGroupSpinnerValue(incomeSubGroup)
+            setGroupSpinnerValue(incomeSubGroup.incomeGroupId)
+        }
+
+        if (wallet != null) {
+            setWalletSpinnerValue(wallet)
+        }
     }
 
     private fun setSubGroupSpinnerValue(incomeSubGroup: IncomeSubGroup) {
@@ -391,10 +396,11 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 val incomeHistory = historyWithSubGroupAndWalletGlobal.incomeHistory
 
                 val walletOld = historyWithSubGroupAndWalletGlobal.wallet
-                val updatedBalanceOld = walletOld.balance - incomeHistory.amount
-                val updatedInputOld = walletOld.input.minus(incomeHistory.amount)
-                updateOldWallet(walletOld, updatedBalanceOld, updatedInputOld)
-
+                if (walletOld != null) {
+                    val updatedBalanceOld = walletOld.balance - incomeHistory.amount
+                    val updatedInputOld = walletOld.input.minus(incomeHistory.amount)
+                    updateOldWallet(walletOld, updatedBalanceOld, updatedInputOld)
+                }
                 val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id
 
                 updateIncomeHistoryViewModel.updateIncomeHistoryAndWallet(

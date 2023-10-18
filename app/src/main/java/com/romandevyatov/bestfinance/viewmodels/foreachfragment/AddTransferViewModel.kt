@@ -21,17 +21,19 @@ class AddTransferViewModel @Inject constructor(
     fun archiveWallet(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val selectedWallet = walletRepository.getWalletByNameNotArchived(name)
 
-        val selectedWalletArchived = Wallet(
-            id = selectedWallet.id,
-            name = selectedWallet.name,
-            balance = selectedWallet.balance,
-            archivedDate = LocalDateTime.now(),
-            input = selectedWallet.input,
-            output = selectedWallet.output,
-            description = selectedWallet.description
-        )
+        if (selectedWallet != null) {
+            val selectedWalletArchived = Wallet(
+                id = selectedWallet.id,
+                name = selectedWallet.name,
+                balance = selectedWallet.balance,
+                archivedDate = LocalDateTime.now(),
+                input = selectedWallet.input,
+                output = selectedWallet.output,
+                description = selectedWallet.description
+            )
 
-        walletRepository.updateWallet(selectedWalletArchived)
+            walletRepository.updateWallet(selectedWalletArchived)
+        }
     }
 
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {

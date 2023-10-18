@@ -84,13 +84,20 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val expenseSubGroupId = expenseSubGroup.id!!.toLong()
 
             val wallet = getWalletByNameNotArchived(walletNameBinding)
-            val walletId = wallet.id!!
+            if (wallet != null) {
+                val walletId = wallet.id!!
 
-            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, parsedLocalDateTime, walletId)
+                insertExpenseHistoryRecord(
+                    expenseSubGroupId,
+                    amountBinding,
+                    commentBinding,
+                    parsedLocalDateTime,
+                    walletId
+                )
 
-            updateWallet(walletId, wallet, amountBinding)
+                updateWallet(walletId, wallet, amountBinding)
+            }
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -123,7 +130,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    private fun getWalletByNameNotArchived(walletName: String): Wallet {
+    private fun getWalletByNameNotArchived(walletName: String): Wallet? {
         return walletRepository.getWalletByNameNotArchived(walletName)
     }
 
@@ -138,11 +145,20 @@ class AddExpenseHistoryViewModel @Inject constructor(
             val expenseSubGroupId = expenseSubGroup.id!!.toLong()
 
             val wallet = getWalletByNameNotArchived(walletNameBinding)
-            val walletId = wallet.id!!
 
-            insertExpenseHistoryRecord(expenseSubGroupId, amountBinding, commentBinding, parsedLocalDateTime, walletId)
+            if (wallet != null) {
+                val walletId = wallet.id!!
 
-            updateWallet(walletId, wallet, amountBinding)
+                insertExpenseHistoryRecord(
+                    expenseSubGroupId,
+                    amountBinding,
+                    commentBinding,
+                    parsedLocalDateTime,
+                    walletId
+                )
+
+                updateWallet(walletId, wallet, amountBinding)
+            }
         }
 
     }
@@ -178,16 +194,19 @@ class AddExpenseHistoryViewModel @Inject constructor(
     fun archiveWallet(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val selectedWallet = walletRepository.getWalletByNameNotArchived(name)
 
-        val selectedWalletArchived = Wallet(
-            id = selectedWallet.id,
-            name = selectedWallet.name,
-            balance = selectedWallet.balance,
-            archivedDate = LocalDateTime.now(),
-            input = selectedWallet.input,
-            output = selectedWallet.output,
-            description = selectedWallet.description
-        )
+        if (selectedWallet != null) {
 
-        walletRepository.updateWallet(selectedWalletArchived)
+            val selectedWalletArchived = Wallet(
+                id = selectedWallet.id,
+                name = selectedWallet.name,
+                balance = selectedWallet.balance,
+                archivedDate = LocalDateTime.now(),
+                input = selectedWallet.input,
+                output = selectedWallet.output,
+                description = selectedWallet.description
+            )
+
+            walletRepository.updateWallet(selectedWalletArchived)
+        }
     }
 }

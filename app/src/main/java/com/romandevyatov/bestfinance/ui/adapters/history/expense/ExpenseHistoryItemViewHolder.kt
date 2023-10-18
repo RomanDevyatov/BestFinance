@@ -23,7 +23,7 @@ class ExpenseHistoryItemViewHolder(
 
         binding.expenseGroup.text = expenseGroup?.name.toString()
 
-        binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup.name
+        binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup?.name
 
         binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(dateTimeFormatter)
 

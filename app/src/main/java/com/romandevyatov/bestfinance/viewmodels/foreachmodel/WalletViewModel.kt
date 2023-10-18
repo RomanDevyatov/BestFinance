@@ -26,7 +26,7 @@ class WalletViewModel @Inject constructor(
         walletRepository.updateWallet(wallet)
     }
 
-    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet> {
+    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet>? {
         return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
     }
 

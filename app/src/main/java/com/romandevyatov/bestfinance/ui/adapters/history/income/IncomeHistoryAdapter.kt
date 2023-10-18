@@ -42,7 +42,7 @@ class IncomeHistoryAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: IncomeHistoryItemViewHolder, position: Int) {
         val currentHistoryElement = differ.currentList[position]
-        val currentGroup = incomeGroupsMap[currentHistoryElement.incomeSubGroup.incomeGroupId]
+        val currentGroup = incomeGroupsMap[currentHistoryElement.incomeSubGroup?.incomeGroupId]
         holder.bindItem(differ.currentList[position], currentGroup)
     }
 

@@ -25,7 +25,7 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun getExpenseHistoryWithExpenseSubGroupAndWalletById(expenseHistoryId: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet> {
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletById(expenseHistoryId: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet>? {
         return expenseHistoryRepository.getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(expenseHistoryId)
     }
 

@@ -45,10 +45,10 @@ interface WalletDao {
     fun getAllNotArchivedLiveData(): LiveData<List<Wallet>>
 
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<Wallet>
+    fun getByNameNotArchivedLiveData(name: String): LiveData<Wallet>?
 
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
-    fun getByNameNotArchived(name: String): Wallet
+    fun getByNameNotArchived(name: String): Wallet?
 
     /*
     Archived

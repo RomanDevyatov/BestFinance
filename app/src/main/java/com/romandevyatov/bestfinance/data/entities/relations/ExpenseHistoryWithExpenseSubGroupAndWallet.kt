@@ -12,8 +12,8 @@ data class ExpenseHistoryWithExpenseSubGroupAndWallet (
     var expenseHistory: ExpenseHistory,
 
     @Relation(entity = ExpenseSubGroup::class, parentColumn = "expense_sub_group_id", entityColumn = "id")
-    var expenseSubGroup: ExpenseSubGroup,
+    var expenseSubGroup: ExpenseSubGroup?,
 
     @Relation(entity = Wallet::class, parentColumn = "wallet_id", entityColumn = "id")
-    var wallet: Wallet
+    var wallet: Wallet?
 )

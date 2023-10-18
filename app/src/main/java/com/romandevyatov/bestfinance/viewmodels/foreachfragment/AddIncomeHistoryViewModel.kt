@@ -154,7 +154,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    private fun getWalletByNameNotArchived(walletName: String): Wallet {
+    private fun getWalletByNameNotArchived(walletName: String): Wallet? {
         return walletRepository.getWalletByNameNotArchived(walletName)
     }
 
@@ -169,11 +169,19 @@ class AddIncomeHistoryViewModel @Inject constructor(
             val incomeGroupId = incomeSubGroup.id!!.toLong()
 
             val wallet = getWalletByNameNotArchived(walletNameBinding)
-            val walletId = wallet.id!!
 
-            insertIncomeHistoryRecord(incomeGroupId, amountBinding, commentBinding, parsedLocalDateTime, walletId)
+            val walletId = wallet?.id
+            if (walletId != null) {
+                insertIncomeHistoryRecord(
+                    incomeGroupId,
+                    amountBinding,
+                    commentBinding,
+                    parsedLocalDateTime,
+                    walletId
+                )
 
-            updateWallet(walletId, wallet, amountBinding)
+                updateWallet(walletId, wallet, amountBinding)
+            }
         }
 
     }

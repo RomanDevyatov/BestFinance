@@ -65,20 +65,23 @@ class UpdateExpenseHistoryFragment : Fragment() {
         binding.reusable.addHistoryButton.text = getString(R.string.update)
 
         updateExpenseHistoryViewModel.getExpenseHistoryWithExpenseSubGroupAndWalletById(args.expenseHistoryId)
-            .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
-                historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
+            ?.observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
+                if (historyWithSubGroupAndWallet != null) {
+                    historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
 
-                setupSpinnersValues(historyWithSubGroupAndWallet.expenseSubGroup,
-                    historyWithSubGroupAndWallet.wallet
-                )
+                    setupSpinnersValues(
+                        historyWithSubGroupAndWallet.expenseSubGroup,
+                        historyWithSubGroupAndWallet.wallet
+                    )
 
-                setupSpinners()
+                    setupSpinners()
 
-                setupDateTimeFiledValues()
+                    setupDateTimeFiledValues()
 
-                val expenseHistory = historyWithSubGroupAndWallet.expenseHistory
-                binding.reusable.commentEditText.setText(expenseHistory.comment)
-                binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
+                    val expenseHistory = historyWithSubGroupAndWallet.expenseHistory
+                    binding.reusable.commentEditText.setText(expenseHistory.comment)
+                    binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
+                }
             }
 
         return binding.root
@@ -99,10 +102,15 @@ class UpdateExpenseHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupSpinnersValues(expenseSubGroup: ExpenseSubGroup, wallet: Wallet) {
-        setSubGroupSpinnerValue(expenseSubGroup)
-        setGroupSpinnerValue(expenseSubGroup.expenseGroupId)
-        setWalletSpinnerValue(wallet)
+    private fun setupSpinnersValues(expenseSubGroup: ExpenseSubGroup?, wallet: Wallet?) {
+        if (expenseSubGroup != null) {
+            setSubGroupSpinnerValue(expenseSubGroup)
+            setGroupSpinnerValue(expenseSubGroup.expenseGroupId)
+        }
+
+        if (wallet != null) {
+            setWalletSpinnerValue(wallet)
+        }
     }
 
     private fun setSubGroupSpinnerValue(expenseSubGroup: ExpenseSubGroup) {
@@ -296,7 +304,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
         selectedDate.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.expenseHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.expenseHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
         val datePickerListener = DatePickerDialog.OnDateSetListener() {
                 _, year, month, dayOfMonth ->
             selectedDate.set(Calendar.YEAR, year)
@@ -323,7 +331,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
     private fun setTimeEditText() {
         val selectedTime = Calendar.getInstance()
         selectedTime.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.expenseHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.expenseHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -385,10 +393,11 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 val expenseHistory = historyWithSubGroupAndWalletGlobal.expenseHistory
 
                 val walletOld = historyWithSubGroupAndWalletGlobal.wallet
-                val updatedBalanceOld = walletOld.balance + expenseHistory.amount
-                val updatedOutputOld = walletOld.input.minus(expenseHistory.amount)
-                updateOldWallet(walletOld, updatedBalanceOld, updatedOutputOld)
-
+                if (walletOld != null) {
+                    val updatedBalanceOld = walletOld.balance + expenseHistory.amount
+                    val updatedOutputOld = walletOld.input.minus(expenseHistory.amount)
+                    updateOldWallet(walletOld, updatedBalanceOld, updatedOutputOld)
+                }
                 val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id
 
                 updateExpenseHistoryViewModel.updateExpenseHistoryAndWallet(

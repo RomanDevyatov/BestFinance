@@ -129,7 +129,8 @@ class UpdateWalletFragment : Fragment() {
 
         btnYes.setOnClickListener {
             dialog.dismiss()
-            if (difference.compareTo(0.0) == 1) {
+            val incomeOrExpenseType = difference.compareTo(0.0)
+            if (incomeOrExpenseType == 1) {
                 updateWalletViewModel.addOnlyWalletIncomeHistoryRecord(
                     IncomeHistory(
                         incomeSubGroupId = null,
@@ -139,19 +140,17 @@ class UpdateWalletFragment : Fragment() {
                         walletId = walletId
                     )
                 )
-            } else if (difference.compareTo(0.0) == -1) {
+            } else if (incomeOrExpenseType == -1) {
                 updateWalletViewModel.addOnlyWalletExpenseHistoryRecord(
                     ExpenseHistory(
                         expenseSubGroupId = null,
-                        amount = difference * -1.0,
+                        amount = difference,
                         comment = getString(R.string.changed_wallet_balance),
                         date = LocalDateTime.now(),
                         walletId = walletId
                     )
                 )
             }
-
-            performBackNavigation(args.source.toString())
         }
 
         bntNo.setOnClickListener {
