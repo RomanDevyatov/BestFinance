@@ -1,29 +1,30 @@
 package com.romandevyatov.bestfinance.ui.adapters.settings
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.databinding.ItemCategoryBinding
 
 class CategoryAdapter(
     private val categoryData: List<CategoryItem>,
     private val subCategoryClickListener: SubCategoryAdapter.OnSubCategoryClickListener) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val categoryName: TextView = itemView.findViewById(R.id.categoryName)
-        val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
-        val subcategoriesList: RecyclerView = itemView.findViewById(R.id.subcategoriesList)
+    class CategoryViewHolder(private val binding: ItemCategoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val categoryName = binding.categoryName
+        val categoryIcon = binding.categoryIcon
+        val subcategoriesList = binding.subcategoriesList
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_category, parent, false)
-        return CategoryViewHolder(itemView)
+        val binding = ItemCategoryBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return CategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -37,7 +38,6 @@ class CategoryAdapter(
             layoutManager = LinearLayoutManager(context)
             adapter = subcategoryAdapter
         }
-
     }
 
     override fun getItemCount() = categoryData.size

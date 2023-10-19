@@ -3,10 +3,8 @@ package com.romandevyatov.bestfinance.ui.adapters.settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.databinding.ItemSubcategoryBinding
 
 class SubCategoryAdapter(
     private val subcategoryData: List<SubCategoryItem>,
@@ -18,16 +16,20 @@ class SubCategoryAdapter(
         fun onSubCategoryClick(subCategory: SubCategoryItem)
     }
 
-    class SubCategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val subcategoryName: TextView = itemView.findViewById(R.id.subcategoryName)
-        val subcategoryIcon: ImageView = itemView.findViewById(R.id.subcategoryIcon)
-        val tickIcon: ImageView = itemView.findViewById(R.id.tickIcon)
+    class SubCategoryViewHolder(binding: ItemSubcategoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val subcategoryName = binding.subcategoryName
+        val subcategoryIcon = binding.subcategoryIcon
+        val tickIcon = binding.tickIcon
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubCategoryViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_subcategory, parent, false)
-        return SubCategoryViewHolder(itemView)
+        val binding = ItemSubcategoryBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return SubCategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SubCategoryViewHolder, position: Int) {
