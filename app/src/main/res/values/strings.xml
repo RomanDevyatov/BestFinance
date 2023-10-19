@@ -111,7 +111,7 @@
     <string name="income_groups">Income groups</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="archived">Archived</string>
+    <string name="archived" formatted="false">Archived</string>
     <string name="update">Update</string>
     <string name="money_flow">Money Flow</string>
     <string name="start_adding_transaction">Start adding transaction</string>

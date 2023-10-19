@@ -7,7 +7,7 @@
     <string name="text_validation_error_not_digit_field">Пожалуйста вводите только цифры!</string>
 
     <!--    general-->
-    <string name="add">Добавить</string>
+    <string name="add" formatted="false">Добавить</string>
     <string name="update">Обновить</string>
     <string name="name">Имя</string>
     <string name="wallet_balance_hint">Баланс</string>
