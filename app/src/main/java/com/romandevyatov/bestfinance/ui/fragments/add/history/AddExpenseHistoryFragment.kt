@@ -159,7 +159,7 @@ class AddExpenseHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
-        val datePickerListener = DatePickerDialog.OnDateSetListener() {
+        val datePickerListener = DatePickerDialog.OnDateSetListener {
                 _, year, month, dayOfMonth ->
             selectedDate.set(Calendar.YEAR, year)
             selectedDate.set(Calendar.MONTH, month)
