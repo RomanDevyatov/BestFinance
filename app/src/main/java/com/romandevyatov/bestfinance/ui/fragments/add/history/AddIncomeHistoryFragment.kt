@@ -48,9 +48,6 @@ import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistory
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add_income_history.*
-import kotlinx.android.synthetic.main.fragment_add_income_history.view.*
-import kotlinx.android.synthetic.main.fragment_add_income_sub_group.view.*
 import java.time.LocalDateTime
 import java.util.*
 
@@ -497,7 +494,7 @@ class AddIncomeHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
-        val datePickerListener = DatePickerDialog.OnDateSetListener() {
+        val datePickerListener = DatePickerDialog.OnDateSetListener {
                 _, year, month, dayOfMonth ->
             selectedDate.set(Calendar.YEAR, year)
             selectedDate.set(Calendar.MONTH, month)
