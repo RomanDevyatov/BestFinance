@@ -67,20 +67,23 @@ class UpdateTransferHistoryFragment : Fragment() {
         setOnBackPressedHandler()
 
         updateTransferHistoryViewModel.getTransferHistoryWithWalletsByIdLiveData(args.transferHistoryId)
-            .observe(viewLifecycleOwner) { transferHistoryWithWallets ->
-                historyWithWalletsGlobal = transferHistoryWithWallets.copy()
+            ?.observe(viewLifecycleOwner) { transferHistoryWithWallets ->
+                if (transferHistoryWithWallets != null) {
+                    historyWithWalletsGlobal = transferHistoryWithWallets.copy()
 
-                setupSpinnersValues(transferHistoryWithWallets.walletFrom,
-                    transferHistoryWithWallets.walletTo
-                )
+                    setupSpinnersValues(
+                        transferHistoryWithWallets.walletFrom,
+                        transferHistoryWithWallets.walletTo
+                    )
 
-                setupSpinners()
+                    setupSpinners()
 
-                setupDateTimeFiledValues()
+                    setupDateTimeFiledValues()
 
-                val transferHistory = transferHistoryWithWallets.transferHistory
-                binding.reusable.commentEditText.setText(transferHistory.comment)
-                binding.reusable.amountEditText.setText(transferHistory.amount.toString())
+                    val transferHistory = transferHistoryWithWallets.transferHistory
+                    binding.reusable.commentEditText.setText(transferHistory.comment)
+                    binding.reusable.amountEditText.setText(transferHistory.amount.toString())
+                }
 
                 setButtonOnClickListener(view)
             }

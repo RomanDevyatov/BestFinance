@@ -27,7 +27,7 @@ class TransferHistoryRepository @Inject constructor(
         transferHistoryDao.update(transferHistory)
     }
 
-    fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets> {
+    fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets>? {
         return transferHistoryDao.getWithWalletsByIdLiveData(id)
     }
 }

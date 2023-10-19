@@ -51,14 +51,16 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     fun archiveExpenseGroupById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val selectExpenseGroup = expenseGroupRepository.getExpenseGroupById(id)
 
-        val selectedExpenseGroupArchived = ExpenseGroup(
-            id = selectExpenseGroup.id,
-            name = selectExpenseGroup.name,
-            description = selectExpenseGroup.description,
-            archivedDate = LocalDateTime.now()
-        )
+        if (selectExpenseGroup != null) {
+            val selectedExpenseGroupArchived = ExpenseGroup(
+                id = selectExpenseGroup.id,
+                name = selectExpenseGroup.name,
+                description = selectExpenseGroup.description,
+                archivedDate = LocalDateTime.now()
+            )
 
-        expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupArchived)
+            expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupArchived)
+        }
     }
 
     fun unarchiveExpenseGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {

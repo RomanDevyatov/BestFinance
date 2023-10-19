@@ -30,7 +30,7 @@ interface IncomeSubGroupDao {
     fun getByName(name: String): IncomeSubGroup
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>
+    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>?
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :groupId")
     fun getByNameAndGroupId(name: String, groupId: Long): IncomeSubGroup?
@@ -45,10 +45,10 @@ interface IncomeSubGroupDao {
     fun getAllNotArchivedLiveData(): LiveData<List<IncomeSubGroup>>
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchived(name: String?): IncomeSubGroup
+    fun getByNameNotArchived(name: String?): IncomeSubGroup?
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>
+    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>?
 
     @Query("SELECT * FROM income_sub_group WHERE id = :id AND archived_date IS NULL")
     fun getByIdNotArchived(id: Long?): IncomeSubGroup?

@@ -32,7 +32,7 @@ class IncomeHistoryRepository @Inject constructor(
         incomeHistoryDao.delete(incomeHistory)
     }
 
-    fun getIncomeHistoryByIdLiveData(id: Long): LiveData<IncomeHistory> {
+    fun getIncomeHistoryByIdLiveData(id: Long): LiveData<IncomeHistory>? {
         return incomeHistoryDao.getByIdLiveData(id)
     }
 

@@ -49,19 +49,19 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesLiveData()
     }
 
-    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup> {
+    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup>? {
         return expenseGroupDao.getByNameNotArchivedLiveData(selectedExpenseGroupName)
     }
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name: String): ExpenseGroupWithExpenseSubGroups {
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name: String): ExpenseGroupWithExpenseSubGroups? {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameNotArchived(name)
     }
 
-    fun getExpenseGroupByName(name: String): ExpenseGroup {
+    fun getExpenseGroupByName(name: String): ExpenseGroup? {
         return expenseGroupDao.getExpenseGroupByName(name)
     }
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name: String): ExpenseGroupWithExpenseSubGroups {
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name: String): ExpenseGroupWithExpenseSubGroups? {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
     }
 
@@ -91,7 +91,7 @@ class ExpenseGroupRepository @Inject constructor(
         return expenseGroupDao.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
     }
 
-    fun getExpenseGroupById(id: Long): ExpenseGroup {
+    fun getExpenseGroupById(id: Long): ExpenseGroup? {
         return expenseGroupDao.getById(id)
     }
 

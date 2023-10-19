@@ -46,7 +46,7 @@ class ExpenseSubGroupViewModel @Inject constructor(
     val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
 
-    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup> {
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup>? {
         return expenseSubGroupRepository.getExpenseSubGroupByNameNotArchivedLiveData(name)
     }
 

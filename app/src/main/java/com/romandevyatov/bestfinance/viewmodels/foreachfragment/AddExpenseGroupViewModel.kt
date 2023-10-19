@@ -26,10 +26,12 @@ class AddExpenseGroupViewModel @Inject constructor(
             expenseGroupRepository.insertExpenseGroup(expenseGroup)
         } else if (existingExpenseGroup.archivedDate != null) {
             val expenseGroupWithExpenseSubGroups = expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
-            expenseGroupRepository.unarchiveExpenseGroup(expenseGroupWithExpenseSubGroups.expenseGroup)
+            if (expenseGroupWithExpenseSubGroups != null) {
+                expenseGroupRepository.unarchiveExpenseGroup(expenseGroupWithExpenseSubGroups.expenseGroup)
 
-            expenseGroupWithExpenseSubGroups.expenseSubGroups.forEach {
-                expenseSubGroupRepository.unarchiveExpenseSubGroup(it)
+                expenseGroupWithExpenseSubGroups.expenseSubGroups.forEach {
+                    expenseSubGroupRepository.unarchiveExpenseSubGroup(it)
+                }
             }
         }
     }

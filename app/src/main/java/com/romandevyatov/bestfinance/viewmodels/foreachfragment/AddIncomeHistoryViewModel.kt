@@ -166,21 +166,22 @@ class AddIncomeHistoryViewModel @Inject constructor(
     fun archive(incomeSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val incomeSubGroup = incomeSubGroupRepository.getByNameNotArchived(incomeSubGroupNameBinding)
-            val incomeGroupId = incomeSubGroup.id!!.toLong()
+            val incomeGroupId = incomeSubGroup?.id
+            if (incomeGroupId != null) {
+                val wallet = getWalletByNameNotArchived(walletNameBinding)
 
-            val wallet = getWalletByNameNotArchived(walletNameBinding)
+                val walletId = wallet?.id
+                if (walletId != null) {
+                    insertIncomeHistoryRecord(
+                        incomeGroupId,
+                        amountBinding,
+                        commentBinding,
+                        parsedLocalDateTime,
+                        walletId
+                    )
 
-            val walletId = wallet?.id
-            if (walletId != null) {
-                insertIncomeHistoryRecord(
-                    incomeGroupId,
-                    amountBinding,
-                    commentBinding,
-                    parsedLocalDateTime,
-                    walletId
-                )
-
-                updateWallet(walletId, wallet, amountBinding)
+                    updateWallet(walletId, wallet, amountBinding)
+                }
             }
         }
 
