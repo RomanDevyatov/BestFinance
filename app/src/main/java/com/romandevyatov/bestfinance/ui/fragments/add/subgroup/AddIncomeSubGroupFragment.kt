@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
@@ -175,19 +176,17 @@ class AddIncomeSubGroupFragment : Fragment() {
         subGroup: IncomeSubGroup,
         message: String
     ) {
+        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
         val dialog = Dialog(context)
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
+        dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+        binding.tvMessage.text = message
 
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
+        binding.btnYes.setOnClickListener {
             addSubGroupViewModel.unarchiveIncomeSubGroup(subGroup)
             dialog.dismiss()
 
@@ -198,7 +197,7 @@ class AddIncomeSubGroupFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        bntNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 

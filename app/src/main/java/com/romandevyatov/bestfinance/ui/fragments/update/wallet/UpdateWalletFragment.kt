@@ -21,6 +21,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
@@ -115,19 +116,17 @@ class UpdateWalletFragment : Fragment() {
         difference: Double,
         message: String?
     ) {
+        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
         val dialog = Dialog(context)
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
+        dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+        binding.tvMessage.text = message
 
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
+        binding.btnYes.setOnClickListener {
             dialog.dismiss()
             val incomeOrExpenseType = difference.compareTo(0.0)
             if (incomeOrExpenseType == 1) {
@@ -153,7 +152,7 @@ class UpdateWalletFragment : Fragment() {
             }
         }
 
-        bntNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -161,25 +160,23 @@ class UpdateWalletFragment : Fragment() {
     }
 
     private fun showUnarchiveDialog(context: Context, wallet: Wallet, message: String?) {
+        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
         val dialog = Dialog(context)
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
+        dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+        binding.tvMessage.text = message
 
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
+        binding.btnYes.setOnClickListener {
             dialog.dismiss()
             updateWalletViewModel.unarchiveWallet(wallet)
             performBackNavigation(args.source.toString())
         }
 
-        bntNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 

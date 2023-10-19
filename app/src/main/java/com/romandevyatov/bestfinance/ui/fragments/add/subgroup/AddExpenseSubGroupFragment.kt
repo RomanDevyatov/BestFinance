@@ -11,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -21,6 +19,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
+import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
@@ -173,24 +172,22 @@ class AddExpenseSubGroupFragment : Fragment() {
         subGroup: ExpenseSubGroup,
         message: String
     ) {
+        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
         val dialog = Dialog(context)
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
+        dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+        binding.tvMessage.text = message
 
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
+        binding.btnYes.setOnClickListener {
             addSubGroupViewModel.unarchiveExpenseSubGroup(subGroup)
             dialog.dismiss()
         }
 
-        bntNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 

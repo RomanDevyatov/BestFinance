@@ -24,6 +24,7 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
@@ -153,25 +154,23 @@ class AddWalletFragment : Fragment() {
     }
 
     private fun showUnarchiveDialog(context: Context, wallet: Wallet, message: String?) {
+        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
         val dialog = Dialog(context)
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_alert)
+        dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val tvMessage: TextView = dialog.findViewById(R.id.tvMessage)
-        val btnYes: Button = dialog.findViewById(R.id.btnYes)
-        val bntNo: Button = dialog.findViewById(R.id.btnNo)
+        binding.tvMessage.text = message
 
-        tvMessage.text = message
-
-        btnYes.setOnClickListener {
+        binding.btnYes.setOnClickListener {
             dialog.dismiss()
             walletViewModel.unarchiveWallet(wallet)
             performNavigation(args.source, wallet.name)
         }
 
-        bntNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 
