@@ -15,8 +15,6 @@ class TransferHistoryRepository @Inject constructor(
 
     fun getAllTransferHistories(): LiveData<List<TransferHistory>> = transferHistoryDao.getAll()
 
-    fun getAllTransferHistoriesByArchivedDate(archivedDate: LocalDateTime?): LiveData<List<TransferHistory>> = transferHistoryDao.getAll()
-
     suspend fun insertTransferHistory(transferHistory: TransferHistory) {
         transferHistoryDao.insert(transferHistory)
     }

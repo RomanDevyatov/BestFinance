@@ -22,6 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
@@ -32,9 +33,10 @@ import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity() : BaseActivity(), OnExitAppListener {
+class MainActivity : BaseActivity(), OnExitAppListener {
 
-    private lateinit var binding: ActivityMainBinding
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -44,7 +46,7 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setNavigationTopBar()
@@ -52,6 +54,11 @@ class MainActivity() : BaseActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
 
         applySavedTheme()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     fun getProtectedStorage(): Storage {

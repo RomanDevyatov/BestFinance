@@ -118,7 +118,6 @@ class AddExpenseHistoryFragment : Fragment() {
         return binding.root
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -358,7 +357,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun setGroupSpinnerOnClickListener() {
         binding.groupSpinner.setOnItemClickListener {
-                _, _, position, _ ->
+                _, _, _, _ ->
 
             val selectedGroupName =
                 binding.groupSpinner.text.toString()
@@ -398,7 +397,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun setSubGroupSpinnerOnClickListener() {
         binding.subGroupSpinner.setOnItemClickListener {
-                _, _, position, _ ->
+                _, _, _, _ ->
 
             val selectedSubGroupName = binding.subGroupSpinner.text.toString()
 
@@ -418,7 +417,7 @@ class AddExpenseHistoryFragment : Fragment() {
 
     private fun setWalletSpinnerOnItemClickListener() {
         binding.walletSpinner.setOnItemClickListener {
-                _, _, position, _ ->
+                _, _, _, _ ->
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
