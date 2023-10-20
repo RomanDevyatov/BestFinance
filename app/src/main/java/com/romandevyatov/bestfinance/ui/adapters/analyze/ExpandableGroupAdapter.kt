@@ -108,7 +108,7 @@ class ExpandableGroupAdapter(
                                 SubParentData(
                                     parentTitle = changingBalanceTitle,
                                     childNestedListOfExpenseSubGroup = it.expenseSubGroupWithExpenseHistories,
-                                    type = Constants.INCOMINGS_PARENT_TYPE
+                                    type = Constants.EXPENSES_PARENT_TYPE
                                 )
                             }
                         }!!.toList()

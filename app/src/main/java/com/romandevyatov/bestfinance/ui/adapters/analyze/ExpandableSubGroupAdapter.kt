@@ -53,7 +53,7 @@ class ExpandableSubGroupAdapter(private val mList: List<SubParentData>) :
             when (subParentData.type) {
                 Constants.INCOMINGS_PARENT_TYPE -> {
                     val adapter = NestedChildAdapter(
-                        subParentData.childNestedListOfIncomeSubGroup?.map {
+                        subParentData?.childNestedListOfIncomeSubGroup?.map {
                             ChildData(it, null, Constants.INCOMINGS_PARENT_TYPE)
                         }!!.toList()
                     )
