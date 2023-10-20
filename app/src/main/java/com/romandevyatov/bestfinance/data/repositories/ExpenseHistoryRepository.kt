@@ -32,4 +32,8 @@ class ExpenseHistoryRepository @Inject constructor(
     suspend fun updateExpenseHistory(expenseHistory: ExpenseHistory) {
         return expenseHistoryDao.update(expenseHistory)
     }
+
+    fun getExpenseHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>> {
+        return expenseHistoryDao.getAllWhereSubGroupIsNullLiveData()
+    }
 }

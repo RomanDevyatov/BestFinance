@@ -5,10 +5,10 @@ import androidx.room.Relation
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 
-data class ExpenseSubGroupWithExpenseHistories (
+data class ExpenseSubGroupWithExpenseHistories(
 
     @Embedded
-    var expenseSubGroup: ExpenseSubGroup,
+    var expenseSubGroup: ExpenseSubGroup?,
 
     @Relation(
         entity = ExpenseHistory::class,

@@ -8,7 +8,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 data class ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(
 
     @Embedded
-    val expenseGroup: ExpenseGroup,
+    val expenseGroup: ExpenseGroup?,
 
     @Relation(
         entity = ExpenseSubGroup::class,

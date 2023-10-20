@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseSubGroupWithExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeSubGroupWithIncomeHistories
 import com.romandevyatov.bestfinance.databinding.FragmentAnalyzeBinding
@@ -41,72 +44,89 @@ class AnalyzeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mList: ArrayList<ParentData> = ArrayList()
+        expandableGroupAdapter = ExpandableGroupAdapter(arrayListOf(), getString(R.string.changed_wallet_balance))
+        binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
+        binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
 
+        setupObservers()
+    }
+
+    private fun setupObservers() {
         analyzeViewModel.allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData.observe(viewLifecycleOwner) { incomes ->
-            analyzeViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(
-                viewLifecycleOwner
-            ) { expenses ->
+            analyzeViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(viewLifecycleOwner) { expenses ->
+                analyzeViewModel.getIncomeHistoriesWhereSubGroupIsNullLiveData().observe(viewLifecycleOwner) { incomesChangingBalance ->
+                    val combinedList = incomes.toMutableList()
+                    val balanceIncomeChangingHistories = getIncomeChangingBalanceRecords(incomesChangingBalance)
+                    if (balanceIncomeChangingHistories != null) {
+                        combinedList += balanceIncomeChangingHistories
+                    }
 
-                analyzeViewModel.getIncomeHistoriesWhereSubGroupIsNullLiveData()
-                    .observe(viewLifecycleOwner) {
-                        val combinedList: MutableList<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories> =
-                            incomes.toMutableList()
-                        val balanceIncomeChangingHistories = gets(it)
-                        if (balanceIncomeChangingHistories != null) {
-                            combinedList += balanceIncomeChangingHistories
+                    val incomesParentData = ParentData(
+                        analyzeParentTitle = getString(R.string.incomes),
+                        type = Constants.INCOMINGS_PARENT_TYPE,
+                        subParentNestedListIncomings = combinedList
+                    )
+                    addParentData(incomesParentData)
+
+                    analyzeViewModel.getExpenseHistoriesWhereSubGroupIsNullLiveData().observe(viewLifecycleOwner) { expenseChangingBalance ->
+                        val combinedExpenseList = expenses.toMutableList()
+
+                        val balanceExpenseChangingHistories = getExpenseChangingBalanceRecords(expenseChangingBalance)
+
+                        if (balanceExpenseChangingHistories != null) {
+                            combinedExpenseList += balanceExpenseChangingHistories
                         }
 
-                        val apd = ParentData(
-                            analyzeParentTitle = getString(R.string.incomes),
-                            type = Constants.INCOMINGS_PARENT_TYPE,
-                            subParentNestedListIncomings = combinedList
-                        )
-                        mList.add(apd)
-
-                        val parentData = ParentData(
+                        val expensesParentData = ParentData(
                             analyzeParentTitle = getString(R.string.expenses),
                             type = Constants.EXPENSES_PARENT_TYPE,
-                            subParentNestedListExpenses = expenses
+                            subParentNestedListExpenses = combinedExpenseList
                         )
-                        mList.add(parentData)
+                        addParentData(expensesParentData)
 
-                        expandableGroupAdapter = ExpandableGroupAdapter(mList)
+                        expandableGroupAdapter = ExpandableGroupAdapter(
+                            expandableGroupAdapter.getList(),
+                            getString(R.string.changed_wallet_balance)
+                        )
+
                         binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
-                        binding.analyzeGroupRecycler.layoutManager =
-                            LinearLayoutManager(requireContext())
+                        binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
                     }
-            }
-
-            analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
-                val totalIncomeValue = history.sumOf { it.amount }
-
-                analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
-                    val totalExpensesValue = expenseHistory.sumOf { it.amount }
-
-                    binding.analyzeGroupTextView.text =
-                        ((totalIncomeValue.minus(totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
                 }
+            }
+        }
+
+        analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
+            val totalIncomeValue = history.sumOf { it.amount }
+
+            analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
+                val totalExpensesValue = expenseHistory.sumOf { it.amount }
+
+                binding.analyzeGroupTextView.text =
+                    (((totalIncomeValue - totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
             }
         }
     }
 
-    private fun gets(it: List<IncomeHistory>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
-        if (it.isNotEmpty()) {
-            val incomeSubGroupWithIncomeHistories: ArrayList<IncomeSubGroupWithIncomeHistories> =
-                ArrayList()
-            incomeSubGroupWithIncomeHistories.add(
-                IncomeSubGroupWithIncomeHistories(
-                    null,
-                    it
-                )
-            )
-            return IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(
-                incomeGroup = null,
-                incomeSubGroupWithIncomeHistories = incomeSubGroupWithIncomeHistories
-            )
-        }
+    private fun addParentData(data: ParentData) {
+        val mList = expandableGroupAdapter.getList()
+        mList.add(data)
+        expandableGroupAdapter.setList(mList)
+    }
 
+    private fun getIncomeChangingBalanceRecords(it: List<IncomeHistory>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
+        if (it.isNotEmpty()) {
+            val incomeSubGroupWithIncomeHistories = arrayListOf(IncomeSubGroupWithIncomeHistories(null, it))
+            return IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(null, incomeSubGroupWithIncomeHistories)
+        }
+        return null
+    }
+
+    private fun getExpenseChangingBalanceRecords(it: List<ExpenseHistory>): ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories? {
+        if (it.isNotEmpty()) {
+            val expenseSubGroupWithExpenseHistories = arrayListOf(ExpenseSubGroupWithExpenseHistories(null, it))
+            return ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(null, expenseSubGroupWithExpenseHistories)
+        }
         return null
     }
 

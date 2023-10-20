@@ -23,6 +23,10 @@ class AnalyzeViewModel @Inject constructor(
         return incomeHistoryRepository.getIncomeHistoriesWhereSubGroupIsNullLiveData()
     }
 
+    fun getExpenseHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>> {
+        return expenseHistoryRepository.getExpenseHistoriesWhereSubGroupIsNullLiveData()
+    }
+
     val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
 
     val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData()

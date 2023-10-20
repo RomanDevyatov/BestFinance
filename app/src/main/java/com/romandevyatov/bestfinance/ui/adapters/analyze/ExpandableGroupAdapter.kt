@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.adapters.analyze
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,10 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ParentData
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubParentData
 import com.romandevyatov.bestfinance.utils.Constants
 
-class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) :
-    RecyclerView.Adapter<ExpandableGroupAdapter.ItemViewHolder>() {
+class ExpandableGroupAdapter(
+    private var parents: ArrayList<ParentData>,
+    private val changingBalanceTitle: String
+) : RecyclerView.Adapter<ExpandableGroupAdapter.ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding = CardExpandableParentBinding.inflate(
@@ -25,6 +28,16 @@ class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) :
 
     override fun getItemCount(): Int {
         return parents.size
+    }
+
+    fun getList(): ArrayList<ParentData> {
+        return parents
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setList(newList: ArrayList<ParentData>) {
+        parents = newList
+        notifyDataSetChanged()
     }
 
     inner class ItemViewHolder(private val binding: CardExpandableParentBinding) :
@@ -62,7 +75,7 @@ class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) :
                                 )
                             } else {
                                 SubParentData(
-                                    parentTitle = "Переводы",
+                                    parentTitle = changingBalanceTitle,
                                     childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
                                     type = Constants.INCOMINGS_PARENT_TYPE
                                 )
@@ -84,11 +97,20 @@ class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) :
                 Constants.EXPENSES_PARENT_TYPE -> {
                     adapter = ExpandableSubGroupAdapter(
                         subParentModel.subParentNestedListExpenses?.map {
-                            SubParentData(
-                                parentTitle = it.expenseGroup.name,
-                                childNestedListOfExpenseSubGroup = it.expenseSubGroupWithExpenseHistories,
-                                type = Constants.EXPENSES_PARENT_TYPE
-                            )
+                            if (it.expenseGroup != null) {
+                                SubParentData(
+                                    parentTitle = it.expenseGroup.name,
+                                    childNestedListOfExpenseSubGroup =
+                                        it.expenseSubGroupWithExpenseHistories,
+                                    type = Constants.EXPENSES_PARENT_TYPE
+                                )
+                            } else {
+                                SubParentData(
+                                    parentTitle = changingBalanceTitle,
+                                    childNestedListOfExpenseSubGroup = it.expenseSubGroupWithExpenseHistories,
+                                    type = Constants.INCOMINGS_PARENT_TYPE
+                                )
+                            }
                         }!!.toList()
                     )
                     binding.childRv.adapter = adapter
