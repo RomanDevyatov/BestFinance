@@ -39,4 +39,8 @@ class IncomeHistoryRepository @Inject constructor(
     fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet>? {
         return incomeHistoryDao.getWithIncomeSubGroupAndWalletByIdLiveData(id)
     }
+
+    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
+        return incomeHistoryDao.getWhereSubGroupIdIsNullLiveData()
+    }
 }

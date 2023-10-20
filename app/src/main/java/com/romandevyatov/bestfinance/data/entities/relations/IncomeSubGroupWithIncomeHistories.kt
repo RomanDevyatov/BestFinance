@@ -5,10 +5,10 @@ import androidx.room.Relation
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 
-class IncomeSubGroupWithIncomeHistories (
+class IncomeSubGroupWithIncomeHistories(
 
     @Embedded
-    val incomeSubGroup: IncomeSubGroup,
+    val incomeSubGroup: IncomeSubGroup?,
 
     @Relation(
         entity = IncomeHistory::class,

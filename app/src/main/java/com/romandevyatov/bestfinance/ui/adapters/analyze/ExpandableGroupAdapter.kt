@@ -54,11 +54,19 @@ class ExpandableGroupAdapter(private val parents: ArrayList<ParentData>) :
                 Constants.INCOMINGS_PARENT_TYPE -> {
                     adapter = ExpandableSubGroupAdapter(
                         subParentModel.subParentNestedListIncomings?.map {
-                            SubParentData(
-                                parentTitle = it.incomeGroup.name,
-                                childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
-                                type = Constants.INCOMINGS_PARENT_TYPE
-                            )
+                            if (it.incomeGroup != null) {
+                                SubParentData(
+                                    parentTitle = it.incomeGroup.name,
+                                    childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
+                                    type = Constants.INCOMINGS_PARENT_TYPE
+                                )
+                            } else {
+                                SubParentData(
+                                    parentTitle = "Переводы",
+                                    childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
+                                    type = Constants.INCOMINGS_PARENT_TYPE
+                                )
+                            }
                         }!!.toList()
                     )
                     binding.childRv.adapter = adapter

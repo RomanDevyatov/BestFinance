@@ -8,7 +8,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 data class IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories (
 
     @Embedded
-    val incomeGroup: IncomeGroup,
+    val incomeGroup: IncomeGroup?,
 
     @Relation(
         entity = IncomeSubGroup::class,
