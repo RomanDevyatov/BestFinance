@@ -45,4 +45,7 @@ interface IncomeHistoryDao {
 
     @Query("SELECT * FROM income_history WHERE income_sub_group_id IS NULL")
     fun getWhereSubGroupIdIsNullLiveData(): LiveData<List<IncomeHistory>>
+
+    @Query("SELECT * FROM income_history WHERE id = :id")
+    fun getById(id: Long): IncomeHistory?
 }

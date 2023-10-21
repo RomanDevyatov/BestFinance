@@ -20,6 +20,9 @@ interface ExpenseHistoryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(expenseHistory: ExpenseHistory)
 
+    @Query("SELECT * FROM expense_history WHERE id = :id")
+    fun getById(id: Long): ExpenseHistory
+
     @Delete
     suspend fun delete(expenseHistory: ExpenseHistory)
 

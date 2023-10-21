@@ -39,4 +39,7 @@ interface TransferHistoryDao {
     @Transaction
     @Query("SELECT * FROM transfer_history WHERE id = :id LIMIT 1")
     fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets>?
+
+    @Query("SELECT * FROM transfer_history WHERE id = :id")
+    fun getById(id: Long): TransferHistory?
 }

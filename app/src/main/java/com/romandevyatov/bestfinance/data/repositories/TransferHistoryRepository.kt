@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.TransferHistoryDao
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,10 +18,6 @@ class TransferHistoryRepository @Inject constructor(
         transferHistoryDao.insert(transferHistory)
     }
 
-    suspend fun deleteTransferHistory(transferHistory: TransferHistory) {
-        transferHistoryDao.delete(transferHistory)
-    }
-
     suspend fun updateTransferHistory(transferHistory: TransferHistory) {
         transferHistoryDao.update(transferHistory)
     }
@@ -33,5 +28,9 @@ class TransferHistoryRepository @Inject constructor(
 
     suspend fun deleteTransferHistoryById(id: Long) {
         transferHistoryDao.deleteById(id)
+    }
+
+    fun getTransferHistoryById(id: Long): TransferHistory? {
+        return transferHistoryDao.getById(id)
     }
 }

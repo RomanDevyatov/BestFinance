@@ -6,7 +6,6 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.exp
 
 @Singleton
 class ExpenseHistoryRepository @Inject constructor(
@@ -39,5 +38,9 @@ class ExpenseHistoryRepository @Inject constructor(
 
     suspend fun deleteExpenseHistory(id: Long) {
         return expenseHistoryDao.deleteById(id)
+    }
+
+    fun getExpenseHistoryById(id: Long): ExpenseHistory {
+        return expenseHistoryDao.getById(id)
     }
 }

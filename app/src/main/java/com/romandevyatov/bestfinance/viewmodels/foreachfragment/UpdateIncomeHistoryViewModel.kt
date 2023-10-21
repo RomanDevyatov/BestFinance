@@ -60,7 +60,24 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupByIdLiveData(incomeGroupId)
     }
 
-    fun deleteItem(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.deleteIncomeHistoryById(id)
+    private var deletedItem: IncomeHistory? = null
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = incomeHistoryRepository.getIncomeHistoryById(id)
+            deletedItem = itemToDelete
+            incomeHistoryRepository.deleteIncomeHistoryById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deletedItem?.let { itemToRestore ->
+            try {
+                incomeHistoryRepository.insertIncomeHistory(itemToRestore)
+                deletedItem = null
+            } catch (_: Exception) { }
+        }
     }
 }

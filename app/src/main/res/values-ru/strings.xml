@@ -165,5 +165,6 @@
     <string name="delete_confirmation_warning_message">Вы действительно хотите удалить эту запись?</string>
     <string name="group_is_already_existing">Эта группа %s уже существует</string>
     <string name="group_is_archived">Группа %1$s архивирована. Хотите ли Вы разархивировать группу доходов %2$s?</string>
+    <string name="undo">Отменить</string>
 
 </resources>

@@ -61,7 +61,24 @@ class UpdateTransferHistoryViewModel @Inject constructor(
         }
     }
 
+    private var deletedItem: TransferHistory? = null
+
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
-        transferHistoryRepository.deleteTransferHistoryById(id)
+        try {
+            val itemToDelete = transferHistoryRepository.getTransferHistoryById(id)
+            deletedItem = itemToDelete
+            transferHistoryRepository.deleteTransferHistoryById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deletedItem?.let { itemToRestore ->
+            try {
+                transferHistoryRepository.insertTransferHistory(itemToRestore)
+                deletedItem = null
+            } catch (_: Exception) { }
+        }
     }
 }

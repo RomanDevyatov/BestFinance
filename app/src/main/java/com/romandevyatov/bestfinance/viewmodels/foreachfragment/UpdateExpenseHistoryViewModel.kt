@@ -22,7 +22,7 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository,
     private val walletRepository: WalletRepository
 ): ViewModel() {
-    
+
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     fun getExpenseHistoryWithExpenseSubGroupAndWalletById(expenseHistoryId: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet>? {
@@ -30,18 +30,18 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     }
 
     fun updateExpenseHistoryAndWallet(updatedExpenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
-        updateExpenseHistory(
-            updatedExpenseHistory
-        )
+        try {
+            updateExpenseHistory(updatedExpenseHistory)
 
-        val wallet = walletRepository.getWalletById(updatedExpenseHistory.walletId)
-        if (wallet != null) {
-            val updatedWallet = wallet.copy(
-                balance = wallet.balance - updatedExpenseHistory.amount,
-                output = wallet.output + updatedExpenseHistory.amount
-            )
-            walletRepository.updateWallet(updatedWallet)
-        }
+            val wallet = walletRepository.getWalletById(updatedExpenseHistory.walletId)
+            if (wallet != null) {
+                val updatedWallet = wallet.copy(
+                    balance = wallet.balance - updatedExpenseHistory.amount,
+                    output = wallet.output + updatedExpenseHistory.amount
+                )
+                walletRepository.updateWallet(updatedWallet)
+            }
+        } catch (_: Exception) { }
     }
 
     fun updateExpenseHistory(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
@@ -66,7 +66,22 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
         walletRepository.updateWallet(wallet)
     }
 
+    private var deletedItem: ExpenseHistory? = null
+
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
-        expenseHistoryRepository.deleteExpenseHistory(id)
+        try {
+            val itemToDelete = expenseHistoryRepository.getExpenseHistoryById(id)
+            deletedItem = itemToDelete
+            expenseHistoryRepository.deleteExpenseHistory(id)
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deletedItem?.let { itemToRestore ->
+            try {
+                expenseHistoryRepository.insertExpenseHistory(itemToRestore)
+                deletedItem = null
+            } catch (_: Exception) { }
+        }
     }
 }

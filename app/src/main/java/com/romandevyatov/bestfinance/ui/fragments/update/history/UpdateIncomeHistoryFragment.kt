@@ -108,7 +108,8 @@ class UpdateIncomeHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateIncomeHistoryViewModel,
-            itemId = args.incomeHistoryId
+            itemId = args.incomeHistoryId,
+            rootView = binding.root
         ) { navigateToHistory() }
     }
 

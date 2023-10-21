@@ -100,7 +100,8 @@ class UpdateTransferHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateTransferHistoryViewModel,
-            itemId = args.transferHistoryId
+            itemId = args.transferHistoryId,
+            rootView = binding.root
         ) { navigateToHistory() }
     }
 

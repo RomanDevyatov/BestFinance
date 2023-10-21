@@ -107,7 +107,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateExpenseHistoryViewModel,
-            itemId = args.expenseHistoryId
+            itemId = args.expenseHistoryId,
+            rootView = binding.root
         ) { navigateToHistory() }
     }
 
