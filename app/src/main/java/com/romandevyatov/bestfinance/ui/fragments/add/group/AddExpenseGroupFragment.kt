@@ -121,30 +121,4 @@ class AddExpenseGroupFragment : Fragment() {
         _binding = null
     }
 
-    private fun showWalletDialog(context: Context, group: ExpenseGroup, message: String?) {
-        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
-        val dialog = Dialog(context)
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(binding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        binding.tvMessage.text = message
-
-        binding.btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveExpenseGroup(group)
-            dialog.dismiss()
-            val action = AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-            action.expenseGroupName = group.name
-            findNavController().navigate(action)
-        }
-
-        binding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
 }
