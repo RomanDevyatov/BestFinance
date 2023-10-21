@@ -1,30 +1,22 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.wallet
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
-import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
+import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
@@ -99,11 +91,13 @@ class AddWalletFragment : Fragment() {
                             getString(R.string.wallet_is_already_existing, walletNameBinding)
                         )
                     } else {
-                        showUnarchiveDialog(
+                        WindowUtil.showUnarchiveDialog(
                             requireContext(),
-                            wallet,
                             getString(R.string.unarchive_wallet, wallet.name, wallet.name)
-                        )
+                        ) {
+                            walletViewModel.unarchiveWallet(wallet)
+                            performNavigation(args.source, wallet.name)
+                        }
                     }
                 }
             }
@@ -151,30 +145,6 @@ class AddWalletFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
-    }
-
-    private fun showUnarchiveDialog(context: Context, wallet: Wallet, message: String?) {
-        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
-        val dialog = Dialog(context)
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(binding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        binding.tvMessage.text = message
-
-        binding.btnYes.setOnClickListener {
-            dialog.dismiss()
-            walletViewModel.unarchiveWallet(wallet)
-            performNavigation(args.source, wallet.name)
-        }
-
-        binding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
 }

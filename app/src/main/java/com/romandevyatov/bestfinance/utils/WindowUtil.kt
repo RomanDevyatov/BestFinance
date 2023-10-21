@@ -79,5 +79,31 @@ class WindowUtil {
             dialog.show()
         }
 
+        fun showUnarchiveDialog(
+            context: Context,
+            message: String?,
+            onUnarchiveAction: () -> Unit
+        ) {
+            val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
+            val dialog = Dialog(context)
+
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(binding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            binding.tvMessage.text = message
+
+            binding.btnYes.setOnClickListener {
+                dialog.dismiss()
+                onUnarchiveAction()
+            }
+
+            binding.btnNo.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
 }

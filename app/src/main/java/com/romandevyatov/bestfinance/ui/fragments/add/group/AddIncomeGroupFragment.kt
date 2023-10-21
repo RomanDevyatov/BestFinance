@@ -1,23 +1,18 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.group
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
-import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
@@ -93,14 +88,18 @@ class AddIncomeGroupFragment : Fragment() {
                 } else if (incomeGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
-                        "This group `$groupNameBinding` is already existing."
+                        getString(R.string.group_is_already_existing, groupNameBinding)
                     )
                 } else {
-                    showUnarchiveDialog(
+                    WindowUtil.showUnarchiveDialog(
                         requireContext(),
-                        incomeGroup,
-                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` income group?"
-                    )
+                        getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
+                    ) {
+                        addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
+                        val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                        action.incomeGroupName = incomeGroup.name
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
@@ -115,34 +114,6 @@ class AddIncomeGroupFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showUnarchiveDialog(context: Context, group: IncomeGroup, message: String?) {
-        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
-        val dialog = Dialog(context)
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(binding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        binding.tvMessage.text = message
-
-        binding.btnYes.setOnClickListener {
-            addGroupViewModel.unarchiveIncomeGroup(group)
-            dialog.dismiss()
-            val action =
-                AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-            action.incomeGroupName = group.name
-            findNavController().navigate(action)
-        }
-
-
-        binding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
 }

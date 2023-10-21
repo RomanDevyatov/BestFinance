@@ -1,16 +1,11 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.subgroup
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,7 +14,6 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
-import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
@@ -89,11 +83,12 @@ class AddExpenseSubGroupFragment : Fragment() {
                             getString(R.string.sub_group_exists_message, subGroupNameBinding)
                         )
                     } else {
-                        showUnarchiveDialog(
+                        WindowUtil.showUnarchiveDialog(
                             requireContext(),
-                            subGroup,
                             getString(R.string.confirm_unarchive_message, subGroupNameBinding)
-                        )
+                        ) {
+                            addSubGroupViewModel.unarchiveExpenseSubGroup(subGroup)
+                        }
                     }
                 }
             }
@@ -165,33 +160,6 @@ class AddExpenseSubGroupFragment : Fragment() {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
-    }
-
-    private fun showUnarchiveDialog(
-        context: Context,
-        subGroup: ExpenseSubGroup,
-        message: String
-    ) {
-        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
-        val dialog = Dialog(context)
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(binding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        binding.tvMessage.text = message
-
-        binding.btnYes.setOnClickListener {
-            addSubGroupViewModel.unarchiveExpenseSubGroup(subGroup)
-            dialog.dismiss()
-        }
-
-        binding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
 }

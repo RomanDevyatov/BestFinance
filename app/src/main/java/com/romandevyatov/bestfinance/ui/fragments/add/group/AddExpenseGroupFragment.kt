@@ -15,6 +15,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
@@ -92,13 +93,14 @@ class AddExpenseGroupFragment : Fragment() {
                 } else if (expenseGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
-                        "This group `$groupNameBinding` is already existing."
+                        getString(R.string.group_is_already_existing, groupNameBinding)
                     )
                 } else {
                     showWalletDialog(
                         requireContext(),
                         expenseGroup,
-                        "The group with this name is archived. Do you want to unarchive `$groupNameBinding` expense group?")
+                        getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
+                    )
                 }
             }
         }

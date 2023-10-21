@@ -10,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -94,11 +92,13 @@ class UpdateWalletFragment : Fragment() {
                         getString(R.string.wallet_name_already_exists, walletNameBinding)
                     )
                 } else {
-                    showUnarchiveDialog(
+                    WindowUtil.showUnarchiveDialog(
                         requireContext(),
-                        wallet,
                         getString(R.string.wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating, walletNameBinding, walletNameBinding)
-                    )
+                    ) {
+                        updateWalletViewModel.unarchiveWallet(wallet)
+                        performBackNavigation(args.source.toString())
+                    }
                 }
             }
         }
@@ -150,30 +150,6 @@ class UpdateWalletFragment : Fragment() {
                     )
                 )
             }
-        }
-
-        binding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showUnarchiveDialog(context: Context, wallet: Wallet, message: String?) {
-        val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
-        val dialog = Dialog(context)
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(binding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        binding.tvMessage.text = message
-
-        binding.btnYes.setOnClickListener {
-            dialog.dismiss()
-            updateWalletViewModel.unarchiveWallet(wallet)
-            performBackNavigation(args.source.toString())
         }
 
         binding.btnNo.setOnClickListener {
