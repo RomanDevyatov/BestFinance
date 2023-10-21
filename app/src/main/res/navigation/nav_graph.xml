@@ -238,7 +238,7 @@
 
     <fragment
         android:id="@+id/groups_and_sub_groups_settings_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.GroupsAndSubGroupsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragment"
         android:label="@string/groups_and_sub_groups"
         tools:layout="@layout/fragment_settings_groups_and_sub_groups" >
 
@@ -266,7 +266,7 @@
 
     <fragment
         android:id="@+id/wallets_settings_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.more.wallets.SettingsWalletsFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.settings.wallets.SettingsWalletsFragment"
         android:label="@string/wallets"
         tools:layout="@layout/fragment_settings_wallets" >
 

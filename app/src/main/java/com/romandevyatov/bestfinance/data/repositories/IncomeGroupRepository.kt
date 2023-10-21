@@ -102,11 +102,19 @@ class IncomeGroupRepository @Inject constructor(
         return incomeGroupDao.updateArchivedDateById(id, date)
     }
 
-    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups> {
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups> {
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id)
+    }
+
+    fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id: Long): IncomeGroupWithIncomeSubGroups? {
+        return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id)
     }
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id: Long): IncomeGroupWithIncomeSubGroups? {
         return incomeGroupDao.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id)
+    }
+
+    fun getIncomeGroupById(id: Long): IncomeGroup? {
+        return incomeGroupDao.getById(id)
     }
 }

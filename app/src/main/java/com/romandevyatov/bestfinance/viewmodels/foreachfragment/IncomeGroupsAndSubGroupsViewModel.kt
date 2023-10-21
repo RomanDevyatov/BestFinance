@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
@@ -35,10 +36,6 @@ class IncomeGroupsAndSubGroupsViewModel @Inject constructor(
         incomeGroupRepository.updateArchivedDateById(id, dateTime)
     }
 
-    fun deleteIncomeGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.deleteIncomeGroupById(id)
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveIncomeSubGroupByIdSpecific(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         val dateTime = (LocalDateTime.now()).format(LocalDateTimeRoomTypeConverter.dateTimeFormatter)
@@ -51,4 +48,46 @@ class IncomeGroupsAndSubGroupsViewModel @Inject constructor(
 
     val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
 
+    private var deleteSubGroup: IncomeSubGroup? = null
+
+    fun deleteSubItem(subId: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val subGroupToDelete = incomeSubGroupRepository.getIncomeSubGroupById(subId)
+            deleteSubGroup = subGroupToDelete
+            incomeSubGroupRepository.deleteIncomeSubGroupById(subId)
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteSubItem() = viewModelScope.launch (Dispatchers.IO) {
+        deleteSubGroup?.let { subItemToRestore ->
+            try {
+                incomeSubGroupRepository.insertIncomeSubGroup(subItemToRestore)
+                deleteSubGroup = null
+            } catch (_: Exception) { }
+        }
+    }
+
+    private var deleteItemWithSubItems: IncomeGroupWithIncomeSubGroups? = null
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val incomeGroupWithSubGroups = incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id)
+            deleteItemWithSubItems = incomeGroupWithSubGroups
+            incomeGroupRepository.deleteIncomeGroupById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deleteItemWithSubItems?.let { incomeGroupWithSubGroups ->
+            try {
+                incomeGroupRepository.insertIncomeGroup(incomeGroupWithSubGroups.incomeGroup)
+                incomeGroupWithSubGroups.incomeSubGroups.forEach { subGroup ->
+//                    incomeGroupRepository.insert
+                }
+                deleteItemWithSubItems = null
+            } catch (_: Exception) { }
+        }
+    }
 }

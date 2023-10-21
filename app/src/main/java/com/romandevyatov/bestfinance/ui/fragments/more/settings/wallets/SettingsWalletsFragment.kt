@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.wallets
+package com.romandevyatov.bestfinance.ui.fragments.more.settings.wallets
 
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +16,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.WalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +47,11 @@ class SettingsWalletsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setOnBackPressedHandler()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupRecyclerView() {
@@ -101,9 +107,14 @@ class SettingsWalletsFragment : Fragment() {
 
     private val walletItemDeleteListener = object : WalletsAdapter.OnWalletItemDeleteListener {
         override fun onWalletItemDelete(walletItem: WalletItem) {
-            walletItemMutableList.remove(walletItem)
-            walletsAdapter.removeItem(walletItem)
-            settingsWalletsViewModel.deleteWalletById(walletItem.id)
+            walletItem.id?.let { id ->
+                WindowUtil.showDeleteDialog(
+                    context = requireContext(),
+                    viewModel = settingsWalletsViewModel,
+                    itemId = id,
+                    rootView = binding.root
+                ) { }
+            }
         }
     }
 
@@ -124,10 +135,5 @@ class SettingsWalletsFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

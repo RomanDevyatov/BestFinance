@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.Gr
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GroupsAndSubGroupsFragment : Fragment() {
+class SettingsGroupsAndSubGroupsFragment : Fragment() {
 
     private lateinit var groupTypeArray: Array<String>
 

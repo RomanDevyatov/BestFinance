@@ -72,4 +72,44 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     }
 
     val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>>? = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
+
+    private var deleteSubGroup: ExpenseSubGroup? = null
+
+    fun deleteSubItem(subId: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val subGroupToDelete = expenseSubGroupRepository.getExpenseSubGroupById(subId)
+            deleteSubGroup = subGroupToDelete
+            expenseSubGroupRepository.deleteExpenseSubGroupById(subId)
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteSubItem() = viewModelScope.launch (Dispatchers.IO) {
+        deleteSubGroup?.let { subItemToRestore ->
+            try {
+                expenseSubGroupRepository.insertExpenseSubGroup(subItemToRestore)
+                deleteSubGroup = null
+            } catch (_: Exception) { }
+        }
+    }
+
+    private var deleteItem: ExpenseGroup? = null
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = expenseGroupRepository.getExpenseGroupById(id)
+            deleteItem = itemToDelete
+            expenseGroupRepository.deleteExpenseGroupById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deleteItem?.let { itemToRestore ->
+            try {
+                expenseGroupRepository.insertExpenseGroup(itemToRestore)
+                deleteItem = null
+            } catch (_: Exception) { }
+        }
+    }
 }

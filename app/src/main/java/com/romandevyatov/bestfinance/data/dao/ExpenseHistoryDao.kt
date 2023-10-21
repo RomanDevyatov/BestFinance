@@ -21,7 +21,7 @@ interface ExpenseHistoryDao {
     suspend fun insert(expenseHistory: ExpenseHistory)
 
     @Query("SELECT * FROM expense_history WHERE id = :id")
-    fun getById(id: Long): ExpenseHistory
+    fun getById(id: Long): ExpenseHistory?
 
     @Delete
     suspend fun delete(expenseHistory: ExpenseHistory)
@@ -33,7 +33,7 @@ interface ExpenseHistoryDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM expense_history WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    fun deleteById(id: Long)
 
     @Transaction
     @Query("SELECT * FROM expense_history")

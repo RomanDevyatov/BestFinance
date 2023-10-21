@@ -43,4 +43,25 @@ class SettingsWalletsViewModel @Inject constructor(
             walletRepository.updateWallet(walletArchived)
         }
     }
+
+    private var deletedWalletItem: Wallet? = null
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = walletRepository.getWalletById(id)
+            deletedWalletItem = itemToDelete
+            walletRepository.deleteWalletById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deletedWalletItem?.let { walletToRestore ->
+            try {
+                walletRepository.insertWallet(walletToRestore)
+                deletedWalletItem = null
+            } catch (_: Exception) { }
+        }
+    }
 }

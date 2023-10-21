@@ -78,4 +78,7 @@ interface IncomeSubGroupDao {
 
     @Query("UPDATE income_sub_group SET archived_date = :date WHERE id = :id")
     fun updateArchivedDateById(id: Long?, date: String?)
+
+    @Query("SELECT * FROM income_sub_group WHERE id = :id")
+    fun getById(id: Long): IncomeSubGroup?
 }

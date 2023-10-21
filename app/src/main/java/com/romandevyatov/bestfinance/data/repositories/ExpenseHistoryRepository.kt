@@ -36,11 +36,11 @@ class ExpenseHistoryRepository @Inject constructor(
         return expenseHistoryDao.getAllWhereSubGroupIsNullLiveData()
     }
 
-    suspend fun deleteExpenseHistory(id: Long) {
+    fun deleteExpenseHistory(id: Long) {
         return expenseHistoryDao.deleteById(id)
     }
 
-    fun getExpenseHistoryById(id: Long): ExpenseHistory {
+    fun getExpenseHistoryById(id: Long): ExpenseHistory? {
         return expenseHistoryDao.getById(id)
     }
 }

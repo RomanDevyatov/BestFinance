@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.income
+package com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.expense
 
 import android.os.Build
 import android.os.Bundle
@@ -13,25 +13,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.databinding.FragmentSettingsIncomeGroupsAndSubGroupsBinding
+import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
+import com.romandevyatov.bestfinance.databinding.FragmentSettingsExpenseGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
-import com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.GroupsAndSubGroupsFragmentDirections
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
+import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class IncomeGroupsAndSubGroupsFragment : Fragment() {
+class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
 
-    private var _binding: FragmentSettingsIncomeGroupsAndSubGroupsBinding? = null
+    private var _binding: FragmentSettingsExpenseGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
 
-    private val generalGroupsAndSubGroupsViewModel: IncomeGroupsAndSubGroupsViewModel by viewModels()
+    private val generalGroupsAndSubGroupsViewModel: ExpenseGroupsAndSubGroupsViewModel by viewModels()
 
     private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
 
@@ -41,22 +41,20 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
             if (isChecked) {
-                generalGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
+                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
             } else {
-                generalGroupsAndSubGroupsViewModel.archiveIncomeSubGroupByIdSpecific(
-                    subGroupItem.id
-                )
+                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(subGroupItem.name)
             }
         }
 
         override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
-            generalGroupsAndSubGroupsViewModel.deleteIncomeSubGroupById(subGroupItem.id)
+            generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroupItem.id)
         }
 
         override fun navigateToUpdateSubGroup(id: Long) {
             val action =
-                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateIncomeSubGroupFragment()
-            action.incomeSubGroupId = id
+                SettingsGroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseSubGroupFragment()
+            action.expenseSubGroupId = id
             findNavController().navigate(action)
         }
     }
@@ -67,25 +65,21 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (isChecked) {
-                    generalGroupsAndSubGroupsViewModel.unarchiveIncomeGroupByIdSpecific(
-                        groupWithSubGroupsItem.id
-                    )
+                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
                 } else {
-                    generalGroupsAndSubGroupsViewModel.archiveIncomeGroupByIdSpecific(
-                        groupWithSubGroupsItem.id
-                    )
+                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(groupWithSubGroupsItem.id!!)
                 }
             }
         }
 
         override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-            generalGroupsAndSubGroupsViewModel.deleteIncomeGroupById(groupWithSubGroupsItem.id)
+            generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
         }
 
         override fun navigateToUpdateGroup(name: String) {
             val action =
-                GroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateIncomeGroupFragment()
-            action.incomeGroupName = name
+                SettingsGroupsAndSubGroupsFragmentDirections.actionGroupsAndSubGroupsSettingsFragmentToUpdateExpenseGroupFragment()
+            action.expenseGroupName = name
             findNavController().navigate(action)
         }
     }
@@ -103,13 +97,13 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSettingsIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
 
         setOnBackPressedHandler()
 
-        generalGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+        generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
             allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
                 updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
                 groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
@@ -126,17 +120,17 @@ class IncomeGroupsAndSubGroupsFragment : Fragment() {
         binding.recyclerView.adapter = groupWithSubgroupsAdapter
     }
 
-    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<IncomeGroupWithIncomeSubGroups>) {
+    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
         groupWithSubGroupsItemMutableList.clear()
         groupWithSubGroupsItemMutableList.addAll(
             groupsWithSubGroups.map { groupWithSubGroup ->
-                val subGroupsForAdapterItem = groupWithSubGroup.incomeSubGroups.map {
-                    SubGroupItem(it.id!!, it.name, it.incomeGroupId, it.archivedDate == null)
+                val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
+                    SubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
                 }.toMutableList()
                 GroupWithSubGroupsItem(
-                    groupWithSubGroup.incomeGroup.id,
-                    groupWithSubGroup.incomeGroup.name,
-                    groupWithSubGroup.incomeGroup.archivedDate == null,
+                    groupWithSubGroup.expenseGroup.id,
+                    groupWithSubGroup.expenseGroup.name,
+                    groupWithSubGroup.expenseGroup.archivedDate == null,
                     subGroupsForAdapterItem
                 )
             }
