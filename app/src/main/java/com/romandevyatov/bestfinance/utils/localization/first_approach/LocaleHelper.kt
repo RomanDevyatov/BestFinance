@@ -4,7 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import androidx.preference.PreferenceManager
-import java.util.*
+import java.util.Locale
 
 class LocaleHelper {
 

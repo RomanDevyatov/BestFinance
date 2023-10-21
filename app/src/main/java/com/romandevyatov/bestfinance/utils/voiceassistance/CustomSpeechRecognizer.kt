@@ -5,7 +5,7 @@ import android.content.Intent
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import java.util.*
+import java.util.Locale
 
 class CustomSpeechRecognizer(context: Context, locale: Locale = Locale.getDefault()) {
 

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.util.Log
-import java.util.*
+import java.util.Locale
 
 open class CustomSpeechRecognitionListener: RecognitionListener {
     override fun onReadyForSpeech(params: Bundle?) { }

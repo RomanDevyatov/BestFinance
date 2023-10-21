@@ -41,14 +41,16 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
-import com.romandevyatov.bestfinance.utils.voiceassistance.*
-import com.romandevyatov.bestfinance.viewmodels.*
+import com.romandevyatov.bestfinance.utils.voiceassistance.CustomTextToSpeech
+import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognizer
+import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
+import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognitionListener
+import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
 
 @AndroidEntryPoint
 class AddIncomeHistoryFragment : Fragment() {

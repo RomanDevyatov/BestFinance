@@ -5,7 +5,12 @@ import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.mockk
+import io.mockk.coVerify
+import io.mockk.coEvery
+import io.mockk.just
+import io.mockk.runs
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

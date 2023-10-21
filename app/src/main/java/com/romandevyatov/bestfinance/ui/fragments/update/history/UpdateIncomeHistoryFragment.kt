@@ -36,7 +36,7 @@ import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
 
 @AndroidEntryPoint
 class UpdateIncomeHistoryFragment : Fragment() {

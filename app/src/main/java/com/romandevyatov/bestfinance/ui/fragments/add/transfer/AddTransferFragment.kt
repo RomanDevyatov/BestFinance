@@ -50,7 +50,8 @@ import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Locale
+import kotlin.collections.ArrayList
 
 // TODO: validate if the same wallets are chosen
 

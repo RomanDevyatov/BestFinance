@@ -7,7 +7,6 @@ import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
-import java.util.*
 
 class ExpenseHistoryItemViewHolder(
     private val binding: CardHistoryExpenseBinding,

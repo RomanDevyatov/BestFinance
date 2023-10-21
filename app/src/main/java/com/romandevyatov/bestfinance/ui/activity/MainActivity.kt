@@ -23,6 +23,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
+import com.romandevyatov.bestfinance.ui.activity.base.BaseActivity
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment

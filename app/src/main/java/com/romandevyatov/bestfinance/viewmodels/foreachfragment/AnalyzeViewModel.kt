@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
-import com.romandevyatov.bestfinance.data.repositories.*
+import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
+import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
+import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
+import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,8 +17,8 @@ import javax.inject.Inject
 class AnalyzeViewModel @Inject constructor(
     private val incomeHistoryRepository: IncomeHistoryRepository,
     private val expenseHistoryRepository: ExpenseHistoryRepository,
-    private val expenseGroupRepository: ExpenseGroupRepository,
-    private val incomeGroupRepository: IncomeGroupRepository
+    expenseGroupRepository: ExpenseGroupRepository,
+    incomeGroupRepository: IncomeGroupRepository
 ) : ViewModel() {
 
     fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {

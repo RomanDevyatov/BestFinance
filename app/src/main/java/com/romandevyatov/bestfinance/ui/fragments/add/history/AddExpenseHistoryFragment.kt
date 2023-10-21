@@ -7,7 +7,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AutoCompleteTextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -33,13 +33,11 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
-import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
 
 @AndroidEntryPoint
 class AddExpenseHistoryFragment : Fragment() {

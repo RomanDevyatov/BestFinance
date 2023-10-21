@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.activity
+package com.romandevyatov.bestfinance.ui.activity.base
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -1,6 +1,9 @@
 package com.romandevyatov.bestfinance.data.entities
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import androidx.room.ColumnInfo
 import java.time.LocalDateTime
 
 @Entity(tableName = "expense_sub_group",
