@@ -96,11 +96,15 @@ class AddExpenseGroupFragment : Fragment() {
                         getString(R.string.group_is_already_existing, groupNameBinding)
                     )
                 } else {
-                    showWalletDialog(
+                    WindowUtil.showUnarchiveDialog(
                         requireContext(),
-                        expenseGroup,
                         getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
-                    )
+                    ) {
+                        addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
+                        val action = AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                        action.expenseGroupName = expenseGroup.name
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
