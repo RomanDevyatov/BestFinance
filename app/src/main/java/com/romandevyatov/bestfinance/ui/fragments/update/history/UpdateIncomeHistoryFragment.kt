@@ -26,6 +26,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.data.validation.base.ValidateResult
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
@@ -369,8 +370,12 @@ class UpdateIncomeHistoryFragment : Fragment() {
             val dateBinding = binding.reusable.dateEditText.text.toString().trim()
             val timeBinding = binding.reusable.timeEditText.text.toString().trim()
 
-            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.reusable.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+            var subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+            if (historyWithSubGroupAndWalletGlobal.incomeSubGroup != null ) {
+                binding.reusable.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+            } else {
+                subGroupNameBindingValidation = ValidateResult(true, R.string.text_validation_success)
+            }
 
             val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
             binding.reusable.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
@@ -401,16 +406,19 @@ class UpdateIncomeHistoryFragment : Fragment() {
                     val updatedInputOld = walletOld.input.minus(incomeHistory.amount)
                     updateOldWallet(walletOld, updatedBalanceOld, updatedInputOld)
                 }
-                val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id
+
+                val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id!!
+
+                val incomeSubGroupId = spinnerSubGroupItemsGlobal.find { it.name == subGroupNameBinding }?.id
 
                 updateIncomeHistoryViewModel.updateIncomeHistoryAndWallet(
                     IncomeHistory(
                         id = incomeHistory.id,
-                        incomeSubGroupId = spinnerSubGroupItemsGlobal.find { it.name == subGroupNameBinding }?.id!!,
+                        incomeSubGroupId = incomeSubGroupId,
                         amount = amountBinding.toDouble(),
                         comment = commentBinding,
                         date = parsedLocalDateTime,
-                        walletId = walletId!!,
+                        walletId = walletId,
                         archivedDate = incomeHistory.archivedDate,
                         createdDate = incomeHistory.createdDate
                     )

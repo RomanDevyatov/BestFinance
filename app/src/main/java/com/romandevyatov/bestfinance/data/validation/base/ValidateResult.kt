@@ -1,6 +1,6 @@
 package com.romandevyatov.bestfinance.data.validation.base
 
 data class ValidateResult(
-    val isSuccess: Boolean,
+    var isSuccess: Boolean,
     val message: Int
 )

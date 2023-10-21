@@ -73,12 +73,14 @@ class ExpandableGroupAdapter(
                                     childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
                                     type = Constants.INCOMINGS_PARENT_TYPE
                                 )
-                            } else {
+                            } else if (it.incomeSubGroupWithIncomeHistories.isNotEmpty()) {
                                 SubParentData(
                                     parentTitle = changingBalanceTitle,
                                     childNestedListOfIncomeSubGroup = it.incomeSubGroupWithIncomeHistories,
                                     type = Constants.INCOMINGS_PARENT_TYPE
                                 )
+                            } else {
+                                SubParentData()
                             }
                         }!!.toList()
                     )
@@ -104,12 +106,14 @@ class ExpandableGroupAdapter(
                                         it.expenseSubGroupWithExpenseHistories,
                                     type = Constants.EXPENSES_PARENT_TYPE
                                 )
-                            } else {
+                            } else if (it.expenseSubGroupWithExpenseHistories.isNotEmpty()) {
                                 SubParentData(
                                     parentTitle = changingBalanceTitle,
                                     childNestedListOfExpenseSubGroup = it.expenseSubGroupWithExpenseHistories,
                                     type = Constants.EXPENSES_PARENT_TYPE
                                 )
+                            } else {
+                                SubParentData()
                             }
                         }!!.toList()
                     )

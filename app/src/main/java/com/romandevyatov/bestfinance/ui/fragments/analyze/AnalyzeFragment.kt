@@ -44,7 +44,7 @@ class AnalyzeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        expandableGroupAdapter = ExpandableGroupAdapter(arrayListOf(), getString(R.string.changed_wallet_balance))
+        expandableGroupAdapter = ExpandableGroupAdapter(arrayListOf(), getString(R.string.changed_balance))
         binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
         binding.analyzeGroupRecycler.layoutManager = LinearLayoutManager(requireContext())
 
@@ -56,7 +56,9 @@ class AnalyzeFragment : Fragment() {
             analyzeViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(viewLifecycleOwner) { expenses ->
                 analyzeViewModel.getIncomeHistoriesWhereSubGroupIsNullLiveData().observe(viewLifecycleOwner) { incomesChangingBalance ->
                     val combinedList = incomes.toMutableList()
+
                     val balanceIncomeChangingHistories = getIncomeChangingBalanceRecords(incomesChangingBalance)
+
                     if (balanceIncomeChangingHistories != null) {
                         combinedList += balanceIncomeChangingHistories
                     }
@@ -86,7 +88,7 @@ class AnalyzeFragment : Fragment() {
 
                         expandableGroupAdapter = ExpandableGroupAdapter(
                             expandableGroupAdapter.getList(),
-                            getString(R.string.changed_wallet_balance)
+                            getString(R.string.changed_balance)
                         )
 
                         binding.analyzeGroupRecycler.adapter = expandableGroupAdapter
