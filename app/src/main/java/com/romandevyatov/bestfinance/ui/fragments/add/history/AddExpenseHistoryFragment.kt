@@ -1,7 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.history
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -34,6 +32,7 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMEN
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
+import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.viewmodels.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
@@ -158,49 +157,11 @@ class AddExpenseHistoryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
-        val selectedDate = Calendar.getInstance()
-        val datePickerListener = DatePickerDialog.OnDateSetListener {
-                _, year, month, dayOfMonth ->
-            selectedDate.set(Calendar.YEAR, year)
-            selectedDate.set(Calendar.MONTH, month)
-            selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-            binding.dateEditText.setText(dateFormat.format(selectedDate.time))
-        }
-
-        binding.dateEditText.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                datePickerListener,
-                selectedDate.get(Calendar.YEAR),
-                selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        binding.dateEditText.setText(dateFormat.format(selectedDate.time))
+        DateTimeUtils.setupDatePicker(binding.dateEditText, dateFormat)
     }
 
     private fun setTimeEditText() {
-        val selectedTime = Calendar.getInstance()
-
-        val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            selectedTime.set(Calendar.MINUTE, minute)
-            binding.timeEditText.setText(timeFormat.format(selectedTime.time))
-        }
-
-        binding.timeEditText.setOnClickListener {
-            TimePickerDialog(
-                requireContext(),
-                timePickerListener,
-                selectedTime.get(Calendar.HOUR_OF_DAY),
-                selectedTime.get(Calendar.MINUTE),
-                false
-            ).show()
-        }
-
-        binding.timeEditText.setText(timeFormat.format(selectedTime.time))
+        DateTimeUtils.setupDatePicker(binding.timeEditText, timeFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

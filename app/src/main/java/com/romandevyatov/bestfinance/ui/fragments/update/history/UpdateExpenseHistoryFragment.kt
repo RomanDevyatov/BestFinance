@@ -1,7 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.history
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -23,6 +21,8 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
@@ -31,6 +31,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseHistoryBin
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -312,54 +313,12 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
-        val selectedDate = Calendar.getInstance()
-        selectedDate.timeInMillis =
-            historyWithSubGroupAndWalletGlobal.expenseHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
-        val datePickerListener = DatePickerDialog.OnDateSetListener() {
-                _, year, month, dayOfMonth ->
-            selectedDate.set(Calendar.YEAR, year)
-            selectedDate.set(Calendar.MONTH, month)
-            selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-            binding.reusable.dateEditText.setText(LocalDateTimeRoomTypeConverter.dateFormat.format(selectedDate.time))
-        }
-
-        binding.reusable.dateEditText.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                datePickerListener,
-                selectedDate.get(Calendar.YEAR),
-                selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        binding.reusable.dateEditText.setText(LocalDateTimeRoomTypeConverter.dateFormat.format(selectedDate.time))
+        DateTimeUtils.setupDatePicker(binding.reusable.dateEditText, dateFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTimeEditText() {
-        val selectedTime = Calendar.getInstance()
-        selectedTime.timeInMillis =
-            historyWithSubGroupAndWalletGlobal.expenseHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
-
-        val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            selectedTime.set(Calendar.MINUTE, minute)
-            binding.reusable.timeEditText.setText(LocalDateTimeRoomTypeConverter.timeFormat.format(selectedTime.time))
-        }
-
-        binding.reusable.timeEditText.setOnClickListener {
-            TimePickerDialog(
-                requireContext(),
-                timePickerListener,
-                selectedTime.get(Calendar.HOUR_OF_DAY),
-                selectedTime.get(Calendar.MINUTE),
-                false
-            ).show()
-        }
-
-        binding.reusable.timeEditText.setText(LocalDateTimeRoomTypeConverter.timeFormat.format(selectedTime.time))
+        DateTimeUtils.setupTimePicker(binding.reusable.timeEditText, timeFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
