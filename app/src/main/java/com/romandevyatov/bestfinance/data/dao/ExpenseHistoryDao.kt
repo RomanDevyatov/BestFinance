@@ -24,7 +24,7 @@ interface ExpenseHistoryDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM expense_history WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long)
 
     @Transaction
     @Query("SELECT * FROM expense_history")

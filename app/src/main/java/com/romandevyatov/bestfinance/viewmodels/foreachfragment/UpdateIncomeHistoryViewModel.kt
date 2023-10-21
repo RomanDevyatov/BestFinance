@@ -44,10 +44,8 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         }
     }
 
-    fun updateWallet(updatedWallet: Wallet) = viewModelScope.launch(Dispatchers.IO){
-        walletRepository.updateWallet(
-            updatedWallet
-        )
+    fun updateWallet(updatedWallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(updatedWallet)
     }
 
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups>? {
@@ -60,5 +58,9 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
 
     fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup>? {
         return incomeGroupRepository.getIncomeGroupByIdLiveData(incomeGroupId)
+    }
+
+    fun deleteItem(id: Long) = viewModelScope.launch(Dispatchers.IO) {
+        incomeHistoryRepository.deleteIncomeHistoryById(id)
     }
 }

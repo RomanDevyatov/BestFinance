@@ -23,11 +23,15 @@ class TransferHistoryRepository @Inject constructor(
         transferHistoryDao.delete(transferHistory)
     }
 
-    fun updateTransferHistory(transferHistory: TransferHistory) {
+    suspend fun updateTransferHistory(transferHistory: TransferHistory) {
         transferHistoryDao.update(transferHistory)
     }
 
     fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets>? {
         return transferHistoryDao.getWithWalletsByIdLiveData(id)
+    }
+
+    suspend fun deleteTransferHistoryById(id: Long) {
+        transferHistoryDao.deleteById(id)
     }
 }

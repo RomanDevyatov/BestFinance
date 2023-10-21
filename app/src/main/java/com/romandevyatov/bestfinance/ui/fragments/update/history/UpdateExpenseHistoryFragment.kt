@@ -31,6 +31,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseHistoryBin
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -100,6 +101,14 @@ class UpdateExpenseHistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun deleteRecord() {
+        WindowUtil.showDeleteDialog(
+            context = requireContext(),
+            viewModel = updateExpenseHistoryViewModel,
+            itemId = args.expenseHistoryId
+        ) { navigateToHistory() }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

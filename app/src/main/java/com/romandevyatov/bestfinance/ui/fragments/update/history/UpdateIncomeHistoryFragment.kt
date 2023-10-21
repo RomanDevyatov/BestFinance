@@ -31,6 +31,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBind
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -95,12 +96,19 @@ class UpdateIncomeHistoryFragment : Fragment() {
         setOnBackPressedHandler()
 
         setupButtonClickListeners(view)
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun deleteRecord() {
+        WindowUtil.showDeleteDialog(
+            context = requireContext(),
+            viewModel = updateIncomeHistoryViewModel,
+            itemId = args.incomeHistoryId
+        ) { navigateToHistory() }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

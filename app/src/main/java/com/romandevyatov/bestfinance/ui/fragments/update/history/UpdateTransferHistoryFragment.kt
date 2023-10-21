@@ -28,6 +28,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateTransferHistoryBi
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -92,6 +93,14 @@ class UpdateTransferHistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun deleteRecord() {
+        WindowUtil.showDeleteDialog(
+            context = requireContext(),
+            viewModel = updateTransferHistoryViewModel,
+            itemId = args.transferHistoryId
+        ) { navigateToHistory() }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -74,6 +74,8 @@
 
     <string name="wallet_is_archived">Wallet with name %s is archived</string>
 
+    <string name="delete_confirmation_warning_message">Do you really want to delete this record?</string>
+
     <!--    add expense sub group-->
     <string name="error_empty_sub_group_name">Sub-group name is required.</string>
     <string name="error_empty_group_name">Group name is required.</string>
@@ -162,5 +164,6 @@
     <string name="balance_is_changed_do_you_want_to_add_history_record">Balance is changed, do you want to add history record?</string>
     <string name="wallet_name_already_exists">Wallet %s already exists</string>
     <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Wallet %1$s is archived. Do you want to unarchive %2$s wallet and proceed updating?</string>
+
 
 </resources>

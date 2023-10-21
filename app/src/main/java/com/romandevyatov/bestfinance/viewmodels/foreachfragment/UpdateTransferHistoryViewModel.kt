@@ -60,4 +60,8 @@ class UpdateTransferHistoryViewModel @Inject constructor(
             updateWallet(updatedWalletFrom)
         }
     }
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        transferHistoryRepository.deleteTransferHistoryById(id)
+    }
 }

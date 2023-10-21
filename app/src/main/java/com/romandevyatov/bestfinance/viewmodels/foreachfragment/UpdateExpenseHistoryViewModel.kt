@@ -65,4 +65,8 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     fun updateWallet(wallet: Wallet) = viewModelScope.launch (Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
     }
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        expenseHistoryRepository.deleteExpenseHistory(id)
+    }
 }

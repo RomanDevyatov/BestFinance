@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -22,9 +23,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
-import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
+import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
@@ -142,13 +145,17 @@ class MainActivity : BaseActivity(), OnExitAppListener {
 
     private fun setOnDestinationChangedListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            setVisabilityOfBottomNavigationBar(destination.id)
+            setVisibilityOfBottomNavigationBar(destination.id)
 
-            setVisabilityOfSettingsAction(destination.id)
+            setVisibilityOfDeleteAction(destination.id)
+            setVisibilityOfVoiceAction(destination.id)
+            setVisibilityOfSettingsAction(destination.id)
+
+            invalidateOptionsMenu()
         }
     }
 
-    private fun setVisabilityOfBottomNavigationBar(destinationId: Int) {
+    private fun setVisibilityOfBottomNavigationBar(destinationId: Int) {
         val bottomNavViewExcludedArray = arrayOf(
             R.id.add_income_fragment,
             R.id.add_income_group_fragment,
@@ -178,11 +185,13 @@ class MainActivity : BaseActivity(), OnExitAppListener {
     }
 
     private var showSettingsActionIcon = false
+    private var showDeleteActionIcon = false
     private var showVoiceActionIcon = false
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.action_settings)?.isVisible = showSettingsActionIcon
         menu?.findItem(R.id.action_voice)?.isVisible = showVoiceActionIcon
+        menu?.findItem(R.id.action_delete)?.isVisible = showDeleteActionIcon
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -197,40 +206,87 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             navController.navigate(R.id.settings_fragment)
             true
         }
-
         R.id.action_voice -> {
-            startVoiceRecognition()
+            if (hasRecordAudioPermission()) {
+                startVoiceRecognition()
+            } else {
+                requestRecordAudioPermission()
+            }
             true
         }
-
+        R.id.action_delete -> {
+            when (val fragment = getCurrentFragment()) {
+                is UpdateIncomeHistoryFragment -> {
+                    fragment.deleteRecord()
+                }
+                is UpdateExpenseHistoryFragment -> {
+                    fragment.deleteRecord()
+                }
+                is UpdateTransferHistoryFragment -> {
+                    fragment.deleteRecord()
+                }
+            }
+            true
+        }
         else -> {
             super.onOptionsItemSelected(item)
         }
     }
 
-    private fun startVoiceRecognition() {
-        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
-        }
+    private fun hasRecordAudioPermission(): Boolean {
+        val permission = RECORD_AUDIO
+        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+    }
 
+    private fun requestRecordAudioPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
+    }
+
+    private fun startVoiceRecognition() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-        val fragment = navHostFragment.childFragmentManager.fragments.first()
+        val fragment = getCurrentFragment()
         if (fragment is AddIncomeHistoryFragment) {
             fragment.setIntentGlob(intent)
             fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
         } else if (fragment is AddTransferFragment) {
             fragment.setIntentGlob(intent)
-            fragment.startAddingTransaction("Start adding transaction.")
+            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
         }
     }
 
-    private fun setVisabilityOfSettingsAction(destinationId: Int) {
-        showSettingsActionIcon = destinationId == R.id.more_fragment
+    private fun getCurrentFragment(): Fragment? {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        return navHostFragment.childFragmentManager.fragments.firstOrNull()
+    }
 
+//    private fun startVoiceRecognition() {
+//        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
+//        }
+//
+//        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
+//
+//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+//        val fragment = navHostFragment.childFragmentManager.fragments.first()
+//        if (fragment is AddIncomeHistoryFragment) {
+//            fragment.setIntentGlob(intent)
+//            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
+//        } else if (fragment is AddTransferFragment) {
+//            fragment.setIntentGlob(intent)
+//            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
+//        }
+//    }
+
+    private fun setVisibilityOfVoiceAction(destinationId: Int) {
+        showSettingsActionIcon = destinationId == R.id.more_fragment
+    }
+
+    private fun setVisibilityOfSettingsAction(destinationId: Int) {
         showVoiceActionIcon = when (destinationId) {
             R.id.add_income_fragment -> true
             R.id.add_transfer_fragment -> true
@@ -239,7 +295,16 @@ class MainActivity : BaseActivity(), OnExitAppListener {
                 false
             }
         }
+    }
 
-        invalidateOptionsMenu()
+    private fun setVisibilityOfDeleteAction(destinationId: Int) {
+        showDeleteActionIcon = when (destinationId) {
+            R.id.update_income_history_fragment -> true
+            R.id.update_expense_history_fragment -> true
+            R.id.update_transfer_history_fragment -> true
+            else -> {
+                false
+            }
+        }
     }
 }

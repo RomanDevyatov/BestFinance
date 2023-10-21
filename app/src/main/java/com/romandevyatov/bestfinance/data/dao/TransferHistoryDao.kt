@@ -18,13 +18,13 @@ interface TransferHistoryDao {
     suspend fun delete(transferHistory: TransferHistory)
 
     @Update
-    fun update(transferHistory: TransferHistory)
+    suspend fun update(transferHistory: TransferHistory)
 
     @Query("DELETE FROM transfer_history")
     suspend fun deleteAll()
 
     @Query("DELETE FROM transfer_history WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long)
 
     @Transaction
     @Query("SELECT * FROM transfer_history")

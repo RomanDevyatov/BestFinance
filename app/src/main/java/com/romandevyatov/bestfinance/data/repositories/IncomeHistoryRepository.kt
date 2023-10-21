@@ -43,4 +43,8 @@ class IncomeHistoryRepository @Inject constructor(
     fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
         return incomeHistoryDao.getWhereSubGroupIdIsNullLiveData()
     }
+
+    suspend fun deleteIncomeHistoryById(id: Long) {
+        incomeHistoryDao.deleteById(id)
+    }
 }
