@@ -364,7 +364,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
 
     private fun setFromWalletSpinnerAdapter() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
-            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            allWallets?.let { wallets ->
                 val spinnerItems = getWalletItemsSpinner(wallets)
 
                 val walletSpinnerAdapter =
@@ -385,7 +385,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
 
     private fun setToWalletSpinnerAdapter() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
-            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            allWallets?.let { wallets ->
                 val spinnerItems = getWalletItemsSpinner(wallets)
 
                 val walletSpinnerAdapter = SpinnerAdapter(

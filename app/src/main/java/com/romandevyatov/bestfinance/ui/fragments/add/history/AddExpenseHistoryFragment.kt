@@ -497,8 +497,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceFragment() {
     private fun setGroupAndSubGroupSpinnerAdapter() {
         addHistoryViewModel.getAllExpenseGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { expenseGroups ->
-                expenseGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
-
+                expenseGroups?.let { groups ->
                     val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
 
                     spinnerGroupItems.addAll(getGroupItemsForSpinner(groups))
@@ -570,7 +569,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceFragment() {
     private fun setWalletSpinnerAdapter() {
         addHistoryViewModel.walletsNotArchivedLiveData
             .observe(viewLifecycleOwner) { allWallets ->
-                allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                allWallets?.let { wallets ->
                     val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
                     walletItemsGlobal.clear()
