@@ -168,6 +168,7 @@
     <string name="group_is_archived">The group %1$s is archived. Do you want to unarchive %2$s income group?</string>
     <string name="undo">Undo</string>
     <string name="until_delete">Before deletion</string>
+    <string name="deleted">Deleted</string>
 
 
 </resources>

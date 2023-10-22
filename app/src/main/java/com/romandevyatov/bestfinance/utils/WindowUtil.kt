@@ -83,7 +83,7 @@ class WindowUtil {
             groupOrSubGroup: Boolean? = null,
             navigateFunction: () -> Unit
         ) {
-            val message = context.getString(R.string.until_delete)
+            val message = context.getString(R.string.delete_confirmation_warning_message)
 
             val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
             val dialog = Dialog(context)
@@ -145,7 +145,7 @@ class WindowUtil {
                     if (isCountdown) {
                         showUndoCountdownSnackbar(
                             view = rootView,
-                            message = message,
+                            message = context.getString(R.string.until_delete),
                             actionText = context.getString(R.string.undo),
                             action = {
                                 when (viewModel) {
@@ -181,7 +181,7 @@ class WindowUtil {
                     } else {
                         showUndoSnackbar(
                             view = rootView,
-                            message = message,
+                            message = context.getString(R.string.deleted),
                             actionText = context.getString(R.string.undo),
                             action = {
                                 when (viewModel) {

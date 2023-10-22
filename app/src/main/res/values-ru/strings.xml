@@ -167,5 +167,6 @@
     <string name="group_is_archived">Группа %1$s архивирована. Хотите ли Вы разархивировать группу доходов %2$s?</string>
     <string name="undo">Отменить</string>
     <string name="until_delete">До удаления</string>
+    <string name="deleted">Удалено</string>
 
 </resources>
