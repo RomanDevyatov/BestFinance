@@ -55,6 +55,7 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = incomeGroupsAndSubGroupsViewModel,
+                    isCountdown = true,
                     itemId = id,
                     rootView = binding.root,
                     groupOrSubGroup = false
@@ -93,6 +94,7 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                     WindowUtil.showDeleteDialog(
                         context = requireContext(),
                         viewModel = incomeGroupsAndSubGroupsViewModel,
+                        isCountdown = true,
                         itemId = id,
                         rootView = binding.root,
                         groupOrSubGroup = true

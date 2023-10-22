@@ -109,6 +109,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
             context = requireContext(),
             viewModel = updateIncomeHistoryViewModel,
             itemId = args.incomeHistoryId,
+            isCountdown = false,
             rootView = binding.root
         ) { navigateToHistory() }
     }

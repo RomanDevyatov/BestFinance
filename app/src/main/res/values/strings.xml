@@ -166,7 +166,8 @@
     <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Wallet %1$s is archived. Do you want to unarchive %2$s wallet and proceed updating?</string>
     <string name="group_is_already_existing">This group %s is already existing</string>
     <string name="group_is_archived">The group %1$s is archived. Do you want to unarchive %2$s income group?</string>
-    <string name="undo">Cancel</string>
+    <string name="undo">Undo</string>
+    <string name="until_delete">Before deletion</string>
 
 
 </resources>

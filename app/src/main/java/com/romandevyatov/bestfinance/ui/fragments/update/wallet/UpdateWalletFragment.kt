@@ -85,7 +85,7 @@ class UpdateWalletFragment : Fragment() {
 
                     updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
 
-                    performBackNavigation(args.source.toString())
+                    performBackNavigation()
                 } else if (wallet.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -97,7 +97,7 @@ class UpdateWalletFragment : Fragment() {
                         getString(R.string.wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating, walletNameBinding, walletNameBinding)
                     ) {
                         updateWalletViewModel.unarchiveWallet(wallet)
-                        performBackNavigation(args.source.toString())
+                        performBackNavigation()
                     }
                 }
             }
@@ -159,8 +159,8 @@ class UpdateWalletFragment : Fragment() {
         dialog.show()
     }
 
-    private fun performBackNavigation(prevFragmentString: String?) {
-        when (prevFragmentString) {
+    private fun performBackNavigation() {
+        when (args.source.toString()) {
             Constants.MENU_WALLET_FRAGMENT -> {
                 val action =
                     UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
@@ -171,6 +171,18 @@ class UpdateWalletFragment : Fragment() {
                     UpdateWalletFragmentDirections.actionNavigationUpdateWalletToWalletsSettings()
                 findNavController().navigate(action)
             }
+        }
+    }
+
+    fun deleteRecord() {
+        walletId?.let {
+            WindowUtil.showDeleteDialog(
+                context = requireContext(),
+                viewModel = updateWalletViewModel,
+                isCountdown = true,
+                itemId = it,
+                rootView = binding.root
+            ) { performBackNavigation() }
         }
     }
 

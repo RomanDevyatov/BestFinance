@@ -101,6 +101,7 @@ class UpdateTransferHistoryFragment : Fragment() {
             context = requireContext(),
             viewModel = updateTransferHistoryViewModel,
             itemId = args.transferHistoryId,
+            isCountdown = false,
             rootView = binding.root
         ) { navigateToHistory() }
     }

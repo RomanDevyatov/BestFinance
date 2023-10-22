@@ -2,6 +2,7 @@ package com.romandevyatov.bestfinance.utils
 
 object Constants {
 
+    const val UNDO_DELAY: Long = 4000L
     const val SPINNER_TO = "spinner_to"
     const val SPINNER_FROM = "spinner_from"
     const val ADD_TRANSFER_HISTORY_FRAGMENT = "add_transfer_history_fragment"

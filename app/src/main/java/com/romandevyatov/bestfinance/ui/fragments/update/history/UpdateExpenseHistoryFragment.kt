@@ -108,6 +108,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
             context = requireContext(),
             viewModel = updateExpenseHistoryViewModel,
             itemId = args.expenseHistoryId,
+            isCountdown = false,
             rootView = binding.root
         ) { navigateToHistory() }
     }

@@ -111,6 +111,7 @@ class SettingsWalletsFragment : Fragment() {
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = settingsWalletsViewModel,
+                    isCountdown = true,
                     itemId = id,
                     rootView = binding.root
                 ) { }

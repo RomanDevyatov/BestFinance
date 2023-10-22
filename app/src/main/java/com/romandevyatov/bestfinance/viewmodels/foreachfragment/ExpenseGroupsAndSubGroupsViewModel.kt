@@ -10,8 +10,10 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -73,43 +75,61 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
 
     val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>>? = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
 
-    private var deleteSubGroup: ExpenseSubGroup? = null
-
-    fun deleteSubItem(subId: Long) = viewModelScope.launch (Dispatchers.IO) {
-        try {
-            val subGroupToDelete = expenseSubGroupRepository.getExpenseSubGroupById(subId)
-            deleteSubGroup = subGroupToDelete
-            expenseSubGroupRepository.deleteExpenseSubGroupById(subId)
-        } catch (_: Exception) { }
-    }
-
-    fun undoDeleteSubItem() = viewModelScope.launch (Dispatchers.IO) {
-        deleteSubGroup?.let { subItemToRestore ->
-            try {
-                expenseSubGroupRepository.insertExpenseSubGroup(subItemToRestore)
-                deleteSubGroup = null
-            } catch (_: Exception) { }
-        }
-    }
-
-    private var deleteItem: ExpenseGroup? = null
+    private var deletedItem: ExpenseGroup? = null
+    private val deletedItemList = mutableListOf<ExpenseGroup>()
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {
             val itemToDelete = expenseGroupRepository.getExpenseGroupById(id)
-            deleteItem = itemToDelete
-            expenseGroupRepository.deleteExpenseGroupById(id)
-        } catch (_: Exception) {
+            if (itemToDelete != null) {
+                deletedItem = itemToDelete
+                deletedItemList.add(itemToDelete)
 
+                // Delay for the specified time before deletion
+                delay(Constants.UNDO_DELAY)
+
+                // After the delay, check if the item is still in the list and delete it
+                if (deletedItemList.contains(itemToDelete)) {
+                    expenseGroupRepository.deleteExpenseGroupById(id)
+                    deletedItemList.remove(itemToDelete)
+                }
+            }
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch(Dispatchers.IO) {
+        if (deletedItemList.contains(deletedItem)) {
+            deletedItemList.remove(deletedItem)
+            deletedItem = null
         }
     }
 
-    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
-        deleteItem?.let { itemToRestore ->
-            try {
-                expenseGroupRepository.insertExpenseGroup(itemToRestore)
-                deleteItem = null
-            } catch (_: Exception) { }
+    private var deletedSubItem: ExpenseSubGroup? = null
+    private val deletedSubItemList = mutableListOf<ExpenseSubGroup>()
+
+    fun deleteSubItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = expenseSubGroupRepository.getExpenseSubGroupById(id)
+            if (itemToDelete != null) {
+                deletedSubItem = itemToDelete
+                deletedSubItemList.add(itemToDelete)
+
+                // Delay for the specified time before deletion
+                delay(Constants.UNDO_DELAY)
+
+                // After the delay, check if the item is still in the list and delete it
+                if (deletedSubItemList.contains(itemToDelete)) {
+                    expenseSubGroupRepository.deleteExpenseSubGroupById(id)
+                    deletedSubItemList.remove(itemToDelete)
+                }
+            }
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteSubItem() = viewModelScope.launch(Dispatchers.IO) {
+        if (deletedSubItemList.contains(deletedSubItem)) {
+            deletedSubItemList.remove(deletedSubItem)
+            deletedSubItem = null
         }
     }
 }

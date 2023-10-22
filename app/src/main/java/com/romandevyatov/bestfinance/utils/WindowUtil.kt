@@ -8,14 +8,22 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.databinding.CustomSnackbarBinding
 import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.DialogInfoBinding
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.*
+import com.romandevyatov.bestfinance.utils.Constants.UNDO_DELAY
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateWalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
 
 class WindowUtil {
     companion object {
@@ -70,11 +78,12 @@ class WindowUtil {
             context: Context,
             viewModel: ViewModel,
             itemId: Long,
+            isCountdown: Boolean = false,
             rootView: View? = null,
             groupOrSubGroup: Boolean? = null,
             navigateFunction: () -> Unit
         ) {
-            val message = context.getString(R.string.delete_confirmation_warning_message)
+            val message = context.getString(R.string.until_delete)
 
             val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
             val dialog = Dialog(context)
@@ -99,6 +108,9 @@ class WindowUtil {
                     is UpdateIncomeHistoryViewModel -> {
                         viewModel.deleteItem(itemId)
                     }
+                    is UpdateWalletViewModel -> {
+                        viewModel.deleteItem(itemId)
+                    }
                     is IncomeGroupsAndSubGroupsViewModel -> {
                         if (groupOrSubGroup != null) {
                             when (groupOrSubGroup) {
@@ -109,7 +121,6 @@ class WindowUtil {
                                     viewModel.deleteSubItem(itemId)
                                 }
                             }
-
                         }
                     }
                     is ExpenseGroupsAndSubGroupsViewModel -> {
@@ -131,43 +142,56 @@ class WindowUtil {
                 }
 
                 if (rootView != null) {
-                    showUndoSnackbar(
-                        view = rootView,
-                        message = message,
-                        actionText = context.getString(R.string.undo),
-                        action = {
-                            when (viewModel) {
-                                is UpdateExpenseHistoryViewModel -> viewModel.undoDeleteItem()
-                                is UpdateTransferHistoryViewModel -> viewModel.undoDeleteItem()
-                                is UpdateIncomeHistoryViewModel -> viewModel.undoDeleteItem()
-                                is SettingsWalletsViewModel -> viewModel.undoDeleteItem()
-                                is IncomeGroupsAndSubGroupsViewModel -> {
-                                    if (groupOrSubGroup != null) {
-                                        when (groupOrSubGroup) {
-                                            true -> {
-                                                viewModel.undoDeleteItem()
-                                            }
-                                            false -> {
-                                                viewModel.undoDeleteSubItem()
+                    if (isCountdown) {
+                        showUndoCountdownSnackbar(
+                            view = rootView,
+                            message = message,
+                            actionText = context.getString(R.string.undo),
+                            action = {
+                                when (viewModel) {
+                                    is SettingsWalletsViewModel -> viewModel.undoDeleteItem()
+                                    is UpdateWalletViewModel -> viewModel.undoDeleteItem()
+                                    is IncomeGroupsAndSubGroupsViewModel -> {
+                                        if (groupOrSubGroup != null) {
+                                            when (groupOrSubGroup) {
+                                                true -> {
+                                                    viewModel.undoDeleteItem()
+                                                }
+                                                false -> {
+                                                    viewModel.undoDeleteSubItem()
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                is ExpenseGroupsAndSubGroupsViewModel -> {
-                                    if (groupOrSubGroup != null) {
-                                        when (groupOrSubGroup) {
-                                            true -> {
-                                                viewModel.undoDeleteItem()
-                                            }
-                                            false -> {
-                                                viewModel.undoDeleteSubItem()
+                                    is ExpenseGroupsAndSubGroupsViewModel -> {
+                                        if (groupOrSubGroup != null) {
+                                            when (groupOrSubGroup) {
+                                                true -> {
+                                                    viewModel.undoDeleteItem()
+                                                }
+                                                false -> {
+                                                    viewModel.undoDeleteSubItem()
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                    )
+                        )
+                    } else {
+                        showUndoSnackbar(
+                            view = rootView,
+                            message = message,
+                            actionText = context.getString(R.string.undo),
+                            action = {
+                                when (viewModel) {
+                                    is UpdateExpenseHistoryViewModel -> viewModel.undoDeleteItem()
+                                    is UpdateTransferHistoryViewModel -> viewModel.undoDeleteItem()
+                                    is UpdateIncomeHistoryViewModel -> viewModel.undoDeleteItem()
+                                }
+                            }
+                        )
+                    }
                 }
                 
                 navigateFunction()
@@ -186,33 +210,71 @@ class WindowUtil {
                 action.invoke()
             }
             snackbar.show()
-
-//            val context = view.context
-//            val customSnackbarView = LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-//            val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
-//
-//            val timer = object : CountDownTimer(3000, 1000) {
-//                override fun onTick(millisUntilFinished: Long) {
-//                    val secondsLeft = (millisUntilFinished / 1000).toInt()
-//                    val countdownText = customSnackbarView.findViewById<TextView>(R.id.countdown_text)
-//                    countdownText.text = secondsLeft.toString()
-//                }
-//
-//                override fun onFinish() {
-//                    // Countdown finished, display "done" message
-//                    val countdownText = customSnackbarView.findViewById<TextView>(R.id.countdown_text)
-//                    countdownText.text = "Done"
-//                }
-//            }
-//            timer.start()
-//
-//            val message = customSnackbarView.findViewById<TextView>(R.id.snackbar_text)
-//            message.text = "Countdown:"
-//
-//            val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
-//            snackbarLayout.addView(customSnackbarView, 0)
-//
-//            snackbar.show()
         }
+
+        private fun showUndoCountdownSnackbar(view: View, message: String, actionText: String, action: () -> Unit) {
+            val customSnackbar = CustomSnackbar(view.context, view)
+            customSnackbar.setText(message)
+            customSnackbar.setCountdownMilSec(UNDO_DELAY)
+            customSnackbar.setAction(actionText, action)
+            customSnackbar.show()
+        }
+
+        class CustomSnackbar(context: Context, rootView: View, ) {
+            private val snackbarView = LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+            private val countdownText = snackbarView.findViewById<TextView>(R.id.countdown_text)
+            private val snackbarText = snackbarView.findViewById<TextView>(R.id.snackbar_text)
+
+            private val snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
+            private var timer: CountDownTimer? = null
+
+            fun show() {
+                // To remove the default Snackbar background
+                val layout = snackbar.view as Snackbar.SnackbarLayout
+                layout.setBackgroundColor(Color.TRANSPARENT)
+
+                // Set the custom view for the Snackbar
+                val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
+                snackbarLayout.removeAllViews()
+                snackbarLayout.addView(snackbarView, 0)
+
+                snackbar.show()
+            }
+
+            fun setAction(actionText: String, action: () -> Unit) {
+                val actionButton = snackbarView.findViewById<Button>(R.id.customSnackbarAction)
+                actionButton.text = actionText
+                actionButton.setOnClickListener {
+                    action.invoke()
+                    dismiss()
+                }
+            }
+
+            fun setText(message: String) {
+                snackbarText.text = message
+            }
+
+            fun setCountdownMilSec(milliseconds: Long) {
+                timer = object : CountDownTimer(milliseconds, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        val secondsLeft = (millisUntilFinished / 1000).toInt()
+                        countdownText.text = secondsLeft.toString()
+                    }
+
+                    override fun onFinish() {
+                        countdownText.text = "Done"
+                    }
+                }
+
+                timer?.start()
+            }
+
+            fun dismiss() {
+                timer?.cancel()
+                snackbar.dismiss()
+            }
+        }
+
+
     }
 }

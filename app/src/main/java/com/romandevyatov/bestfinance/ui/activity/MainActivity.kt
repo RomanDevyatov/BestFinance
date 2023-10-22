@@ -29,6 +29,7 @@ import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragme
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
@@ -226,6 +227,9 @@ class MainActivity : BaseActivity(), OnExitAppListener {
                 is UpdateTransferHistoryFragment -> {
                     fragment.deleteRecord()
                 }
+                is UpdateWalletFragment -> {
+                    fragment.deleteRecord()
+                }
             }
             true
         }
@@ -303,6 +307,7 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.update_income_history_fragment -> true
             R.id.update_expense_history_fragment -> true
             R.id.update_transfer_history_fragment -> true
+            R.id.update_wallet_fragment -> true
             else -> {
                 false
             }
