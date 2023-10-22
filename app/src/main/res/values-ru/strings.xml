@@ -162,7 +162,7 @@
     <string name="wallet_name_already_exists">Кошелёк %s уже существует</string>
     <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Кошелёк %1$s архивирован. Вы хотите разархивировать %2$s кошелёк и продолжить изменение?</string>
 
-    <string name="delete_confirmation_warning_message">Вы действительно хотите удалить эту запись?</string>
+    <string name="delete_confirmation_warning_message">Вы действительно хотите удалить %s?</string>
     <string name="group_is_already_existing">Эта группа %s уже существует</string>
     <string name="group_is_archived">Группа %1$s архивирована. Хотите ли Вы разархивировать группу доходов %2$s?</string>
     <string name="undo">Отменить</string>

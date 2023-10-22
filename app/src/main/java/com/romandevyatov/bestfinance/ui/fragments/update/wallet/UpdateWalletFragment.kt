@@ -40,6 +40,8 @@ class UpdateWalletFragment : Fragment() {
 
     private var walletId: Long? = null
 
+    private var walletGlobal: Wallet? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +52,7 @@ class UpdateWalletFragment : Fragment() {
         updateWalletViewModel.getWalletByNameLiveData(args.walletName.toString())?.observe(viewLifecycleOwner) { wallet ->
             if (wallet != null) {
                 walletId = wallet.id!!
+                walletGlobal = wallet
 
                 binding.nameEditText.setText(wallet.name)
                 binding.balanceEditText.setText(wallet.balance.toString())
@@ -179,6 +182,7 @@ class UpdateWalletFragment : Fragment() {
             WindowUtil.showDeleteDialog(
                 context = requireContext(),
                 viewModel = updateWalletViewModel,
+                message = getString(R.string.delete_confirmation_warning_message, walletGlobal?.name),
                 isCountdown = true,
                 itemId = it,
                 rootView = binding.root

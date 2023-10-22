@@ -111,6 +111,7 @@ class SettingsWalletsFragment : Fragment() {
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = settingsWalletsViewModel,
+                    message = getString(R.string.delete_confirmation_warning_message, walletItem.name),
                     isCountdown = true,
                     itemId = id,
                     rootView = binding.root

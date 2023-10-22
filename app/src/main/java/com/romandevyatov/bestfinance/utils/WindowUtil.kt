@@ -77,14 +77,13 @@ class WindowUtil {
         fun showDeleteDialog(
             context: Context,
             viewModel: ViewModel,
+            message: String,
             itemId: Long,
             isCountdown: Boolean = false,
             rootView: View? = null,
             groupOrSubGroup: Boolean? = null,
             navigateFunction: () -> Unit
         ) {
-            val message = context.getString(R.string.delete_confirmation_warning_message)
-
             val binding = DialogAlertBinding.inflate(LayoutInflater.from(context))
             val dialog = Dialog(context)
 

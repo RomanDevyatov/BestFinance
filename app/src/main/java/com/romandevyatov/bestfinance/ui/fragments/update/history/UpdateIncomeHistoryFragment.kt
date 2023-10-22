@@ -108,6 +108,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateIncomeHistoryViewModel,
+            message = getString(R.string.delete_confirmation_warning_message, incomeGroupGlobal?.name),
             itemId = args.incomeHistoryId,
             isCountdown = false,
             rootView = binding.root

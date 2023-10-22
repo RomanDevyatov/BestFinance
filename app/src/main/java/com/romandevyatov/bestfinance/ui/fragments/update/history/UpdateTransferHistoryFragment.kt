@@ -100,6 +100,7 @@ class UpdateTransferHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateTransferHistoryViewModel,
+            message = getString(R.string.delete_confirmation_warning_message, "this transfer history"),
             itemId = args.transferHistoryId,
             isCountdown = false,
             rootView = binding.root

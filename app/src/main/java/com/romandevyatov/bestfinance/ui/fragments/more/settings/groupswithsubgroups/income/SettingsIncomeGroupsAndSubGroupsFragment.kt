@@ -55,6 +55,7 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = incomeGroupsAndSubGroupsViewModel,
+                    message = getString(R.string.delete_confirmation_warning_message, subGroupItem.name),
                     isCountdown = true,
                     itemId = id,
                     rootView = binding.root,
@@ -94,6 +95,7 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                     WindowUtil.showDeleteDialog(
                         context = requireContext(),
                         viewModel = incomeGroupsAndSubGroupsViewModel,
+                        message = getString(R.string.delete_confirmation_warning_message, groupWithSubGroupsItem.name),
                         isCountdown = true,
                         itemId = id,
                         rootView = binding.root,

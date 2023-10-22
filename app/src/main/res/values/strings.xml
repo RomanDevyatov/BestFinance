@@ -74,7 +74,7 @@
 
     <string name="wallet_is_archived">Wallet with name %s is archived</string>
 
-    <string name="delete_confirmation_warning_message">Do you really want to delete this record?</string>
+    <string name="delete_confirmation_warning_message">Do you really want to delete %s?</string>
 
     <!--    add expense sub group-->
     <string name="error_empty_sub_group_name">Sub-group name is required.</string>

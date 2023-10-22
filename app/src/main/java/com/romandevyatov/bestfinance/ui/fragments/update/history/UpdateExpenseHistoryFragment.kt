@@ -107,6 +107,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateExpenseHistoryViewModel,
+            message = getString(R.string.delete_confirmation_warning_message, expenseGroupGlobal?.name),
             itemId = args.expenseHistoryId,
             isCountdown = false,
             rootView = binding.root
