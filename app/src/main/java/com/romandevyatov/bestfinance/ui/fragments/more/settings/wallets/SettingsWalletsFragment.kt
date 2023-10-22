@@ -65,7 +65,7 @@ class SettingsWalletsFragment : Fragment() {
 
     private fun observeWallets() {
         settingsWalletsViewModel.allWalletsLiveData.observe(viewLifecycleOwner) { allWallets ->
-            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            allWallets?.let { wallets ->
                 walletItemMutableList.clear()
                 walletItemMutableList.addAll(
                     wallets.map {

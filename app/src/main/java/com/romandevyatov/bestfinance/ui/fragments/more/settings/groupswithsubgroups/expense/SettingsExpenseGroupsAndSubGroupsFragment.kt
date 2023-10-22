@@ -105,7 +105,7 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
 
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData
             .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-                allGroupsWithSubGroups?.takeIf { it.isNotEmpty() }?.let { groupWithIncomeSubGroups ->
+                allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
                 updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
                 groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }

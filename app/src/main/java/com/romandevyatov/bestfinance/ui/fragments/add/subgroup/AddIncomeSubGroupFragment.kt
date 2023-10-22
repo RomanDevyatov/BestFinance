@@ -141,7 +141,7 @@ class AddIncomeSubGroupFragment : Fragment() {
 
     private fun initGroupSpinner() {
         addSubGroupViewModel.incomeGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
-            incomeGroupList?.takeIf { it.isNotEmpty() }?.let { groups ->
+            incomeGroupList?.let { groups ->
                 val spinnerItems = getIncomeGroupList(groups)
 
                 spinnerItemsGlobal.clear()

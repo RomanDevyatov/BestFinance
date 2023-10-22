@@ -162,7 +162,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setGroupAndSubGroupSpinnerAdapter() {
         updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived()
             .observe(viewLifecycleOwner) { incomeGroups ->
-                incomeGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
+                incomeGroups?.let { groups ->
                     val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
                     val groupSpinnerAdapter = GroupSpinnerAdapter(
@@ -182,7 +182,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
 
     private fun setWalletSpinnerAdapter() {
         updateIncomeHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
-            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            allWallets?.let { wallets ->
                 val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
                 val walletSpinnerAdapter =

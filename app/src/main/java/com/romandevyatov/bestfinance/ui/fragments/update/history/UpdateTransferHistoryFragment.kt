@@ -127,7 +127,7 @@ class UpdateTransferHistoryFragment : Fragment() {
 
     private fun setWalletSpinnerAdapter() {
         updateTransferHistoryViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
-            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            allWallets?.let { wallets ->
                 val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
                 val walletSpinnerAdapter =

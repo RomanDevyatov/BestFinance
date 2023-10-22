@@ -182,7 +182,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     private fun initGroupSpinner() {
         updateSubGroupViewModel.getAllIncomeGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { incomeGroups ->
-                incomeGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
+                incomeGroups?.let { groups ->
                     val spinnerItems = getIncomeGroupList(groups)
 
                     val spinnerAdapter =

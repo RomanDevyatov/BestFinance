@@ -166,11 +166,14 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private fun initGroupSpinner() {
         updateSubGroupViewModel.getAllExpenseGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { expenseGroups ->
-                expenseGroups?.takeIf { it.isNotEmpty() }?.let {
+                expenseGroups?.let {
                     val spinnerItems = getExpenseGroupList(it)
 
                     val spinnerAdapter = GroupSpinnerAdapter(
-                        requireContext(), R.layout.item_with_del, spinnerItems, Constants.ADD_NEW_EXPENSE_GROUP
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerItems,
+                        Constants.ADD_NEW_EXPENSE_GROUP
                     )
 
                     expenseGroupsGlobal = spinnerItems

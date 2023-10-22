@@ -540,28 +540,28 @@ class AddExpenseHistoryFragment : VoiceAssistanceFragment() {
         addHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-            groupWithSubGroups?.let {
-                val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
+            val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
 
-                spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(it))
+            if (groupWithSubGroups != null) {
+                spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(groupWithSubGroups))
+            }
 
-                subGroupSpinnerItemsGlobal.clear()
-                subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
+            subGroupSpinnerItemsGlobal.clear()
+            subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
 
-                spinnerSubItems.add(SpinnerItem(null, ADD_NEW_EXPENSE_SUB_GROUP))
+            spinnerSubItems.add(SpinnerItem(null, ADD_NEW_EXPENSE_SUB_GROUP))
 
-                val subGroupSpinnerAdapter = GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerSubItems,
-                    ADD_NEW_EXPENSE_SUB_GROUP,
-                    archiveSubGroupListener)
+            val subGroupSpinnerAdapter = GroupSpinnerAdapter(
+                requireContext(),
+                R.layout.item_with_del,
+                spinnerSubItems,
+                ADD_NEW_EXPENSE_SUB_GROUP,
+                archiveSubGroupListener)
 
-                binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+            binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 
-                if (isSetIfAvailable) {
-                    setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
-                }
+            if (isSetIfAvailable) {
+                setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
             }
         }
     }

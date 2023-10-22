@@ -49,7 +49,7 @@ class WalletFragment : Fragment() {
         }
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.takeIf { it.isNotEmpty() }?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
+            walletList?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
                 walletAdapter.submitList(walletItems)
             }
         }
