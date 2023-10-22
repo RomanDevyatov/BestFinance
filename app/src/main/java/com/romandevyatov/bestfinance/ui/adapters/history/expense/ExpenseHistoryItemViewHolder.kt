@@ -20,7 +20,7 @@ class ExpenseHistoryItemViewHolder(
     ) {
         binding.balanceTextView.text = expenseHistory.expenseHistory.amount.toString()
 
-        binding.expenseGroup.text = expenseGroup?.name.toString()
+        binding.expenseGroup.text = expenseGroup?.name ?: "Changing balance"
 
         binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup?.name
 

@@ -20,7 +20,7 @@ class IncomeHistoryItemViewHolder(
     ) {
         binding.balanceTextView.text = incomeHistory.incomeHistory.amount.toString()
 
-        binding.incomeGroupNameTextView.text = incomeGroup?.name
+        binding.incomeGroupNameTextView.text = incomeGroup?.name ?: "Changing balance"
 
         binding.subGroupNameTextView.text = incomeHistory.incomeSubGroup?.name
 

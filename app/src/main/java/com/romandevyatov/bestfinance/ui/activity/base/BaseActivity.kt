@@ -23,7 +23,7 @@ open class BaseActivity: AppCompatActivity() { //You can use your preferred acti
             if (label != 0) {
                 setTitle(label);
             }
-        } catch (e: PackageManager.NameNotFoundException) {}
+        } catch (_: PackageManager.NameNotFoundException) {}
     }
 
     override fun attachBaseContext(base: Context) {
