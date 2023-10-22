@@ -208,11 +208,13 @@ class WindowUtil {
             snackbar.setAction(actionText) {
                 action.invoke()
             }
+
             snackbar.show()
         }
 
         private fun showUndoCountdownSnackbar(view: View, message: String, actionText: String, action: () -> Unit) {
             val customSnackbar = CustomSnackbar(view.context, view)
+
             customSnackbar.setText(message)
             customSnackbar.setCountdownMilSec(UNDO_DELAY)
             customSnackbar.setAction(actionText, action)
@@ -230,7 +232,7 @@ class WindowUtil {
             fun show() {
                 // To remove the default Snackbar background
                 val layout = snackbar.view as Snackbar.SnackbarLayout
-                layout.setBackgroundColor(Color.GRAY)
+                layout.setBackgroundColor(Color.BLACK)
 
                 // Set the custom view for the Snackbar
                 val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
@@ -256,12 +258,13 @@ class WindowUtil {
             fun setCountdownMilSec(milliseconds: Long) {
                 timer = object : CountDownTimer(milliseconds, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
-                        val secondsLeft = (millisUntilFinished / 1000).toInt()
+                        val secondsLeft = (millisUntilFinished / 1000).toInt() + 1
                         countdownText.text = secondsLeft.toString()
                     }
 
                     override fun onFinish() {
-                        countdownText.text = "Done"
+                        countdownText.text = "OK"
+                        dismiss()
                     }
                 }
 
