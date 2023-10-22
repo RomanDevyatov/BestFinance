@@ -24,4 +24,5 @@ object Constants {
     const val DEFAULT_DELAY_AFTER_SPOKEN_TEXT: Long = 0
     const val SHOW_DROP_DOWN_DELAY_MS: Long = 30
     const val CLICK_DELAY_MS = 1000
+    const val UNCALLABLE_WORD = "&&Rпизда%<хуй"
 }

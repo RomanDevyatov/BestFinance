@@ -65,7 +65,7 @@
     <string name="you_said">Вы сказали %s. Выхожу</string>
 
     <string name="wallet_doesnt_exist">Кошелёк %1$s не найден. Вы хотите создать новый кошелёк %2$s? (Да/Нет)</string>
-    <string name="adding_wallet">Добавляю кошелёк %s, задайте баланс</string>
+    <string name="adding_wallet">Добавляю кошелёк %s</string>
     <string name="continue_wallet_prompt">Вы хотите продолжить и назвать кошелёк имя ещё раз? (Да/Нет)</string>
     <string name="exit">Выхожу</string>
     <string name="start_again">Помощник опять в деле опять</string>

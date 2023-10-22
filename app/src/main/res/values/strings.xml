@@ -46,7 +46,7 @@
     <string name="you_said">You said %s. Exiting</string>
 
     <string name="wallet_doesnt_exist">Wallet %1$s doesn\'t exist. Do you want to create a new wallet with %2$s name? (Yes/No)</string>
-    <string name="adding_wallet">Adding %s wallet, set wallet balance</string>
+    <string name="adding_wallet">Adding %s wallet</string>
     <string name="continue_wallet_prompt">Do you want to continue and call wallet name one more time? (Yes/No)</string>
     <string name="exit">Exiting</string>
     <string name="start_again">Starting voice assistance again</string>

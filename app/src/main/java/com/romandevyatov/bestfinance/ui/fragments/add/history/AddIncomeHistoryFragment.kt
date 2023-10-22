@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.SpeechRecognizer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,7 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
+import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
@@ -79,6 +81,8 @@ class AddIncomeHistoryFragment : Fragment() {
     private lateinit var speechRecognizer: CustomSpeechRecognizer
     private lateinit var handler: Handler
     private lateinit var currentStageName: InputState
+
+    private var voicedWalletName: String? = null
 
     private var steps: MutableList<InputState> = mutableListOf()
     private var currentStageIndex: Int = -1
@@ -128,7 +132,7 @@ class AddIncomeHistoryFragment : Fragment() {
 
     fun startAddingTransaction(textToSpeak: String) {
         if (steps.size == 0) {
-            steps.addAll(getNotSetSteps())
+            steps.addAll(getSteps())
             currentStageIndex = 0
             startVoiceAssistance(textToSpeak)
         } else {
@@ -137,10 +141,6 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setUpTextToSpeech() {
-//        intentGlob = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-//        intentGlob.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-//        intentGlob.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode((requireActivity() as MainActivity).getProtectedStorage().getPreferredLocale()))
-
         textToSpeech = CustomTextToSpeech(
             requireContext(),
             speechRecognizer,
@@ -171,7 +171,7 @@ class AddIncomeHistoryFragment : Fragment() {
         speakTextAndRecognize(text, true)
     }
 
-    private fun getNotSetSteps(): MutableList<InputState> {
+    private fun getSteps(): MutableList<InputState> {
         val steps: MutableList<InputState> = mutableListOf()
 
         if (binding.groupSpinner.text.isEmpty()) {
@@ -200,7 +200,7 @@ class AddIncomeHistoryFragment : Fragment() {
     }
 
     private fun setUpSpeechRecognizer() {
-        val recognitionListener = object : CustomSpeechRecognitionListener() {
+        val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResults(results: Bundle?) {
                 val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
@@ -246,7 +246,7 @@ class AddIncomeHistoryFragment : Fragment() {
                 val ask = getString(R.string.group_doesnt_exist, currentSpokenText)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals("-1")) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (currentSpokenText.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertIncomeGroup(
@@ -264,13 +264,13 @@ class AddIncomeHistoryFragment : Fragment() {
                     nextStage(speakTextBefore = getString(R.string.created_group_is_set))
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
+                    spokenValue = UNCALLABLE_WORD // any
                     val ask = getString(R.string.call_group_one_more_time)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, currentSpokenText))
             }
-        } else if (spokenValue.equals("-1")) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (currentSpokenText.lowercase()) {
                 getString(R.string.yes) -> { // start again
                     startVoiceAssistance()
@@ -296,11 +296,11 @@ class AddIncomeHistoryFragment : Fragment() {
                 spokenValue = currentSpokenText
 
                 val ask = getString(R.string.add_new_subgroup_prompt, currentSpokenText)
-                speakTextAndRecognize(ask, false)
+                speakTextAndRecognize(ask, false) // ask new
             }
-        } else if (!spokenValue.equals("-1")) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) { // if i want to create new subgroup
             when (currentSpokenText.lowercase()) {
-                getString(R.string.yes) -> {
+                getString(R.string.yes) -> { // if I sad yes I want to create new subgroup
                     speakText(getString(R.string.adding_subgroup, spokenValue))
 
                     val groupId = groupSpinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
@@ -316,14 +316,14 @@ class AddIncomeHistoryFragment : Fragment() {
 
                     nextStage(speakTextBefore = getString(R.string.created_subgroup_is_set))
                 }
-                getString(R.string.no) -> {
-                    spokenValue = "-1"
+                getString(R.string.no) -> { // if I sad no I don't want to create new subgroup
+                    spokenValue = UNCALLABLE_WORD
                     val ask = getString(R.string.continue_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, currentSpokenText))
             }
-        } else if (spokenValue.equals("-1")) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) { // one more time
             when (currentSpokenText.lowercase()) {
                 getString(R.string.yes) -> {
                     startVoiceAssistance()
@@ -345,6 +345,7 @@ class AddIncomeHistoryFragment : Fragment() {
             val wallets = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
 
             if (wallets.contains(currentSpokenText)) { // success
+                voicedWalletName = currentSpokenText
                 binding.walletSpinner.setText(currentSpokenText, false)
                 nextStage() // move further
             } else {
@@ -353,68 +354,81 @@ class AddIncomeHistoryFragment : Fragment() {
                 val ask = getString(R.string.wallet_doesnt_exist, currentSpokenText, currentSpokenText)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals("-1")) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (currentSpokenText.lowercase()) {
                 getString(R.string.yes) -> {
-                    currentStageName = InputState.SET_BALANCE
-
+                    voicedWalletName = spokenValue as String
+                    if (!steps.contains(InputState.SET_BALANCE)) {
+                        steps.add(currentStageIndex + 1, InputState.SET_BALANCE)
+                    }
                     val message = getString(R.string.adding_wallet, spokenValue.toString())
-                    speakTextAndRecognize(message, false) // move further
+                    nextStage(speakTextBefore = message)
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = "-1" // any
+                    spokenValue = UNCALLABLE_WORD // any
 
                     val ask = getString(R.string.continue_wallet_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, currentSpokenText))
             }
-        } else if (spokenValue.equals("-1")) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (currentSpokenText.lowercase()) {
-                getString(R.string.yes) -> speakText(getString(R.string.start_again)) // start again
+                getString(R.string.yes) -> startVoiceAssistance() // start again
                 getString(R.string.no) -> { // exit
                     speakText(getString(R.string.exit))
                 }
                 else -> speakText(getString(R.string.you_said, currentSpokenText))
             }
-            spokenValue = null
         }
     }
 
     private fun handleWalletBalanceInput(spokenBalanceText: String) {
-        val textNumbers = spokenBalanceText.replace(",", "")
+        if (spokenValue == null) {
+            val textNumbers = spokenBalanceText.replace(",", "")
 
-        val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
+            val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
 
-        if (convertedNumber != null && spokenValue != null) {
-            val newWallet = Wallet(
-                name = spokenValue!!,
-                balance = convertedNumber
-            )
-            addHistoryViewModel.insertWallet(newWallet)
+            if (convertedNumber != null) {
+                if (voicedWalletName != null) {
+                    val newWallet = Wallet(
+                        name = voicedWalletName!!,
+                        balance = convertedNumber
+                    )
+                    addHistoryViewModel.insertWallet(newWallet)
 
-            binding.walletSpinner.setText(spokenValue, false)
+                    binding.walletSpinner.setText(voicedWalletName, false)
 
-            spokenValue = null
+                    nextStage()
+                } else {
+                    Log.e("AIH.balance", "voicedWalletName is null!")
+                }
+            } else {
+                spokenValue = UNCALLABLE_WORD
 
-            nextStage()
-        } else if (!spokenValue.equals("-1") || convertedNumber == null) {
-            spokenValue = "-1"
-
-            val askSpeechText = getString(R.string.incorrect_balance)
-            speakTextAndRecognize(askSpeechText, false)
-        } else if (spokenValue.equals("-1")) {
+                val askSpeechText = getString(R.string.incorrect_balance)
+                speakTextAndRecognize(askSpeechText, false)
+            }
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (spokenBalanceText.lowercase()) {
                 getString(R.string.yes) -> { // start again setting balance
-                    val ask = getString(R.string.set_balance)
-                    speakTextAndRecognize(ask, false)
+                    startVoiceAssistance()
                 }
                 getString(R.string.no) -> { // exit
-                    speakText(getString(R.string.exit))
+                    spokenValue = UNCALLABLE_WORD
+                    voicedWalletName = null
+                    steps.remove(InputState.SET_BALANCE)
+                    currentStageIndex -= 1
+                    currentStageName = steps[currentStageIndex]
+
+                    val ask = getString(R.string.continue_wallet_prompt)
+                    speakTextAndRecognize(ask, false)
                 }
-                else -> speakText(getString(R.string.you_said, spokenBalanceText))
+                else -> {
+                    spokenValue = null
+                    speakText(getString(R.string.you_said, spokenBalanceText))
+                }
             }
-            spokenValue = null
         }
     }
 
@@ -445,7 +459,6 @@ class AddIncomeHistoryFragment : Fragment() {
             }
         }
     }
-
 
     private fun handleCommentInput(spokenComment: String) {
         val speakText = if (spokenComment.isNotEmpty()) {
