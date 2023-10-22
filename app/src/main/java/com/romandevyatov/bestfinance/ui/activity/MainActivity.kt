@@ -254,10 +254,8 @@ class MainActivity : BaseActivity(), OnExitAppListener {
 
         val fragment = getCurrentFragment()
         if (fragment is AddIncomeHistoryFragment) {
-            fragment.setIntentGlob(intent)
             fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
         } else if (fragment is AddTransferFragment) {
-            fragment.setIntentGlob(intent)
             fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
         }
     }
