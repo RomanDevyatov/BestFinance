@@ -4,6 +4,24 @@ import java.util.Locale
 
 object NumberConverter {
 
+    fun convertSpokenTextToNumber(spokenText: String): Double? {
+        val currentLocale = Locale.getDefault()
+        val validWords = validWordsMap[currentLocale] ?: emptyMap()
+        return when (currentLocale) {
+            Locale.US -> {
+                val digitOrLevelList = replaceTextNumberToRealDigit(spokenText, englishNumberMap)
+                handleNumbers(digitOrLevelList, validWords)
+            }
+            Locale("RU") -> {
+                val digitOrLevelList = replaceTextNumberToRealDigit(spokenText, russianNumberMap)
+                handleNumbers(digitOrLevelList, validWords)
+            }
+            else -> {
+                spokenText.toDoubleOrNull()
+            }
+        }
+    }
+
     private val englishNumberMap = mapOf(
         "zero" to "0",
         "one" to "1",
@@ -35,72 +53,88 @@ object NumberConverter {
         "ninety" to "90"
     )
 
-    fun convertSpokenTextToNumber(spokenText: String): Double? {
-        return when (Locale.getDefault()) {
-            Locale.US -> {
-                handleEnglishNumbers(spokenText)
-            }
-            else -> {
-                spokenText.toDoubleOrNull()
-            }
-        }
-    }
+    private val russianNumberMap = mapOf(
+        "ноль" to "0",
+        "один" to "1",
+        "два" to "2",
+        "три" to "3",
+        "четыре" to "4",
+        "пять" to "5",
+        "шесть" to "6",
+        "семь" to "7",
+        "восемь" to "8",
+        "девять" to "9",
+        "десять" to "10",
+        "одиннадцать" to "11",
+        "двенадцать" to "12",
+        "тринадцать" to "13",
+        "четырнадцать" to "14",
+        "пятнадцать" to "15",
+        "шестнадцать" to "16",
+        "семнадцать" to "17",
+        "восемнадцать" to "18",
+        "девятнадцать" to "19",
+        "двадцать" to "20",
+        "тридцать" to "30",
+        "сорок" to "40",
+        "пятьдесят" to "50",
+        "шестьдесят" to "60",
+        "семьдесят" to "70",
+        "восемьдесят" to "80",
+        "девяносто" to "90"
+    )
 
-    private fun replaceEnglishTextNumberToRealDigit(spokenText: String): MutableList<String> {
-        return spokenText.split(" ").map { word ->
-            englishNumberMap[word.lowercase(Locale.ROOT)] ?: word
-        }.toMutableList()
-    }
+    private val validWordsMap = mapOf(
+        Locale.US to mapOf(
+            "." to arrayOf("point"),
+            "100" to arrayOf("hundred"),
+            "1000" to arrayOf("thousand"),
+            "1000000" to arrayOf("million"),
+            "1000000000" to arrayOf("billion")
+        ),
+        Locale("RU") to mapOf(
+            "." to arrayOf("точка"),
+            "100" to arrayOf("сотня", "сотен", "сто"),
+            "1000" to arrayOf("тысяча", "тысяч", "тысячи"),
+            "1000000" to arrayOf("миллион", "миллионов", "миллиона"),
+            "1000000000" to arrayOf("миллиард", "миллиарда", "миллиардов")
+        )
+    )
 
-    private fun handleEnglishNumbers(spokenText: String): Double? {
+    private fun handleNumbers(digitOrLevelList: MutableList<String>, validWordMap: Map<String, Array<String>>): Double? {
         var result = 0.0  // Initialize as a double for handling decimal parts
         var isDecimal = false
         var decimalMultiplier = 0.1  // Start with one decimal place
-        var multiplier = 1.0  // Initialize as 1 for handling units like hundreds and thousands
+        var multiplier = 1.0  // handling units like hundreds and thousands
         var nextMultiplier = 1.0
 
-        val digitOrLevelList = replaceEnglishTextNumberToRealDigit(spokenText)
-
-        val validWords = setOf(
-            "point", "hundred", "thousand", "million", "billion"
-        )
+        val validWords: List<String> = validWordMap.values.flatMap { it.asList() }
 
         for (digitOrLevel in digitOrLevelList) {
-            if (isDouble(digitOrLevel) || (digitOrLevel.lowercase() in validWords)) {
-                val number = if (digitOrLevel.isNotEmpty()) digitOrLevel.toDouble() else 0.0
-
-                if (digitOrLevel.equals("point", ignoreCase = true)) {
-                    isDecimal = true
-                    continue  // Skip "point" in the final output
-                }
-
-                when {
-                    digitOrLevel.equals("hundred", ignoreCase = true) -> {
-                        nextMultiplier = 100.0
-                    }
-                    digitOrLevel.equals("thousand", ignoreCase = true) -> {
-                        nextMultiplier = 1000.0
-                    }
-                    digitOrLevel.equals("million", ignoreCase = true) -> {
-                        nextMultiplier = 1000000.0
-                    }
-                    digitOrLevel.equals("billion", ignoreCase = true) -> {
-                        nextMultiplier = 1000000000.0
-                    }
-                    else -> {
-                        if (isDecimal) {
-                            // Accumulate the decimal - after point
-                            result += number * decimalMultiplier
-                            decimalMultiplier *= 0.1
-                        } else {
-                            if (nextMultiplier > 1) {
-                                multiplier = nextMultiplier
-                                nextMultiplier = 1.0
+            if (isDouble(digitOrLevel) || validWords.contains(digitOrLevel.lowercase())) {
+                if (validWordMap["."]?.contains(digitOrLevel.lowercase()) == false) {
+                    nextMultiplier = when {
+                        validWordMap["100"]?.contains(digitOrLevel.lowercase()) == true -> 100.0
+                        validWordMap["1000"]?.contains(digitOrLevel.lowercase()) == true -> 1000.0
+                        validWordMap["1000000"]?.contains(digitOrLevel.lowercase()) == true -> 1000000.0
+                        validWordMap["1000000000"]?.contains(digitOrLevel.lowercase()) == true -> 1000000000.0
+                        else -> {
+                            val number = digitOrLevel.toDoubleOrNull() ?: 0.0
+                            if (isDecimal) {
+                                result += number * decimalMultiplier
+                                decimalMultiplier *= 0.1
+                            } else {
+                                if (nextMultiplier > 1) {
+                                    multiplier = nextMultiplier
+                                    nextMultiplier = 1.0
+                                }
+                                result += number * multiplier
                             }
-                            // Accumulate the integer part with appropriate multiplier - before point
-                            result += number * multiplier
+                            nextMultiplier
                         }
                     }
+                } else {
+                    isDecimal = true
                 }
             } else {
                 return null
@@ -108,6 +142,12 @@ object NumberConverter {
         }
 
         return result
+    }
+
+    private fun replaceTextNumberToRealDigit(spokenText: String, numberMap: Map<String, String>): MutableList<String> {
+        return spokenText.split(" ").map { word ->
+            numberMap[word.lowercase(Locale.ROOT)] ?: word
+        }.toMutableList()
     }
 
     private fun isDouble(str: String): Boolean {
