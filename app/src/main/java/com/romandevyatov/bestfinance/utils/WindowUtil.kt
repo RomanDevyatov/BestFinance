@@ -227,11 +227,9 @@ class WindowUtil {
             private var timer: CountDownTimer? = null
 
             fun show() {
-                // Удалите фон Snackbar по умолчанию
                 val layout = snackbar.view as Snackbar.SnackbarLayout
                 layout.setBackgroundColor(Color.BLACK)
 
-                // Установите пользовательский макет Snackbar
                 val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
                 snackbarLayout.removeAllViews()
                 snackbarLayout.addView(binding.root, 0)
