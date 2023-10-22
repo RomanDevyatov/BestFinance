@@ -230,7 +230,7 @@ class WindowUtil {
             fun show() {
                 // To remove the default Snackbar background
                 val layout = snackbar.view as Snackbar.SnackbarLayout
-                layout.setBackgroundColor(Color.TRANSPARENT)
+                layout.setBackgroundColor(Color.GRAY)
 
                 // Set the custom view for the Snackbar
                 val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
