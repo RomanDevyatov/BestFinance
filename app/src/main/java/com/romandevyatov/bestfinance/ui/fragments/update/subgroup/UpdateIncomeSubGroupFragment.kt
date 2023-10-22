@@ -100,15 +100,30 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
             updateSubGroupViewModel.getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(newIncomeGroupId)
                 .observe(viewLifecycleOwner) { groupWithSubGroups ->
-                    val subGroups = groupWithSubGroups.incomeSubGroups.map { it.name }.toMutableList()
+                    groupWithSubGroups?.let { group ->
+                        val subGroups =
+                            group.incomeSubGroups.map { it.name }.toMutableList()
 
-                    if ((incomeSubGroupOldGlobal?.name != newSubGroupNameBinding
-                                || incomeSubGroupOldGlobal?.incomeGroupId != newIncomeGroupId)
-                        && subGroups.contains(newSubGroupNameBinding)) {
-                        WindowUtil.showExistingDialog(requireContext(), getString(R.string.sub_group_already_exist_in_group, newSubGroupNameBinding, newGroupNameBinding))
-                    } else {
-                        updateSubGroup(newSubGroupNameBinding, newDescriptionBinding, newIncomeGroupId)
-                        navigateToSettingGroupsAndSubGroups()
+                        if ((incomeSubGroupOldGlobal?.name != newSubGroupNameBinding
+                                    || incomeSubGroupOldGlobal?.incomeGroupId != newIncomeGroupId)
+                            && subGroups.contains(newSubGroupNameBinding)
+                        ) {
+                            WindowUtil.showExistingDialog(
+                                requireContext(),
+                                getString(
+                                    R.string.sub_group_already_exist_in_group,
+                                    newSubGroupNameBinding,
+                                    newGroupNameBinding
+                                )
+                            )
+                        } else {
+                            updateSubGroup(
+                                newSubGroupNameBinding,
+                                newDescriptionBinding,
+                                newIncomeGroupId
+                            )
+                            navigateToSettingGroupsAndSubGroups()
+                        }
                     }
                 }
         }

@@ -498,33 +498,33 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
         addHistoryViewModel.getAllIncomeGroupNotArchived()
-            .observe(viewLifecycleOwner) { groups ->
-            val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
+            .observe(viewLifecycleOwner) { incomeGroups ->
+                incomeGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
+                    val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
 
-            if (groups.isNotEmpty()) {
-                spinnerGroupItems.addAll(getGroupItemsForSpinner(groups))
-            }
+                    spinnerGroupItems.addAll(getGroupItemsForSpinner(groups))
 
-            groupSpinnerItemsGlobal.clear()
-            groupSpinnerItemsGlobal.addAll(spinnerGroupItems)
+                    groupSpinnerItemsGlobal.clear()
+                    groupSpinnerItemsGlobal.addAll(spinnerGroupItems)
 
-            spinnerGroupItems.add(SpinnerItem(null, ADD_NEW_INCOME_GROUP))
+                    spinnerGroupItems.add(SpinnerItem(null, ADD_NEW_INCOME_GROUP))
 
-            val groupSpinnerAdapter = GroupSpinnerAdapter(
-                requireContext(),
-                R.layout.item_with_del,
-                spinnerGroupItems,
-                ADD_NEW_INCOME_GROUP,
-                archiveGroupListener
-            )
+                    val groupSpinnerAdapter = GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerGroupItems,
+                        ADD_NEW_INCOME_GROUP,
+                        archiveGroupListener
+                    )
 
-            binding.groupSpinner.setAdapter(groupSpinnerAdapter)
+                    binding.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-            if (groups.isNotEmpty()) {
-                setIfAvailableGroupSpinnersValue(spinnerGroupItems)
-            }
+                    if (groups.isNotEmpty()) {
+                        setIfAvailableGroupSpinnersValue(spinnerGroupItems)
+                    }
 
-            setSubGroupSpinnerAdapter()
+                    setSubGroupSpinnerAdapter()
+                }
         }
     }
 
@@ -570,24 +570,28 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
     }
 
     private fun setWalletSpinnerAdapter() {
-        addHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-            val spinnerWalletItems = getWalletItemsForSpinner(wallets)
+        addHistoryViewModel.walletsNotArchivedLiveData
+            .observe(viewLifecycleOwner) { allWallets ->
+                allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                    val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            walletItemsGlobal.clear()
-            walletItemsGlobal.addAll(spinnerWalletItems)
+                    walletItemsGlobal.clear()
+                    walletItemsGlobal.addAll(spinnerWalletItems)
 
-            spinnerWalletItems.add(SpinnerItem(null, ADD_NEW_WALLET))
+                    spinnerWalletItems.add(SpinnerItem(null, ADD_NEW_WALLET))
 
-            val walletSpinnerAdapter = GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerWalletItems,
-                    ADD_NEW_WALLET,
-                    archiveWalletListener)
+                    val walletSpinnerAdapter = GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerWalletItems,
+                        ADD_NEW_WALLET,
+                        archiveWalletListener
+                    )
 
-            binding.walletSpinner.setAdapter(walletSpinnerAdapter)
+                    binding.walletSpinner.setAdapter(walletSpinnerAdapter)
 
-            setIfAvailableWalletSpinnerValue(spinnerWalletItems)
+                    setIfAvailableWalletSpinnerValue(spinnerWalletItems)
+                }
         }
     }
 

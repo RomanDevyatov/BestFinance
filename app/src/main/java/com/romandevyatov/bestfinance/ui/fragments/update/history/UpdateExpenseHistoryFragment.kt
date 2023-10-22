@@ -159,31 +159,41 @@ class UpdateExpenseHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        updateExpenseHistoryViewModel.getAllExpenseGroupNotArchived().observe(viewLifecycleOwner) { groups ->
-            val spinnerGroupItems = getGroupItemsForSpinner(groups)
+        updateExpenseHistoryViewModel.getAllExpenseGroupNotArchived().observe(viewLifecycleOwner) { expenseGroups ->
+            expenseGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
+                val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-            val groupSpinnerAdapter = GroupSpinnerAdapter(
-                requireContext(),
-                R.layout.item_with_del,
-                spinnerGroupItems,
-                null,
-                null)
+                val groupSpinnerAdapter = GroupSpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerGroupItems,
+                    null,
+                    null
+                )
 
-            binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
+                binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-            setSubGroupSpinnerAdapter()
+                setSubGroupSpinnerAdapter()
+            }
         }
     }
 
     private fun setWalletSpinnerAdapter() {
-        updateExpenseHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        updateExpenseHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            val spinnerWalletItems = getWalletItemsForSpinner(wallets)
+                val walletSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerWalletItems,
+                        null,
+                        null
+                    )
 
-            val walletSpinnerAdapter =
-                GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems, null, null)
-
-            binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+                binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+            }
         }
     }
 
@@ -200,14 +210,22 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 updateExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
                     selectedGroupName
                 ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-                    val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
+                    groupWithSubGroups?.let {
+                        val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-                    spinnerSubGroupItemsGlobal = spinnerSubItems
+                        spinnerSubGroupItemsGlobal = spinnerSubItems
 
-                    val subGroupSpinnerAdapter =
-                        GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
+                        val subGroupSpinnerAdapter =
+                            GroupSpinnerAdapter(
+                                requireContext(),
+                                R.layout.item_with_del,
+                                spinnerSubItems,
+                                null,
+                                null
+                            )
 
-                    binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+                        binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+                    }
                 }
             }
 
@@ -267,16 +285,23 @@ class UpdateExpenseHistoryFragment : Fragment() {
         updateExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-            val spinnerSubItems =
-                getSpinnerSubItemsNotArchived(groupWithSubGroups)
+            groupWithSubGroups?.let {
+                val spinnerSubItems =
+                    getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-            spinnerSubGroupItemsGlobal = spinnerSubItems
+                spinnerSubGroupItemsGlobal = spinnerSubItems
 
-            val subGroupSpinnerAdapter =
-                GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
+                val subGroupSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerSubItems,
+                        null,
+                        null
+                    )
 
-            binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
-
+                binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+            }
         }
     }
 

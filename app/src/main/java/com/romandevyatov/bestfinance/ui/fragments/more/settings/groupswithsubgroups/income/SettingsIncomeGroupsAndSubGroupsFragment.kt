@@ -132,8 +132,9 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        incomeGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData?.observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-            allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
+        incomeGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData
+            .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+                allGroupsWithSubGroups?.takeIf { it.isNotEmpty() }?.let { groupWithIncomeSubGroups ->
                 updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
                 groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
             }

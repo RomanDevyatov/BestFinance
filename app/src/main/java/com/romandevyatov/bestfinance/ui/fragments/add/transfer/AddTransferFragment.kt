@@ -363,29 +363,43 @@ class AddTransferFragment : VoiceAssistanceFragment() {
     }
 
     private fun setFromWalletSpinnerAdapter() {
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val spinnerItems = getWalletItemsSpinner(wallets)
 
-            val spinnerItems = getWalletItemsSpinner(wallets)
+                val walletSpinnerAdapter =
+                    SpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerItems,
+                        ADD_NEW_WALLET,
+                        archiveFromWalletListener
+                    )
 
-            val walletSpinnerAdapter =
-                SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, ADD_NEW_WALLET, archiveFromWalletListener)
+                binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
-            binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
-
-            setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter)
+                setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter)
+            }
         }
     }
 
     private fun setToWalletSpinnerAdapter() {
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val spinnerItems = getWalletItemsSpinner(wallets)
 
-            val spinnerItems = getWalletItemsSpinner(wallets)
+                val walletSpinnerAdapter = SpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerItems,
+                    ADD_NEW_WALLET,
+                    archiveToWalletListener
+                )
 
-            val walletSpinnerAdapter = SpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems, ADD_NEW_WALLET, archiveToWalletListener)
+                binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
-            binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
-
-            setIfAvailableToWalletSpinnersValue(walletSpinnerAdapter)
+                setIfAvailableToWalletSpinnersValue(walletSpinnerAdapter)
+            }
         }
     }
 
@@ -534,53 +548,76 @@ class AddTransferFragment : VoiceAssistanceFragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, CLICK_DELAY_MS.toLong())
+            }, CLICK_DELAY_MS)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendTransferHistory() {
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-            val amountBinding = binding.amountEditText.text.toString().trim()
-            val dateBinding = binding.dateEditText.text.toString().trim()
-            val timeBinding = binding.timeEditText.text.toString().trim()
-            val comment = binding.commentEditText.text.toString().trim()
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val amountBinding = binding.amountEditText.text.toString().trim()
+                val dateBinding = binding.dateEditText.text.toString().trim()
+                val timeBinding = binding.timeEditText.text.toString().trim()
+                val comment = binding.commentEditText.text.toString().trim()
 
-            val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
-            val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
+                val walletFromNameBinding = binding.fromWalletNameSpinner.text.toString()
+                val walletToNameBinding = binding.toWalletNameSpinner.text.toString()
 
-            val isEqualSpinnerNamesValidation = IsEqualValidator(walletFromNameBinding, walletToNameBinding).validate()
-            binding.fromWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
-            binding.toWalletNameSpinnerLayout.error = if (!isEqualSpinnerNamesValidation.isSuccess) getString(isEqualSpinnerNamesValidation.message) else null
+                val isEqualSpinnerNamesValidation =
+                    IsEqualValidator(walletFromNameBinding, walletToNameBinding).validate()
+                binding.fromWalletNameSpinnerLayout.error =
+                    if (!isEqualSpinnerNamesValidation.isSuccess) getString(
+                        isEqualSpinnerNamesValidation.message
+                    ) else null
+                binding.toWalletNameSpinnerLayout.error =
+                    if (!isEqualSpinnerNamesValidation.isSuccess) getString(
+                        isEqualSpinnerNamesValidation.message
+                    ) else null
 
-            val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
-            binding.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
+                val amountValidation = BaseValidator.validate(
+                    EmptyValidator(amountBinding),
+                    IsDigitValidator(amountBinding)
+                )
+                binding.amountEditText.error =
+                    if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
-            val dateBindingValidation = EmptyValidator(dateBinding).validate()
-            binding.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
+                val dateBindingValidation = EmptyValidator(dateBinding).validate()
+                binding.dateLayout.error =
+                    if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
 
-            val timeBindingValidation = EmptyValidator(timeBinding).validate()
-            binding.timeLayout.error = if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
+                val timeBindingValidation = EmptyValidator(timeBinding).validate()
+                binding.timeLayout.error =
+                    if (!timeBindingValidation.isSuccess) getString(timeBindingValidation.message) else null
 
-            if (isEqualSpinnerNamesValidation.isSuccess
-                && amountValidation.isSuccess
-                && dateBindingValidation.isSuccess
-                && timeBindingValidation.isSuccess
-            ) {
-                val walletFrom = wallets.find { it.name == walletFromNameBinding }
-                updateWalletFrom(walletFrom!!, amountBinding.toDouble())
+                if (isEqualSpinnerNamesValidation.isSuccess
+                    && amountValidation.isSuccess
+                    && dateBindingValidation.isSuccess
+                    && timeBindingValidation.isSuccess
+                ) {
+                    val walletFrom = wallets.find { it.name == walletFromNameBinding }
+                    updateWalletFrom(walletFrom!!, amountBinding.toDouble())
 
-                val walletTo = wallets.find { it.name == walletToNameBinding }
-                updateWalletTo(walletTo!!, amountBinding.toDouble())
+                    val walletTo = wallets.find { it.name == walletToNameBinding }
+                    updateWalletTo(walletTo!!, amountBinding.toDouble())
 
-                val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
-                val parsedLocalDateTime = LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
+                    val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
+                    val parsedLocalDateTime =
+                        LocalDateTime.from(dateTimeFormatter.parse(fullDateTime))
 
-                insertTransferHistoryRecord(comment, walletFrom, walletTo, amountBinding.toDouble(), parsedLocalDateTime)
+                    insertTransferHistoryRecord(
+                        comment,
+                        walletFrom,
+                        walletTo,
+                        amountBinding.toDouble(),
+                        parsedLocalDateTime
+                    )
 
-                sharedModViewModel.set(null)
-                val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
-                findNavController().navigate(action)
+                    sharedModViewModel.set(null)
+                    val action =
+                        AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
+                    findNavController().navigate(action)
+                }
             }
         }
     }

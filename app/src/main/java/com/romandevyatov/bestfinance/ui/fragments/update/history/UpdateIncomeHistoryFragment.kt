@@ -161,31 +161,41 @@ class UpdateIncomeHistoryFragment : Fragment() {
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
         updateIncomeHistoryViewModel.getAllIncomeGroupNotArchived()
-            .observe(viewLifecycleOwner) { groups ->
-                val spinnerGroupItems = getGroupItemsForSpinner(groups)
+            .observe(viewLifecycleOwner) { incomeGroups ->
+                incomeGroups?.takeIf { it.isNotEmpty() }?.let { groups ->
+                    val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-                val groupSpinnerAdapter = GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerGroupItems,
-                    null,
-                    null)
+                    val groupSpinnerAdapter = GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerGroupItems,
+                        null,
+                        null
+                    )
 
-                binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
+                    binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-                setSubGroupSpinnerAdapter()
+                    setSubGroupSpinnerAdapter()
+                }
             }
     }
 
     private fun setWalletSpinnerAdapter() {
-        updateIncomeHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        updateIncomeHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            val spinnerWalletItems = getWalletItemsForSpinner(wallets)
+                val walletSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerWalletItems,
+                        null,
+                        null
+                    )
 
-            val walletSpinnerAdapter =
-                GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems, null, null)
-
-            binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+                binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+            }
         }
     }
 

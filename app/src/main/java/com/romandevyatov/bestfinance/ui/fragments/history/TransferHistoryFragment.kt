@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.fragments.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.transfer.TransferHistoryAdapter
-import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,7 +54,11 @@ class TransferHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         transferHistoryViewModel.allTransferHistoriesLiveData.observe(viewLifecycleOwner) {
-            transferHistoryAdapter.submitList(it)
+            if (it.isNotEmpty()) {
+                transferHistoryAdapter.submitList(it)
+            } else {
+                Log.d("TransferHistory", "allTransferHistoriesLiveData is null!")
+            }
         }
 
     }

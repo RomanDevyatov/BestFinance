@@ -48,11 +48,10 @@ class WalletFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-            val walletItems = wallets.map {
-                WalletItem(it.id, it.name, it.balance)
-            }.toMutableList()
-            walletAdapter.submitList(walletItems)
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
+            walletList?.takeIf { it.isNotEmpty() }?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
+                walletAdapter.submitList(walletItems)
+            }
         }
 
         initWalletRecyclerView()

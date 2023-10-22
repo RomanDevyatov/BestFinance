@@ -55,9 +55,9 @@ class AnalyzeFragment : Fragment() {
         analyzeViewModel.allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData.observe(viewLifecycleOwner) { incomes ->
             analyzeViewModel.allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData.observe(viewLifecycleOwner) { expenses ->
                 analyzeViewModel.getIncomeHistoriesWhereSubGroupIsNullLiveData().observe(viewLifecycleOwner) { incomesChangingBalance ->
-                    val combinedList = incomes.toMutableList()
+                    val combinedList = incomes?.toMutableList() ?: mutableListOf()
 
-                    val balanceIncomeChangingHistories = getIncomeChangingBalanceRecords(incomesChangingBalance)
+                    val balanceIncomeChangingHistories = incomesChangingBalance?.let { getIncomeChangingBalanceRecords(it) }
 
                     if (balanceIncomeChangingHistories != null) {
                         combinedList += balanceIncomeChangingHistories
@@ -71,9 +71,9 @@ class AnalyzeFragment : Fragment() {
                     addParentData(incomesParentData)
 
                     analyzeViewModel.getExpenseHistoriesWhereSubGroupIsNullLiveData().observe(viewLifecycleOwner) { expenseChangingBalance ->
-                        val combinedExpenseList = expenses.toMutableList()
+                        val combinedExpenseList = expenses?.toMutableList() ?: mutableListOf()
 
-                        val balanceExpenseChangingHistories = getExpenseChangingBalanceRecords(expenseChangingBalance)
+                        val balanceExpenseChangingHistories = expenseChangingBalance?.let { getExpenseChangingBalanceRecords(it) }
 
                         if (balanceExpenseChangingHistories != null) {
                             combinedExpenseList += balanceExpenseChangingHistories
@@ -98,14 +98,15 @@ class AnalyzeFragment : Fragment() {
             }
         }
 
-        analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { history ->
-            val totalIncomeValue = history.sumOf { it.amount }
+        analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { histories ->
+            val totalIncomeValue = histories?.sumOf { it.amount } ?: 0.0
 
             analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
-                val totalExpensesValue = expenseHistory.sumOf { it.amount }
+                val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
 
-                binding.analyzeGroupTextView.text =
-                    (((totalIncomeValue - totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
+                val result = (((totalIncomeValue - totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
+
+                binding.analyzeGroupTextView.text = result
             }
         }
     }

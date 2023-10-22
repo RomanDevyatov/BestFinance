@@ -98,8 +98,10 @@ class HomeFragment : Fragment() {
         setButtonListeners()
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            val balanceValue = walletList.sumOf { it.balance }
-            binding.totalCapitalTextView.text = balanceValue.toString()
+            walletList?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val balanceValue = wallets.sumOf { it.balance }
+                binding.totalCapitalTextView.text = balanceValue.toString()
+            }
         }
 
         incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
@@ -117,12 +119,14 @@ class HomeFragment : Fragment() {
             totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
             binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
 
-            expenseHistoryViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
-                totalExpensesValue = expenseHistory.sumOf { it.amount }
-                binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
+            expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
+                expenseHistoryList?.takeIf { it.isNotEmpty() }?.let { histories ->
+                    totalExpensesValue = histories.sumOf { it.amount }
+                    binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
 
-                moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!)
-                binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
+                    moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!)
+                    binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
+                }
             }
         }
     }

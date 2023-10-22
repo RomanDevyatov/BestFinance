@@ -69,20 +69,20 @@ class UpdateTransferHistoryFragment : Fragment() {
         setOnBackPressedHandler()
 
         updateTransferHistoryViewModel.getTransferHistoryWithWalletsByIdLiveData(args.transferHistoryId)
-            ?.observe(viewLifecycleOwner) { transferHistoryWithWallets ->
-                if (transferHistoryWithWallets != null) {
-                    historyWithWalletsGlobal = transferHistoryWithWallets.copy()
+            .observe(viewLifecycleOwner) { transferHistoryWithWallets ->
+                transferHistoryWithWallets?.let {
+                    historyWithWalletsGlobal = it.copy()
 
                     setupSpinnersValues(
-                        transferHistoryWithWallets.walletFrom,
-                        transferHistoryWithWallets.walletTo
+                        it.walletFrom,
+                        it.walletTo
                     )
 
                     setupSpinners()
 
                     setupDateTimeFiledValues()
 
-                    val transferHistory = transferHistoryWithWallets.transferHistory
+                    val transferHistory = it.transferHistory
                     binding.reusable.commentEditText.setText(transferHistory.comment)
                     binding.reusable.amountEditText.setText(transferHistory.amount.toString())
                 }
@@ -126,20 +126,22 @@ class UpdateTransferHistoryFragment : Fragment() {
     }
 
     private fun setWalletSpinnerAdapter() {
-        updateTransferHistoryViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        updateTransferHistoryViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.takeIf { it.isNotEmpty() }?.let { wallets ->
+                val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            val spinnerWalletItems = getWalletItemsForSpinner(wallets)
+                val walletSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerWalletItems,
+                        null,
+                        null
+                    )
 
-            val walletSpinnerAdapter =
-                GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerWalletItems,
-                    null,
-                    null)
-
-            binding.reusable.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
-            binding.reusable.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
+                binding.reusable.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
+                binding.reusable.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
+            }
         }
     }
 
@@ -253,7 +255,7 @@ class UpdateTransferHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, CLICK_DELAY_MS.toLong())
+            }, CLICK_DELAY_MS)
         }
     }
 
