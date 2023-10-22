@@ -222,48 +222,44 @@ class WindowUtil {
         }
 
         class CustomSnackbar(context: Context, rootView: View, ) {
-            private val snackbarView = LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-            private val countdownText = snackbarView.findViewById<TextView>(R.id.countdown_text)
-            private val snackbarText = snackbarView.findViewById<TextView>(R.id.snackbar_text)
-
+            private val binding = CustomSnackbarBinding.inflate(LayoutInflater.from(context))
             private val snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
             private var timer: CountDownTimer? = null
 
             fun show() {
-                // To remove the default Snackbar background
+                // Удалите фон Snackbar по умолчанию
                 val layout = snackbar.view as Snackbar.SnackbarLayout
                 layout.setBackgroundColor(Color.BLACK)
 
-                // Set the custom view for the Snackbar
+                // Установите пользовательский макет Snackbar
                 val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
                 snackbarLayout.removeAllViews()
-                snackbarLayout.addView(snackbarView, 0)
+                snackbarLayout.addView(binding.root, 0)
 
                 snackbar.show()
             }
 
             fun setAction(actionText: String, action: () -> Unit) {
-                val actionButton = snackbarView.findViewById<Button>(R.id.customSnackbarAction)
-                actionButton.text = actionText
-                actionButton.setOnClickListener {
+                binding.customSnackbarAction.text = actionText
+                binding.customSnackbarAction.setOnClickListener {
                     action.invoke()
                     dismiss()
                 }
             }
 
             fun setText(message: String) {
-                snackbarText.text = message
+                binding.snackbarText.text = message
             }
 
             fun setCountdownMilSec(milliseconds: Long) {
                 timer = object : CountDownTimer(milliseconds, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
                         val secondsLeft = (millisUntilFinished / 1000).toInt() + 1
-                        countdownText.text = secondsLeft.toString()
+                        binding.countdownText.text = secondsLeft.toString()
                     }
 
                     override fun onFinish() {
-                        countdownText.text = "OK"
+                        binding.countdownText.text = "OK"
                         dismiss()
                     }
                 }
