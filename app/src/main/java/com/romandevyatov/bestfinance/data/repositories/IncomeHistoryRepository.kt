@@ -32,7 +32,7 @@ class IncomeHistoryRepository @Inject constructor(
         incomeHistoryDao.delete(incomeHistory)
     }
 
-    fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet>? {
+    fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?> {
         return incomeHistoryDao.getWithIncomeSubGroupAndWalletByIdLiveData(id)
     }
 

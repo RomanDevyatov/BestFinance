@@ -36,6 +36,7 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
+import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
@@ -69,7 +70,6 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
 
     private lateinit var handler: Handler
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -435,7 +435,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 
@@ -497,7 +497,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllIncomeGroupNotArchived().observe(viewLifecycleOwner) { groups ->
+        addHistoryViewModel.getAllIncomeGroupNotArchived()
+            .observe(viewLifecycleOwner) { groups ->
             val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
 
             if (groups.isNotEmpty()) {
@@ -541,33 +542,32 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
         addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
             groupSpinnerBinding
-        )?.observe(viewLifecycleOwner) { groupWithSubGroups ->
-            val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
+        ).observe(viewLifecycleOwner) { groupWithSubGroups ->
+            groupWithSubGroups?.let {
+                val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
 
-            if (groupWithSubGroups != null) {
-                spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(groupWithSubGroups))
-            }
+                spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(it))
 
-            subGroupSpinnerItemsGlobal.clear()
-            subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
+                subGroupSpinnerItemsGlobal.clear()
+                subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
 
-            spinnerSubItems.add(SpinnerItem(null, ADD_NEW_INCOME_SUB_GROUP))
+                spinnerSubItems.add(SpinnerItem(null, ADD_NEW_INCOME_SUB_GROUP))
 
-            val subGroupSpinnerAdapter = GroupSpinnerAdapter(
+                val subGroupSpinnerAdapter = GroupSpinnerAdapter(
                     requireContext(),
                     R.layout.item_with_del,
                     spinnerSubItems,
                     ADD_NEW_INCOME_SUB_GROUP,
                     archiveSubGroupListener)
 
-            binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+                binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 
-            if (isSetIfAvailable) {
-                setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
+                if (isSetIfAvailable) {
+                    setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
+                }
             }
         }
     }
-
 
     private fun setWalletSpinnerAdapter() {
         addHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
@@ -688,9 +688,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    private fun setIfAvailableGroupSpinnersValue(
-        spinnerGroupItems: MutableList<SpinnerItem>
-    ) {
+    private fun setIfAvailableGroupSpinnersValue(spinnerGroupItems: MutableList<SpinnerItem>) {
         val savedGroupName = args.incomeGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
 
         if (savedGroupName?.isNotBlank() == true) {
@@ -762,14 +760,13 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         return wallets.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
-
     }
 
     private fun dismissAndDropdownSpinner(spinner: AutoCompleteTextView) {
         spinner.dismissDropDown()
         spinner.postDelayed({
             spinner.showDropDown()
-        }, Constants.SHOW_DROP_DOWN_DELAY_MS)
+        }, SHOW_DROP_DOWN_DELAY_MS)
     }
 
     private fun saveAddTransactionForm() {

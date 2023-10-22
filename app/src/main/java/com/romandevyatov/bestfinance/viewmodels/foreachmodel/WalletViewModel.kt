@@ -26,11 +26,7 @@ class WalletViewModel @Inject constructor(
         walletRepository.updateWallet(wallet)
     }
 
-    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet>? {
-        return walletRepository.getWalletByNameNotArchivedLiveData(walletName)
-    }
-
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet?> {
         return walletRepository.getWalletByNameLiveData(walletName)
     }
 
@@ -45,20 +41,6 @@ class WalletViewModel @Inject constructor(
             archivedDate = null
         )
         updateWallet(updatedWallet)
-    }
-
-    fun updateNameAndDescriptionAndBalanceWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
-
-        if (wallet != null) {
-            val updatedWallet = wallet.copy(
-                name = updatedWalletBinding.name,
-                description = updatedWalletBinding.description,
-                balance = updatedWalletBinding.balance
-            )
-
-            updateWallet(updatedWallet)
-        }
     }
 
     fun archiveWalletById(id: Long?, date: LocalDateTime) = viewModelScope.launch(Dispatchers.IO) {

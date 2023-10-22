@@ -11,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -97,7 +95,7 @@ class AddIncomeSubGroupFragment : Fragment() {
 
                 addSubGroupViewModel.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(
                     subGroupNameBinding, groupId
-                )?.observe(viewLifecycleOwner) { subGroup ->
+                ).observe(viewLifecycleOwner) { subGroup ->
                     if (subGroup == null) {
                         val newIncomeSubGroup = IncomeSubGroup(
                             name = subGroupNameBinding,
@@ -131,7 +129,7 @@ class AddIncomeSubGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

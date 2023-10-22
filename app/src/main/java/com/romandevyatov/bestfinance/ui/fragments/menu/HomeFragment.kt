@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
                 handler.postDelayed({
                     exitApp()
                     singleBack = false
-                }, Constants.CLICK_DELAY_MS.toLong())
+                }, Constants.CLICK_DELAY_MS)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

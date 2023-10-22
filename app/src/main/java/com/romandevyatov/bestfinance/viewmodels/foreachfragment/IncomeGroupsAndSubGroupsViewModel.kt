@@ -45,7 +45,7 @@ class IncomeGroupsAndSubGroupsViewModel @Inject constructor(
         incomeSubGroupRepository.updateArchivedDateById(id, null)
     }
 
-    val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
+    val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>> = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
 
     private var deletedItem: IncomeGroup? = null
     private val deletedItemList = mutableListOf<IncomeGroup>()

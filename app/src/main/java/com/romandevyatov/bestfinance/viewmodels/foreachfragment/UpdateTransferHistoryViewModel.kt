@@ -21,7 +21,7 @@ class UpdateTransferHistoryViewModel @Inject constructor(
 
     val allWalletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun getTransferHistoryWithWalletsByIdLiveData(transferHistoryId: Long): LiveData<TransferHistoryWithWallets>? {
+    fun getTransferHistoryWithWalletsByIdLiveData(transferHistoryId: Long): LiveData<TransferHistoryWithWallets?> {
         return transferHistoryRepository.getWithWalletsByIdLiveData(transferHistoryId)
     }
 

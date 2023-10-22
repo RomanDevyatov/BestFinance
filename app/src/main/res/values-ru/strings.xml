@@ -168,5 +168,6 @@
     <string name="undo">Отменить</string>
     <string name="until_delete">До удаления:</string>
     <string name="deleted">Удалено</string>
+    <string name="sub_group_already_exist_in_group">Подгруппа `%1$s` уже существует в группе `%2$s`</string>
 
 </resources>

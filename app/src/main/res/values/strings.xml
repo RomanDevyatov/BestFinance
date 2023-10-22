@@ -164,11 +164,12 @@
     <string name="balance_is_changed_do_you_want_to_add_history_record">Balance is changed, do you want to add history record?</string>
     <string name="wallet_name_already_exists">Wallet %s already exists</string>
     <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Wallet %1$s is archived. Do you want to unarchive %2$s wallet and proceed updating?</string>
-    <string name="group_is_already_existing">This group %s is already existing</string>
+    <string name="group_is_already_existing">Group %s is already existing</string>
     <string name="group_is_archived">The group %1$s is archived. Do you want to unarchive %2$s income group?</string>
     <string name="undo">Undo</string>
     <string name="until_delete">Before deletion:</string>
     <string name="deleted">Deleted</string>
+    <string name="sub_group_already_exist_in_group">Sub group `%1$s` is already existing in `%2$s`` group</string>
 
 
 </resources>

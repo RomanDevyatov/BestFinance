@@ -47,18 +47,16 @@ class UpdateExpenseGroupFragment : Fragment() {
         binding.reusable.addNewExpenseGroupNameButton.text = getString(R.string.update)
 
         updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
-            ?.observe(viewLifecycleOwner) { expenseGroup ->
-                expenseGroupGlobal = ExpenseGroup(
-                    expenseGroup.id,
-                    expenseGroup.name,
-                    expenseGroup.description,
-                    expenseGroup.archivedDate)
-            binding.reusable.newExpenseGroupName.setText(expenseGroup.name)
-            binding.reusable.descriptionEditText.setText(expenseGroup.description)
-            expenseGroupId = expenseGroup.id
-            binding.checkedTextView.isChecked = expenseGroup.archivedDate != null
-            binding.checkedTextView.isEnabled = false
-        }
+            .observe(viewLifecycleOwner) { expenseGroup ->
+                expenseGroup?.let {
+                    expenseGroupGlobal = it.copy()
+                    binding.reusable.newExpenseGroupName.setText(it.name)
+                    binding.reusable.descriptionEditText.setText(it.description)
+                    expenseGroupId = it.id
+                    binding.checkedTextView.isChecked = it.archivedDate != null
+                    binding.checkedTextView.isEnabled = false
+                }
+            }
 
         return binding.root
     }
@@ -88,7 +86,7 @@ class UpdateExpenseGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(nameBinding)
-                    ?.observe(viewLifecycleOwner) { group ->
+                    .observe(viewLifecycleOwner) { group ->
                         if (nameBinding == args.expenseGroupName.toString() || group == null) {
                             updateExpenseGroup(nameBinding, descriptionBinding)
 
@@ -107,7 +105,7 @@ class UpdateExpenseGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

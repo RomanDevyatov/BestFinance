@@ -71,43 +71,44 @@ class AddExpenseGroupFragment : Fragment() {
         binding.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
         if (nameEmptyValidation.isSuccess) {
-            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { expenseGroup ->
-                if (expenseGroup == null) {
-                    addGroupViewModel.insertExpenseGroup(
-                        ExpenseGroup(
-                            name = groupNameBinding,
-                            description = descriptionBinding
+            addGroupViewModel.getExpenseGroupByNameLiveData(groupNameBinding)
+                .observe(viewLifecycleOwner) { expenseGroup ->
+                    if (expenseGroup == null) {
+                        addGroupViewModel.insertExpenseGroup(
+                            ExpenseGroup(
+                                name = groupNameBinding,
+                                description = descriptionBinding
+                            )
                         )
-                    )
 
-                    val action =
-                        AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                    action.expenseGroupName = groupNameBinding
-                    findNavController().navigate(action)
-                } else if (expenseGroup.archivedDate == null) {
-                    WindowUtil.showExistingDialog(
-                        requireContext(),
-                        getString(R.string.group_is_already_existing, groupNameBinding)
-                    )
-                } else {
-                    WindowUtil.showUnarchiveDialog(
-                        requireContext(),
-                        getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
-                    ) {
-                        addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
-                        val action = AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                        action.expenseGroupName = expenseGroup.name
+                        val action =
+                            AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                        action.expenseGroupName = groupNameBinding
                         findNavController().navigate(action)
+                    } else if (expenseGroup.archivedDate == null) {
+                        WindowUtil.showExistingDialog(
+                            requireContext(),
+                            getString(R.string.group_is_already_existing, groupNameBinding)
+                        )
+                    } else {
+                        WindowUtil.showUnarchiveDialog(
+                            requireContext(),
+                            getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
+                        ) {
+                            addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
+                            val action = AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
+                            action.expenseGroupName = expenseGroup.name
+                            findNavController().navigate(action)
+                        }
                     }
                 }
-            }
         }
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, Constants.CLICK_DELAY_MS.toLong())
+        }, Constants.CLICK_DELAY_MS)
     }
 
     override fun onDestroyView() {

@@ -25,7 +25,7 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun getIncomeHistoryWithIncomeSubGroupAndWalletById(incomeHistoryId: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet>? {
+    fun getIncomeHistoryWithIncomeSubGroupAndWalletById(incomeHistoryId: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?> {
         return incomeHistoryRepository.getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(incomeHistoryId)
     }
 
@@ -48,7 +48,7 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         walletRepository.updateWallet(updatedWallet)
     }
 
-    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups>? {
+    fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups?> {
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
@@ -56,7 +56,7 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup>? {
+    fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup?> {
         return incomeGroupRepository.getIncomeGroupByIdLiveData(incomeGroupId)
     }
 

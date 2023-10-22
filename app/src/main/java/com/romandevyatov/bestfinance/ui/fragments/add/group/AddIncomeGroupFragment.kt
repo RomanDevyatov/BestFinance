@@ -72,43 +72,44 @@ class AddIncomeGroupFragment : Fragment() {
         binding.groupNameInputLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
 
         if (nameEmptyValidation.isSuccess) {
-            addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)?.observe(viewLifecycleOwner) { incomeGroup ->
-                if (incomeGroup == null) {
-                    addGroupViewModel.insertIncomeGroup(
-                        IncomeGroup(
-                            name = groupNameBinding,
-                            description = groupDescriptionBinding,
-                            isPassive = isPassiveBinding
+            addGroupViewModel.getIncomeGroupNameByNameLiveData(groupNameBinding)
+                .observe(viewLifecycleOwner) { incomeGroup ->
+                    if (incomeGroup == null) {
+                        addGroupViewModel.insertIncomeGroup(
+                            IncomeGroup(
+                                name = groupNameBinding,
+                                description = groupDescriptionBinding,
+                                isPassive = isPassiveBinding
+                            )
                         )
-                    )
-                    val action =
-                        AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                    action.incomeGroupName = groupNameBinding
-                    findNavController().navigate(action)
-                } else if (incomeGroup.archivedDate == null) {
-                    WindowUtil.showExistingDialog(
-                        requireContext(),
-                        getString(R.string.group_is_already_existing, groupNameBinding)
-                    )
-                } else {
-                    WindowUtil.showUnarchiveDialog(
-                        requireContext(),
-                        getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
-                    ) {
-                        addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
-                        val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                        action.incomeGroupName = incomeGroup.name
+                        val action =
+                            AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                        action.incomeGroupName = groupNameBinding
                         findNavController().navigate(action)
+                    } else if (incomeGroup.archivedDate == null) {
+                        WindowUtil.showExistingDialog(
+                            requireContext(),
+                            getString(R.string.group_is_already_existing, groupNameBinding)
+                        )
+                    } else {
+                        WindowUtil.showUnarchiveDialog(
+                            requireContext(),
+                            getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
+                        ) {
+                            addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
+                            val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
+                            action.incomeGroupName = incomeGroup.name
+                            findNavController().navigate(action)
+                        }
                     }
                 }
-            }
         }
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, Constants.CLICK_DELAY_MS.toLong())
+        }, Constants.CLICK_DELAY_MS)
     }
 
     override fun onDestroyView() {

@@ -67,20 +67,20 @@ class UpdateExpenseHistoryFragment : Fragment() {
         binding.reusable.addHistoryButton.text = getString(R.string.update)
 
         updateExpenseHistoryViewModel.getExpenseHistoryWithExpenseSubGroupAndWalletById(args.expenseHistoryId)
-            ?.observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
-                if (historyWithSubGroupAndWallet != null) {
-                    historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
+            .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
+                historyWithSubGroupAndWallet?.let {
+                    historyWithSubGroupAndWalletGlobal = it.copy()
 
                     setupSpinnersValues(
-                        historyWithSubGroupAndWallet.expenseSubGroup,
-                        historyWithSubGroupAndWallet.wallet
+                        it.expenseSubGroup,
+                        it.wallet
                     )
 
                     setupSpinners()
 
                     setupDateTimeFiledValues()
 
-                    val expenseHistory = historyWithSubGroupAndWallet.expenseHistory
+                    val expenseHistory = it.expenseHistory
                     binding.reusable.commentEditText.setText(expenseHistory.comment)
                     binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
                 }
@@ -132,11 +132,14 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setGroupSpinnerValue(expenseGroupId: Long) {
-        updateExpenseHistoryViewModel.getExpenseGroupByIdLiveData(expenseGroupId)?.observe(viewLifecycleOwner) { expenseGroup ->
-            expenseGroupGlobal = expenseGroup.copy()
+        updateExpenseHistoryViewModel.getExpenseGroupByIdLiveData(expenseGroupId)
+            .observe(viewLifecycleOwner) { expenseGroup ->
+                expenseGroup?.let {
+                    expenseGroupGlobal = it.copy()
 
-            binding.reusable.groupSpinner.setText(expenseGroup.name, false)
-        }
+                    binding.reusable.groupSpinner.setText(it.name, false)
+                }
+            }
     }
 
     private fun setWalletSpinnerValue(wallet: Wallet) {
@@ -400,7 +403,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

@@ -35,13 +35,13 @@ interface IncomeSubGroupDao {
     fun getByName(name: String): IncomeSubGroup
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name")
-    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup>?
+    fun getByNameLiveData(name: String?): LiveData<IncomeSubGroup?>
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :groupId")
     fun getByNameAndGroupId(name: String, groupId: Long): IncomeSubGroup?
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND income_group_id = :groupId")
-    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, groupId: Long?): LiveData<IncomeSubGroup>?
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, groupId: Long?): LiveData<IncomeSubGroup?>
 
     /*
     Not Archived
@@ -53,7 +53,7 @@ interface IncomeSubGroupDao {
     fun getByNameNotArchived(name: String?): IncomeSubGroup?
 
     @Query("SELECT * FROM income_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup>?
+    fun getByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup?>
 
     @Query("SELECT * FROM income_sub_group WHERE id = :id AND archived_date IS NULL")
     fun getByIdNotArchived(id: Long?): IncomeSubGroup?
@@ -71,7 +71,7 @@ interface IncomeSubGroupDao {
     fun unarchiveIncomeSubGroupById(id: Long?)
 
     @Query("SELECT * FROM income_sub_group WHERE id = :id")
-    fun getByIdLiveData(id: Long?): LiveData<IncomeSubGroup>?
+    fun getByIdLiveData(id: Long?): LiveData<IncomeSubGroup?>
 
     @Query("UPDATE income_sub_group SET archived_date = :date WHERE id = :id")
     fun archiveById(id: Long?, date: String)

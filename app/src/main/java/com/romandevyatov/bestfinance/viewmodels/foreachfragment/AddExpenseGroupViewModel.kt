@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +38,7 @@ class AddExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.updateExpenseGroup(expenseGroup)
     }
 
-    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup>? {
+    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup?> {
         return expenseGroupRepository.getExpenseGroupNameByNameLiveData(groupNameBinding)
     }
 

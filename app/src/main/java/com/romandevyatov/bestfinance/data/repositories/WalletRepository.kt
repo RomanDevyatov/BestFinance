@@ -24,7 +24,7 @@ class WalletRepository @Inject constructor(
         walletDao.update(wallet)
     }
 
-    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet>? {
+    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet?> {
         return walletDao.getByNameNotArchivedLiveData(walletName)
     }
 
@@ -36,7 +36,7 @@ class WalletRepository @Inject constructor(
         return walletDao.getById(id)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet>? {
+    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet?> {
         return walletDao.getByNameLiveData(walletName)
     }
 

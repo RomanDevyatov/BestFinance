@@ -49,16 +49,17 @@ class UpdateWalletFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateWalletBinding.inflate(inflater, container, false)
 
-        updateWalletViewModel.getWalletByNameLiveData(args.walletName.toString())?.observe(viewLifecycleOwner) { wallet ->
-            if (wallet != null) {
-                walletId = wallet.id!!
-                walletGlobal = wallet
+        updateWalletViewModel.getWalletByNameLiveData(args.walletName.toString())
+            .observe(viewLifecycleOwner) { wallet ->
+                wallet?.let {
+                    walletId = it.id
+                    walletGlobal = it.copy()
 
-                binding.nameEditText.setText(wallet.name)
-                binding.balanceEditText.setText(wallet.balance.toString())
-                binding.descriptionEditText.setText(wallet.description)
+                    binding.nameEditText.setText(it.name)
+                    binding.balanceEditText.setText(it.balance.toString())
+                    binding.descriptionEditText.setText(it.description)
+                }
             }
-        }
 
         return binding.root
     }
@@ -72,38 +73,48 @@ class UpdateWalletFragment : Fragment() {
             val walletBalanceBinding = binding.balanceEditText.text.toString().toDouble()
             val walletDescriptionBinding = binding.descriptionEditText.text.toString()
 
-            updateWalletViewModel.getWalletByNameLiveData(walletNameBinding)?.observe(viewLifecycleOwner) { wallet ->
-                if (walletNameBinding == args.walletName.toString() || wallet == null) {
-                    val updatedWallet = Wallet(
-                        id = walletId,
-                        name = walletNameBinding,
-                        balance = walletBalanceBinding,
-                        description = walletDescriptionBinding
-                    )
+            updateWalletViewModel.getWalletByNameLiveData(walletNameBinding)
+                .observe(viewLifecycleOwner) { wallet ->
+                    if (walletNameBinding == args.walletName.toString() || wallet == null) {
+                        val updatedWallet = Wallet(
+                            id = walletId,
+                            name = walletNameBinding,
+                            balance = walletBalanceBinding,
+                            description = walletDescriptionBinding
+                        )
 
-                    val difference = walletBalanceBinding - wallet.balance
-                    if (difference != 0.0) {
-                        showChangingBalanceDialog(requireContext(), walletId!!, difference, getString(R.string.balance_is_changed_do_you_want_to_add_history_record))
-                    }
+                        walletGlobal?.let { walletGlobal ->
+                            walletId?.let { id ->
+                                val difference = walletBalanceBinding - walletGlobal.balance
+                                if (difference != 0.0) {
+                                    showChangingBalanceDialog(
+                                        requireContext(),
+                                        id,
+                                        difference,
+                                        getString(R.string.balance_is_changed_do_you_want_to_add_history_record)
+                                    )
+                                }
+                            }
+                        }
 
-                    updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
+                        updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
 
-                    performBackNavigation()
-                } else if (wallet.archivedDate == null) {
-                    WindowUtil.showExistingDialog(
-                        requireContext(),
-                        getString(R.string.wallet_name_already_exists, walletNameBinding)
-                    )
-                } else {
-                    WindowUtil.showUnarchiveDialog(
-                        requireContext(),
-                        getString(R.string.wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating, walletNameBinding, walletNameBinding)
-                    ) {
-                        updateWalletViewModel.unarchiveWallet(wallet)
                         performBackNavigation()
+                    } else if (wallet.archivedDate == null) {
+                        WindowUtil.showExistingDialog(
+                            requireContext(),
+                            getString(R.string.wallet_name_already_exists, walletNameBinding)
+                        )
+                    } else {
+                        WindowUtil.showUnarchiveDialog(
+                            requireContext(),
+                            getString(R.string.wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating, walletNameBinding, walletNameBinding)
+                        ) {
+                            updateWalletViewModel.unarchiveWallet(wallet)
+                            performBackNavigation()
+                        }
                     }
                 }
-            }
         }
     }
 

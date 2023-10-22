@@ -75,38 +75,39 @@ class AddWalletFragment : Fragment() {
             if (walletNameValidation.isSuccess
                 && walletBalanceValidation.isSuccess
             ) {
-                walletViewModel.getWalletByNameLiveData(walletNameBinding)?.observe(viewLifecycleOwner) { wallet ->
-                    if (wallet == null) {
-                        val newWallet = Wallet(
-                            name = walletNameBinding,
-                            balance = walletBalanceBinding.toDouble(),
-                            description = walletDescriptionBinding
-                        )
+                walletViewModel.getWalletByNameLiveData(walletNameBinding)
+                    .observe(viewLifecycleOwner) { wallet ->
+                        if (wallet == null) {
+                            val newWallet = Wallet(
+                                name = walletNameBinding,
+                                balance = walletBalanceBinding.toDouble(),
+                                description = walletDescriptionBinding
+                            )
 
-                        walletViewModel.insertWallet(newWallet)
-                        performNavigation(args.source, walletNameBinding)
-                    } else if (wallet.archivedDate == null) {
-                        WindowUtil.showExistingDialog(
-                            requireContext(),
-                            getString(R.string.wallet_is_already_existing, walletNameBinding)
-                        )
-                    } else {
-                        WindowUtil.showUnarchiveDialog(
-                            requireContext(),
-                            getString(R.string.unarchive_wallet, wallet.name, wallet.name)
-                        ) {
-                            walletViewModel.unarchiveWallet(wallet)
-                            performNavigation(args.source, wallet.name)
+                            walletViewModel.insertWallet(newWallet)
+                            performNavigation(args.source, walletNameBinding)
+                        } else if (wallet.archivedDate == null) {
+                            WindowUtil.showExistingDialog(
+                                requireContext(),
+                                getString(R.string.wallet_is_already_existing, walletNameBinding)
+                            )
+                        } else {
+                            WindowUtil.showUnarchiveDialog(
+                                requireContext(),
+                                getString(R.string.unarchive_wallet, wallet.name, wallet.name)
+                            ) {
+                                walletViewModel.unarchiveWallet(wallet)
+                                performNavigation(args.source, wallet.name)
+                            }
                         }
                     }
-                }
             }
 
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
 
     }

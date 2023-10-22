@@ -71,8 +71,7 @@ class AddExpenseSubGroupFragment : Fragment() {
 
                 addSubGroupViewModel.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(
                     subGroupNameBinding, groupId
-                )?.observe(viewLifecycleOwner) { subGroup ->
-
+                ).observe(viewLifecycleOwner) { subGroup ->
                     if (subGroup == null) {
                         addIncomeSubGroup(subGroupNameBinding, descriptionBinding, groupId)
 
@@ -97,7 +96,7 @@ class AddExpenseSubGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

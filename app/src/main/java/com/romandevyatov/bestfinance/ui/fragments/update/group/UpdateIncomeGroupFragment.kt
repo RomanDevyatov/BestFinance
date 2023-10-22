@@ -50,18 +50,15 @@ class UpdateIncomeGroupFragment : Fragment() {
         binding.reusable.addNewGroupButton.text = getString(R.string.update)
 
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
-            ?.observe(viewLifecycleOwner) { incomeGroup ->
-                incomeGroupGlobal = IncomeGroup(
-                    incomeGroup.id,
-                    incomeGroup.name,
-                    incomeGroup.isPassive,
-                    incomeGroup.description,
-                    incomeGroup.archivedDate)
-                binding.reusable.groupNameInputEditText.setText(incomeGroup.name)
-                binding.reusable.groupDescriptionInputEditText.setText(incomeGroup.description)
-                incomeGroupId = incomeGroup.id
-                binding.checkedTextView.isChecked = incomeGroup.archivedDate != null
-                binding.checkedTextView.isEnabled = false
+            .observe(viewLifecycleOwner) { incomeGroup ->
+                incomeGroup?.let {
+                    incomeGroupGlobal = it.copy()
+                    binding.reusable.groupNameInputEditText.setText(it.name)
+                    binding.reusable.groupDescriptionInputEditText.setText(it.description)
+                    incomeGroupId = it.id
+                    binding.checkedTextView.isChecked = it.archivedDate != null
+                    binding.checkedTextView.isEnabled = false
+                }
             }
 
         return binding.root
@@ -94,7 +91,7 @@ class UpdateIncomeGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(nameBinding)
-                    ?.observe(viewLifecycleOwner) { group ->
+                    .observe(viewLifecycleOwner) { group ->
                         if (nameBinding == args.incomeGroupName.toString() || group == null) {
                             updateIncomeGroup(nameBinding, descriptionBinding, isPassiveBinding)
 
@@ -103,7 +100,7 @@ class UpdateIncomeGroupFragment : Fragment() {
                             // Group is already existing
                             WindowUtil.showExistingDialog(
                                 requireContext(),
-                                "This group `$nameBinding` is already existing."
+                                getString(R.string.group_is_already_existing, nameBinding)
                             )
                         }
                     }
@@ -113,7 +110,7 @@ class UpdateIncomeGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.CLICK_DELAY_MS.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

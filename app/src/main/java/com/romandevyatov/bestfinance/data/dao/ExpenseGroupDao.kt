@@ -32,7 +32,7 @@ interface ExpenseGroupDao {
     suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
-    fun getByNameLiveData(name: String): LiveData<ExpenseGroup>?
+    fun getByNameLiveData(name: String): LiveData<ExpenseGroup?>
 
     @Query("SELECT * FROM expense_group WHERE name = :name LIMIT 1")
     fun getExpenseGroupByName(name: String): ExpenseGroup?
@@ -50,11 +50,11 @@ interface ExpenseGroupDao {
 
     @Transaction
     @Query("SELECT * FROM expense_group WHERE name = :name")
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups>
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups?>
 
     @Transaction
     @Query("SELECT * FROM expense_group")
-    fun getAllExpenseGroupsWithExpenseSubGroupsLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroups>>?
+    fun getAllExpenseGroupsWithExpenseSubGroupsLiveData(): LiveData<List<ExpenseGroupWithExpenseSubGroups>>
 
     @Transaction
     @Query("SELECT * FROM expense_group")
@@ -67,7 +67,7 @@ interface ExpenseGroupDao {
     fun getAllNotArchivedLiveData(): LiveData<List<ExpenseGroup>>
 
     @Query("SELECT * FROM expense_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseGroup>?
+    fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseGroup?>
 
     @Transaction
     @Query("SELECT * FROM expense_group WHERE name = :name AND archived_date IS NULL")
@@ -84,20 +84,20 @@ interface ExpenseGroupDao {
             "AND eg.archived_date IS NULL " +
             "AND esg.archived_date IS NULL " +
             "LIMIT 1")
-    fun getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups>
+    fun getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(name: String): LiveData<ExpenseGroupWithExpenseSubGroups?>
 
     /*
     Archived
      */
     @Query("SELECT * FROM expense_group WHERE archived_date IS NOT NULL")
-    fun getAllExpenseGroupsArchivedLiveData(): LiveData<List<ExpenseGroup>>?
+    fun getAllExpenseGroupsArchivedLiveData(): LiveData<List<ExpenseGroup>>
 
     @Transaction
     @Query("SELECT * FROM expense_group WHERE archived_date = :date")
     fun getAllExpenseGroupWithExpenseSubGroupsWithExpenseHistoriesWithArchivedDate(date: LocalDateTime?): LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>>
 
     @Query("SELECT * FROM expense_group WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
-    fun getExpenseGroupArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>?
+    fun getExpenseGroupArchivedByNameLiveData(name: String): LiveData<ExpenseGroup?>
 
     @Query("SELECT * FROM expense_group WHERE id = :id LIMIT 1")
     fun getById(id: Long): ExpenseGroup?
@@ -107,11 +107,15 @@ interface ExpenseGroupDao {
 
     @Transaction
     @Query("SELECT * FROM expense_group WHERE id = :id")
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups>
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups?>
 
     @Query("SELECT * FROM expense_group WHERE archived_date IS NULL")
     fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>>
 
     @Query("SELECT * FROM expense_group WHERE id = :id")
-    fun getByIdLiveData(id: Long): LiveData<ExpenseGroup>?
+    fun getByIdLiveData(id: Long): LiveData<ExpenseGroup?>
+
+    @Transaction
+    @Query("SELECT * FROM expense_group WHERE id = :id")
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id: Long): ExpenseGroupWithExpenseSubGroups?
 }

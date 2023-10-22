@@ -41,7 +41,7 @@ interface ExpenseHistoryDao {
 
     @Transaction
     @Query("SELECT * FROM expense_history WHERE id = :id LIMIT 1")
-    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet>?
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet?>
 
     @Query("SELECT * FROM expense_history WHERE expense_sub_group_id IS NULL")
     fun getAllWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>>
