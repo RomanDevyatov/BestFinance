@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
         setButtonListeners()
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.takeIf { it.isNotEmpty() }?.let { wallets ->
+            walletList?.let { wallets ->
                 val balanceValue = wallets.sumOf { it.balance }
                 binding.totalCapitalTextView.text = balanceValue.toString()
             }
@@ -120,7 +120,7 @@ class HomeFragment : Fragment() {
             binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
 
             expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
-                expenseHistoryList?.takeIf { it.isNotEmpty() }?.let { histories ->
+                expenseHistoryList?.let { histories ->
                     totalExpensesValue = histories.sumOf { it.amount }
                     binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
 
