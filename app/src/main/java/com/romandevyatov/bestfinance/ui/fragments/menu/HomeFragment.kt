@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewM
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.absoluteValue
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -124,7 +125,7 @@ class HomeFragment : Fragment() {
                     totalExpensesValue = histories.sumOf { it.amount }
                     binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
 
-                    moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!)
+                    moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!.absoluteValue)
                     binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
                 }
             }
