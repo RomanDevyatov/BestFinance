@@ -8,11 +8,24 @@ object NumberConverter {
     private const val NUMBER_MAP: String = "numberMap"
     private const val LARGE_NUMBER_MAP: String = "largeNumberMap"
 
-    fun convertSpokenTextToNumber(spokenText: String): Double? {
+    private fun convertRecognizedText(text: String): String {
+        val numberPattern = "\\d+(\\.\\d{1,3})"
+        val numberRegex = Regex(numberPattern)
+
+        val formattedText = numberRegex.replace(text) { matchResult ->
+            val originalNumber = matchResult.value
+            val formattedNumber = originalNumber.replace(".", "")
+            formattedNumber
+        }
+
+        return formattedText
+    }
+
+    fun convertSpokenTextToNumber(spokenText: String): Number? {
         when (val currentLocale = Locale.getDefault()) {
             Locale.US, Locale("RU") -> {
                 if (containsOnlyDigitsAndPeriod(spokenText)) {
-                    return postProcessRecognizedNumber(spokenText).toDouble()
+                    return convertRecognizedText(spokenText).toDoubleOrNull()
                 }
 
                 val wordToNumberMapping = wordToNumberMaps[currentLocale] ?: emptyMap()
@@ -37,20 +50,23 @@ object NumberConverter {
     ): Int {
         var result = 0
         var currentNumber = 0
-        var previousNumber = 0
 
         if (wordToNumberMap.isEmpty()) {
             throw RuntimeException("wordToNumberMapArray is empty! Set wordToNumberMapArray")
         }
 
         for (word in russianWords) {
-            val lowercaseWord = word.lowercase()
-            val number = wordToNumberMap[NUMBER_MAP]?.get(lowercaseWord) ?: wordToNumberMap[LARGE_NUMBER_MAP]?.get(lowercaseWord)
+            val lowercaseWord = word.trim().lowercase()
+            val f1 = lowercaseWord.toIntOrNull()
+            var number: Int? = wordToNumberMap[NUMBER_MAP]?.get(lowercaseWord) ?: wordToNumberMap[LARGE_NUMBER_MAP]?.get(lowercaseWord)
+
+            if (f1 != null) {
+                number = f1
+            }
 
             if (number != null) {
                 if (number >= 100) {
                     result += currentNumber * number
-                    previousNumber = number
                     currentNumber = 0
                 } else {
                     if (number >= 10) {
@@ -73,36 +89,7 @@ object NumberConverter {
             }
         }
 
-        return result + currentNumber + previousNumber
-    }
-
-    private fun postProcessRecognizedNumber(text: String): String {
-        val segments = text.split(" ")
-
-        val result = StringBuilder()
-        var buffer = ""
-
-        for (segment in segments) {
-            if (segment.matches(Regex("^\\d+(\\.\\d+)?$")) || segment == "0.0") {
-                if (buffer.isNotEmpty()) {
-                    result.append(buffer)
-                    buffer = ""
-                }
-                result.append(segment)
-            } else {
-                if (buffer.isNotEmpty()) {
-                    result.append(buffer)
-                    buffer = ""
-                }
-                result.append(segment)
-            }
-        }
-
-        if (buffer.isNotEmpty()) {
-            result.append(buffer)
-        }
-
-        return result.toString()
+        return result + currentNumber
     }
 
     private val russianNumberMap = mapOf(
@@ -147,7 +134,7 @@ object NumberConverter {
         "восемьсот" to 800,
         "девятьсот" to 900,
         "тысяча" to 1000,
-        "миллион" to 1_000_000,
+        "млн" to 1_000_000,
         "миллиард" to 1_000_000_000
     )
 

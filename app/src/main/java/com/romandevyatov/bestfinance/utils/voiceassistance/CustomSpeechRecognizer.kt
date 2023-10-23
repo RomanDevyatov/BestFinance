@@ -13,7 +13,7 @@ class CustomSpeechRecognizer(context: Context, locale: Locale = Locale.getDefaul
     private val defaultIntent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
     init {
-        defaultIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        defaultIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
         defaultIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale.toLanguageTag())
     }
 
