@@ -23,13 +23,15 @@ abstract class VoiceAssistanceFragment : Fragment() {
     protected var voicedWalletName: String? = null
 
     protected abstract fun calculateSteps(): MutableList<InputState>
-    abstract fun handleGroupInput(handledSpokenValue: String)
-    abstract fun handleSubGroupInput(handledSpokenValue: String)
-    abstract fun handleWalletInput(handledSpokenValue: String)
-    abstract fun handleWalletBalanceInput(handledSpokenValue: String)
-    abstract fun handleAmountInput(handledSpokenValue: String)
-    abstract fun handleCommentInput(handledSpokenValue: String)
-    abstract fun handleConfirmInput(handledSpokenValue: String)
+    protected open fun handleGroupInput(handledSpokenValue: String) {}
+    protected open fun handleSubGroupInput(handledSpokenValue: String) {}
+    protected open fun handleWalletInput(handledSpokenValue: String) {}
+    protected open fun handleWalletBalanceInput(handledSpokenValue: String) {}
+    protected open fun handleWalletNameInput(handledSpokenValue: String) {}
+    protected open fun handleAmountInput(handledSpokenValue: String) {}
+    protected open fun handleCommentInput(handledSpokenValue: String) {}
+    protected open fun handleDescriptionInput(handledSpokenValue: String) {}
+    protected open fun handleConfirmInput(handledSpokenValue: String) {}
 
     override fun onDestroy() {
         super.onDestroy()

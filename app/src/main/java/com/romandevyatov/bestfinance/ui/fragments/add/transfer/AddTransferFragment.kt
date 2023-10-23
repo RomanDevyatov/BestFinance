@@ -127,12 +127,6 @@ class AddTransferFragment : VoiceAssistanceFragment() {
         return steps
     }
 
-    override fun handleGroupInput(handledSpokenValue: String) { }
-
-    override fun handleSubGroupInput(handledSpokenValue: String) { }
-
-    override fun handleWalletInput(handledSpokenValue: String) { }
-
     override fun setUpSpeechRecognizerListener() {
         val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
             @RequiresApi(Build.VERSION_CODES.O)

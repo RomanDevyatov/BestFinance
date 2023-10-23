@@ -11,6 +11,8 @@ enum class InputState(@StringRes val settingTextResId: Int) {
     WALLET_TO(R.string.wallet_to_setting),
     AMOUNT(R.string.amount_setting),
     COMMENT(R.string.comment_setting),
+    WALLET_NAME(R.string.wallet_name_setting),
+    DESCRIPTION(R.string.description_setting),
     SET_BALANCE(R.string.set_balance_setting),
     CONFIRM(R.string.confirm_setting)
 }

@@ -24,8 +24,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.activity.base.BaseActivity
+import com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.wallet.AddWalletFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragment
@@ -252,11 +254,21 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
 
+        val inititalMessage = getString(R.string.start_adding_transaction)
         val fragment = getCurrentFragment()
-        if (fragment is AddIncomeHistoryFragment) {
-            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
-        } else if (fragment is AddTransferFragment) {
-            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
+        when (fragment) {
+            is AddIncomeHistoryFragment -> {
+                fragment.startAddingTransaction(inititalMessage)
+            }
+            is AddExpenseHistoryFragment -> {
+                fragment.startAddingTransaction(inititalMessage)
+            }
+            is AddTransferFragment -> {
+                fragment.startAddingTransaction(inititalMessage)
+            }
+            is AddWalletFragment -> {
+                fragment.startAddingTransaction(getString(R.string.adding_wallet_initial))
+            }
         }
     }
 
@@ -286,18 +298,19 @@ class MainActivity : BaseActivity(), OnExitAppListener {
 //    }
 
     private fun setVisibilityOfVoiceAction(destinationId: Int) {
-        showSettingsActionIcon = destinationId == R.id.more_fragment
-    }
-
-    private fun setVisibilityOfSettingsAction(destinationId: Int) {
         showVoiceActionIcon = when (destinationId) {
             R.id.add_income_fragment -> true
             R.id.add_transfer_fragment -> true
             R.id.add_expense_fragment -> true
+            R.id.add_wallet_fragment -> true
             else -> {
                 false
             }
         }
+    }
+
+    private fun setVisibilityOfSettingsAction(destinationId: Int) {
+        showSettingsActionIcon = destinationId == R.id.more_fragment
     }
 
     private fun setVisibilityOfDeleteAction(destinationId: Int) {
