@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,15 +25,14 @@ import com.romandevyatov.bestfinance.utils.Constants.ADD_TRANSFER_HISTORY_FRAGME
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.Constants.WALLETS_FRAGMENT
 import com.romandevyatov.bestfinance.utils.WindowUtil
-import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognitionListener
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
-import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceFragment
+import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddWalletFragment : VoiceAssistanceFragment() {
+class AddWalletFragment : VoiceAssistanceBaseFragment() {
 
     private var _binding: FragmentAddWalletBinding? = null
     private val binding get() = _binding!!
@@ -136,11 +134,11 @@ class AddWalletFragment : VoiceAssistanceFragment() {
         val steps: MutableList<InputState> = mutableListOf()
 
         if (binding.nameEditText.text.toString().isEmpty()) {
-            steps.add(InputState.WALLET_NAME)
+            steps.add(InputState.SET_NAME)
         }
 
         if (binding.balanceEditText.text.toString().isEmpty()) {
-            steps.add(InputState.SET_BALANCE)
+            steps.add(InputState.SET_WALLET_BALANCE)
         }
 
         if (binding.descriptionEditText.text.toString().isEmpty()) {
@@ -152,30 +150,18 @@ class AddWalletFragment : VoiceAssistanceFragment() {
         return steps
     }
 
-    override fun setUpSpeechRecognizerListener() {
-        val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResults(results: Bundle?) {
-                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val currentSpokenText = recognizedStrings[0]
-                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
-
-                    when (currentStageName) {
-                        InputState.WALLET_NAME -> handleWalletNameInput(handledSpokenValue)
-                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
-                        InputState.DESCRIPTION -> handleDescriptionInput(handledSpokenValue)
-                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
-                        else -> {}
-                    }
-                }
-            }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
+        when (currentStage) {
+            InputState.SET_NAME -> handleNameInput(handledSpokenValue)
+            InputState.SET_WALLET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+            InputState.DESCRIPTION -> handleDescriptionInput(handledSpokenValue)
+            InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+            else -> {}
         }
-        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
-    override fun handleWalletNameInput(handledSpokenValue: String) {
+    private fun handleNameInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             walletViewModel.getWalletByNameLiveData(handledSpokenValue).observe(viewLifecycleOwner) { wallet ->
                 wallet?.let {
@@ -189,7 +175,7 @@ class AddWalletFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleWalletBalanceInput(handledSpokenValue: String) {
+    private fun handleWalletBalanceInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val textNumbers = handledSpokenValue.replace(",", "")
 
@@ -217,7 +203,7 @@ class AddWalletFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleDescriptionInput(handledSpokenValue: String) {
+    private fun handleDescriptionInput(handledSpokenValue: String) {
         val speakText = if (handledSpokenValue.isNotEmpty()) {
             binding.descriptionEditText.setText(handledSpokenValue)
             getString(R.string.description_is_set)
@@ -229,7 +215,7 @@ class AddWalletFragment : VoiceAssistanceFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun handleConfirmInput(handledSpokenValue: String) {
+    private fun handleConfirmInput(handledSpokenValue: String) {
         when (handledSpokenValue.lowercase()) {
             getString(R.string.yes) -> {
                 sendWallet()

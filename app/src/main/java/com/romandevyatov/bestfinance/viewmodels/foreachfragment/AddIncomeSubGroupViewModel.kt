@@ -40,6 +40,7 @@ class AddIncomeSubGroupViewModel @Inject constructor(
     }
 
     fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.unarchiveIncomeSubGroup(incomeSubGroup)
+        val incomeSubGroupUnarchived = incomeSubGroup.copy(archivedDate = null)
+        updateIncomeSubGroup(incomeSubGroupUnarchived)
     }
 }

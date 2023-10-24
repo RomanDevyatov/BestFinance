@@ -126,7 +126,7 @@
     <string name="wallet_to_setting">Set wallet to</string>
     <string name="amount_setting">Set amount</string>
     <string name="comment_setting">Set comment</string>
-    <string name="set_balance_setting">Set wallet balance</string>
+    <string name="set_wallet_balance_setting">Set wallet balance</string>
     <string name="confirm_setting">Confirm transaction (Yes/No)</string>
 
     <string name="yes">yes</string>
@@ -176,6 +176,21 @@
     <string name="description_is_set">Description is set</string>
     <string name="description_is_empty">Description is empty</string>
     <string name="wallet_added">Wallet %s was added</string>
+    <string name="set_name">Set name</string>
+    <string name="group_is_already_existing_set_another_name">%s group is already exists, set another name</string>
+    <string name="adding_income_group_initial">Adding income group</string>
+    <string name="subgroup_is_already_existing_in_group_set_another_name">%1$s subgroup is already existing in %2$s group set another name</string>
+    <string name="group_doesnt_exist_set_another_name">%s group doesn\'t exist, set another name</string>
+    <string name="adding_income_sub_group_initial">Adding income sub group</string>
+    <string name="adding_expense_sub_group_initial">Adding expense sub group</string>
+    <string name="adding_income_initial">Adding income</string>
+    <string name="adding_expense_initial">Adding expense</string>
+    <string name="adding_transfer_initial">Adding transfer</string>
+    <string name="expense_sub_group_added">Expense subgroup was added</string>
+    <string name="income_sub_group_added">Income subgroup was added</string>
+    <string name="expense_group_added">Expense group was added</string>
+    <string name="income_group_added">Income group was added</string>
+    <string name="set_is_passive">Is income group passive</string>
 
 
 </resources>

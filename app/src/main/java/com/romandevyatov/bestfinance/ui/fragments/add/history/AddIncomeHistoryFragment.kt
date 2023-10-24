@@ -30,7 +30,7 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
-import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceFragment
+import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
@@ -49,7 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
+class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
     private var _binding: FragmentAddIncomeHistoryBinding? = null
     private val binding get() = _binding!!
@@ -140,7 +140,21 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         return steps
     }
 
-    override fun handleGroupInput(handledSpokenValue: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
+        when (currentStageName) {
+            InputState.GROUP -> handleGroupInput(handledSpokenValue)
+            InputState.SET_NAME -> handleSubGroupInput(handledSpokenValue)
+            InputState.WALLET -> handleWalletInput(handledSpokenValue)
+            InputState.SET_WALLET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+            InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+            InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+            InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+            else -> {}
+        }
+    }
+
+    private fun handleGroupInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val groupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.groupSpinner)
 
@@ -194,7 +208,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleSubGroupInput(handledSpokenValue: String) {
+    private fun handleSubGroupInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val subGroupList = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.subGroupSpinner)
 
@@ -249,7 +263,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleWalletInput(handledSpokenValue: String) {
+    private fun handleWalletInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val wallets = SpinnerUtil.getAllItemsFromAutoCompleteTextView(binding.walletSpinner)
 
@@ -267,8 +281,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> {
                     voicedWalletName = spokenValue as String
-                    if (!steps.contains(InputState.SET_BALANCE)) {
-                        steps.add(currentStageIndex + 1, InputState.SET_BALANCE)
+                    if (!steps.contains(InputState.SET_WALLET_BALANCE)) {
+                        steps.add(currentStageIndex + 1, InputState.SET_WALLET_BALANCE)
                     }
                     val message = getString(R.string.adding_wallet, spokenValue.toString())
                     nextStage(speakTextBefore = message)
@@ -292,7 +306,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleWalletBalanceInput(handledSpokenValue: String) {
+    private fun handleWalletBalanceInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val textNumbers = handledSpokenValue.replace(",", "")
 
@@ -326,7 +340,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
                 getString(R.string.no) -> { // exit
                     spokenValue = UNCALLABLE_WORD
                     voicedWalletName = null
-                    steps.remove(InputState.SET_BALANCE)
+                    steps.remove(InputState.SET_WALLET_BALANCE)
                     currentStageIndex -= 1
                     currentStageName = steps[currentStageIndex]
 
@@ -341,7 +355,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleAmountInput(handledSpokenValue: String) {
+    private fun handleAmountInput(handledSpokenValue: String) {
         if (spokenValue == null) {
             val textNumbers = handledSpokenValue.replace(",", "")
 
@@ -369,7 +383,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleCommentInput(handledSpokenValue: String) {
+    private fun handleCommentInput(handledSpokenValue: String) {
         val speakText = if (handledSpokenValue.isNotEmpty()) {
             binding.commentEditText.setText(handledSpokenValue)
             getString(R.string.comment_is_set)
@@ -381,7 +395,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun handleConfirmInput(handledSpokenValue: String) {
+    private fun handleConfirmInput(handledSpokenValue: String) {
         when (handledSpokenValue.lowercase()) {
             getString(R.string.yes) -> { // sent
                 sendIncomeHistory()

@@ -122,7 +122,7 @@
     <string name="wallet_to_setting">Задайте целевой кошелёк</string>
     <string name="amount_setting">Задайте количество</string>
     <string name="comment_setting">Задайте комментарий</string>
-    <string name="set_balance_setting">Задайте баланс кошелька</string>
+    <string name="set_wallet_balance_setting">Задайте баланс кошелька</string>
     <string name="confirm_setting">Подтвердите транзакцию (Да/Нет)</string>
 
     <string name="yes">да</string>
@@ -175,5 +175,19 @@
     <string name="description_is_empty">Описание пусто</string>
     <string name="wallet_added">Кошелёк %s был добавлен</string>
     <string name="adding_wallet_initial">Добавление кошелька</string>
-
+    <string name="set_name">Здайте имя</string>
+    <string name="group_is_already_existing_set_another_name">Группа %s уже существует, задайте другое имя</string>
+    <string name="adding_income_group_initial">Добавление группы доходов</string>
+    <string name="subgroup_is_already_existing_in_group_set_another_name">подгруппа %1$s уже существует в группе %2$s задайте другое имя</string>
+    <string name="group_doesnt_exist_set_another_name">Группа %s не существует, задайте другое имя</string>
+    <string name="adding_income_sub_group_initial">Добавление подгруппы доходов</string>
+    <string name="adding_expense_sub_group_initial">Добавление подгруппы расходов</string>
+    <string name="adding_income_initial">Добавление дохода</string>
+    <string name="adding_expense_initial">Добавление расхода</string>
+    <string name="adding_transfer_initial">Добавление перевода</string>
+    <string name="expense_sub_group_added">Подгруппа расходов добавлена</string>
+    <string name="income_sub_group_added">Подгруппа доходов добавлена</string>
+    <string name="expense_group_added">Группа трат добавлена</string>
+    <string name="income_group_added">Подгруппа доходов добавлена</string>
+    <string name="set_is_passive">Группа пассивного типа</string>
 </resources>

@@ -29,13 +29,7 @@ class AddExpenseSubGroupViewModel @Inject constructor(
     }
 
     fun unarchiveExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val expenseSubGroupUnarchived = ExpenseSubGroup(
-            id = expenseSubGroup.id,
-            name = expenseSubGroup.name,
-            description = expenseSubGroup.description,
-            expenseGroupId = expenseSubGroup.expenseGroupId,
-            archivedDate = null
-        )
+        val expenseSubGroupUnarchived = expenseSubGroup.copy(archivedDate = null)
         updateExpenseSubGroup(expenseSubGroupUnarchived)
     }
 

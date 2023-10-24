@@ -1,10 +1,8 @@
 package com.romandevyatov.bestfinance.ui.activity
 
 import android.Manifest.permission.RECORD_AUDIO
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,8 +22,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.ActivityMainBinding
 import com.romandevyatov.bestfinance.ui.activity.base.BaseActivity
+import com.romandevyatov.bestfinance.ui.fragments.add.group.AddExpenseGroupFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.group.AddIncomeGroupFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddExpenseSubGroupFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddIncomeSubGroupFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.wallet.AddWalletFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment
@@ -250,24 +252,30 @@ class MainActivity : BaseActivity(), OnExitAppListener {
     }
 
     private fun startVoiceRecognition() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
-
-        val inititalMessage = getString(R.string.start_adding_transaction)
-        val fragment = getCurrentFragment()
-        when (fragment) {
+        when (val fragment = getCurrentFragment()) {
             is AddIncomeHistoryFragment -> {
-                fragment.startAddingTransaction(inititalMessage)
+                fragment.startAddingTransaction(getString(R.string.adding_income_initial))
             }
             is AddExpenseHistoryFragment -> {
-                fragment.startAddingTransaction(inititalMessage)
+                fragment.startAddingTransaction(getString(R.string.adding_expense_initial))
             }
             is AddTransferFragment -> {
-                fragment.startAddingTransaction(inititalMessage)
+                fragment.startAddingTransaction(getString(R.string.adding_transfer_initial))
             }
             is AddWalletFragment -> {
                 fragment.startAddingTransaction(getString(R.string.adding_wallet_initial))
+            }
+            is AddIncomeGroupFragment -> {
+                fragment.startAddingTransaction(getString(R.string.adding_income_group_initial))
+            }
+            is AddExpenseGroupFragment -> {
+                fragment.startAddingTransaction(getString(R.string.adding_income_group_initial))
+            }
+            is AddIncomeSubGroupFragment -> {
+                fragment.startAddingTransaction(getString(R.string.adding_income_sub_group_initial))
+            }
+            is AddExpenseSubGroupFragment -> {
+                fragment.startAddingTransaction(getString(R.string.adding_expense_sub_group_initial))
             }
         }
     }
@@ -277,32 +285,16 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         return navHostFragment.childFragmentManager.fragments.firstOrNull()
     }
 
-//    private fun startVoiceRecognition() {
-//        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), 1)
-//        }
-//
-//        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocaleUtil.getLocaleFromPrefCode(storage.getPreferredLocale()))
-//
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-//        val fragment = navHostFragment.childFragmentManager.fragments.first()
-//        if (fragment is AddIncomeHistoryFragment) {
-//            fragment.setIntentGlob(intent)
-//            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
-//        } else if (fragment is AddTransferFragment) {
-//            fragment.setIntentGlob(intent)
-//            fragment.startAddingTransaction(getString(R.string.start_adding_transaction))
-//        }
-//    }
-
     private fun setVisibilityOfVoiceAction(destinationId: Int) {
         showVoiceActionIcon = when (destinationId) {
             R.id.add_income_fragment -> true
             R.id.add_transfer_fragment -> true
             R.id.add_expense_fragment -> true
             R.id.add_wallet_fragment -> true
+            R.id.add_income_group_fragment -> true
+            R.id.add_expense_group_fragment -> true
+            R.id.add_income_sub_group_fragment -> true
+            R.id.add_expense_sub_group_fragment -> true
             else -> {
                 false
             }

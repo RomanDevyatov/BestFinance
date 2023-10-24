@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,7 @@ import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
-import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceFragment
+import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
@@ -37,7 +36,6 @@ import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
-import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognitionListener
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
@@ -48,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class AddTransferFragment : VoiceAssistanceFragment() {
+class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
     private var _binding: FragmentAddTransferBinding? = null
     private val binding get() = _binding!!
@@ -127,29 +125,17 @@ class AddTransferFragment : VoiceAssistanceFragment() {
         return steps
     }
 
-    override fun setUpSpeechRecognizerListener() {
-        val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResults(results: Bundle?) {
-                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val currentSpokenText = recognizedStrings[0]
-                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
-
-                    when (currentStageName) {
-                        InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
-                        InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
-                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
-                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
-                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
-                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
-                        else -> {}
-                    }
-                }
-            }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
+        when (currentStageName) {
+            InputState.WALLET_FROM -> handleWalletInput(handledSpokenValue, binding.fromWalletNameSpinner)
+            InputState.WALLET_TO -> handleWalletInput(handledSpokenValue, binding.toWalletNameSpinner)
+            InputState.SET_WALLET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
+            InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
+            InputState.COMMENT -> handleCommentInput(handledSpokenValue)
+            InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
+            else -> {}
         }
-        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     private fun handleWalletInput(currentSpokenText: String, bindingWalletSpinner: AutoCompleteTextView) { // wallet
@@ -199,8 +185,8 @@ class AddTransferFragment : VoiceAssistanceFragment() {
                 getString(R.string.yes) -> {
                     voicedWalletName = spokenValue
 
-                    if (steps[currentStageIndex + 1] != InputState.SET_BALANCE) {
-                        steps.add(currentStageIndex + 1, InputState.SET_BALANCE)
+                    if (steps[currentStageIndex + 1] != InputState.SET_WALLET_BALANCE) {
+                        steps.add(currentStageIndex + 1, InputState.SET_WALLET_BALANCE)
                     }
                     val message = getString(R.string.adding_wallet, spokenValue.toString())
                     nextStage(speakTextBefore = message)
@@ -225,7 +211,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleWalletBalanceInput(handledSpokenValue: String) {
+    private fun handleWalletBalanceInput(handledSpokenValue: String) {
         val textNumbers = handledSpokenValue.replace(",", "")
 
         val convertedNumber = NumberConverter.convertSpokenTextToNumber(textNumbers)
@@ -271,7 +257,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleAmountInput(handledSpokenValue: String) { // amount
+    private fun handleAmountInput(handledSpokenValue: String) { // amount
         if (spokenValue == null) {
             val textNumbers = handledSpokenValue.replace(",", "")
 
@@ -299,7 +285,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
         }
     }
 
-    override fun handleCommentInput(handledSpokenValue: String) { // comment
+    private fun handleCommentInput(handledSpokenValue: String) { // comment
         val speakText = if (handledSpokenValue.isNotEmpty()) {
             binding.commentEditText.setText(handledSpokenValue)
             getString(R.string.comment_is_set)
@@ -311,7 +297,7 @@ class AddTransferFragment : VoiceAssistanceFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun handleConfirmInput(handledSpokenValue: String) {
+    private fun handleConfirmInput(handledSpokenValue: String) {
         when (handledSpokenValue.lowercase()) {
             getString(R.string.yes) -> {
                 sendTransferHistory()

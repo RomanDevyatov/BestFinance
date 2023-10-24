@@ -12,7 +12,7 @@ import com.romandevyatov.bestfinance.utils.voiceassistance.CustomSpeechRecognize
 import com.romandevyatov.bestfinance.utils.voiceassistance.CustomTextToSpeech
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 
-abstract class VoiceAssistanceFragment : Fragment() {
+abstract class VoiceAssistanceBaseFragment : Fragment() {
 
     protected var spokenValue: String? = null
     protected var textToSpeech: CustomTextToSpeech? = null
@@ -23,15 +23,7 @@ abstract class VoiceAssistanceFragment : Fragment() {
     protected var voicedWalletName: String? = null
 
     protected abstract fun calculateSteps(): MutableList<InputState>
-    protected open fun handleGroupInput(handledSpokenValue: String) {}
-    protected open fun handleSubGroupInput(handledSpokenValue: String) {}
-    protected open fun handleWalletInput(handledSpokenValue: String) {}
-    protected open fun handleWalletBalanceInput(handledSpokenValue: String) {}
-    protected open fun handleWalletNameInput(handledSpokenValue: String) {}
-    protected open fun handleAmountInput(handledSpokenValue: String) {}
-    protected open fun handleCommentInput(handledSpokenValue: String) {}
-    protected open fun handleDescriptionInput(handledSpokenValue: String) {}
-    protected open fun handleConfirmInput(handledSpokenValue: String) {}
+    protected abstract fun handleUserInput(handledSpokenValue: String, currentStage: InputState)
 
     override fun onDestroy() {
         super.onDestroy()
@@ -53,6 +45,23 @@ abstract class VoiceAssistanceFragment : Fragment() {
         } else {
             startVoiceAssistance()
         }
+    }
+
+    protected open fun setUpSpeechRecognizerListener() {
+        val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResults(results: Bundle?) {
+                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
+                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
+                    val currentSpokenText = recognizedStrings[0]
+                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
+
+                    handleUserInput(handledSpokenValue, currentStageName)
+                }
+            }
+        }
+        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     protected fun startVoiceAssistance(textBefore: String? = "") {
@@ -84,32 +93,6 @@ abstract class VoiceAssistanceFragment : Fragment() {
             (requireActivity() as MainActivity).getProtectedStorage(),
             null
         )
-    }
-
-    protected open fun setUpSpeechRecognizerListener() {
-        val recognitionListener = object : CustomSpeechRecognitionListener(requireContext()) {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResults(results: Bundle?) {
-                val recognizedStrings = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-                if (recognizedStrings != null && recognizedStrings.isNotEmpty()) {
-                    val currentSpokenText = recognizedStrings[0]
-                    val handledSpokenValue = handleRecognizedText(currentSpokenText)
-
-                    when (currentStageName) {
-                        InputState.GROUP -> handleGroupInput(handledSpokenValue)
-                        InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
-                        InputState.WALLET -> handleWalletInput(handledSpokenValue)
-                        InputState.SET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
-                        InputState.AMOUNT -> handleAmountInput(handledSpokenValue)
-                        InputState.COMMENT -> handleCommentInput(handledSpokenValue)
-                        InputState.CONFIRM -> handleConfirmInput(handledSpokenValue)
-                        else -> {}
-                    }
-                }
-            }
-        }
-        speechRecognizer.setRecognitionListener(recognitionListener)
     }
 
     protected open fun setUpSpeechRecognizer() {
