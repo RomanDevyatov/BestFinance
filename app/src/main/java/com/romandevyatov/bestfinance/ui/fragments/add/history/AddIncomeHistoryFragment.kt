@@ -107,7 +107,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
         textToSpeech?.finish()
 
-        speechRecognizer.destroy()
+        speechRecognizer?.destroy()
 
         _binding = null
     }
@@ -144,7 +144,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
         when (currentStageName) {
             InputState.GROUP -> handleGroupInput(handledSpokenValue)
-            InputState.SET_NAME -> handleSubGroupInput(handledSpokenValue)
+            InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
             InputState.WALLET -> handleWalletInput(handledSpokenValue)
             InputState.SET_WALLET_BALANCE -> handleWalletBalanceInput(handledSpokenValue)
             InputState.AMOUNT -> handleAmountInput(handledSpokenValue)

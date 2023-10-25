@@ -106,7 +106,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
         textToSpeech?.finish()
 
-        speechRecognizer.destroy()
+        speechRecognizer?.destroy()
 
         _binding = null
     }

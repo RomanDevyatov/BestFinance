@@ -3,6 +3,7 @@ package com.romandevyatov.bestfinance.utils.voiceassistance.base
 import android.os.Build
 import android.os.Bundle
 import android.speech.SpeechRecognizer
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.romandevyatov.bestfinance.ui.activity.MainActivity
@@ -16,7 +17,7 @@ abstract class VoiceAssistanceBaseFragment : Fragment() {
 
     protected var spokenValue: String? = null
     protected var textToSpeech: CustomTextToSpeech? = null
-    protected lateinit var speechRecognizer: CustomSpeechRecognizer
+    protected var speechRecognizer: CustomSpeechRecognizer? = null
     protected lateinit var currentStageName: InputState
     protected var currentStageIndex: Int = -1
     protected var steps: MutableList<InputState> = mutableListOf()
@@ -30,7 +31,7 @@ abstract class VoiceAssistanceBaseFragment : Fragment() {
 
         textToSpeech?.finish()
 
-        speechRecognizer.destroy()
+        speechRecognizer?.destroy()
     }
 
     open fun startAddingTransaction(textToSpeak: String) {
@@ -61,7 +62,7 @@ abstract class VoiceAssistanceBaseFragment : Fragment() {
                 }
             }
         }
-        speechRecognizer.setRecognitionListener(recognitionListener)
+        speechRecognizer?.setRecognitionListener(recognitionListener)
     }
 
     protected fun startVoiceAssistance(textBefore: String? = "") {
@@ -87,12 +88,14 @@ abstract class VoiceAssistanceBaseFragment : Fragment() {
     }
 
     protected fun setUpTextToSpeech() {
-        textToSpeech = CustomTextToSpeech(
-            requireContext(),
-            speechRecognizer,
-            (requireActivity() as MainActivity).getProtectedStorage(),
-            null
-        )
+        textToSpeech = speechRecognizer?.let {
+            CustomTextToSpeech(
+                requireContext(),
+                it,
+                (requireActivity() as MainActivity).getProtectedStorage(),
+                null
+            )
+        }
     }
 
     protected open fun setUpSpeechRecognizer() {
