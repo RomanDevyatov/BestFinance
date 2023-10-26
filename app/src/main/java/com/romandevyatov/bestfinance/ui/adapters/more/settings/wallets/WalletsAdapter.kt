@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.wallets
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardWalletItemBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.models.WalletItem
 
 class WalletsAdapter(
     private val onWalletItemCheckedChangeListener: OnWalletItemCheckedChangeListener? = null,

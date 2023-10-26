@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

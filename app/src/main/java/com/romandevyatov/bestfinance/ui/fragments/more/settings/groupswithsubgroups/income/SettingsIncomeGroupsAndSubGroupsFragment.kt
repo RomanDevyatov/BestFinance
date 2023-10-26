@@ -13,12 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsIncomeGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.GroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.SubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
@@ -34,9 +33,45 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
 
     private val incomeGroupsAndSubGroupsViewModel: IncomeGroupsAndSubGroupsViewModel by viewModels()
 
-    private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
+    private val groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter by lazy {
+        GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+    }
 
-    private var groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter? = null
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+
+        setupGroupWithSubgroupsAdapter()
+
+        setOnBackPressedHandler()
+
+        incomeGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData
+            .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+                val groupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
+                    val subGroupItems = groups.incomeSubGroups.map {
+                        SubGroupItem(
+                            it.id!!,
+                            it.name,
+                            it.incomeGroupId,
+                            it.archivedDate == null
+                        )
+                    }.toMutableList()
+
+                    GroupWithSubGroupsItem(
+                        groups.incomeGroup.id,
+                        groups.incomeGroup.name,
+                        groups.incomeGroup.archivedDate == null,
+                        subGroupItems
+                    )
+                } ?: emptyList()
+
+                groupWithSubgroupsAdapter.submitList(groupWithSubGroupsItems)
+            }
+
+        return binding.root
+    }
 
     private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupListener {
         @RequiresApi(Build.VERSION_CODES.O)
@@ -122,48 +157,9 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsIncomeGroupsAndSubGroupsBinding.inflate(inflater, container, false)
-
-        setupRecyclerView()
-
-        setOnBackPressedHandler()
-
-        incomeGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData
-            .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-                allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
-                updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
-                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
-            }
-        }
-
-        return binding.root
-    }
-
-    private fun setupRecyclerView() {
-        groupWithSubgroupsAdapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
-
+    private fun setupGroupWithSubgroupsAdapter() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = groupWithSubgroupsAdapter
     }
 
-    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<IncomeGroupWithIncomeSubGroups>) {
-        groupWithSubGroupsItemMutableList.clear()
-        groupWithSubGroupsItemMutableList.addAll(
-            groupsWithSubGroups.map { groupWithSubGroup ->
-                val subGroupsForAdapterItem = groupWithSubGroup.incomeSubGroups.map {
-                    SubGroupItem(it.id!!, it.name, it.incomeGroupId, it.archivedDate == null)
-                }.toMutableList()
-                GroupWithSubGroupsItem(
-                    groupWithSubGroup.incomeGroup.id,
-                    groupWithSubGroup.incomeGroup.name,
-                    groupWithSubGroup.incomeGroup.archivedDate == null,
-                    subGroupsForAdapterItem
-                )
-            }
-        )
-    }
 }

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings
+package com.romandevyatov.bestfinance.ui.adapters.more.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,8 @@ import com.romandevyatov.bestfinance.databinding.ItemCategoryBinding
 
 class CategoryAdapter(
     private val categoryData: List<CategoryItem>,
-    private val subCategoryClickListener: SubCategoryAdapter.OnSubCategoryClickListener) :
+    private val subCategoryClickListener: SubCategoryAdapter.OnSubCategoryClickListener
+) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     class CategoryViewHolder(private val binding: ItemCategoryBinding) :

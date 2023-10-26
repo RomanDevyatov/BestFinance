@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsExpenseGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.GroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.SubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint

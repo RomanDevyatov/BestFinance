@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models
 
 data class SubGroupItem(
     val id: Long,

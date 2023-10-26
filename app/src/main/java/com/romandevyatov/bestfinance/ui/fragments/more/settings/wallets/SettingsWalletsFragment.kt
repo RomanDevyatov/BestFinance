@@ -13,8 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.WalletsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models.WalletItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.WalletsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.models.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.wallets.models
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.models
 
 data class WalletItem(
     val id: Long?,

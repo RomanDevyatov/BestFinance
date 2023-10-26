@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

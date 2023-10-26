@@ -11,10 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuMoreBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.CategoryItem
-import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.settings.SubCategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.CategoryAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.CategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SubCategoryAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SubCategoryItem
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

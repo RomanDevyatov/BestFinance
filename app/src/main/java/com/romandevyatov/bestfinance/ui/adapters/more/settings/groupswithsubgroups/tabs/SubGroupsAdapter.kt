@@ -1,11 +1,10 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
 
 class SubGroupsAdapter(
     private val mList: MutableList<SubGroupItem> = mutableListOf(),

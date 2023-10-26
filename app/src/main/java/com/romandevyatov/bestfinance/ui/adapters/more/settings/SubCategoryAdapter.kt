@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings
+package com.romandevyatov.bestfinance.ui.adapters.more.settings
 
 import android.view.LayoutInflater
 import android.view.View

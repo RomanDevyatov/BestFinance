@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.settings.groupswithsubgroups.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
 
 class GroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
