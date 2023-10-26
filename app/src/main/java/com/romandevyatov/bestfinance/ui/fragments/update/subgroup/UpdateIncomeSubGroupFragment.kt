@@ -17,7 +17,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeSubGroupViewModel

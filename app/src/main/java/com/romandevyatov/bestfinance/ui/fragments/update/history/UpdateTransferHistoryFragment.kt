@@ -26,7 +26,7 @@ import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.WindowUtil

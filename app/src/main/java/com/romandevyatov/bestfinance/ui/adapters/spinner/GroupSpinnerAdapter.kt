@@ -9,6 +9,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.view.isVisible
 import com.romandevyatov.bestfinance.databinding.ItemWithDelBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 
 class GroupSpinnerAdapter(
     context: Context,

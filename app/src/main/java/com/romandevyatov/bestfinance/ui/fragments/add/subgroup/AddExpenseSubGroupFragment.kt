@@ -17,7 +17,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.WindowUtil

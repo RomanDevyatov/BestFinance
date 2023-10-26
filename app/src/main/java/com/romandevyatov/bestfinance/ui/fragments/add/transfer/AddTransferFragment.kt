@@ -25,7 +25,9 @@ import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
+import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
@@ -330,68 +332,69 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun archiveWallet(name: String) {
-        addTransferViewModel.archiveWallet(name)
-        if (binding.toWalletNameSpinner.text.toString() == name) {
+    private fun archiveWallet(spinnerItem: SpinnerItem) {
+        spinnerItem.id?.let { addTransferViewModel.archiveWalletById(it) }
+        if (binding.toWalletNameSpinner.text.toString() == spinnerItem.name) {
             binding.toWalletNameSpinner.text = null
             toSpinnerValueGlobalBeforeAdd = null
         }
-        if (binding.fromWalletNameSpinner.text.toString() == name) {
+        if (binding.fromWalletNameSpinner.text.toString() == spinnerItem.name) {
             binding.fromWalletNameSpinner.text = null
             fromSpinnerValueGlobalBeforeAdd = null
         }
     }
 
     private fun setFromWalletSpinnerAdapter() {
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+        walletViewModel.allWalletsNotArchivedLiveData
+            .observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
-                val spinnerItems = getWalletItemsSpinner(wallets)
+                val spinnerWalletItems = getWalletItemsSpinner(wallets)
+
+                spinnerWalletItems.add(SpinnerItem(null, ADD_NEW_WALLET))
 
                 val walletSpinnerAdapter =
-                    SpinnerAdapter(
+                    GroupSpinnerAdapter(
                         requireContext(),
                         R.layout.item_with_del,
-                        spinnerItems,
+                        spinnerWalletItems,
                         ADD_NEW_WALLET,
                         archiveFromWalletListener
                     )
 
                 binding.fromWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
-                setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter)
+                setIfAvailableFromWalletSpinnersValue(spinnerWalletItems)
             }
         }
     }
 
     private fun setToWalletSpinnerAdapter() {
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+        walletViewModel.allWalletsNotArchivedLiveData
+            .observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
-                val spinnerItems = getWalletItemsSpinner(wallets)
+                val spinnerToWalletItems = getWalletItemsSpinner(wallets)
 
-                val walletSpinnerAdapter = SpinnerAdapter(
+                spinnerToWalletItems.add(SpinnerItem(null, ADD_NEW_WALLET))
+
+                val walletSpinnerAdapter = GroupSpinnerAdapter(
                     requireContext(),
                     R.layout.item_with_del,
-                    spinnerItems,
+                    spinnerToWalletItems,
                     ADD_NEW_WALLET,
                     archiveToWalletListener
                 )
 
                 binding.toWalletNameSpinner.setAdapter(walletSpinnerAdapter)
 
-                setIfAvailableToWalletSpinnersValue(walletSpinnerAdapter)
+                setIfAvailableToWalletSpinnersValue(spinnerToWalletItems)
             }
         }
     }
 
-    private fun getWalletItemsSpinner(walletList: List<Wallet>?): ArrayList<String> {
-        val spinnerItems = ArrayList<String>()
-
-        walletList?.forEach { it ->
-            spinnerItems.add(it.name)
-        }
-        spinnerItems.add(ADD_NEW_WALLET)
-
-        return spinnerItems
+    private fun getWalletItemsSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
+        return wallets.map {
+            SpinnerItem(it.id, it.name)
+        }.toMutableList()
     }
 
     private fun setFromSpinnerListener() {
@@ -453,22 +456,22 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         return false
     }
 
-    private fun setIfAvailableFromWalletSpinnersValue(walletSpinnerAdapter: SpinnerAdapter) {
+    private fun setIfAvailableFromWalletSpinnersValue(spinnerWalletItems: MutableList<SpinnerItem>) {
         val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.fromWalletSpinnerValue
         val spinnerTypeArg = args.spinnerType
 
-        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_FROM && isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
+        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_FROM && spinnerWalletItems.find { it.name == savedWalletName } != null) {
             fromSpinnerValueGlobalBeforeAdd = savedWalletName
 
             binding.fromWalletNameSpinner.setText(savedWalletName, false)
         }
     }
 
-    private fun setIfAvailableToWalletSpinnersValue(walletSpinnerAdapter: SpinnerAdapter) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.fromWalletSpinnerValue
+    private fun setIfAvailableToWalletSpinnersValue(spinnerWalletItems: MutableList<SpinnerItem>) {
+        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.toWalletSpinnerValue
         val spinnerTypeArg = args.spinnerType
 
-        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_TO && isNameInAdapter(walletSpinnerAdapter, savedWalletName)) {
+        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_TO && spinnerWalletItems.find { it.name == savedWalletName } != null) {
             toSpinnerValueGlobalBeforeAdd = savedWalletName
 
             binding.toWalletNameSpinner.setText(savedWalletName, false)
@@ -680,11 +683,11 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     }
 
     private val archiveFromWalletListener =
-        object : SpinnerAdapter.DeleteItemClickListener {
+        object : GroupSpinnerAdapter.DeleteItemClickListener {
 
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun archive(name: String) {
-                archiveWallet(name)
+            override fun archive(spinnerItem: SpinnerItem) {
+                archiveWallet(spinnerItem)
 
                 sharedModViewModel.set(null)
 
@@ -693,11 +696,11 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         }
 
     private val archiveToWalletListener =
-        object : SpinnerAdapter.DeleteItemClickListener {
+        object : GroupSpinnerAdapter.DeleteItemClickListener {
 
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun archive(name: String) {
-                archiveWallet(name)
+            override fun archive(spinnerItem: SpinnerItem) {
+                archiveWallet(spinnerItem)
 
                 sharedModViewModel.set(null)
 
