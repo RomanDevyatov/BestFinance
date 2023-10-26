@@ -51,16 +51,16 @@ class GroupWithSubgroupsAdapter(
                 groupListener?.onGroupChecked(groupWithSubGroupsItem, isChecked)
 
                 if (isChecked) {
-                    binding.subGroupRecyclerView.visibility = View.VISIBLE
+                    binding.historiesByDateRecyclerView.visibility = View.VISIBLE
                 } else {
-                    binding.subGroupRecyclerView.visibility = View.GONE
+                    binding.historiesByDateRecyclerView.visibility = View.GONE
                 }
             }
 
             if (groupWithSubGroupsItem.isExist) {
-                binding.subGroupRecyclerView.visibility = View.VISIBLE
+                binding.historiesByDateRecyclerView.visibility = View.VISIBLE
             } else {
-                binding.subGroupRecyclerView.visibility = View.GONE
+                binding.historiesByDateRecyclerView.visibility = View.GONE
             }
 
             binding.deleteButton.setOnClickListener {
@@ -68,8 +68,8 @@ class GroupWithSubgroupsAdapter(
             }
 
             val subGroupsAdapter = SubGroupsAdapter(groupWithSubGroupsItem.subgroups, listener)
-            binding.subGroupRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
-            binding.subGroupRecyclerView.adapter = subGroupsAdapter
+            binding.historiesByDateRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.historiesByDateRecyclerView.adapter = subGroupsAdapter
 
             binding.root.setOnClickListener {
                 groupListener?.navigateToUpdateGroup(groupWithSubGroupsItem.name)

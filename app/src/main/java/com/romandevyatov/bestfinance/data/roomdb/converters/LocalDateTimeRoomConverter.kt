@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 class LocalDateTimeRoomTypeConverter {
 
