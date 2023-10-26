@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.HistoryByDateAdapter
@@ -46,32 +47,34 @@ class IncomeHistoryFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
-            groups.associateBy { it.id }
+        val listener = object : TransactionAdapter.OnHistoryItemListener {
 
-            val listener = object : TransactionAdapter.OnHistoryItemListener {
-
-                override fun navigateToUpdateTransaction(id: Long) {
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToUpdateIncomeHistoryFragment()
-                    action.incomeHistoryId = id
-                    findNavController().navigate(action)
-                }
+            override fun navigateToUpdateTransaction(id: Long) {
+                val action = HistoryFragmentDirections.actionHistoryFragmentToUpdateIncomeHistoryFragment()
+                action.incomeHistoryId = id
+                findNavController().navigate(action)
             }
-
-            incomeHistoryAdapter = HistoryByDateAdapter(listener)
-            binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
         }
+
+        incomeHistoryAdapter = HistoryByDateAdapter(listener)
+        binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { allIncomeHistoryWithIncomeGroupAndWallet ->
-                val transactionItems = convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet)
+        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
+            val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
+            incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(
+                viewLifecycleOwner
+            ) { allIncomeHistoryWithIncomeGroupAndWallet ->
+                val transactionItems =
+                    convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet, incomeGroupMap)
                 val groupTransactionsByDate = groupTransactionsByDate(transactionItems)
                 incomeHistoryAdapter?.submitList(groupTransactionsByDate)
+            }
         }
     }
 
@@ -92,7 +95,10 @@ class IncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet: List<IncomeHistoryWithIncomeSubGroupAndWallet>): MutableList<TransactionItem> {
+    private fun convertHistoryToIncomeHistoryItemList(
+        allIncomeHistoryWithIncomeGroupAndWallet: List<IncomeHistoryWithIncomeSubGroupAndWallet>,
+        incomeGroupMap: Map<Long?, IncomeGroup>
+    ): MutableList<TransactionItem> {
         val transactionItemList = mutableListOf<TransactionItem>()
 
         for (incomeHistoryWithIncomeSubGroupAndWallet in allIncomeHistoryWithIncomeGroupAndWallet) {
@@ -103,7 +109,7 @@ class IncomeHistoryFragment : Fragment() {
             if (incomeSubGroup != null && wallet != null) {
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = incomeSubGroup.name,
+                    groupName = incomeGroupMap[incomeHistory.incomeSubGroupId]?.name.toString(),
                     subGroupGroupName = incomeSubGroup.name,
                     amount = incomeHistory.amount,
                     comment = incomeHistory.comment ?: "",
