@@ -31,7 +31,6 @@ class IncomeHistoryFragment : Fragment() {
 
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val groupViewModel: IncomeGroupViewModel by viewModels()
-//    private var incomeHistoryAdapter: IncomeHistoryAdapter? = null
     private var incomeHistoryAdapter: HistoryByDateAdapter? = null
 
     override fun onCreateView(
@@ -109,7 +108,7 @@ class IncomeHistoryFragment : Fragment() {
             if (incomeSubGroup != null && wallet != null) {
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = incomeGroupMap[incomeHistory.incomeSubGroupId]?.name.toString(),
+                    groupName = incomeGroupMap[incomeSubGroup.incomeGroupId]?.name,
                     subGroupGroupName = incomeSubGroup.name,
                     amount = incomeHistory.amount,
                     comment = incomeHistory.comment ?: "",

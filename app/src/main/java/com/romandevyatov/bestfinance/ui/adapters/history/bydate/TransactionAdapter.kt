@@ -43,6 +43,8 @@ class TransactionAdapter(
 
             binding.subGroupNameTextView.text = transactionItem.subGroupGroupName
 
+            binding.walletNameTextView.text = transactionItem.walletName
+
             binding.dateIncomeTextView.text = transactionItem.date?.toLocalTime().toString()
 
             binding.root.setOnClickListener {

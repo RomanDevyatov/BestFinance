@@ -64,14 +64,29 @@
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:gravity="left"
             android:text="dateIncomeTextView"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/walletNameTextView"
+            app:layout_constraintStart_toEndOf="@+id/incomeGroupNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/balanceTextView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/walletNameTextView"
+            style="@style/CustomTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="TextView"
+            android:gravity="left"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/balanceTextView"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.157" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
