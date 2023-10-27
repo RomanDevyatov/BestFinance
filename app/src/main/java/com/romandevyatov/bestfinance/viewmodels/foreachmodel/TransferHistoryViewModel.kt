@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
+import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
+import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,19 +19,11 @@ class TransferHistoryViewModel @Inject constructor(
 
     val allTransferHistoriesLiveData: LiveData<List<TransferHistory>> = transferHistoryRepository.getAllTransferHistories()
 
-    val notArchivedTransferHistoriesLiveData: LiveData<List<TransferHistory>>
-        = transferHistoryRepository.getAllTransferHistoriesByArchivedDate(null)
-
     fun insertTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
         transferHistoryRepository.insertTransferHistory(transferHistory)
     }
 
-    fun updateTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.updateTransferHistory(transferHistory)
-    }
+    val allTransferHistoryWithWalletsLiveData: LiveData<List<TransferHistoryWithWallets>> = transferHistoryRepository.getAllTransferHistoryWithWalletsLiveData()
 
-    fun deleteTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.deleteTransferHistory(transferHistory)
-    }
 
 }

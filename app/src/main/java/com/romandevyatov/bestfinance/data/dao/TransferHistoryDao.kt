@@ -1,8 +1,15 @@
 package com.romandevyatov.bestfinance.data.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Delete
+import androidx.room.Update
+import androidx.room.Query
+import androidx.room.Transaction
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
+import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 
 @Dao
 interface TransferHistoryDao {
@@ -23,10 +30,20 @@ interface TransferHistoryDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM transfer_history WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long)
 
     @Transaction
     @Query("SELECT * FROM transfer_history")
-    fun getAllWithTransferGroupAndWallet(): LiveData<List<TransferHistory>>
-    
+    fun getAllWithTransferGroupAndWalletLiveData(): LiveData<List<TransferHistoryWithWallets>>
+
+    @Transaction
+    @Query("SELECT * FROM transfer_history WHERE id = :id LIMIT 1")
+    fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets?>
+
+    @Query("SELECT * FROM transfer_history WHERE id = :id")
+    fun getById(id: Long): TransferHistory?
+
+    @Transaction
+    @Query("SELECT * FROM transfer_history")
+    fun getAllWithWallets(): LiveData<List<TransferHistoryWithWallets>>
 }

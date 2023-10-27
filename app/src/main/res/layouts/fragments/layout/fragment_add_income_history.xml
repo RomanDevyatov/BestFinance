@@ -9,14 +9,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/groupSpinnerLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/CustomAutoCompleteTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
         android:clickable="true"
         android:focusable="true"
-        android:hint="Group name"
+        android:hint="@string/group_name"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,14 +34,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/subGroupSpinnerLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/CustomAutoCompleteTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="32dp"
         android:clickable="true"
         android:focusable="true"
-        android:hint="Income sub group"
+        android:hint="@string/income_sub_group"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="@+id/groupSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
@@ -60,14 +60,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/walletSpinnerLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/CustomAutoCompleteTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:focusable="true"
-        android:hint="Wallet"
+        android:hint="@string/wallet"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="@+id/subGroupSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
@@ -86,12 +86,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/amountLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         app:helperText="Required"
-        android:hint="Amount"
+        android:hint="@string/amount"
         app:layout_constraintEnd_toEndOf="@+id/walletSpinnerLayout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/walletSpinnerLayout"
@@ -106,12 +107,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Date"
+        android:hint="@string/date"
         app:helperText="Required"
         app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_bias="0.5"
@@ -130,12 +132,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/timeLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Time"
+        android:hint="@string/time"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amountLayout">
@@ -152,11 +155,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/commentLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Comment"
+        android:hint="@string/comment"
         app:layout_constraintEnd_toEndOf="@+id/timeLayout"
         app:layout_constraintStart_toStartOf="@+id/dateLayout"
         app:layout_constraintTop_toBottomOf="@+id/dateLayout">
@@ -168,15 +172,16 @@
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addHistoryButton"
-        android:layout_width="wrap_content"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Add"
+        android:layout_marginHorizontal="32dp"
+        android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/commentLayout"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/commentLayout"
         app:layout_constraintTop_toBottomOf="@+id/commentLayout" />
 

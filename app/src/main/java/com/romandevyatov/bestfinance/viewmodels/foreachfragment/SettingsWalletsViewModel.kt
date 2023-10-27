@@ -18,33 +18,10 @@ class SettingsWalletsViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ) : ViewModel() {
 
-    val allWalletsLiveData: LiveData<List<Wallet>>? = walletRepository.getAllWalletLiveData()
-
-    val allWalletsArchivedLiveData: LiveData<List<Wallet>>? = walletRepository.getAllWalletsArchivedLiveData()
-
-    fun getWalletsArchivedByNameLiveData(name: String): LiveData<Wallet>? {
-        return walletRepository.getWalletByNameLiveData(name)
-    }
+    val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
 
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
-    }
-
-    fun unarchiveWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val updatedWallet = Wallet(
-            id = wallet.id,
-            name = wallet.name,
-            description = wallet.description,
-            balance = wallet.balance,
-            input = wallet.input,
-            output = wallet.output,
-            archivedDate = null
-        )
-        updateWallet(updatedWallet)
-    }
-
-    fun getWalletArchivedByNameLiveData(name: String): LiveData<Wallet>? {
-        return walletRepository.getWalletArchivedByNameLiveData(name)
     }
 
     fun deleteWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -58,20 +35,33 @@ class SettingsWalletsViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWalletById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val wallet = walletRepository.getWalletById(id)
+        if (wallet != null) {
+            val walletArchived = wallet.copy(
+                archivedDate = LocalDateTime.now()
+            )
 
-        val walletArchived = Wallet(
-            id = wallet.id,
-            name = wallet.name,
-            balance = wallet.balance,
-            archivedDate = LocalDateTime.now(),
-            input = wallet.input,
-            output = wallet.output,
-            description = wallet.description
-        )
-
-        walletRepository.updateWallet(walletArchived)
-
+            walletRepository.updateWallet(walletArchived)
+        }
     }
 
+    private var deletedWalletItem: Wallet? = null
 
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = walletRepository.getWalletById(id)
+            deletedWalletItem = itemToDelete
+            walletRepository.deleteWalletById(id)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
+        deletedWalletItem?.let { walletToRestore ->
+            try {
+                walletRepository.insertWallet(walletToRestore)
+                deletedWalletItem = null
+            } catch (_: Exception) { }
+        }
+    }
 }

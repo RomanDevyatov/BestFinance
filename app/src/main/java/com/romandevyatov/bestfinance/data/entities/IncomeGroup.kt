@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.romandevyatov.bestfinance.data.entities.base.Group
 import java.time.LocalDateTime
-
 
 @Entity(
     tableName = "income_group",
@@ -28,5 +28,4 @@ data class IncomeGroup(
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null
-
 )

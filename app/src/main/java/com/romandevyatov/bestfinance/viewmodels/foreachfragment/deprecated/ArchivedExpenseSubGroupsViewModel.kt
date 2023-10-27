@@ -25,6 +25,6 @@ class ArchivedExpenseSubGroupsViewModel @Inject constructor(
         expenseSubGroupRepository.deleteExpenseSubGroupById(id)
     }
 
-    val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>>? = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
+    val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
 
 }

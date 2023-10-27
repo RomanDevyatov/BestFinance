@@ -26,5 +26,4 @@ class HomeViewModel @Inject constructor(
             _resultLiveData.postValue(result)
         }
     }
-
 }

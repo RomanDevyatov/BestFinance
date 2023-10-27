@@ -1,18 +1,11 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.subgroup
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,7 +17,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeSubGroupViewModel
@@ -41,9 +34,12 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
     private var incomeSubGroupOldGlobal: IncomeSubGroup? = null
 
-    private var incomeGroupsGlobal: List<SpinnerItem>? = emptyList()
+    private var incomeGroupsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
-    private val clickDelayMs = 1000
+    private val ADD_NEW_INCOME_GROUP: String by lazy {
+        getString(R.string.add_new_income_group)
+    }
+
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -55,19 +51,17 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addSubGroupButton.text = "Update"
+        binding.reusable.addSubGroupButton.text = getString(R.string.update)
 
         updateSubGroupViewModel.getIncomeSubGroupByIdLiveData(args.incomeSubGroupId)
-            ?.observe(viewLifecycleOwner) { incomeSubGroup ->
-                incomeSubGroupOldGlobal = IncomeSubGroup(
-                    incomeSubGroup.id,
-                    incomeSubGroup.name,
-                    incomeSubGroup.description,
-                    incomeSubGroup.incomeGroupId,
-                    incomeSubGroup.archivedDate)
+            .observe(viewLifecycleOwner) { incomeSubGroup ->
+                incomeSubGroup?.let {
+                    incomeSubGroupOldGlobal = it.copy()
 
-                binding.reusable.subGroupNameEditText.setText(incomeSubGroup.name)
-                binding.reusable.subGroupDescriptionEditText.setText(incomeSubGroup.description)
+                    binding.reusable.subGroupNameEditText.setText(it.name)
+                    binding.reusable.subGroupDescriptionEditText.setText(it.description)
+                }
+
             }
 
         return binding.root
@@ -78,9 +72,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                val action =
-                    UpdateIncomeSubGroupFragmentDirections.actionNavigationUpdateIncomeSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                findNavController().navigate(action)
+                navigateToSettingGroupsAndSubGroups()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -112,15 +104,30 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
             updateSubGroupViewModel.getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(newIncomeGroupId)
                 .observe(viewLifecycleOwner) { groupWithSubGroups ->
-                    val subGroups = groupWithSubGroups.incomeSubGroups.map { it.name }.toMutableList()
+                    groupWithSubGroups?.let { group ->
+                        val subGroups =
+                            group.incomeSubGroups.map { it.name }.toMutableList()
 
-                    if ((incomeSubGroupOldGlobal?.name != newSubGroupNameBinding
-                                || incomeSubGroupOldGlobal?.incomeGroupId != newIncomeGroupId)
-                        && subGroups.contains(newSubGroupNameBinding)) {
-                        WindowUtil.showExistingDialog(requireContext(), "This sub group `$newSubGroupNameBinding` is already existing in `${newGroupNameBinding}` group.")
-                    } else {
-                        updateSubGroup(newSubGroupNameBinding, newDescriptionBinding, newIncomeGroupId)
-                        navigateToSettingGroupsAndSubGroups()
+                        if ((incomeSubGroupOldGlobal?.name != newSubGroupNameBinding
+                                    || incomeSubGroupOldGlobal?.incomeGroupId != newIncomeGroupId)
+                            && subGroups.contains(newSubGroupNameBinding)
+                        ) {
+                            WindowUtil.showExistingDialog(
+                                requireContext(),
+                                getString(
+                                    R.string.sub_group_already_exist_in_group,
+                                    newSubGroupNameBinding,
+                                    newGroupNameBinding
+                                )
+                            )
+                        } else {
+                            updateSubGroup(
+                                newSubGroupNameBinding,
+                                newDescriptionBinding,
+                                newIncomeGroupId
+                            )
+                            navigateToSettingGroupsAndSubGroups()
+                        }
                     }
                 }
         }
@@ -129,12 +136,13 @@ class UpdateIncomeSubGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelayMs.toLong())
+        }, Constants.CLICK_DELAY_MS)
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {
         val action =
             UpdateIncomeSubGroupFragmentDirections.actionNavigationUpdateIncomeSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        action.initialTabIndex = 0
         findNavController().navigate(action)
     }
 
@@ -167,7 +175,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     }
 
     private fun getGroupSpinnerItemByName(nameGroup: String): SpinnerItem? {
-        return incomeGroupsGlobal?.find { it.name == nameGroup }
+        return incomeGroupsGlobal.find { it.name == nameGroup }
     }
 
     override fun onDestroyView() {
@@ -178,18 +186,26 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     private fun initGroupSpinner() {
         updateSubGroupViewModel.getAllIncomeGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { incomeGroups ->
-                val spinnerItems = getIncomeGroupList(incomeGroups)
+                incomeGroups?.let { groups ->
+                    val spinnerItems = getIncomeGroupList(groups)
 
-                val spinnerAdapter =
-                    GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,
-                        Constants.ADD_NEW_INCOME_GROUP)
+                    val spinnerAdapter =
+                        GroupSpinnerAdapter(
+                            requireContext(),
+                            R.layout.item_with_del,
+                            spinnerItems,
+                            ADD_NEW_INCOME_GROUP
+                        )
 
-                incomeGroupsGlobal = spinnerItems
+                    incomeGroupsGlobal.clear()
+                    incomeGroupsGlobal.addAll(spinnerItems)
 
-                binding.reusable.groupSpinner.setAdapter(spinnerAdapter)
+                    binding.reusable.groupSpinner.setAdapter(spinnerAdapter)
 
-                val groupName = spinnerItems.find { it.id == incomeSubGroupOldGlobal?.incomeGroupId }?.name
-                binding.reusable.groupSpinner.setText(groupName, false)
+                    val groupName =
+                        spinnerItems.find { it.id == incomeSubGroupOldGlobal?.incomeGroupId }?.name
+                    binding.reusable.groupSpinner.setText(groupName, false)
+                }
             }
     }
 

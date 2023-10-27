@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +19,7 @@ class AddIncomeSubGroupViewModel @Inject constructor(
 ) : ViewModel() {
 
     // GENERAL
-    val incomeSubGroupsLiveData: LiveData<List<IncomeSubGroup>> = incomeSubGroupRepository.getAllIncomeSubGroups()
+    val incomeGroupsNotArchivedLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
 
     fun insertIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
         val existingIncomeSubGroup = incomeSubGroupRepository.getIncomeSubGroupByNameAndIncomeGroupId(incomeSubGroup.name, incomeSubGroup.incomeGroupId)
@@ -37,87 +35,12 @@ class AddIncomeSubGroupViewModel @Inject constructor(
         incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroup)
     }
 
-    fun deleteIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.deleteIncomeSubGroup(incomeSubGroup)
-    }
-
-    fun deleteIncomeSubGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.deleteIncomeSubGroupById(id)
-    }
-
-    fun deleteAllIncomeSubGroup() = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.deleteAllIncomeSubGroups()
-    }
-
-    // WHERE ARCHIVED DATE IS NULL
-    val incomeSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<IncomeSubGroup>> = incomeSubGroupRepository.getAllIncomeSubGroupsWhereArchivedDateIsNull()
-
-    fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> {
-        return incomeSubGroupRepository.getIncomeSubGroupByNameNotArchivedLiveData(name)
-    }
-
-    fun getIncomeSubGroupByNameLiveData(name: String): LiveData<IncomeSubGroup> {
-        return incomeSubGroupRepository.getIncomeSubGroupByNameLiveData(name)
-    }
-
-    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>? {
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup?> {
         return incomeSubGroupRepository.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
     }
 
-
-
-    val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
-
-    fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.insertIncomeGroup(incomeGroup)
-    }
-
-    fun updateIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.updateIncomeGroup(incomeGroup)
-    }
-
-    fun deleteIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.deleteIncomeGroup(incomeGroup)
-    }
-
-    fun deleteIncomeGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.deleteIncomeGroupById(id)
-    }
-
-    fun deleteAllIncomeGroup() = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.deleteAllIncomeGroups()
-    }
-
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
-        return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
-    }
-
-    fun getAllIncomeGroupWithIncomeSubGroupsByIncomeGroupNameAndNotArchivedLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
-    }
-
-    fun getIncomeGroupNameByNameLiveData(incomeGroupName: String): LiveData<IncomeGroup>? {
-        return incomeGroupRepository.getIncomeGroupNameByNameLiveData(incomeGroupName)
-    }
-
-    suspend fun getIncomeGroupByIdNotArchived(incomeGroupId: Long): IncomeGroup {
-        return incomeGroupRepository.getIncomeGroupByIdNotArchived(incomeGroupId)
-    }
-
-    fun getIncomeGroupNotArchivedByNameLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupRepository.getIncomeGroupNotArchivedByNameLiveData(selectedIncomeGroupName)
-    }
-
     fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.unarchiveIncomeSubGroup(incomeSubGroup)
+        val incomeSubGroupUnarchived = incomeSubGroup.copy(archivedDate = null)
+        updateIncomeSubGroup(incomeSubGroupUnarchived)
     }
-
-    val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistories()
-
-    val allIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoryAndNotArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>> = incomeGroupRepository.getAllIncomeGroupWithIncomeSubGroupsIncludingIncomeHistoriesNotArchivedLiveData()
-
-
-
-
-
 }

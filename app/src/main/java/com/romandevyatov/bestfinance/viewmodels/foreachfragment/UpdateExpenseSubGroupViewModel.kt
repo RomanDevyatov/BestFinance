@@ -18,7 +18,7 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
-    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups> {
+    fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id: Long?): LiveData<ExpenseGroupWithExpenseSubGroups?> {
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(id)
     }
 
@@ -32,12 +32,7 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
         }
     }
 
-    fun getExpenseSubGroupByNameLiveData(name: String): LiveData<ExpenseSubGroup> {
-        return expenseSubGroupRepository.getExpenseSubGroupByNameLiveData(name)
-    }
-
-    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>? {
+    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup?> {
         return expenseSubGroupRepository.getExpenseSubGroupByIdLiveData(id)
     }
-    
 }

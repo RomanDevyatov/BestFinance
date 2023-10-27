@@ -1,18 +1,11 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.subgroup
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,7 +17,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseSubGroupViewModel
@@ -43,7 +36,6 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
     private var expenseGroupsGlobal: List<SpinnerItem>? = emptyList()
 
-    private val clickDelayMs = 1000
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -55,19 +47,16 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addSubGroupNameButton.text = "Update"
+        binding.reusable.addSubGroupNameButton.text = getString(R.string.update)
 
         updateSubGroupViewModel.getExpenseSubGroupByIdLiveData(args.expenseSubGroupId)
-            ?.observe(viewLifecycleOwner) { expenseSubGroup ->
-                expenseSubGroupOldGlobal = ExpenseSubGroup(
-                    expenseSubGroup.id,
-                    expenseSubGroup.name,
-                    expenseSubGroup.description,
-                    expenseSubGroup.expenseGroupId,
-                    expenseSubGroup.archivedDate)
+            .observe(viewLifecycleOwner) { expenseSubGroup ->
+                expenseSubGroup?.let {
+                    expenseSubGroupOldGlobal = it.copy()
 
-                binding.reusable.subGroupNameEditText.setText(expenseSubGroup.name)
-                binding.reusable.subGroupDescriptionEditText.setText(expenseSubGroup.description)
+                    binding.reusable.subGroupNameEditText.setText(it.name)
+                    binding.reusable.subGroupDescriptionEditText.setText(it.description)
+                }
             }
 
         return binding.root
@@ -76,9 +65,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val action =
-                    UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-                findNavController().navigate(action)
+                navigateToSettingGroupsAndSubGroups()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -110,15 +97,17 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
             updateSubGroupViewModel.getExpenseGroupWithExpenseSubGroupsByExpenseGroupId(newExpenseGroupId)
                 .observe(viewLifecycleOwner) { groupWithSubGroups ->
-                    val subGroups = groupWithSubGroups.expenseSubGroups.map { it.name }.toMutableList()
+                    groupWithSubGroups?.let { group ->
+                        val subGroups = group.expenseSubGroups.map { it.name }.toMutableList()
 
-                    if ((expenseSubGroupOldGlobal?.name != newSubGroupNameBinding
-                                || expenseSubGroupOldGlobal?.expenseGroupId != newExpenseGroupId)
-                        && subGroups.contains(newSubGroupNameBinding)) {
-                        WindowUtil.showExistingDialog(requireContext(), "This sub group `$newSubGroupNameBinding` is already existing in `${newGroupNameBinding}` group.")
-                    } else {
-                        updateSubGroup(newSubGroupNameBinding, newDescriptionBinding, newExpenseGroupId)
-                        navigateToSettingGroupsAndSubGroups()
+                        if ((expenseSubGroupOldGlobal?.name != newSubGroupNameBinding
+                                    || expenseSubGroupOldGlobal?.expenseGroupId != newExpenseGroupId)
+                            && subGroups.contains(newSubGroupNameBinding)) {
+                            WindowUtil.showExistingDialog(requireContext(), getString(R.string.sub_group_already_exist_in_group, newSubGroupNameBinding, newGroupNameBinding))
+                        } else {
+                            updateSubGroup(newSubGroupNameBinding, newDescriptionBinding, newExpenseGroupId)
+                            navigateToSettingGroupsAndSubGroups()
+                        }
                     }
                 }
         }
@@ -127,12 +116,13 @@ class UpdateExpenseSubGroupFragment : Fragment() {
         handler.postDelayed({
             isButtonClickable = true
             view.isEnabled = true
-        }, clickDelayMs.toLong())
+        }, Constants.CLICK_DELAY_MS)
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {
         val action =
             UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        action.initialTabIndex = 1
         findNavController().navigate(action)
     }
 
@@ -176,18 +166,22 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     private fun initGroupSpinner() {
         updateSubGroupViewModel.getAllExpenseGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { expenseGroups ->
-                val spinnerItems = getExpenseGroupList(expenseGroups)
+                expenseGroups?.let {
+                    val spinnerItems = getExpenseGroupList(it)
 
-                val spinnerAdapter =
-                    GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerItems,
-                        Constants.ADD_NEW_EXPENSE_GROUP)
+                    val spinnerAdapter = GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerItems,
+                        null
+                    )
 
-                expenseGroupsGlobal = spinnerItems
+                    expenseGroupsGlobal = spinnerItems
+                    binding.reusable.groupSpinner.setAdapter(spinnerAdapter)
 
-                binding.reusable.groupSpinner.setAdapter(spinnerAdapter)
-
-                val groupName = spinnerItems.find { it.id == expenseSubGroupOldGlobal?.expenseGroupId }?.name
-                binding.reusable.groupSpinner.setText(groupName, false)
+                    val groupName = it.find { group -> group.id == expenseSubGroupOldGlobal?.expenseGroupId }?.name
+                    binding.reusable.groupSpinner.setText(groupName, false)
+                }
             }
     }
 

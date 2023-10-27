@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 class LocalDateTimeRoomTypeConverter {
 
@@ -14,8 +14,8 @@ class LocalDateTimeRoomTypeConverter {
 
         @RequiresApi(Build.VERSION_CODES.O)
         val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        var timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun getNowFormatted() : String {
@@ -39,17 +39,4 @@ class LocalDateTimeRoomTypeConverter {
         }
         return null
     }
-
 }
-
-
-//ISO_LOCAL_TIME = new DateTimeFormatterBuilder()
-//.appendValue(HOUR_OF_DAY, 2)
-//.appendLiteral(':')
-//.appendValue(MINUTE_OF_HOUR, 2)
-//.optionalStart()
-//.appendLiteral(':')
-//.appendValue(SECOND_OF_MINUTE, 2)
-//.optionalStart()
-//.appendFraction(NANO_OF_SECOND, 0, 9, true)
-//.toFormatter(ResolverStyle.STRICT, null);

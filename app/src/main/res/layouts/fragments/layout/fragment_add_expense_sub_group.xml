@@ -9,9 +9,10 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/subGroupNameTextInputLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Sub group name"
+        android:hint="@string/sub_group_name"
         app:helperText="Required"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
@@ -29,11 +30,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/subGroupDescriptionTextInputLayout"
+        style="@style/CustomTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Sub group description"
+        android:hint="@string/sub_group_description"
         app:layout_constraintEnd_toEndOf="@+id/subGroupNameTextInputLayout"
         app:layout_constraintStart_toStartOf="@+id/subGroupNameTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/subGroupNameTextInputLayout">
@@ -48,12 +50,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/groupSpinnerLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/CustomAutoCompleteTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Expense groups"
+        android:hint="@string/expense_groups"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="@+id/subGroupDescriptionTextInputLayout"
         app:layout_constraintStart_toStartOf="@+id/subGroupDescriptionTextInputLayout"
@@ -66,15 +68,16 @@
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addSubGroupNameButton"
-        android:layout_width="wrap_content"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Add"
+        android:layout_marginHorizontal="32dp"
+        android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/groupSpinnerLayout"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/groupSpinnerLayout"
         app:layout_constraintTop_toBottomOf="@+id/groupSpinnerLayout" />
 

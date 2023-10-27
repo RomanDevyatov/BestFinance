@@ -15,6 +15,7 @@
 
         <TextView
             android:id="@+id/tvMessage"
+            style="@style/CustomTextViewStyle"
             android:textSize="24sp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -32,8 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnOk"
+                style="@style/MaterialButtonStyle"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"

@@ -1,9 +1,13 @@
 package com.romandevyatov.bestfinance.data.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Delete
+import androidx.room.Update
+import androidx.room.Query
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
-
 
 @Dao
 interface ExpenseSubGroupDao {
@@ -24,28 +28,28 @@ interface ExpenseSubGroupDao {
     suspend fun deleteAll()
 
     @Query("DELETE FROM expense_sub_group WHERE id = :id")
-    suspend fun deleteById(id: kotlin.Long?)
+    suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name")
-    fun getByNameLiveData(name: String): LiveData<ExpenseSubGroup>
+    fun getByNameLiveData(name: String): LiveData<ExpenseSubGroup?>
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name")
     fun getByName(name: String): ExpenseSubGroup
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :groupId LIMIT 1")
-    fun getByNameAndGroupId(name: String, groupId: Long): ExpenseSubGroup
+    fun getByNameAndGroupId(name: String, groupId: Long): ExpenseSubGroup?
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND expense_group_id = :groupId LIMIT 1")
-    fun getByNameAndGroupIdLiveData(name: String, groupId: Long?): LiveData<ExpenseSubGroup>?
+    fun getByNameAndGroupIdLiveData(name: String, groupId: Long?): LiveData<ExpenseSubGroup?>
 
     @Query("SELECT * FROM expense_sub_group WHERE archived_date IS NULL")
     fun getAllNotArchivedLiveData(): LiveData<List<ExpenseSubGroup>>
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup>
+    fun getByNameNotArchivedLiveData(name: String): LiveData<ExpenseSubGroup?>
 
     @Query("SELECT * FROM expense_sub_group WHERE name = :name AND archived_date IS NULL")
-    fun getByNameNotArchived(name: String): ExpenseSubGroup
+    fun getByNameNotArchived(name: String): ExpenseSubGroup?
 
     @Query("UPDATE expense_sub_group SET archived_date = NULL WHERE expense_group_id = :groupId")
     fun unarchiveByGroupId(groupId: Long?)
@@ -54,6 +58,14 @@ interface ExpenseSubGroupDao {
     fun unarchiveById(id: Long?)
 
     @Query("SELECT * FROM expense_sub_group WHERE id = :id LIMIT 1")
-    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup>?
+    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup?>
 
+    @Query("SELECT * FROM expense_sub_group WHERE id = :id LIMIT 1")
+    fun getById(id: Long): ExpenseSubGroup?
+
+    @Query("SELECT * FROM expense_sub_group WHERE id = :id AND archived_date IS NULL")
+    fun getByIdNotArchived(id: Long): ExpenseSubGroup?
+
+    @Query("UPDATE expense_sub_group SET archived_date = :date WHERE id = :id")
+    fun updateArchivedDateById(id: Long?, date: String)
 }

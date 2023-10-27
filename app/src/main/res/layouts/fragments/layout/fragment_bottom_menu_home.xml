@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    tools:context=".ui.fragments.menu.HomeFragment">
+
+    <TextView
+        android:id="@+id/capitalTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/capital"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/passiveIncomeTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/moneyFlowTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/money_flow"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/goToHistoryButton"
+        app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
+
+    <TextView
+        android:id="@+id/totalExpensesTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/total_expenses"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/moneyFlowTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalIncomeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalIncomeTextView" />
+
+    <TextView
+        android:id="@+id/totalIncomeTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/total_income"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/totalExpensesTextView"
+        app:layout_constraintStart_toStartOf="@+id/passiveIncomeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/passiveIncomeTextView" />
+
+    <TextView
+        android:id="@+id/passiveIncomeTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/passive_income"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/totalIncomeTextView"
+        app:layout_constraintStart_toStartOf="@+id/capitalTextView"
+        app:layout_constraintTop_toBottomOf="@+id/capitalTextView" />
+
+    <TextView
+        android:id="@+id/totalExpensesValueTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalIncomeValueTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/totalIncomeValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalIncomeValueTextView" />
+
+    <TextView
+        android:id="@+id/passiveIncomeValueTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalCapitalTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/totalCapitalTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalCapitalTextView" />
+
+    <TextView
+        android:id="@+id/totalIncomeValueTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/passiveIncomeValueTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/passiveIncomeValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/passiveIncomeValueTextView" />
+
+    <TextView
+        android:id="@+id/moneyFlowValueTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalExpensesValueTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/totalExpensesValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalExpensesValueTextView" />
+
+    <TextView
+        android:id="@+id/totalCapitalTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="32dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/capitalTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToAnalyzeButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/analyze"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/goToHistoryButton"
+        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToHistoryButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/history"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/goToAnalyzeButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moneyFlowTextView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addTransferButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/transfer"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/goToAddExpenseButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/goToAddIncomeButton"
+        app:layout_constraintTop_toBottomOf="@+id/goToHistoryButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToAddExpenseButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/expense"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/addTransferButton"
+        app:layout_constraintTop_toBottomOf="@+id/goToAnalyzeButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goToAddIncomeButton"
+        style="@style/MaterialButtonStyle"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/income"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/addTransferButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goToHistoryButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

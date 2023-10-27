@@ -15,6 +15,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,6 @@ class UpdateExpenseGroupFragment : Fragment() {
 
     private var expenseGroupGlobal: ExpenseGroup? = null
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -44,21 +44,19 @@ class UpdateExpenseGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addNewExpenseGroupNameButton.text = "Update"
+        binding.reusable.addNewExpenseGroupNameButton.text = getString(R.string.update)
 
         updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
-            ?.observe(viewLifecycleOwner) { expenseGroup ->
-                expenseGroupGlobal = ExpenseGroup(
-                    expenseGroup.id,
-                    expenseGroup.name,
-                    expenseGroup.description,
-                    expenseGroup.archivedDate)
-            binding.reusable.newExpenseGroupName.setText(expenseGroup.name)
-            binding.reusable.descriptionEditText.setText(expenseGroup.description)
-            expenseGroupId = expenseGroup.id
-            binding.checkedTextView.isChecked = expenseGroup.archivedDate != null
-            binding.checkedTextView.isEnabled = false
-        }
+            .observe(viewLifecycleOwner) { expenseGroup ->
+                expenseGroup?.let {
+                    expenseGroupGlobal = it.copy()
+                    binding.reusable.newExpenseGroupName.setText(it.name)
+                    binding.reusable.descriptionEditText.setText(it.description)
+                    expenseGroupId = it.id
+                    binding.checkedTextView.isChecked = it.archivedDate != null
+                    binding.checkedTextView.isEnabled = false
+                }
+            }
 
         return binding.root
     }
@@ -66,7 +64,7 @@ class UpdateExpenseGroupFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_navigation_update_expense_group_to_navigation_settings_groups_and_sub_groups_settings_fragment)
+                navigateToSettingsGroupsAndSubGroupsSettingsFragment()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -88,7 +86,7 @@ class UpdateExpenseGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(nameBinding)
-                    ?.observe(viewLifecycleOwner) { group ->
+                    .observe(viewLifecycleOwner) { group ->
                         if (nameBinding == args.expenseGroupName.toString() || group == null) {
                             updateExpenseGroup(nameBinding, descriptionBinding)
 
@@ -97,7 +95,7 @@ class UpdateExpenseGroupFragment : Fragment() {
                             // Group is already existing
                             WindowUtil.showExistingDialog(
                                 requireContext(),
-                                "This group `$nameBinding` is already existing."
+                                getString(R.string.error_existing_group, nameBinding)
                             )
                         }
                     }
@@ -107,13 +105,14 @@ class UpdateExpenseGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 
     private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
         val action =
             UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
+        action.initialTabIndex = 1
         findNavController().navigate(action)
     }
 

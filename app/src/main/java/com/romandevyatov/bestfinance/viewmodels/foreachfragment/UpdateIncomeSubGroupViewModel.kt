@@ -20,25 +20,18 @@ class UpdateIncomeSubGroupViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups> {
-        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupId(id)
+        return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id)
     }
 
     fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun updateIncomeSubGroup(incomeSubGroup: IncomeSubGroup) {
-        viewModelScope.launch(Dispatchers.IO) {
-            incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroup)
-        }
+    fun updateIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
+        incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroup)
     }
 
-    fun getIncomeSubGroupByNameLiveData(name: String): LiveData<IncomeSubGroup> {
-        return incomeSubGroupRepository.getIncomeSubGroupByNameLiveData(name)
-    }
-
-    fun getIncomeSubGroupByIdLiveData(id: Long?): LiveData<IncomeSubGroup>? {
+    fun getIncomeSubGroupByIdLiveData(id: Long?): LiveData<IncomeSubGroup?> {
         return incomeSubGroupRepository.getIncomeSubGroupByIdLiveData(id)
     }
-
 }

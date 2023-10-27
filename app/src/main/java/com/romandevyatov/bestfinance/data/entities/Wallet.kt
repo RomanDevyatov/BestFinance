@@ -33,5 +33,4 @@ data class Wallet(
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null
-
 )

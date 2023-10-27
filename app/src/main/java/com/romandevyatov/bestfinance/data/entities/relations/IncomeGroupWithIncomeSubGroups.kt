@@ -15,5 +15,4 @@ data class IncomeGroupWithIncomeSubGroups(
         entityColumn = "income_group_id"
     )
     val incomeSubGroups: List<IncomeSubGroup>
-
 )

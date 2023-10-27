@@ -1,6 +1,5 @@
 package com.romandevyatov.bestfinance.data.repositories
 
-
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.ExpenseHistoryDao
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
@@ -25,4 +24,23 @@ class ExpenseHistoryRepository @Inject constructor(
         expenseHistoryDao.insert(expenseHistory)
     }
 
+    fun getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet?> {
+        return expenseHistoryDao.getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(id)
+    }
+
+    suspend fun updateExpenseHistory(expenseHistory: ExpenseHistory) {
+        return expenseHistoryDao.update(expenseHistory)
+    }
+
+    fun getExpenseHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>> {
+        return expenseHistoryDao.getAllWhereSubGroupIsNullLiveData()
+    }
+
+    fun deleteExpenseHistory(id: Long) {
+        return expenseHistoryDao.deleteById(id)
+    }
+
+    fun getExpenseHistoryById(id: Long): ExpenseHistory? {
+        return expenseHistoryDao.getById(id)
+    }
 }

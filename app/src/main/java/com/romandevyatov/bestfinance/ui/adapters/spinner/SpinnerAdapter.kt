@@ -4,15 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.core.view.isVisible
-import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.databinding.ItemWithDelBinding
 
 class SpinnerAdapter(
     context: Context,
     private val resourceId: Int,
     private var items: MutableList<String>,
-    private val addItem: String,
+    private val addItem: String? = null,
     var listener: DeleteItemClickListener? = null
 ) : ArrayAdapter<String>(context, resourceId, items), Filterable {
 
@@ -22,19 +24,28 @@ class SpinnerAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val spinnerView = convertView ?: LayoutInflater.from(context).inflate(
-            resourceId,
-            parent,
-            false
-        )
+        val binding: ItemWithDelBinding
+        val spinnerView: View
 
-        val itemNameTextView = spinnerView.findViewById<TextView>(R.id.itemNameTextView)
-        val itemDeleteTextView = spinnerView.findViewById<TextView>(R.id.itemDelTextView)
+        if (convertView == null) {
+            binding = ItemWithDelBinding.inflate(
+                LayoutInflater.from(context),
+                parent,
+                false
+            )
+            spinnerView = binding.root
+            spinnerView.tag = binding
+        } else {
+            binding = convertView.tag as ItemWithDelBinding
+            spinnerView = convertView
+        }
 
         val itemText = items[position]
-        itemNameTextView.text = itemText
+        binding.itemNameTextView.text = itemText
 
-        itemDeleteTextView.isVisible = itemText != addItem
+        val itemDeleteTextView = binding.itemDelTextView
+
+        itemDeleteTextView.isVisible = addItem != null && itemText != addItem
 
         itemDeleteTextView.setOnClickListener {
             listener?.archive(itemText)
@@ -93,5 +104,4 @@ class SpinnerAdapter(
             adapter.updateData(results?.values as MutableList<String>)
         }
     }
-
 }

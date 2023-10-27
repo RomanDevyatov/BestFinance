@@ -41,7 +41,7 @@ class IncomeSubGroupViewModel @Inject constructor(
     // WHERE ARCHIVED DATE IS NULL
     val incomeSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<IncomeSubGroup>> = incomeSubGroupRepository.getAllIncomeSubGroupsWhereArchivedDateIsNull()
 
-    fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup> {
+    fun getIncomeSubGroupByNameNotArchivedLiveData(name: String): LiveData<IncomeSubGroup?> {
         return incomeSubGroupRepository.getIncomeSubGroupByNameNotArchivedLiveData(name)
     }
 
