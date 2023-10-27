@@ -20,7 +20,7 @@ import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirecti
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class TransferHistoryFragment : Fragment() {

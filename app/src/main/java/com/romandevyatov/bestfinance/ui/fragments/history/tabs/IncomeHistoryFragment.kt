@@ -22,7 +22,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewMode
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class IncomeHistoryFragment : Fragment() {

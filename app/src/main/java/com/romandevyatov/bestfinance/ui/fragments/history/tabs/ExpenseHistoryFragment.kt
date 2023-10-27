@@ -22,7 +22,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewMod
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class ExpenseHistoryFragment : Fragment() {
