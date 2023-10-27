@@ -1,6 +1,7 @@
 package com.romandevyatov.bestfinance.ui.adapters.menu.wallet
 
 import android.annotation.SuppressLint
+import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -45,7 +46,8 @@ class WalletMenuAdapter(
             binding.walletNameTextView.text = wallet.name
 
             if (wallet.id == null && wallet.name == addItemText && wallet.balance == null) {
-                binding.walletNameTextView.gravity = Gravity.RIGHT
+//                binding.walletNameTextView.layout.width = "ma"
+                binding.walletNameTextView.gravity = Gravity.CENTER
                 binding.amountTextView.text = ""
             } else {
                 binding.amountTextView.text = wallet.balance.toString()
@@ -53,7 +55,7 @@ class WalletMenuAdapter(
 
             binding.root.setOnClickListener {
                 if (wallet.id == null &&
-                    wallet.name == Constants.ADD_NEW_WALLET &&
+                    wallet.name == addItemText &&
                     wallet.balance == null) {
                     listener.navigateToAddNewWallet()
                 } else {

@@ -18,8 +18,6 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletMenuAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
-import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +30,11 @@ class WalletFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
-    private val addNewWalletString = getString(R.string.add_new_wallet)
     private lateinit var walletMenuAdapter: WalletMenuAdapter
+
+    private val addNewWalletString: String by lazy {
+        getString(R.string.add_new_wallet)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBottomMenuWalletsBinding.inflate(inflater, container, false)

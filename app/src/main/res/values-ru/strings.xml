@@ -195,6 +195,6 @@
     <string name="add_new_income_group">Добавить новую группу доходов</string>
     <string name="add_new_expense_sub_group">Добавить новую подгруппу расходов</string>
     <string name="add_new_expense_group">Добавить новую группу расходов</string>
-    <string name="add_new_wallet">Add new wallet</string>
+    <string name="add_new_wallet">Добавить новый кошелёк</string>
 
 </resources>
