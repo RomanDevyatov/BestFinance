@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
+import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransferBinding
 
 class TransferHistoryAdapter(private val listener: ItemClickListener? = null) : RecyclerView.Adapter<TransferItemViewHolder>() {
 
@@ -32,7 +32,7 @@ class TransferHistoryAdapter(private val listener: ItemClickListener? = null) : 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferItemViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = CardHistoryTransferBinding.inflate(from, parent, false)
+        val binding = CardItemHistoryTransferBinding.inflate(from, parent, false)
         return TransferItemViewHolder(binding, listener)
     }
 

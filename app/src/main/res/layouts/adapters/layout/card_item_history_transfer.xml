@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp" >
+    android:layout_margin="5dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView"
@@ -18,63 +19,72 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.454"
-            app:srcCompat="@drawable/ic_arrow_upward" />
+            app:layout_constraintVertical_bias="0.48"
+            app:srcCompat="@drawable/ic_transfer_arrows" />
 
         <TextView
-            android:id="@+id/expenseSubGroupNameTextView"
+            android:id="@+id/fromNameTextView"
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="4dp"
-            android:layout_marginTop="4dp"
-            android:text="Expense Sub Group Name"
+            android:text="fromNameTextView"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/balanceTextView"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image2View"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/toNameTextView" />
+
+        <ImageView
+            android:id="@+id/image2View"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/toNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
+            app:srcCompat="@drawable/ic_right_arrow" />
 
         <TextView
-            android:id="@+id/dateTextView"
+            android:id="@+id/toNameTextView"
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:gravity="left"
-            android:text="Date TextView"
+            android:text="toNameTextView"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balanceTextView"
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/balanceTextView"
+            android:id="@+id/amountTextView"
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
             android:gravity="left"
-            android:text="Balance TextView"
+            android:text="TextView"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/expenseGroup"
+            android:id="@+id/dateIncomeTextView"
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="TextView"
+            android:gravity="left"
+            android:text="dateIncomeTextView"
             android:textSize="18sp"
-            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/fromNameTextView"
+            app:layout_constraintEnd_toStartOf="@+id/amountTextView"
+            app:layout_constraintHorizontal_bias="0.302"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/expenseSubGroupNameTextView" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.666" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

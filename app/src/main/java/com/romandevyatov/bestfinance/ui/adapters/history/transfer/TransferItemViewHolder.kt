@@ -5,10 +5,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
-import com.romandevyatov.bestfinance.databinding.CardHistoryTransferBinding
+import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransferBinding
 
 class TransferItemViewHolder(
-    private val binding: CardHistoryTransferBinding,
+    private val binding: CardItemHistoryTransferBinding,
     private val listener: TransferHistoryAdapter.ItemClickListener?
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -18,7 +18,7 @@ class TransferItemViewHolder(
 
         binding.toNameTextView.text = transferHistory.toWalletId.toString()
 
-        binding.balanceTextView.text = transferHistory.amount.toString()
+        binding.amountTextView.text = transferHistory.amount.toString()
 
         binding.dateIncomeTextView.text = transferHistory.createdDate?.format(
             LocalDateTimeRoomTypeConverter.dateTimeFormatter

@@ -34,7 +34,7 @@ class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adap
 
         fun bind(wallet: WalletItem) {
             binding.walletNameTextView.text = wallet.name
-            binding.balanceTextView.text = wallet.balance.toString()
+            binding.amountTextView.text = wallet.balance.toString()
 
             binding.root.setOnClickListener {
                 listener.navigate(wallet.name)

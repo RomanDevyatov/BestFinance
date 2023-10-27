@@ -2,9 +2,9 @@ package com.romandevyatov.bestfinance.ui.adapters.history
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.romandevyatov.bestfinance.ui.fragments.history.ExpenseHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.history.IncomeHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.history.TransferHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.tabs.ExpenseHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.tabs.IncomeHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.history.tabs.TransferHistoryFragment
 
 class HistoryViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {

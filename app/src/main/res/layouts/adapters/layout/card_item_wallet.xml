@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     style="@style/CustomCardViewStyle"
     android:layout_margin="5dp"
-    app:cardCornerRadius="32dp"
-    app:cardElevation="5dp" >
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,14 +26,14 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/balanceTextView"
+            app:layout_constraintEnd_toStartOf="@+id/amountTextView"
             app:layout_constraintHorizontal_bias="0.068"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/balanceTextView"
+            android:id="@+id/amountTextView"
             style="@style/CustomTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

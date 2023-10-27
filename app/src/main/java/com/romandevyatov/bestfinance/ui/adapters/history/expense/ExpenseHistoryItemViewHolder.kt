@@ -3,13 +3,13 @@ package com.romandevyatov.bestfinance.ui.adapters.history.expense
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardHistoryExpenseBinding
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
+import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransactionBinding
 
 class ExpenseHistoryItemViewHolder(
-    private val binding: CardHistoryExpenseBinding,
+    private val binding: CardItemHistoryTransactionBinding,
     private val listener: ExpenseHistoryAdapter.ItemClickListener?
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -18,13 +18,13 @@ class ExpenseHistoryItemViewHolder(
         expenseHistory: ExpenseHistoryWithExpenseSubGroupAndWallet,
         expenseGroup: ExpenseGroup?
     ) {
-        binding.balanceTextView.text = expenseHistory.expenseHistory.amount.toString()
+        binding.amountTextView.text = expenseHistory.expenseHistory.amount.toString()
 
-        binding.expenseGroup.text = expenseGroup?.name ?: "Changing balance"
+        binding.incomeGroupNameTextView.text = expenseGroup?.name ?: "Changing balance"
 
-        binding.expenseSubGroupNameTextView.text = expenseHistory.expenseSubGroup?.name
+        binding.subGroupNameTextView.text = expenseHistory.expenseSubGroup?.name
 
-        binding.dateTextView.text = expenseHistory.expenseHistory.date?.format(dateTimeFormatter)
+        binding.dateIncomeTextView.text = expenseHistory.expenseHistory.date?.format(dateTimeFormatter)
 
         binding.root.setOnClickListener {
             listener?.navigate(expenseHistory.expenseHistory.id!!)

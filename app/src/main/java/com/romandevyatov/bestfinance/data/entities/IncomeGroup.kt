@@ -15,17 +15,17 @@ data class IncomeGroup(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    override val id: Long? = null,
+    val id: Long? = null,
 
     @ColumnInfo(name = "name")
-    override val name: String,
+    val name: String,
 
     @ColumnInfo(name = "is_passive")
     val isPassive: Boolean,
 
     @ColumnInfo(name = "description")
-    override val description: String? = null,
+    val description: String? = null,
 
     @ColumnInfo(name = "archived_date")
-    override val archivedDate: LocalDateTime? = null
-) : Group
+    val archivedDate: LocalDateTime? = null
+)

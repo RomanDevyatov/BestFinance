@@ -7,7 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
     android:id="@+id/transferHistoryFragment"
-    tools:context=".ui.fragments.history.TransferHistoryFragment">
+    tools:context=".ui.fragments.history.tabs.TransferHistoryFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transferHistoryRecyclerView"

@@ -1,11 +1,11 @@
-package com.romandevyatov.bestfinance.ui.adapters.history.bydate
+package com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions
 
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardHistoryIncomeBinding
+import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransactionBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionItem
 
 class TransactionAdapter(
@@ -18,7 +18,7 @@ class TransactionAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        val binding = CardHistoryIncomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = CardItemHistoryTransactionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TransactionViewHolder(binding)
     }
 
@@ -32,12 +32,12 @@ class TransactionAdapter(
     }
 
     inner class TransactionViewHolder(
-        private val binding: CardHistoryIncomeBinding
+        private val binding: CardItemHistoryTransactionBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transactionItem: TransactionItem) {
-            binding.balanceTextView.text = transactionItem.amount.toString()
+            binding.amountTextView.text = transactionItem.amount.toString()
 
             binding.incomeGroupNameTextView.text = transactionItem.groupName ?: "Changing balance"
 

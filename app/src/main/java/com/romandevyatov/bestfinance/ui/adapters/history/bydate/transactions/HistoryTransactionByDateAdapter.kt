@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.history.bydate
+package com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -9,31 +9,31 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryByIdBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.IncomeHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionHistoryItem
 
-class HistoryByDateAdapter(
+class HistoryTransactionByDateAdapter(
     private val listener: TransactionAdapter.OnHistoryItemListener? = null
-) : RecyclerView.Adapter<HistoryByDateAdapter.IncomeHistoryByDateViewHolder>() {
+) : RecyclerView.Adapter<HistoryTransactionByDateAdapter.TransactionHistoryByDateViewHolder>() {
 
-    private val differentCallback = object: DiffUtil.ItemCallback<IncomeHistoryItem>() {
-        override fun areItemsTheSame(oldItem: IncomeHistoryItem, newItem: IncomeHistoryItem): Boolean {
+    private val differentCallback = object: DiffUtil.ItemCallback<TransactionHistoryItem>() {
+        override fun areItemsTheSame(oldItem: TransactionHistoryItem, newItem: TransactionHistoryItem): Boolean {
             return oldItem.date == newItem.date
         }
 
-        override fun areContentsTheSame(oldItem: IncomeHistoryItem, newItem: IncomeHistoryItem): Boolean {
+        override fun areContentsTheSame(oldItem: TransactionHistoryItem, newItem: TransactionHistoryItem): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differIncomeHistory = AsyncListDiffer(this, differentCallback)
 
-    inner class IncomeHistoryByDateViewHolder(
+    inner class TransactionHistoryByDateViewHolder(
         val binding: CardHistoryByIdBinding,
         val listener: TransactionAdapter.OnHistoryItemListener?
     ) : RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(groupWithSubGroupsItem: IncomeHistoryItem) {
+        fun bind(groupWithSubGroupsItem: TransactionHistoryItem) {
             binding.dateTextView.text = groupWithSubGroupsItem.date
 
             val transactionAdapter = TransactionAdapter(groupWithSubGroupsItem.transactions, listener)
@@ -42,14 +42,14 @@ class HistoryByDateAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeHistoryByDateViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionHistoryByDateViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = CardHistoryByIdBinding.inflate(from, parent, false)
-        return IncomeHistoryByDateViewHolder(binding, listener)
+        return TransactionHistoryByDateViewHolder(binding, listener)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: IncomeHistoryByDateViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TransactionHistoryByDateViewHolder, position: Int) {
         holder.bind(differIncomeHistory.currentList[position])
     }
 
@@ -57,7 +57,7 @@ class HistoryByDateAdapter(
         return differIncomeHistory.currentList.size
     }
 
-    fun submitList(list: List<IncomeHistoryItem>) {
+    fun submitList(list: List<TransactionHistoryItem>) {
         differIncomeHistory.submitList(list)
     }
 }

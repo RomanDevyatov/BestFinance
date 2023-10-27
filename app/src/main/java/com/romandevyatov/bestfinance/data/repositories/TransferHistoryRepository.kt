@@ -33,4 +33,8 @@ class TransferHistoryRepository @Inject constructor(
     fun getTransferHistoryById(id: Long): TransferHistory? {
         return transferHistoryDao.getById(id)
     }
+
+    fun getAllTransferHistoryWithWalletsLiveData(): LiveData<List<TransferHistoryWithWallets>> {
+        return transferHistoryDao.getAllWithWallets()
+    }
 }

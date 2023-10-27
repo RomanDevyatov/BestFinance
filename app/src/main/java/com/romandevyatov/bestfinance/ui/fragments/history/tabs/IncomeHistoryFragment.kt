@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.history
+package com.romandevyatov.bestfinance.ui.fragments.history.tabs
 
 import android.os.Build
 import android.os.Bundle
@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.HistoryByDateAdapter
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.TransactionAdapter
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.IncomeHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.HistoryTransactionByDateAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.TransactionAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionHistoryItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionItem
+import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +32,7 @@ class IncomeHistoryFragment : Fragment() {
 
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val groupViewModel: IncomeGroupViewModel by viewModels()
-    private var incomeHistoryAdapter: HistoryByDateAdapter? = null
+    private var incomeHistoryAdapter: HistoryTransactionByDateAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,13 +50,14 @@ class IncomeHistoryFragment : Fragment() {
         val listener = object : TransactionAdapter.OnHistoryItemListener {
 
             override fun navigateToUpdateTransaction(id: Long) {
-                val action = HistoryFragmentDirections.actionHistoryFragmentToUpdateIncomeHistoryFragment()
+                val action =
+                    HistoryFragmentDirections.actionHistoryFragmentToUpdateIncomeHistoryFragment()
                 action.incomeHistoryId = id
                 findNavController().navigate(action)
             }
         }
 
-        incomeHistoryAdapter = HistoryByDateAdapter(listener)
+        incomeHistoryAdapter = HistoryTransactionByDateAdapter(listener)
         binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
     }
@@ -71,26 +73,27 @@ class IncomeHistoryFragment : Fragment() {
             ) { allIncomeHistoryWithIncomeGroupAndWallet ->
                 val transactionItems =
                     convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet, incomeGroupMap)
-                val groupTransactionsByDate = groupTransactionsByDate(transactionItems)
+                val sortedTransactionItems = transactionItems.sortedByDescending { it.date }
+                val groupTransactionsByDate = groupTransactionsByDate(sortedTransactionItems)
                 incomeHistoryAdapter?.submitList(groupTransactionsByDate)
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun groupTransactionsByDate(transactionItemList: List<TransactionItem>): MutableList<IncomeHistoryItem> {
+    private fun groupTransactionsByDate(transactionItemList: List<TransactionItem>): MutableList<TransactionHistoryItem> {
         val groupedTransactions = transactionItemList.groupBy {
             val transactionDate = it.date?.toLocalDate()
             transactionDate?.format(DateTimeFormatter.ofPattern("d MMMM uuuu", Locale.getDefault())).toString()
         }
 
-        val incomeHistoryItemList = mutableListOf<IncomeHistoryItem>()
+        val transactionHistoryItemList = mutableListOf<TransactionHistoryItem>()
 
         for ((date, transactions) in groupedTransactions) {
-            incomeHistoryItemList.add(IncomeHistoryItem(date, transactions))
+            transactionHistoryItemList.add(TransactionHistoryItem(date, transactions))
         }
 
-        return incomeHistoryItemList
+        return transactionHistoryItemList
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
