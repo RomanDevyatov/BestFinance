@@ -1,7 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.history
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -23,17 +21,21 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
+import com.romandevyatov.bestfinance.data.validation.base.ValidateResult
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerItem
+import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.DateTimeUtils
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.*
 
 @AndroidEntryPoint
 class UpdateExpenseHistoryFragment : Fragment() {
@@ -62,23 +64,26 @@ class UpdateExpenseHistoryFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateExpenseHistoryBinding.inflate(inflater, container, false)
 
-        binding.reusable.addHistoryButton.text = "Update"
+        binding.reusable.addHistoryButton.text = getString(R.string.update)
 
         updateExpenseHistoryViewModel.getExpenseHistoryWithExpenseSubGroupAndWalletById(args.expenseHistoryId)
             .observe(viewLifecycleOwner) { historyWithSubGroupAndWallet ->
-                historyWithSubGroupAndWalletGlobal = historyWithSubGroupAndWallet.copy()
+                historyWithSubGroupAndWallet?.let {
+                    historyWithSubGroupAndWalletGlobal = it.copy()
 
-                setupSpinnersValues(historyWithSubGroupAndWallet.expenseSubGroup,
-                    historyWithSubGroupAndWallet.wallet
-                )
+                    setupSpinnersValues(
+                        it.expenseSubGroup,
+                        it.wallet
+                    )
 
-                setupSpinners()
+                    setupSpinners()
 
-                setupDateTimeFiledValues()
+                    setupDateTimeFiledValues()
 
-                val expenseHistory = historyWithSubGroupAndWallet.expenseHistory
-                binding.reusable.commentEditText.setText(expenseHistory.comment)
-                binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
+                    val expenseHistory = it.expenseHistory
+                    binding.reusable.commentEditText.setText(expenseHistory.comment)
+                    binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
+                }
             }
 
         return binding.root
@@ -98,11 +103,27 @@ class UpdateExpenseHistoryFragment : Fragment() {
         _binding = null
     }
 
+    fun deleteRecord() {
+        WindowUtil.showDeleteDialog(
+            context = requireContext(),
+            viewModel = updateExpenseHistoryViewModel,
+            message = getString(R.string.delete_confirmation_warning_message, expenseGroupGlobal?.name),
+            itemId = args.expenseHistoryId,
+            isCountdown = false,
+            rootView = binding.root
+        ) { navigateToHistory() }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupSpinnersValues(expenseSubGroup: ExpenseSubGroup, wallet: Wallet) {
-        setSubGroupSpinnerValue(expenseSubGroup)
-        setGroupSpinnerValue(expenseSubGroup.expenseGroupId)
-        setWalletSpinnerValue(wallet)
+    private fun setupSpinnersValues(expenseSubGroup: ExpenseSubGroup?, wallet: Wallet?) {
+        if (expenseSubGroup != null) {
+            setSubGroupSpinnerValue(expenseSubGroup)
+            setGroupSpinnerValue(expenseSubGroup.expenseGroupId)
+        }
+
+        if (wallet != null) {
+            setWalletSpinnerValue(wallet)
+        }
     }
 
     private fun setSubGroupSpinnerValue(expenseSubGroup: ExpenseSubGroup) {
@@ -111,11 +132,14 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setGroupSpinnerValue(expenseGroupId: Long) {
-        updateExpenseHistoryViewModel.getExpenseGroupByIdLiveData(expenseGroupId)?.observe(viewLifecycleOwner) { expenseGroup ->
-            expenseGroupGlobal = expenseGroup.copy()
+        updateExpenseHistoryViewModel.getExpenseGroupByIdLiveData(expenseGroupId)
+            .observe(viewLifecycleOwner) { expenseGroup ->
+                expenseGroup?.let {
+                    expenseGroupGlobal = it.copy()
 
-            binding.reusable.groupSpinner.setText(expenseGroup.name, false)
-        }
+                    binding.reusable.groupSpinner.setText(it.name, false)
+                }
+            }
     }
 
     private fun setWalletSpinnerValue(wallet: Wallet) {
@@ -135,31 +159,41 @@ class UpdateExpenseHistoryFragment : Fragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        updateExpenseHistoryViewModel.getAllExpenseGroupNotArchived().observe(viewLifecycleOwner) { groups ->
-            val spinnerGroupItems = getGroupItemsForSpinner(groups)
+        updateExpenseHistoryViewModel.getAllExpenseGroupNotArchived().observe(viewLifecycleOwner) { expenseGroups ->
+            expenseGroups?.let { groups ->
+                val spinnerGroupItems = getGroupItemsForSpinner(groups)
 
-            val groupSpinnerAdapter = GroupSpinnerAdapter(
-                requireContext(),
-                R.layout.item_with_del,
-                spinnerGroupItems,
-                null,
-                null)
+                val groupSpinnerAdapter = GroupSpinnerAdapter(
+                    requireContext(),
+                    R.layout.item_with_del,
+                    spinnerGroupItems,
+                    null,
+                    null
+                )
 
-            binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
+                binding.reusable.groupSpinner.setAdapter(groupSpinnerAdapter)
 
-            setSubGroupSpinnerAdapter()
+                setSubGroupSpinnerAdapter()
+            }
         }
     }
 
     private fun setWalletSpinnerAdapter() {
-        updateExpenseHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
+        updateExpenseHistoryViewModel.walletsNotArchivedLiveData.observe(viewLifecycleOwner) { allWallets ->
+            allWallets?.let { wallets ->
+                val spinnerWalletItems = getWalletItemsForSpinner(wallets)
 
-            val spinnerWalletItems = getWalletItemsForSpinner(wallets)
+                val walletSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerWalletItems,
+                        null,
+                        null
+                    )
 
-            val walletSpinnerAdapter =
-                GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerWalletItems, null, null)
-
-            binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+                binding.reusable.walletSpinner.setAdapter(walletSpinnerAdapter)
+            }
         }
     }
 
@@ -176,14 +210,22 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 updateExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
                     selectedGroupName
                 ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-                    val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
+                    groupWithSubGroups?.let {
+                        val spinnerSubItems = getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-                    spinnerSubGroupItemsGlobal = spinnerSubItems
+                        spinnerSubGroupItemsGlobal = spinnerSubItems
 
-                    val subGroupSpinnerAdapter =
-                        GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
+                        val subGroupSpinnerAdapter =
+                            GroupSpinnerAdapter(
+                                requireContext(),
+                                R.layout.item_with_del,
+                                spinnerSubItems,
+                                null,
+                                null
+                            )
 
-                    binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+                        binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+                    }
                 }
             }
 
@@ -243,16 +285,23 @@ class UpdateExpenseHistoryFragment : Fragment() {
         updateExpenseHistoryViewModel.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
-            val spinnerSubItems =
-                getSpinnerSubItemsNotArchived(groupWithSubGroups)
+            groupWithSubGroups?.let {
+                val spinnerSubItems =
+                    getSpinnerSubItemsNotArchived(groupWithSubGroups)
 
-            spinnerSubGroupItemsGlobal = spinnerSubItems
+                spinnerSubGroupItemsGlobal = spinnerSubItems
 
-            val subGroupSpinnerAdapter =
-                GroupSpinnerAdapter(requireContext(), R.layout.item_with_del, spinnerSubItems, null, null)
+                val subGroupSpinnerAdapter =
+                    GroupSpinnerAdapter(
+                        requireContext(),
+                        R.layout.item_with_del,
+                        spinnerSubItems,
+                        null,
+                        null
+                    )
 
-            binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
-
+                binding.reusable.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+            }
         }
     }
 
@@ -294,54 +343,12 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateEditText() {
-        val selectedDate = Calendar.getInstance()
-        selectedDate.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.expenseHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
-        val datePickerListener = DatePickerDialog.OnDateSetListener() {
-                _, year, month, dayOfMonth ->
-            selectedDate.set(Calendar.YEAR, year)
-            selectedDate.set(Calendar.MONTH, month)
-            selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-            binding.reusable.dateEditText.setText(LocalDateTimeRoomTypeConverter.dateFormat.format(selectedDate.time))
-        }
-
-        binding.reusable.dateEditText.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                datePickerListener,
-                selectedDate.get(Calendar.YEAR),
-                selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        binding.reusable.dateEditText.setText(LocalDateTimeRoomTypeConverter.dateFormat.format(selectedDate.time))
+        DateTimeUtils.setupDatePicker(binding.reusable.dateEditText, dateFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTimeEditText() {
-        val selectedTime = Calendar.getInstance()
-        selectedTime.timeInMillis =
-            historyWithSubGroupAndWalletGlobal?.expenseHistory?.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
-
-        val timePickerListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            selectedTime.set(Calendar.MINUTE, minute)
-            binding.reusable.timeEditText.setText(LocalDateTimeRoomTypeConverter.timeFormat.format(selectedTime.time))
-        }
-
-        binding.reusable.timeEditText.setOnClickListener {
-            TimePickerDialog(
-                requireContext(),
-                timePickerListener,
-                selectedTime.get(Calendar.HOUR_OF_DAY),
-                selectedTime.get(Calendar.MINUTE),
-                false
-            ).show()
-        }
-
-        binding.reusable.timeEditText.setText(LocalDateTimeRoomTypeConverter.timeFormat.format(selectedTime.time))
+        DateTimeUtils.setupTimePicker(binding.reusable.timeEditText, timeFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -358,8 +365,15 @@ class UpdateExpenseHistoryFragment : Fragment() {
             val dateBinding = binding.reusable.dateEditText.text.toString().trim()
             val timeBinding = binding.reusable.timeEditText.text.toString().trim()
 
-            val subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
-            binding.reusable.subGroupSpinnerLayout.error = if (!subGroupNameBindingValidation.isSuccess) getString(subGroupNameBindingValidation.message) else null
+            var subGroupNameBindingValidation = EmptyValidator(subGroupNameBinding).validate()
+            if (historyWithSubGroupAndWalletGlobal.expenseSubGroup != null ) {
+                binding.reusable.subGroupSpinnerLayout.error =
+                    if (!subGroupNameBindingValidation.isSuccess) getString(
+                        subGroupNameBindingValidation.message
+                    ) else null
+            } else {
+                subGroupNameBindingValidation = ValidateResult(true, R.string.text_validation_success)
+            }
 
             val amountBindingValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
             binding.reusable.amountLayout.error = if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
@@ -385,16 +399,19 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 val expenseHistory = historyWithSubGroupAndWalletGlobal.expenseHistory
 
                 val walletOld = historyWithSubGroupAndWalletGlobal.wallet
-                val updatedBalanceOld = walletOld.balance + expenseHistory.amount
-                val updatedOutputOld = walletOld.input.minus(expenseHistory.amount)
-                updateOldWallet(walletOld, updatedBalanceOld, updatedOutputOld)
-
+                if (walletOld != null) {
+                    val updatedBalanceOld = walletOld.balance + expenseHistory.amount
+                    val updatedOutputOld = walletOld.input.minus(expenseHistory.amount)
+                    updateOldWallet(walletOld, updatedBalanceOld, updatedOutputOld)
+                }
                 val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id
+
+                val expenseSubGroupId = spinnerSubGroupItemsGlobal?.find { it.name == subGroupNameBinding }?.id
 
                 updateExpenseHistoryViewModel.updateExpenseHistoryAndWallet(
                     ExpenseHistory(
                         id = expenseHistory.id,
-                        expenseSubGroupId = spinnerSubGroupItemsGlobal?.find { it.name == subGroupNameBinding }?.id!!,
+                        expenseSubGroupId = expenseSubGroupId,
                         amount = amountBinding.toDouble(),
                         comment = commentBinding,
                         date = parsedLocalDateTime,
@@ -411,7 +428,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, Constants.clickDelayMs.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

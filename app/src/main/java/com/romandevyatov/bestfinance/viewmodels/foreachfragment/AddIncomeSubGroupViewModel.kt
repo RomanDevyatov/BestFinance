@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,16 +35,12 @@ class AddIncomeSubGroupViewModel @Inject constructor(
         incomeSubGroupRepository.updateIncomeSubGroup(incomeSubGroup)
     }
 
-    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup>? {
+    fun getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name: String, incomeGroupId: Long?): LiveData<IncomeSubGroup?> {
         return incomeSubGroupRepository.getIncomeSubGroupByNameWithIncomeGroupIdLiveData(name, incomeGroupId)
     }
 
-    fun getIncomeGroupNotArchivedByNameLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup> {
-        return incomeGroupRepository.getIncomeGroupNotArchivedByNameLiveData(selectedIncomeGroupName)
-    }
-
     fun unarchiveIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeSubGroupRepository.unarchiveIncomeSubGroup(incomeSubGroup)
+        val incomeSubGroupUnarchived = incomeSubGroup.copy(archivedDate = null)
+        updateIncomeSubGroup(incomeSubGroupUnarchived)
     }
-
 }

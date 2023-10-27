@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">BestFinance</string>
+    <string name="text_validation_success">Корректно!</string>
+    <string name="text_validation_error_empty_field">Пожалуйста заполните пустое поле!</string>
+    <string name="text_validation_error_wrong_email_field">Некорректный email адрес!</string>
+    <string name="text_validation_same_spinner_values_field">Одинаковые имена кошельков!</string>
+    <string name="text_validation_error_not_digit_field">Пожалуйста вводите только цифры!</string>
+
+    <!--    general-->
+    <string name="add" formatted="false">Добавить</string>
+    <string name="update">Обновить</string>
+    <string name="name">Имя</string>
+    <string name="wallet_balance_hint">Баланс</string>
+    <string name="wallet_description_hint">Описание</string>
+    <string name="description">Описание</string>
+    <string name="expense_group_name">Имя группы расходов</string>
+    <string name="expense_group_description">Описание группы расходов</string>
+    <string name="expense_group">Группа расходов</string>
+    <string name="expense_sub_group">Подгруппа расходов</string>
+    <string name="sub_group_name">Имя подгруппы расходов</string>
+    <string name="sub_group_description">Описание подгруппы расходов</string>
+    <string name="expense_groups">Группы расходов</string>
+    <string name="income_group_name">Имя группы доходов</string>
+    <string name="income_group_description">Описание группы доходов</string>
+    <string name="passive">Пассивный</string>
+    <string name="income_groups">Группы доходов</string>
+    <string name="from">Источник</string>
+    <string name="to">Цель</string>
+    <string name="archived">Архивирован</string>
+    <string name="money_flow">Денежный поток</string>
+
+    <!--    add transfer history-->
+    <string name="wallet_input_success">Кошелёк %s найден</string>
+    <string name="wallet_input_not_exist">Кошелёк %1$s не найден. Вы хотите создать новый кошелёк с именем %2$s? (Да/Нет)</string>
+    <string name="wallet_input_set_balance">Добавляю кошелёк %ы, задайте баланс</string>
+    <string name="wallet_input_continue">Вы хотите продолжить и назвать the кошелёк имя ещё раз? (Да/Нет)</string>
+    <string name="wallet_input_exit">Выхожу</string>
+    <string name="wallet_input_unknown_exit">Вы сказали %s. Выхожу</string>
+
+    <!--    home -->
+    <string name="double_back_to_exit">Нажмите дважды, чтобы выйти</string>
+    <string name="capital">Капитал</string>
+    <string name="passive_income">Пассивный доход</string>
+    <string name="total_income">Итоговый доход</string>
+    <string name="total_expenses">Итоговые расходы</string>
+    <string name="analyze">Анализ</string>
+    <string name="history">История</string>
+    <string name="transfer">Перевод</string>
+    <string name="expense">Расход</string>
+    <string name="income">Доход</string>
+
+    <!--  add income history fragment-->
+    <string name="subgroup_is_set">Подгруппа задана</string>
+    <string name="language_is_not_supported">Язык не поддерживается</string>
+    <string name="group_is_set">Группа задана</string>
+    <string name="created_group_is_set">Созданная группа задана</string>
+    <string name="call_group_one_more_time">Вы хотите продолжить и назвать группа имя ещё раз? (Да/Нет)</string>
+
+    <string name="add_new_subgroup_prompt">Подгруппа с именем %s не найдена. Вы хотите создать новую подгруппу с таким именем? (Да/Нет)</string>
+    <string name="adding_subgroup">Добавление подгруппы %s</string>
+    <string name="created_subgroup_is_set">Созданная подгруппа задана</string>
+    <string name="continue_prompt">Вы хотите продолжить и назвать подгруппу ещё раз? (Да/Нет)</string>
+    <string name="terminate">Завершение</string>
+    <string name="exit_prompt">Вы хотите выйти? (Да/Нет)</string>
+    <string name="you_said">Вы сказали %s. Выхожу</string>
+
+    <string name="wallet_doesnt_exist">Кошелёк %1$s не найден. Вы хотите создать новый кошелёк %2$s? (Да/Нет)</string>
+    <string name="adding_wallet">Добавляю кошелёк %s</string>
+    <string name="continue_wallet_prompt">Вы хотите продолжить и назвать кошелёк имя ещё раз? (Да/Нет)</string>
+    <string name="exit">Выхожу</string>
+    <string name="start_again">Помощник опять в деле опять</string>
+
+    <string name="incorrect_balance">Некорректный баланс кошелька. Вы хотите продолжить и назвать баланс кошелька ещё раз? (Да/Нет)</string>
+    <string name="set_balance">Задайте баланс</string>
+
+    <string name="incorrect_number">Некорректное число. Вы хотите продолжить и назвать количество ещё раз? (Да/Нет)</string>
+
+    <string name="comment_is_set">Комментарий задан</string>
+    <string name="comment_is_empty">Комментарий пуст</string>
+
+    <string name="history_added">Запись истории добавлена</string>
+
+    <string name="group_doesnt_exist">Группы %s нет. Вы хотите создать новую группу с таким именем? (Да/Нет)</string>
+
+    <string name="group_name">Имя группы</string>
+    <string name="income_sub_group">Имя подгруппы</string>
+    <string name="wallet">Кошелёк</string>
+    <string name="amount">Количество</string>
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="comment">Комментарий</string>
+    <string name="categories">Категории</string>
+
+    <string name="wallet_is_archived">Кошелёк с именем %s был архивирован</string>
+
+    <!--    add expense sub группа-->
+    <string name="error_empty_sub_group_name">Имя подгруппы обязательно</string>
+    <string name="error_empty_group_name">Имя группы обязательно</string>
+    <string name="sub_group_exists_message">Подгруппа %s уже существует</string>
+    <string name="confirm_unarchive_message">Подгруппа с этим именем была архивирована. Вы хотите разархивировать подгруппу расходов %s?</string>
+
+    <!--    add income sub группа-->
+    <string name="error_existing_sub_group">Подгруппа %s уже существует</string>
+    <string name="confirm_unarchive_sub_group">Подгруппа с таким именем была архивирована. Вы хотите разархивировать подгруппу расходов %s?</string>
+
+    <!-- Other Strings -->
+    <string name="confirm_added_history_record">Запись была добавлена</string>
+    <string name="exit_message">Выход</string>
+    <string name="error_invalid_input">Вы сказали %s. Выхожу.</string>
+
+    <string name="error_existing_group">Группа %s уже существует</string>
+
+    <string name="wallet_is_already_existing_set_another_wallet_name">Кошелёк %s уже существует. Задайте другое имя</string>
+    <string name="unarchive_wallet">Кошелёк с именем %s был архивирован. Вы хотите разархивировать кошелёк %s?"</string>
+
+    <string name="start_adding_transaction">Добавляю транзакцию</string>
+
+    <string name="group_setting">Задайте группу</string>
+    <string name="sub_group_setting">Задайте подгруппу</string>
+    <string name="wallet_setting">Задайте кошелёк</string>
+    <string name="wallet_from_setting">Задайте кошелёк источник</string>
+    <string name="wallet_to_setting">Задайте целевой кошелёк</string>
+    <string name="amount_setting">Задайте количество</string>
+    <string name="comment_setting">Задайте комментарий</string>
+    <string name="set_wallet_balance_setting">Задайте баланс кошелька</string>
+    <string name="confirm_setting">Подтвердите транзакцию (Да/Нет)</string>
+
+    <string name="yes">да</string>
+    <string name="no">нет</string>
+
+    <string name="groups_and_sub_groups">Группы и подгруппы</string>
+    <string name="wallets">Кошельки</string>
+    <string name="update_expense_group">Обновить группу расходов</string>
+    <string name="update_income_group">Обновить группу доходов</string>
+    <string name="home">Главная</string>
+    <string name="more">Ещё</string>
+    <string name="add_income">Добавление дохода</string>
+    <string name="add_expense">Добавление расхода</string>
+    <string name="new_income_group">Новая группа доходов</string>
+    <string name="new_income_sub_group">Новая подгруппа доходов</string>
+    <string name="new_expense_group">Новая группа расходов</string>
+    <string name="new_expense_sub_group">Новая подгруппа расходов</string>
+    <string name="update_income_sub_group">Обновить подгруппу доходов</string>
+    <string name="update_expense_sub_group">Обновить подгруппу расходов</string>
+    <string name="update_income_history">Обновить запись истории доходов</string>
+    <string name="update_expense_history">Обновить запись истории расходов</string>
+    <string name="update_transfer_history">Обновить запись историю</string>
+    <string name="update_wallet">Обновить кошелёк</string>
+    <string name="add_wallet">Добавить кошелёк</string>
+    <string name="settings">Настройки</string>
+    <string name="style">Стиль</string>
+    <string name="general">Общие</string>
+    <string name="language">Язык</string>
+    <string name="dark_mode">Ночная тема</string>
+    <string name="enable_dark_mode">Включить ночной режим</string>
+    <string name="incomes">Доходы</string>
+    <string name="transfers">Переводы</string>
+    <string name="expenses">Расходы</string>
+    <string name="changed_wallet_balance">Изменение баланса кошелька</string>
+    <string name="changed_balance">Изменение баланса</string>
+    <string name="balance_is_changed_do_you_want_to_add_history_record">Баланс изменился, вы хотите добавить запись истории?</string>
+    <string name="wallet_name_already_exists">Кошелёк %s уже существует</string>
+    <string name="wallet_name_is_archived_do_you_want_to_unarchive_and_proceed_updating">Кошелёк %1$s архивирован. Вы хотите разархивировать %2$s кошелёк и продолжить изменение?</string>
+
+    <string name="delete_confirmation_warning_message">Вы действительно хотите удалить %s?</string>
+    <string name="group_is_already_existing">Эта группа %s уже существует</string>
+    <string name="group_is_archived">Группа %1$s архивирована. Хотите ли Вы разархивировать группу доходов %2$s?</string>
+    <string name="undo">Отменить</string>
+    <string name="until_delete">До удаления:</string>
+    <string name="deleted">Удалено</string>
+    <string name="sub_group_already_exist_in_group">Подгруппа `%1$s` уже существует в группе `%2$s`</string>
+    <string name="description_setting">Задайте описание</string>
+    <string name="wallet_name_setting">Задайте имя кошелька</string>
+    <string name="description_is_set">Описание задано</string>
+    <string name="description_is_empty">Описание пусто</string>
+    <string name="wallet_added">Кошелёк %s был добавлен</string>
+    <string name="adding_wallet_initial">Добавление кошелька</string>
+    <string name="set_name">Здайте имя</string>
+    <string name="group_is_already_existing_set_another_name">Группа %s уже существует, задайте другое имя</string>
+    <string name="adding_income_group_initial">Добавление группы доходов</string>
+    <string name="subgroup_is_already_existing_in_group_set_another_name">подгруппа %1$s уже существует в группе %2$s задайте другое имя</string>
+    <string name="group_doesnt_exist_set_another_name">Группа %s не существует, задайте другое имя</string>
+    <string name="adding_income_sub_group_initial">Добавление подгруппы доходов</string>
+    <string name="adding_expense_sub_group_initial">Добавление подгруппы расходов</string>
+    <string name="adding_income_initial">Добавление дохода</string>
+    <string name="adding_expense_initial">Добавление расхода</string>
+    <string name="adding_transfer_initial">Добавление перевода</string>
+    <string name="expense_sub_group_added">Подгруппа расходов добавлена</string>
+    <string name="income_sub_group_added">Подгруппа доходов добавлена</string>
+    <string name="expense_group_added">Группа трат добавлена</string>
+    <string name="income_group_added">Подгруппа доходов добавлена</string>
+    <string name="set_is_passive">Группа пассивного типа</string>
+
+    <string name="add_new_income_sub_group">Добавить новую подгруппу доходов</string>
+    <string name="add_new_income_group">Добавить новую группу доходов</string>
+    <string name="add_new_expense_sub_group">Добавить новую подгруппу расходов</string>
+    <string name="add_new_expense_group">Добавить новую группу расходов</string>
+    <string name="add_new_wallet">Добавить новый кошелёк</string>
+
+</resources>

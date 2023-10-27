@@ -16,6 +16,7 @@
     <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/black</item>
         <item name="backgroundTint">@color/grey_100</item>
+        <item name="android:radius">8dp</item>
     </style>
 
     <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">

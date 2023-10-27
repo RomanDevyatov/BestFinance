@@ -15,12 +15,11 @@ data class IncomeHistoryWithIncomeSubGroupAndWallet (
         entity = IncomeSubGroup::class,
         parentColumn = "income_sub_group_id",
         entityColumn = "id")
-    var incomeSubGroup: IncomeSubGroup,
+    var incomeSubGroup: IncomeSubGroup?,
 
     @Relation(
         entity = Wallet::class,
         parentColumn = "wallet_id",
         entityColumn = "id")
-    var wallet: Wallet
-
+    var wallet: Wallet?
 )

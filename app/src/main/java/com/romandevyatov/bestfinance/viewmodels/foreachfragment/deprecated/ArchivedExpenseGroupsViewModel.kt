@@ -17,11 +17,11 @@ class ArchivedExpenseGroupsViewModel @Inject constructor(
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
-    fun getExpenseGroupsArchivedByNameLiveData(name: String): LiveData<ExpenseGroup>? {
+    fun getExpenseGroupsArchivedByNameLiveData(name: String): LiveData<ExpenseGroup?> {
         return expenseGroupRepository.getExpenseGroupArchivedByNameLiveData(name)
     }
 
-    val allExpenseGroupsArchivedLiveData: LiveData<List<ExpenseGroup>>? = expenseGroupRepository.getAllExpenseGroupArchivedLiveData()
+    val allExpenseGroupsArchivedLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupArchivedLiveData()
 
     suspend fun updateExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.updateExpenseGroup(expenseGroup)

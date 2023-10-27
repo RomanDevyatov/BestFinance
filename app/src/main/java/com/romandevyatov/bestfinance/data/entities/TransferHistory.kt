@@ -49,5 +49,4 @@ data class TransferHistory (
 
     @ColumnInfo(name = "created_date")
     val createdDate: LocalDateTime? = null
-
 )

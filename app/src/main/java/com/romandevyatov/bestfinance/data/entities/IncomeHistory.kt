@@ -29,7 +29,7 @@ data class IncomeHistory(
     val id: Long? = null,
 
     @ColumnInfo(name = "income_sub_group_id")
-    val incomeSubGroupId: Long,
+    val incomeSubGroupId: Long?,
 
     @ColumnInfo(name = "amount")
     val amount: Double,
@@ -48,5 +48,4 @@ data class IncomeHistory(
 
     @ColumnInfo(name = "created_date")
     val createdDate: LocalDateTime? = null
-
 )

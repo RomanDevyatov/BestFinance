@@ -15,12 +15,11 @@ class UpdateExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
 ) : ViewModel() {
 
-    fun getExpenseGroupByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroup>? {
+    fun getExpenseGroupByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroup?> {
         return expenseGroupRepository.getExpenseGroupNameByNameLiveData(expenseGroupName)
     }
 
     fun updateExpenseGroup(updatedExpenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
         expenseGroupRepository.updateExpenseGroup(updatedExpenseGroup)
     }
-
 }

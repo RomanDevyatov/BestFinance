@@ -18,7 +18,7 @@ class ArchivedIncomeGroupsViewModel @Inject constructor(
     private val incomeSubGroupRepository: IncomeSubGroupRepository
 ) : ViewModel() {
 
-    fun getIncomeGroupsArchivedByNameLiveData(name: String): LiveData<IncomeGroup>? {
+    fun getIncomeGroupsArchivedByNameLiveData(name: String): LiveData<IncomeGroup?> {
         return incomeGroupRepository.getAllIncomeGroupArchivedByNameLiveData(name)
     }
 
@@ -52,7 +52,7 @@ class ArchivedIncomeGroupsViewModel @Inject constructor(
         incomeGroupRepository.deleteIncomeGroupById(id)
     }
 
-    val allIncomeGroupsArchivedWithIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData()
+    val allIncomeGroupsArchivedWithIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>> = incomeGroupRepository.getIncomeGroupArchivedWithIncomeSubGroupsArchivedLiveData()
 
-    val allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getAllIncomeGroupsWhereIncomeSubGroupsArchivedLiveData()
+    val allIncomeGroupsWhereIncomeSubGroupsArchivedLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>> = incomeGroupRepository.getAllIncomeGroupsWhereIncomeSubGroupsArchivedLiveData()
 }

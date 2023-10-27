@@ -18,7 +18,7 @@ interface WalletDao {
     fun getAllLiveData(): LiveData<List<Wallet>>
 
     @Query("SELECT * FROM wallet WHERE id = :id")
-    fun getById(id: Long?): Wallet
+    fun getById(id: Long?): Wallet?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(wallet: Wallet)
@@ -36,7 +36,7 @@ interface WalletDao {
     suspend fun deleteById(id: Long?)
 
     @Query("SELECT * FROM wallet WHERE name = :name LIMIT 1")
-    fun getByNameLiveData(name: String): LiveData<Wallet>?
+    fun getByNameLiveData(name: String): LiveData<Wallet?>
 
     /*
     Not Archived
@@ -45,24 +45,23 @@ interface WalletDao {
     fun getAllNotArchivedLiveData(): LiveData<List<Wallet>>
 
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
-    fun getByNameNotArchivedLiveData(name: String): LiveData<Wallet>
+    fun getByNameNotArchivedLiveData(name: String): LiveData<Wallet?>
 
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NULL LIMIT 1")
-    fun getByNameNotArchived(name: String): Wallet
+    fun getByNameNotArchived(name: String): Wallet?
 
     /*
     Archived
      */
     @Query("SELECT * FROM wallet WHERE archived_date IS NOT NULL")
-    fun getAllArchivedLiveData(): LiveData<List<Wallet>>?
+    fun getAllArchivedLiveData(): LiveData<List<Wallet>>
 
     @Query("SELECT * FROM wallet WHERE name = :name AND archived_date IS NOT NULL LIMIT 1")
-    fun getByNameArchivedLiveData(name: String): LiveData<Wallet>?
+    fun getByNameArchivedLiveData(name: String): LiveData<Wallet?>
 
     @Query("UPDATE wallet SET archived_date = NULL WHERE id = :id")
     fun unarchiveById(id: Long?)
 
     @Query("UPDATE wallet SET archived_date = :date WHERE id = :id")
     fun updateArchivedDateById(id: Long?, date: LocalDateTime?)
-
 }

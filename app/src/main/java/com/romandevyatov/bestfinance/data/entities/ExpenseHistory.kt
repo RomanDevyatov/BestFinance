@@ -23,14 +23,14 @@ import java.time.LocalDateTime
         )
     ]
 )
-class ExpenseHistory (
+class ExpenseHistory(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
     @ColumnInfo(name = "expense_sub_group_id")
-    val expenseSubGroupId: Long,
+    val expenseSubGroupId: Long?,
 
     @ColumnInfo(name = "amount")
     val amount: Double,
@@ -49,5 +49,4 @@ class ExpenseHistory (
 
     @ColumnInfo(name = "created_date")
     val createdDate: LocalDateTime? = null
-
 )

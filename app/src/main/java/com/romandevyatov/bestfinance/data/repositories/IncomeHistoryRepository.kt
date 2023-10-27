@@ -32,12 +32,19 @@ class IncomeHistoryRepository @Inject constructor(
         incomeHistoryDao.delete(incomeHistory)
     }
 
-    fun getIncomeHistoryByIdLiveData(id: Long): LiveData<IncomeHistory> {
-        return incomeHistoryDao.getByIdLiveData(id)
-    }
-
-    fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet> {
+    fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?> {
         return incomeHistoryDao.getWithIncomeSubGroupAndWalletByIdLiveData(id)
     }
 
+    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
+        return incomeHistoryDao.getWhereSubGroupIdIsNullLiveData()
+    }
+
+    suspend fun deleteIncomeHistoryById(id: Long) {
+        incomeHistoryDao.deleteById(id)
+    }
+
+    fun getIncomeHistoryById(id: Long): IncomeHistory? {
+        return incomeHistoryDao.getById(id)
+    }
 }

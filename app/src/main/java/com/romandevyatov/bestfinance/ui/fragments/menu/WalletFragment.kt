@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBinding
-import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletAdapter
+import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletMenuAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -30,7 +30,11 @@ class WalletFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
-    private lateinit var walletAdapter: WalletAdapter
+    private lateinit var walletMenuAdapter: WalletMenuAdapter
+
+    private val addNewWalletString: String by lazy {
+        getString(R.string.add_new_wallet)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBottomMenuWalletsBinding.inflate(inflater, container, false)
@@ -42,17 +46,19 @@ class WalletFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.addButton.setOnClickListener {
-            val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
-            action.source = Constants.WALLETS_FRAGMENT
-            findNavController().navigate(action)
-        }
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
+            walletList?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
+                val spinnerWalletItems: MutableList<WalletItem> = mutableListOf()
 
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { wallets ->
-            val walletItems = wallets.map {
-                WalletItem(it.id, it.name, it.balance)
-            }.toMutableList()
-            walletAdapter.submitList(walletItems)
+                walletItems.let {
+                    spinnerWalletItems.addAll(walletItems)
+                }
+
+                spinnerWalletItems.add(WalletItem(null, addNewWalletString, null))
+
+                walletMenuAdapter.submitList(spinnerWalletItems)
+            }
+
         }
 
         initWalletRecyclerView()
@@ -85,7 +91,7 @@ class WalletFragment : Fragment() {
     // посмотреть статьи с papers with code
 
     private fun initWalletRecyclerView() {
-        val clickOnWalletListener = object : WalletAdapter.ItemClickListener {
+        val clickOnWalletListener = object : WalletMenuAdapter.ItemClickListener {
 
             override fun navigate(name: String) {
                 val action = WalletFragmentDirections.actionNavigationWalletToUpdateWallet()
@@ -93,11 +99,18 @@ class WalletFragment : Fragment() {
                 action.source = Constants.MENU_WALLET_FRAGMENT
                 findNavController().navigate(action)
             }
+
+            override fun navigateToAddNewWallet() {
+                val action = WalletFragmentDirections.actionNavigationWalletToNavigationAddWallet()
+                action.source = Constants.WALLETS_FRAGMENT
+                findNavController().navigate(action)
+            }
         }
-        walletAdapter = WalletAdapter(clickOnWalletListener)
+
+        walletMenuAdapter = WalletMenuAdapter(clickOnWalletListener, addNewWalletString)
 
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.walletRecyclerView.adapter = walletAdapter
+        binding.walletRecyclerView.adapter = walletMenuAdapter
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -115,11 +128,11 @@ class WalletFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
 
-                val selectedWalletItem = walletAdapter.walletDiffer.currentList[pos]
+                val selectedWalletItem = walletMenuAdapter.walletDiffer.currentList[pos]
 
                 walletViewModel.archiveWalletById(selectedWalletItem.id, LocalDateTime.now())
 
-                Snackbar.make(viewHolder.itemView, "Wallet with name ${selectedWalletItem.name} is archived", Snackbar.LENGTH_LONG).apply {
+                Snackbar.make(viewHolder.itemView, getString(R.string.wallet_is_archived, selectedWalletItem.name), Snackbar.LENGTH_LONG).apply {
                     setAction("UNDO") {
                         walletViewModel.unarchiveWalletById(selectedWalletItem.id)
                     }

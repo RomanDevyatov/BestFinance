@@ -14,5 +14,4 @@ class EmailValidator(private val email: String) : BaseValidator() {
 
         return ValidateResult(isValid, message)
     }
-
 }

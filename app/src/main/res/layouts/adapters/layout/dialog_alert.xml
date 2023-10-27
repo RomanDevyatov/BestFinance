@@ -39,7 +39,7 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"
-                android:text="No"
+                android:text="@string/no"
                 android:layout_margin="5dp"
                 android:backgroundTint="#A4A4A4"
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"
-                android:text="Yes"
+                android:text="@string/yes"
                 android:layout_margin="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

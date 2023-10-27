@@ -23,7 +23,7 @@
             android:id="@+id/groupNameInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Income group name"
+            android:hint="@string/income_group_name"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -42,7 +42,7 @@
             android:id="@+id/groupDescriptionInputEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Income group description"
+            android:hint="@string/income_group_description"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:checked="false"
-        android:text="Passive"
+        android:text="@string/passive"
         app:layout_constraintEnd_toEndOf="@+id/groupDescriptionInputLayout"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/groupDescriptionInputLayout"
@@ -61,13 +61,13 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addNewGroupButton"
         style="@style/MaterialButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Add"
+        android:layout_marginHorizontal="32dp"
+        android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/isPassiveCheckBox"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/isPassiveCheckBox"
         app:layout_constraintTop_toBottomOf="@+id/isPassiveCheckBox" />
 

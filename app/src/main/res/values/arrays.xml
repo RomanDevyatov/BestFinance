@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+    <string-array name="group_type_array">
+        <item>@string/income</item>
+        <item>@string/expense</item>
+    </string-array>
+    <string-array name="history_type_array">
+        <item>@string/incomes</item>
+        <item>@string/transfers</item>
+        <item>@string/expenses</item>
+    </string-array>
+
+</resources>

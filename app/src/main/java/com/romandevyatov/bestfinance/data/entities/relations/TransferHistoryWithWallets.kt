@@ -21,5 +21,4 @@ data class TransferHistoryWithWallets(
         parentColumn = "to_wallet_id",
         entityColumn = "id")
     var walletTo: Wallet
-
 )

@@ -16,5 +16,4 @@ data class ExpenseGroupWithExpenseSubGroups(
         entityColumn = "expense_group_id" // ExpenseSubGroup
     )
     val expenseSubGroups: List<ExpenseSubGroup>
-
 )

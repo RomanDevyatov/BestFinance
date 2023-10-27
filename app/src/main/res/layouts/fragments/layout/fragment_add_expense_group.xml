@@ -23,7 +23,7 @@
             android:id="@+id/newExpenseGroupName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Expense group name"
+            android:hint="@string/expense_group_name"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
-        android:hint="Expense group description"
+        android:hint="@string/expense_group_description"
         app:layout_constraintEnd_toEndOf="@+id/newExpenseGroupNameLayout"
         app:layout_constraintStart_toStartOf="@+id/newExpenseGroupNameLayout"
         app:layout_constraintTop_toBottomOf="@+id/newExpenseGroupNameLayout" >
@@ -49,13 +49,13 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addNewExpenseGroupNameButton"
         style="@style/MaterialButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Add"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/descriptionEditTextLayout"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/descriptionEditTextLayout"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditTextLayout" />
 

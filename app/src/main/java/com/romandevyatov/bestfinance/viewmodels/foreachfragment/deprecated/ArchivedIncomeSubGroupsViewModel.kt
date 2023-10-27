@@ -30,6 +30,6 @@ class ArchivedIncomeSubGroupsViewModel @Inject constructor(
         incomeSubGroupRepository.deleteIncomeSubGroupById(id)
     }
 
-    val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>>? = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
+    val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>> = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
 
 }

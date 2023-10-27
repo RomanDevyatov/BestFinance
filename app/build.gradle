@@ -1,3 +1,16 @@
+// project level
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44.2'
+    }
+}
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -20,9 +33,18 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas".toString())
-        }
+//        ksp {
+//            arg("room.schemaLocation", "$projectDir/schemas".toString())
+//        }
+
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments += [
+//                        "room.schemaLocation":"$projectDir/schemas".toString(),
+//                        "room.incremental":"true"
+//                ]
+//            }
+//        }
     }
 
     sourceSets {
@@ -43,18 +65,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
     }
-}
 
+    hilt {
+        enableAggregatingTask = true
+    }
+}
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
@@ -76,66 +104,57 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.5.1"
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation "androidx.preference:preference:1.1.1"
-
-    // kotlin annotation processing tool (kapt)
-    kapt 'androidx.room:room-compiler:2.5.0'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
 
     // ROOM
-    implementation 'androidx.room:room-runtime:2.5.0'
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation 'androidx.room:room-ktx:2.5.0'
-    annotationProcessor 'androidx.room:room-compiler:2.5.0'
-
-    // To use Kotlin Symbol Processing (KSP)
-    ksp 'androidx.room:room-compiler:2.5.0'
-
-    // optional - Test helpers
-    testImplementation 'androidx.room:room-testing:2.5.0'
-
-    // KSP
-    implementation "com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6"
-
-    // room optional
-    // kapt 'androidx.room:room-compiler:2.5.0'
-    // optional - RxJava2 support for Room
-    // implementation 'androidx.room:room-rxjava2:2.5.0'
-    // optional - RxJava3 support for Room
-    // implementation 'androidx.room:room-rxjava3:2.5.0'
-    // optional - Guava support for Room, including Optional and ListenableFuture
-    // implementation 'androidx.room:room-guava:2.5.0'
-    // optional - Paging 3 Integration
-    // implementation 'androidx.room:room-paging:2.5.0'
+    def room_version = "2.5.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-guava:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
+    implementation "androidx.room:room-paging:$room_version"
 
     // kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:2.5.0"
+    implementation "androidx.room:room-ktx:$room_version"
+    // _______________________________________________
+
+    // KSP
+    implementation 'com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.6'
 
     // HILT
-    implementation 'com.google.dagger:hilt-android:2.44.2'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
-    kapt 'com.google.dagger:hilt-android-compiler:2.44.2'
+    def hilt_version = "2.44.2"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+//    annotationProcessor "com.google.dagger:hilt-compiler:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // For instrumentation tests
-    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.44.2'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
+    androidTestImplementation  "com.google.dagger:hilt-android-testing:$hilt_version"
+//    androidTestAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_version"
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
-    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.44.2'
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+//    testAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_version"
+    // _______________________________________________
 
     // MockK for mocking objects and behavior
     testImplementation "io.mockk:mockk:1.12.0"
 
     // For using Kotlin's coroutines in tests
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1"
 
     // For testing LiveData
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // For testing ViewModel
     testImplementation "androidx.lifecycle:lifecycle-viewmodel-testing:2.1.0"
 
 }
 
-
-
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+        arg("kapt.kotlin.generated", "build/generated/source/kapt/debug")
+    }
+}

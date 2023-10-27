@@ -1,9 +1,5 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.group
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,9 +7,6 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -24,6 +17,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +37,6 @@ class UpdateIncomeGroupFragment : Fragment() {
 
     private var incomeGroupGlobal: IncomeGroup? = null
 
-    private val clickDelay = 1000 // Set the delay time in milliseconds
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -54,21 +47,18 @@ class UpdateIncomeGroupFragment : Fragment() {
 
         setOnBackPressedHandler()
 
-        binding.reusable.addNewGroupButton.text = "Update"
+        binding.reusable.addNewGroupButton.text = getString(R.string.update)
 
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
-            ?.observe(viewLifecycleOwner) { incomeGroup ->
-                incomeGroupGlobal = IncomeGroup(
-                    incomeGroup.id,
-                    incomeGroup.name,
-                    incomeGroup.isPassive,
-                    incomeGroup.description,
-                    incomeGroup.archivedDate)
-                binding.reusable.groupNameInputEditText.setText(incomeGroup.name)
-                binding.reusable.groupDescriptionInputEditText.setText(incomeGroup.description)
-                incomeGroupId = incomeGroup.id
-                binding.checkedTextView.isChecked = incomeGroup.archivedDate != null
-                binding.checkedTextView.isEnabled = false
+            .observe(viewLifecycleOwner) { incomeGroup ->
+                incomeGroup?.let {
+                    incomeGroupGlobal = it.copy()
+                    binding.reusable.groupNameInputEditText.setText(it.name)
+                    binding.reusable.groupDescriptionInputEditText.setText(it.description)
+                    incomeGroupId = it.id
+                    binding.checkedTextView.isChecked = it.archivedDate != null
+                    binding.checkedTextView.isEnabled = false
+                }
             }
 
         return binding.root
@@ -101,7 +91,7 @@ class UpdateIncomeGroupFragment : Fragment() {
 
             if (nameEmptyValidation.isSuccess) {
                 updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(nameBinding)
-                    ?.observe(viewLifecycleOwner) { group ->
+                    .observe(viewLifecycleOwner) { group ->
                         if (nameBinding == args.incomeGroupName.toString() || group == null) {
                             updateIncomeGroup(nameBinding, descriptionBinding, isPassiveBinding)
 
@@ -110,7 +100,7 @@ class UpdateIncomeGroupFragment : Fragment() {
                             // Group is already existing
                             WindowUtil.showExistingDialog(
                                 requireContext(),
-                                "This group `$nameBinding` is already existing."
+                                getString(R.string.group_is_already_existing, nameBinding)
                             )
                         }
                     }
@@ -120,7 +110,7 @@ class UpdateIncomeGroupFragment : Fragment() {
             handler.postDelayed({
                 isButtonClickable = true
                 view.isEnabled = true
-            }, clickDelay.toLong())
+            }, Constants.CLICK_DELAY_MS)
         }
     }
 

@@ -10,8 +10,11 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
+import com.romandevyatov.bestfinance.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -48,17 +51,25 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    fun archiveExpenseGroupByIdSpecific(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
+        val dateTime = (LocalDateTime.now()).format(LocalDateTimeRoomTypeConverter.dateTimeFormatter)
+        expenseSubGroupRepository.updateArchivedDateById(id, dateTime)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun archiveExpenseGroupById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val selectExpenseGroup = expenseGroupRepository.getExpenseGroupById(id)
 
-        val selectedExpenseGroupArchived = ExpenseGroup(
-            id = selectExpenseGroup.id,
-            name = selectExpenseGroup.name,
-            description = selectExpenseGroup.description,
-            archivedDate = LocalDateTime.now()
-        )
+        if (selectExpenseGroup != null) {
+            val selectedExpenseGroupArchived = ExpenseGroup(
+                id = selectExpenseGroup.id,
+                name = selectExpenseGroup.name,
+                description = selectExpenseGroup.description,
+                archivedDate = LocalDateTime.now()
+            )
 
-        expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupArchived)
+            expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupArchived)
+        }
     }
 
     fun unarchiveExpenseGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -69,6 +80,63 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
         expenseGroupRepository.deleteExpenseGroupById(id)
     }
 
-    val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>>? = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
+    val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
 
+    private var deletedItem: ExpenseGroup? = null
+    private val deletedItemList = mutableListOf<ExpenseGroup>()
+
+    fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = expenseGroupRepository.getExpenseGroupById(id)
+            if (itemToDelete != null) {
+                deletedItem = itemToDelete
+                deletedItemList.add(itemToDelete)
+
+                // Delay for the specified time before deletion
+                delay(Constants.UNDO_DELAY)
+
+                // After the delay, check if the item is still in the list and delete it
+                if (deletedItemList.contains(itemToDelete)) {
+                    expenseGroupRepository.deleteExpenseGroupById(id)
+                    deletedItemList.remove(itemToDelete)
+                }
+            }
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteItem() = viewModelScope.launch(Dispatchers.IO) {
+        if (deletedItemList.contains(deletedItem)) {
+            deletedItemList.remove(deletedItem)
+            deletedItem = null
+        }
+    }
+
+    private var deletedSubItem: ExpenseSubGroup? = null
+    private val deletedSubItemList = mutableListOf<ExpenseSubGroup>()
+
+    fun deleteSubItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
+        try {
+            val itemToDelete = expenseSubGroupRepository.getExpenseSubGroupById(id)
+            if (itemToDelete != null) {
+                deletedSubItem = itemToDelete
+                deletedSubItemList.add(itemToDelete)
+
+                // Delay for the specified time before deletion
+                delay(Constants.UNDO_DELAY)
+
+                // After the delay, check if the item is still in the list and delete it
+                if (deletedSubItemList.contains(itemToDelete)) {
+                    expenseSubGroupRepository.deleteExpenseSubGroupById(id)
+                    deletedSubItemList.remove(itemToDelete)
+                }
+            }
+        } catch (_: Exception) { }
+    }
+
+    fun undoDeleteSubItem() = viewModelScope.launch(Dispatchers.IO) {
+        if (deletedSubItemList.contains(deletedSubItem)) {
+            deletedSubItemList.remove(deletedSubItem)
+            deletedSubItem = null
+        }
+    }
 }

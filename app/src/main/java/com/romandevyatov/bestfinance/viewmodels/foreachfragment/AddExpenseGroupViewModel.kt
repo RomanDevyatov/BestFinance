@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,10 +24,12 @@ class AddExpenseGroupViewModel @Inject constructor(
             expenseGroupRepository.insertExpenseGroup(expenseGroup)
         } else if (existingExpenseGroup.archivedDate != null) {
             val expenseGroupWithExpenseSubGroups = expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupName(name)
-            expenseGroupRepository.unarchiveExpenseGroup(expenseGroupWithExpenseSubGroups.expenseGroup)
+            if (expenseGroupWithExpenseSubGroups != null) {
+                expenseGroupRepository.unarchiveExpenseGroup(expenseGroupWithExpenseSubGroups.expenseGroup)
 
-            expenseGroupWithExpenseSubGroups.expenseSubGroups.forEach {
-                expenseSubGroupRepository.unarchiveExpenseSubGroup(it)
+                expenseGroupWithExpenseSubGroups.expenseSubGroups.forEach {
+                    expenseSubGroupRepository.unarchiveExpenseSubGroup(it)
+                }
             }
         }
     }
@@ -38,7 +38,7 @@ class AddExpenseGroupViewModel @Inject constructor(
         expenseGroupRepository.updateExpenseGroup(expenseGroup)
     }
 
-    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup>? {
+    fun getExpenseGroupByNameLiveData(groupNameBinding: String): LiveData<ExpenseGroup?> {
         return expenseGroupRepository.getExpenseGroupNameByNameLiveData(groupNameBinding)
     }
 

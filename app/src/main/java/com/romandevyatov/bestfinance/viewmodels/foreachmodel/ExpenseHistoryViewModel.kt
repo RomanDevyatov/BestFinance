@@ -16,11 +16,7 @@ class ExpenseHistoryViewModel @Inject constructor(
     private val expenseHistoryRepository: ExpenseHistoryRepository
 ) : ViewModel() {
 
-    val expenseHistoryLiveData: LiveData<List<ExpenseHistory>> = expenseHistoryRepository.getAllExpenseHistory()
-
-    fun insertExpenseHistory(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
-        expenseHistoryRepository.insertExpenseHistory(expenseHistory)
-    }
+    val expenseHistoryListLiveData: LiveData<List<ExpenseHistory>> = expenseHistoryRepository.getAllExpenseHistory()
 
     val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
 

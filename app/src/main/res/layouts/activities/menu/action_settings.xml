@@ -3,9 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="always"
+        android:title="delete" />
+
+    <item
+        android:id="@+id/action_voice"
+        android:icon="@drawable/ic_voice"
+        app:showAsAction="always"
+        android:title="voice" />
+
+    <item
         android:id="@+id/action_settings"
-        android:title="More"
         android:icon="@drawable/ic_settings"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="settings" />
 
 </menu>

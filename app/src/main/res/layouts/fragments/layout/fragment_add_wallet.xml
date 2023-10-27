@@ -15,7 +15,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginHorizontal="32dp"
         app:helperText="Required"
-        android:hint="@string/wallet_name_hint"
+        android:hint="@string/name"
         app:layout_constraintTop_toTopOf="parent" >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
-        android:hint="Description"
+        android:hint="@string/description"
         app:layout_constraintEnd_toEndOf="@+id/balanceLayout"
         app:layout_constraintStart_toStartOf="@+id/balanceLayout"
         app:layout_constraintTop_toBottomOf="@+id/balanceLayout">
@@ -67,13 +67,13 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addButton"
         style="@style/MaterialButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="32dp"
         android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/descriptionLayout"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/descriptionLayout"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 

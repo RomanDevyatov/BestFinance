@@ -7,7 +7,6 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
-import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,17 +29,11 @@ class AddExpenseSubGroupViewModel @Inject constructor(
     }
 
     fun unarchiveExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val expenseSubGroupUnarchived = ExpenseSubGroup(
-            id = expenseSubGroup.id,
-            name = expenseSubGroup.name,
-            description = expenseSubGroup.description,
-            expenseGroupId = expenseSubGroup.expenseGroupId,
-            archivedDate = null
-        )
+        val expenseSubGroupUnarchived = expenseSubGroup.copy(archivedDate = null)
         updateExpenseSubGroup(expenseSubGroupUnarchived)
     }
 
-    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup>? {
+    fun getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding: String, groupId: Long?): LiveData<ExpenseSubGroup?> {
         return expenseSubGroupRepository.getExpenseSubGroupByNameWithExpenseGroupIdLiveData(subGroupNameBinding, groupId)
     }
 
