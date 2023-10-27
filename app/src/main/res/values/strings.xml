@@ -191,6 +191,12 @@
     <string name="expense_group_added">Expense group was added</string>
     <string name="income_group_added">Income group was added</string>
     <string name="set_is_passive">Is income group passive</string>
+    <string name="add_new_wallet">Add new wallet</string>
+
+    <string name="add_new_income_sub_group">Add new income sub group</string>
+    <string name="add_new_income_group">Add new income group</string>
+    <string name="add_new_expense_sub_group">Add new expense sub group</string>
+    <string name="add_new_expense_group">Add new expense group</string>
 
 
 </resources>

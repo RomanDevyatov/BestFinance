@@ -562,24 +562,24 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
             groupWithSubGroups?.let {
                 spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(it))
             }
-                subGroupSpinnerItemsGlobal.clear()
-                subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
 
-                spinnerSubItems.add(SpinnerItem(null, ADD_NEW_INCOME_SUB_GROUP))
+            subGroupSpinnerItemsGlobal.clear()
+            subGroupSpinnerItemsGlobal.addAll(spinnerSubItems)
 
-                val subGroupSpinnerAdapter = GroupSpinnerAdapter(
-                    requireContext(),
-                    R.layout.item_with_del,
-                    spinnerSubItems,
-                    ADD_NEW_INCOME_SUB_GROUP,
-                    archiveSubGroupListener)
+            spinnerSubItems.add(SpinnerItem(null, ADD_NEW_INCOME_SUB_GROUP))
 
-                binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
+            val subGroupSpinnerAdapter = GroupSpinnerAdapter(
+                requireContext(),
+                R.layout.item_with_del,
+                spinnerSubItems,
+                ADD_NEW_INCOME_SUB_GROUP,
+                archiveSubGroupListener)
 
-                if (isSetIfAvailable) {
-                    setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
+            binding.subGroupSpinner.setAdapter(subGroupSpinnerAdapter)
 
-                }
+            if (isSetIfAvailable) {
+                setIfAvailableSubGroupSpinnersValue(spinnerSubItems)
+            }
         }
     }
 

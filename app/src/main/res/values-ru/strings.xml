@@ -190,4 +190,11 @@
     <string name="expense_group_added">Группа трат добавлена</string>
     <string name="income_group_added">Подгруппа доходов добавлена</string>
     <string name="set_is_passive">Группа пассивного типа</string>
+
+    <string name="add_new_income_sub_group">Добавить новую подгруппу доходов</string>
+    <string name="add_new_income_group">Добавить новую группу доходов</string>
+    <string name="add_new_expense_sub_group">Добавить новую подгруппу расходов</string>
+    <string name="add_new_expense_group">Добавить новую группу расходов</string>
+    <string name="add_new_wallet">Add new wallet</string>
+
 </resources>

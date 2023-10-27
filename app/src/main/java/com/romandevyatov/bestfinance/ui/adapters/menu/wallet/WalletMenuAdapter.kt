@@ -1,14 +1,21 @@
 package com.romandevyatov.bestfinance.ui.adapters.menu.wallet
 
+import android.annotation.SuppressLint
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemWalletBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
+import com.romandevyatov.bestfinance.utils.Constants
 
-class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adapter<WalletAdapter.WalletItemViewHolder>() {
+class WalletMenuAdapter(
+    private val listener: ItemClickListener,
+    private val addItemText: String? = null
+) : RecyclerView.Adapter<WalletMenuAdapter.WalletItemViewHolder>() {
 
     private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
 
@@ -26,18 +33,32 @@ class WalletAdapter(private val listener: ItemClickListener) : RecyclerView.Adap
     interface ItemClickListener {
 
         fun navigate(name: String)
+        fun navigateToAddNewWallet()
     }
 
     inner class WalletItemViewHolder(
         private val binding: CardItemWalletBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("RtlHardcoded")
         fun bind(wallet: WalletItem) {
             binding.walletNameTextView.text = wallet.name
-            binding.amountTextView.text = wallet.balance.toString()
+
+            if (wallet.id == null && wallet.name == addItemText && wallet.balance == null) {
+                binding.walletNameTextView.gravity = Gravity.RIGHT
+                binding.amountTextView.text = ""
+            } else {
+                binding.amountTextView.text = wallet.balance.toString()
+            }
 
             binding.root.setOnClickListener {
-                listener.navigate(wallet.name)
+                if (wallet.id == null &&
+                    wallet.name == Constants.ADD_NEW_WALLET &&
+                    wallet.balance == null) {
+                    listener.navigateToAddNewWallet()
+                } else {
+                    listener.navigate(wallet.name)
+                }
             }
         }
     }
