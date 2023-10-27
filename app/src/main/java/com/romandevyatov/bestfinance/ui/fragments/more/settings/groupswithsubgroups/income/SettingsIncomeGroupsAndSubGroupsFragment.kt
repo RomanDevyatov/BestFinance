@@ -14,10 +14,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsIncomeGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsGroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsSubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
@@ -33,8 +33,8 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
 
     private val incomeGroupsAndSubGroupsViewModel: IncomeGroupsAndSubGroupsViewModel by viewModels()
 
-    private val groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter by lazy {
-        GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+    private val settingsGroupWithSubgroupsAdapter: SettingsGroupWithSubgroupsAdapter by lazy {
+        SettingsGroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
     }
 
     override fun onCreateView(
@@ -49,9 +49,9 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
 
         incomeGroupsAndSubGroupsViewModel.allIncomeGroupsWithIncomeSubGroupsLiveData
             .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-                val groupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
-                    val subGroupItems = groups.incomeSubGroups.map {
-                        SubGroupItem(
+                val settingsGroupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
+                    val settingsSubGroupItems = groups.incomeSubGroups.map {
+                        SettingsSubGroupItem(
                             it.id!!,
                             it.name,
                             it.incomeGroupId,
@@ -59,38 +59,38 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                         )
                     }.toMutableList()
 
-                    GroupWithSubGroupsItem(
+                    SettingsGroupWithSubGroupsItem(
                         groups.incomeGroup.id,
                         groups.incomeGroup.name,
                         groups.incomeGroup.archivedDate == null,
-                        subGroupItems
+                        settingsSubGroupItems
                     )
                 } ?: emptyList()
 
-                groupWithSubgroupsAdapter.submitList(groupWithSubGroupsItems)
+                settingsGroupWithSubgroupsAdapter.submitList(settingsGroupWithSubGroupsItems)
             }
 
         return binding.root
     }
 
-    private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupListener {
+    private val onSubGroupCheckedImpl = object : SettingsSubGroupsAdapter.OnSubGroupListener {
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
+        override fun onSubgroupChecked(settingsSubGroupItem: SettingsSubGroupItem, isChecked: Boolean) {
             if (isChecked) {
-                incomeGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(subGroupItem.id)
+                incomeGroupsAndSubGroupsViewModel.unarchiveIncomeSubGroupById(settingsSubGroupItem.id)
             } else {
                 incomeGroupsAndSubGroupsViewModel.archiveIncomeSubGroupByIdSpecific(
-                    subGroupItem.id
+                    settingsSubGroupItem.id
                 )
             }
         }
 
-        override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
-            subGroupItem.id.let { id ->
+        override fun onSubGroupDelete(settingsSubGroupItem: SettingsSubGroupItem) {
+            settingsSubGroupItem.id.let { id ->
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = incomeGroupsAndSubGroupsViewModel,
-                    message = getString(R.string.delete_confirmation_warning_message, subGroupItem.name),
+                    message = getString(R.string.delete_confirmation_warning_message, settingsSubGroupItem.name),
                     isCountdown = true,
                     itemId = id,
                     rootView = binding.root,
@@ -107,30 +107,30 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
         }
     }
 
-    private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
+    private val onGroupCheckedImpl = object : SettingsGroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
+        override fun onGroupChecked(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem, isChecked: Boolean) {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (isChecked) {
                     incomeGroupsAndSubGroupsViewModel.unarchiveIncomeGroupByIdSpecific(
-                        groupWithSubGroupsItem.id
+                        settingsGroupWithSubGroupsItem.id
                     )
                 } else {
                     incomeGroupsAndSubGroupsViewModel.archiveIncomeGroupByIdSpecific(
-                        groupWithSubGroupsItem.id
+                        settingsGroupWithSubGroupsItem.id
                     )
                 }
             }
         }
 
-        override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-            groupWithSubGroupsItem.id.let { id ->
+        override fun onGroupDelete(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem) {
+            settingsGroupWithSubGroupsItem.id.let { id ->
                 if (id != null) {
                     WindowUtil.showDeleteDialog(
                         context = requireContext(),
                         viewModel = incomeGroupsAndSubGroupsViewModel,
-                        message = getString(R.string.delete_confirmation_warning_message, groupWithSubGroupsItem.name),
+                        message = getString(R.string.delete_confirmation_warning_message, settingsGroupWithSubGroupsItem.name),
                         isCountdown = true,
                         itemId = id,
                         rootView = binding.root,
@@ -159,7 +159,7 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
 
     private fun setupGroupWithSubgroupsAdapter() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = groupWithSubgroupsAdapter
+        binding.recyclerView.adapter = settingsGroupWithSubgroupsAdapter
     }
 
 }

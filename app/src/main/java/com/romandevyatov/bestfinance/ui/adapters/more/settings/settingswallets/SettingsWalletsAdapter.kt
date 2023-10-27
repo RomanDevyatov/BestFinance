@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,44 +6,44 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardWalletItemBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.models.WalletItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.models.SettingsWalletItem
 
-class WalletsAdapter(
+class SettingsWalletsAdapter(
     private val onWalletItemCheckedChangeListener: OnWalletItemCheckedChangeListener? = null,
     private val walletItemDeleteListener: OnWalletItemDeleteListener? = null,
     private val walletItemClickedListener: OnWalletItemClickedListener? = null
-) : RecyclerView.Adapter<WalletsAdapter.WalletItemViewHolder>() {
+) : RecyclerView.Adapter<SettingsWalletsAdapter.WalletItemViewHolder>() {
 
     interface OnWalletItemCheckedChangeListener {
-        fun onWalletChecked(walletItem: WalletItem, isChecked: Boolean)
+        fun onWalletChecked(settingsWalletItem: SettingsWalletItem, isChecked: Boolean)
     }
 
     interface OnWalletItemDeleteListener {
-        fun onWalletItemDelete(walletItem: WalletItem)
+        fun onWalletItemDelete(settingsWalletItem: SettingsWalletItem)
     }
 
     interface OnWalletItemClickedListener {
-        fun navigateToUpdateWallet(wallet: WalletItem)
+        fun navigateToUpdateWallet(wallet: SettingsWalletItem)
     }
 
-    private val differentCallback = object: DiffUtil.ItemCallback<WalletItem>() {
-        override fun areItemsTheSame(oldItem: WalletItem, newItem: WalletItem): Boolean {
+    private val differentCallback = object: DiffUtil.ItemCallback<SettingsWalletItem>() {
+        override fun areItemsTheSame(oldItem: SettingsWalletItem, newItem: SettingsWalletItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: WalletItem, newItem: WalletItem): Boolean {
+        override fun areContentsTheSame(oldItem: SettingsWalletItem, newItem: SettingsWalletItem): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun submitList(walletItems: List<WalletItem>) {
-        differ.submitList(walletItems)
+    fun submitList(settingsWalletItems: List<SettingsWalletItem>) {
+        differ.submitList(settingsWalletItems)
     }
 
-    fun removeItem(walletItem: WalletItem) {
-        val position = differ.currentList.indexOf(walletItem)
+    fun removeItem(settingsWalletItem: SettingsWalletItem) {
+        val position = differ.currentList.indexOf(settingsWalletItem)
         if (position != -1) {
             val updatedList = differ.currentList.toMutableList()
             updatedList.removeAt(position)
@@ -55,21 +55,21 @@ class WalletsAdapter(
         private val binding: CardWalletItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindSubgroup(walletItem: WalletItem) {
-            binding.walletTextView.text = walletItem.name
+        fun bindSubgroup(settingsWalletItem: SettingsWalletItem) {
+            binding.walletTextView.text = settingsWalletItem.name
 
             binding.deleteButton.setOnClickListener {
-                walletItemDeleteListener?.onWalletItemDelete(walletItem)
+                walletItemDeleteListener?.onWalletItemDelete(settingsWalletItem)
             }
 
-            binding.switchCompat.isChecked = walletItem.isExist
+            binding.switchCompat.isChecked = settingsWalletItem.isExist
 
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                onWalletItemCheckedChangeListener?.onWalletChecked(walletItem, isChecked)
+                onWalletItemCheckedChangeListener?.onWalletChecked(settingsWalletItem, isChecked)
             }
 
             binding.root.setOnClickListener {
-                walletItemClickedListener?.navigateToUpdateWallet(walletItem)
+                walletItemClickedListener?.navigateToUpdateWallet(settingsWalletItem)
             }
         }
     }

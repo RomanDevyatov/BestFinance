@@ -7,19 +7,6 @@ object NumberConverter {
     private const val NUMBER_MAP: String = "numberMap"
     private const val LARGE_NUMBER_MAP: String = "largeNumberMap"
 
-    private fun convertRecognizedText(text: String): String {
-        val numberPattern = "\\d+(\\.\\d{1,3})"
-        val numberRegex = Regex(numberPattern)
-
-        val formattedText = numberRegex.replace(text) { matchResult ->
-            val originalNumber = matchResult.value
-            val formattedNumber = originalNumber.replace(".", "")
-            formattedNumber
-        }
-
-        return formattedText
-    }
-
     fun convertSpokenTextToNumber(spokenText: String): Double? {
         when (val currentLocale = Locale.getDefault()) {
             Locale.US, Locale("RU") -> {
@@ -36,6 +23,19 @@ object NumberConverter {
                 return spokenText.toDoubleOrNull()
             }
         }
+    }
+
+    private fun convertRecognizedText(text: String): String {
+        val numberPattern = "\\d+(\\.\\d{1,3})"
+        val numberRegex = Regex(numberPattern)
+
+        val formattedText = numberRegex.replace(text) { matchResult ->
+            val originalNumber = matchResult.value
+            val formattedNumber = originalNumber.replace(".", "")
+            formattedNumber
+        }
+
+        return formattedText
     }
 
     private fun containsOnlyDigitsAndPeriod(input: String): Boolean {

@@ -1,19 +1,19 @@
-package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 
-class SubGroupsAdapter(
-    private val mList: MutableList<SubGroupItem> = mutableListOf(),
+class SettingsSubGroupsAdapter(
+    private val mList: MutableList<SettingsSubGroupItem> = mutableListOf(),
     private val onSubGroupListener: OnSubGroupListener? = null
-    ) : RecyclerView.Adapter<SubGroupsAdapter.SubGroupViewHolder>() {
+    ) : RecyclerView.Adapter<SettingsSubGroupsAdapter.SubGroupViewHolder>() {
 
     interface OnSubGroupListener {
-        fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean)
-        fun onSubGroupDelete(subGroupItem: SubGroupItem)
+        fun onSubgroupChecked(settingsSubGroupItem: SettingsSubGroupItem, isChecked: Boolean)
+        fun onSubGroupDelete(settingsSubGroupItem: SettingsSubGroupItem)
         fun navigateToUpdateSubGroup(id: Long)
     }
 
@@ -35,24 +35,24 @@ class SubGroupsAdapter(
         val binding: CardSubGroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(subGroupItem: SubGroupItem) {
-            binding.subgroupNameTextView.text = subGroupItem.name
+        fun bind(settingsSubGroupItem: SettingsSubGroupItem) {
+            binding.subgroupNameTextView.text = settingsSubGroupItem.name
 
             binding.switchCompat.setOnCheckedChangeListener(null)
-            binding.switchCompat.isChecked = subGroupItem.isExist
+            binding.switchCompat.isChecked = settingsSubGroupItem.isExist
 
             // Set the listener after setting the state to avoid triggering it unnecessarily
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                subGroupItem.isExist = isChecked
-                onSubGroupListener?.onSubgroupChecked(subGroupItem, isChecked)
+                settingsSubGroupItem.isExist = isChecked
+                onSubGroupListener?.onSubgroupChecked(settingsSubGroupItem, isChecked)
             }
 
             binding.deleteButton.setOnClickListener {
-                onSubGroupListener?.onSubGroupDelete(subGroupItem)
+                onSubGroupListener?.onSubGroupDelete(settingsSubGroupItem)
             }
 
             binding.root.setOnClickListener {
-                onSubGroupListener?.navigateToUpdateSubGroup(subGroupItem.id)
+                onSubGroupListener?.navigateToUpdateSubGroup(settingsSubGroupItem.id)
             }
         }
     }

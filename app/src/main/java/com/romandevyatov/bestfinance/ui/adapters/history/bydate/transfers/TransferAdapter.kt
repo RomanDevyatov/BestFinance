@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransferBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransferItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 
 class TransferAdapter(
     private val transactionList: List<TransferItem>,

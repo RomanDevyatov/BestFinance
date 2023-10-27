@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.history.bydate.model
+package com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model
 
 import java.time.LocalDateTime
 

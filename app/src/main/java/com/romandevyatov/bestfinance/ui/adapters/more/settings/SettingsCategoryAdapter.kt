@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemCategoryBinding
 
-class CategoryAdapter(
-    private val categoryData: List<CategoryItem>,
-    private val subCategoryClickListener: SubCategoryAdapter.OnSubCategoryClickListener
+class SettingsCategoryAdapter(
+    private val categoryData: List<SettingsCategoryItem>,
+    private val subCategoryClickListener: SettingsSubCategoryAdapter.OnSubCategoryClickListener
 ) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+    RecyclerView.Adapter<SettingsCategoryAdapter.CategoryViewHolder>() {
 
-    class CategoryViewHolder(private val binding: ItemCategoryBinding) :
+    class CategoryViewHolder(binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val categoryName = binding.categoryName
         val categoryIcon = binding.categoryIcon
@@ -34,10 +34,10 @@ class CategoryAdapter(
         holder.categoryName.text = currentItem.name
         holder.categoryIcon.setImageResource(currentItem.icon)
 
-        val subcategoryAdapter = SubCategoryAdapter(currentItem.subcategories, subCategoryClickListener)
+        val subcategoryAdapterSettings = SettingsSubCategoryAdapter(currentItem.subcategories, subCategoryClickListener)
         holder.subcategoriesList.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = subcategoryAdapter
+            adapter = subcategoryAdapterSettings
         }
     }
 

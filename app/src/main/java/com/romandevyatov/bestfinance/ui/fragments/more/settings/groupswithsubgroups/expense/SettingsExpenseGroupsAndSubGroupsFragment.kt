@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsExpenseGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.GroupWithSubgroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.SubGroupsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.SubGroupItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsGroupWithSubgroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsSubGroupsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,22 +33,22 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
 
     private val generalGroupsAndSubGroupsViewModel: ExpenseGroupsAndSubGroupsViewModel by viewModels()
 
-    private var groupWithSubGroupsItemMutableList: MutableList<GroupWithSubGroupsItem> = mutableListOf()
+    private var settingsGroupWithSubGroupsItemMutableList: MutableList<SettingsGroupWithSubGroupsItem> = mutableListOf()
 
-    private var groupWithSubgroupsAdapter: GroupWithSubgroupsAdapter? = null
+    private var settingsGroupWithSubgroupsAdapter: SettingsGroupWithSubgroupsAdapter? = null
 
-    private val onSubGroupCheckedImpl = object : SubGroupsAdapter.OnSubGroupListener {
+    private val onSubGroupCheckedImpl = object : SettingsSubGroupsAdapter.OnSubGroupListener {
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onSubgroupChecked(subGroupItem: SubGroupItem, isChecked: Boolean) {
+        override fun onSubgroupChecked(settingsSubGroupItem: SettingsSubGroupItem, isChecked: Boolean) {
             if (isChecked) {
-                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(subGroupItem.id)
+                generalGroupsAndSubGroupsViewModel.unarchiveExpenseSubGroupById(settingsSubGroupItem.id)
             } else {
-                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(subGroupItem.name)
+                generalGroupsAndSubGroupsViewModel.archiveExpenseSubGroup(settingsSubGroupItem.name)
             }
         }
 
-        override fun onSubGroupDelete(subGroupItem: SubGroupItem) {
-            generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(subGroupItem.id)
+        override fun onSubGroupDelete(settingsSubGroupItem: SettingsSubGroupItem) {
+            generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(settingsSubGroupItem.id)
         }
 
         override fun navigateToUpdateSubGroup(id: Long) {
@@ -59,21 +59,21 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
     }
 
-    private val onGroupCheckedImpl = object : GroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
+    private val onGroupCheckedImpl = object : SettingsGroupWithSubgroupsAdapter.OnGroupCheckedChangeListener {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean) {
+        override fun onGroupChecked(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem, isChecked: Boolean) {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (isChecked) {
-                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(groupWithSubGroupsItem.id)
+                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(settingsGroupWithSubGroupsItem.id)
                 } else {
-                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(groupWithSubGroupsItem.id!!)
+                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(settingsGroupWithSubGroupsItem.id!!)
                 }
             }
         }
 
-        override fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-            generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(groupWithSubGroupsItem.id)
+        override fun onGroupDelete(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem) {
+            generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(settingsGroupWithSubGroupsItem.id)
         }
 
         override fun navigateToUpdateGroup(name: String) {
@@ -107,7 +107,7 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
             .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
                 allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
                 updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
-                groupWithSubgroupsAdapter?.submitList(groupWithSubGroupsItemMutableList.toList())
+                settingsGroupWithSubgroupsAdapter?.submitList(settingsGroupWithSubGroupsItemMutableList.toList())
             }
         }
 
@@ -115,20 +115,20 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        groupWithSubgroupsAdapter = GroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+        settingsGroupWithSubgroupsAdapter = SettingsGroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = groupWithSubgroupsAdapter
+        binding.recyclerView.adapter = settingsGroupWithSubgroupsAdapter
     }
 
     private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
-        groupWithSubGroupsItemMutableList.clear()
-        groupWithSubGroupsItemMutableList.addAll(
+        settingsGroupWithSubGroupsItemMutableList.clear()
+        settingsGroupWithSubGroupsItemMutableList.addAll(
             groupsWithSubGroups.map { groupWithSubGroup ->
                 val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                    SubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
+                    SettingsSubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
                 }.toMutableList()
-                GroupWithSubGroupsItem(
+                SettingsGroupWithSubGroupsItem(
                     groupWithSubGroup.expenseGroup.id,
                     groupWithSubGroup.expenseGroup.name,
                     groupWithSubGroup.expenseGroup.archivedDate == null,

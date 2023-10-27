@@ -15,8 +15,8 @@ import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithE
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.HistoryTransactionByDateAdapter
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.TransactionAdapter
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionHistoryItem
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel

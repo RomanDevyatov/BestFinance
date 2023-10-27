@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemSubcategoryBinding
 
-class SubCategoryAdapter(
-    private val subcategoryData: List<SubCategoryItem>,
+class SettingsSubCategoryAdapter(
+    private val subcategoryData: List<SettingsSubCategoryItem>,
     private val clickListener: OnSubCategoryClickListener
 ) :
-    RecyclerView.Adapter<SubCategoryAdapter.SubCategoryViewHolder>() {
+    RecyclerView.Adapter<SettingsSubCategoryAdapter.SubCategoryViewHolder>() {
 
     interface OnSubCategoryClickListener {
-        fun onSubCategoryClick(subCategory: SubCategoryItem)
+        fun onSubCategoryClick(subCategory: SettingsSubCategoryItem)
     }
 
     class SubCategoryViewHolder(binding: ItemSubcategoryBinding) :

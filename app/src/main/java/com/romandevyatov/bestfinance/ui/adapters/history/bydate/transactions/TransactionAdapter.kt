@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransactionBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 
 class TransactionAdapter(
     private val transactionList: List<TransactionItem>,

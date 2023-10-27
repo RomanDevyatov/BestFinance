@@ -13,8 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.WalletsAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.wallets.models.WalletItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.SettingsWalletsAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.models.SettingsWalletItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
@@ -28,8 +28,8 @@ class SettingsWalletsFragment : Fragment() {
 
     private val settingsWalletsViewModel: SettingsWalletsViewModel by viewModels()
 
-    private lateinit var walletsAdapter: WalletsAdapter
-    private val walletItemMutableList = mutableListOf<WalletItem>()
+    private lateinit var settingsWalletsAdapter: SettingsWalletsAdapter
+    private val settingsWalletItemMutableList = mutableListOf<SettingsWalletItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,63 +55,63 @@ class SettingsWalletsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        walletsAdapter = WalletsAdapter(
+        settingsWalletsAdapter = SettingsWalletsAdapter(
             walletItemCheckedChangeListener,
             walletItemDeleteListener,
             walletItemClickedListener)
         binding.walletRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.walletRecyclerView.adapter = walletsAdapter
+        binding.walletRecyclerView.adapter = settingsWalletsAdapter
     }
 
     private fun observeWallets() {
         settingsWalletsViewModel.allWalletsLiveData.observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
-                walletItemMutableList.clear()
-                walletItemMutableList.addAll(
+                settingsWalletItemMutableList.clear()
+                settingsWalletItemMutableList.addAll(
                     wallets.map {
-                        WalletItem(it.id, it.name, it.archivedDate == null)
+                        SettingsWalletItem(it.id, it.name, it.archivedDate == null)
                     }.toMutableList()
                 )
 
-                walletsAdapter.submitList(walletItemMutableList.toList())
+                settingsWalletsAdapter.submitList(settingsWalletItemMutableList.toList())
             }
         }
     }
 
-    private val walletItemCheckedChangeListener = object : WalletsAdapter.OnWalletItemCheckedChangeListener {
+    private val walletItemCheckedChangeListener = object : SettingsWalletsAdapter.OnWalletItemCheckedChangeListener {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        override fun onWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
-            updateWalletChecked(walletItem, isChecked)
+        override fun onWalletChecked(settingsWalletItem: SettingsWalletItem, isChecked: Boolean) {
+            updateWalletChecked(settingsWalletItem, isChecked)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateWalletChecked(walletItem: WalletItem, isChecked: Boolean) {
-        val position = walletItemMutableList.indexOf(walletItem)
+    private fun updateWalletChecked(settingsWalletItem: SettingsWalletItem, isChecked: Boolean) {
+        val position = settingsWalletItemMutableList.indexOf(settingsWalletItem)
         if (position != -1) {
-            walletItemMutableList[position] = walletItem.copy(isExist = isChecked)
-            walletsAdapter.submitList(walletItemMutableList.toList())
-            handleWalletCheckedChange(walletItem, isChecked)
+            settingsWalletItemMutableList[position] = settingsWalletItem.copy(isExist = isChecked)
+            settingsWalletsAdapter.submitList(settingsWalletItemMutableList.toList())
+            handleWalletCheckedChange(settingsWalletItem, isChecked)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun handleWalletCheckedChange(walletItem: WalletItem, isChecked: Boolean) {
+    private fun handleWalletCheckedChange(settingsWalletItem: SettingsWalletItem, isChecked: Boolean) {
         if (isChecked) {
-            settingsWalletsViewModel.unarchiveWalletById(walletItem.id)
+            settingsWalletsViewModel.unarchiveWalletById(settingsWalletItem.id)
         } else {
-            settingsWalletsViewModel.archiveWalletById(walletItem.id!!)
+            settingsWalletsViewModel.archiveWalletById(settingsWalletItem.id!!)
         }
     }
 
-    private val walletItemDeleteListener = object : WalletsAdapter.OnWalletItemDeleteListener {
-        override fun onWalletItemDelete(walletItem: WalletItem) {
-            walletItem.id?.let { id ->
+    private val walletItemDeleteListener = object : SettingsWalletsAdapter.OnWalletItemDeleteListener {
+        override fun onWalletItemDelete(settingsWalletItem: SettingsWalletItem) {
+            settingsWalletItem.id?.let { id ->
                 WindowUtil.showDeleteDialog(
                     context = requireContext(),
                     viewModel = settingsWalletsViewModel,
-                    message = getString(R.string.delete_confirmation_warning_message, walletItem.name),
+                    message = getString(R.string.delete_confirmation_warning_message, settingsWalletItem.name),
                     isCountdown = true,
                     itemId = id,
                     rootView = binding.root
@@ -120,8 +120,8 @@ class SettingsWalletsFragment : Fragment() {
         }
     }
 
-    private val walletItemClickedListener = object : WalletsAdapter.OnWalletItemClickedListener {
-        override fun navigateToUpdateWallet(wallet: WalletItem) {
+    private val walletItemClickedListener = object : SettingsWalletsAdapter.OnWalletItemClickedListener {
+        override fun navigateToUpdateWallet(wallet: SettingsWalletItem) {
             val action =
                 SettingsWalletsFragmentDirections.actionWalletsSettingsFragmentToUpdateWalletFragment()
             action.source = Constants.WALLETS_SETTINGS_FRAGMENT

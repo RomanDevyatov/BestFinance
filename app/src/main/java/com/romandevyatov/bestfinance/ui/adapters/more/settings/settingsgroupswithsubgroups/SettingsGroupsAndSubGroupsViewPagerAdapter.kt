@@ -1,11 +1,11 @@
-package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.expense.SettingsExpenseGroupsAndSubGroupsFragment
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.income.SettingsIncomeGroupsAndSubGroupsFragment
 
-class GroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
+class SettingsGroupsAndSubGroupsViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
 
     private val NUM_TABS = 2

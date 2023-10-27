@@ -11,10 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuMoreBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.CategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.CategoryItem
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.SubCategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.SubCategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryItem
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -59,20 +59,20 @@ class MoreFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val onSubCategoryClickListener = object : SubCategoryAdapter.OnSubCategoryClickListener {
+        val onSubCategoryClickListener = object : SettingsSubCategoryAdapter.OnSubCategoryClickListener {
 
-            override fun onSubCategoryClick(subCategory: SubCategoryItem) {
+            override fun onSubCategoryClick(subCategory: SettingsSubCategoryItem) {
                 navigateToSubCategory(subCategory)
             }
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = CategoryAdapter(createCategoryData(), onSubCategoryClickListener)
+            adapter = SettingsCategoryAdapter(createCategoryData(), onSubCategoryClickListener)
         }
     }
 
-    private fun navigateToSubCategory(subCategory: SubCategoryItem) {
+    private fun navigateToSubCategory(subCategory: SettingsSubCategoryItem) {
         val navDirections: NavDirections = when (subCategory.name) {
             GROUPS_AND_SUB_GROUPS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
@@ -86,14 +86,14 @@ class MoreFragment : Fragment() {
         findNavController().navigate(navDirections)
     }
 
-    private fun createCategoryData(): List<CategoryItem> {
+    private fun createCategoryData(): List<SettingsCategoryItem> {
         return listOf(
-            CategoryItem(
+            SettingsCategoryItem(
                 getString(R.string.categories),
                 R.drawable.ic_archive,
                 listOf(
-                    SubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
-                    SubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
+                    SettingsSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
+                    SettingsSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
                 )
             ),
 //            CategoryItem(

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs
+package com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,32 +8,32 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardGroupWithSubgroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.tabs.models.GroupWithSubGroupsItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
 
-class GroupWithSubgroupsAdapter(
+class SettingsGroupWithSubgroupsAdapter(
     private val groupListener: OnGroupCheckedChangeListener? = null,
-    private val listener: SubGroupsAdapter.OnSubGroupListener? = null
-) : RecyclerView.Adapter<GroupWithSubgroupsAdapter.GroupViewHolder>() {
+    private val listener: SettingsSubGroupsAdapter.OnSubGroupListener? = null
+) : RecyclerView.Adapter<SettingsGroupWithSubgroupsAdapter.GroupViewHolder>() {
 
     interface OnGroupCheckedChangeListener {
-        fun onGroupChecked(groupWithSubGroupsItem: GroupWithSubGroupsItem, isChecked: Boolean)
-        fun onGroupDelete(groupWithSubGroupsItem: GroupWithSubGroupsItem)
+        fun onGroupChecked(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem, isChecked: Boolean)
+        fun onGroupDelete(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem)
         fun navigateToUpdateGroup(name: String)
     }
 
-    private val differentCallback = object: DiffUtil.ItemCallback<GroupWithSubGroupsItem>() {
-        override fun areItemsTheSame(oldItem: GroupWithSubGroupsItem, newItem: GroupWithSubGroupsItem): Boolean {
+    private val differentCallback = object: DiffUtil.ItemCallback<SettingsGroupWithSubGroupsItem>() {
+        override fun areItemsTheSame(oldItem: SettingsGroupWithSubGroupsItem, newItem: SettingsGroupWithSubGroupsItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: GroupWithSubGroupsItem, newItem: GroupWithSubGroupsItem): Boolean {
+        override fun areContentsTheSame(oldItem: SettingsGroupWithSubGroupsItem, newItem: SettingsGroupWithSubGroupsItem): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, differentCallback)
 
-    fun submitList(newGroups: List<GroupWithSubGroupsItem>) {
+    fun submitList(newGroups: List<SettingsGroupWithSubGroupsItem>) {
         differ.submitList(newGroups)
     }
 
@@ -41,14 +41,14 @@ class GroupWithSubgroupsAdapter(
         val binding: CardGroupWithSubgroupsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindGroup(groupWithSubGroupsItem: GroupWithSubGroupsItem) {
-            binding.groupNameTextView.text = groupWithSubGroupsItem.name
+        fun bindGroup(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem) {
+            binding.groupNameTextView.text = settingsGroupWithSubGroupsItem.name
 
             binding.switchCompat.setOnCheckedChangeListener(null)
-            binding.switchCompat.isChecked = groupWithSubGroupsItem.isExist
+            binding.switchCompat.isChecked = settingsGroupWithSubGroupsItem.isExist
             binding.switchCompat.setOnCheckedChangeListener { _, isChecked ->
-                groupWithSubGroupsItem.isExist = isChecked
-                groupListener?.onGroupChecked(groupWithSubGroupsItem, isChecked)
+                settingsGroupWithSubGroupsItem.isExist = isChecked
+                groupListener?.onGroupChecked(settingsGroupWithSubGroupsItem, isChecked)
 
                 if (isChecked) {
                     binding.historiesByDateRecyclerView.visibility = View.VISIBLE
@@ -57,22 +57,22 @@ class GroupWithSubgroupsAdapter(
                 }
             }
 
-            if (groupWithSubGroupsItem.isExist) {
+            if (settingsGroupWithSubGroupsItem.isExist) {
                 binding.historiesByDateRecyclerView.visibility = View.VISIBLE
             } else {
                 binding.historiesByDateRecyclerView.visibility = View.GONE
             }
 
             binding.deleteButton.setOnClickListener {
-                groupListener?.onGroupDelete(groupWithSubGroupsItem)
+                groupListener?.onGroupDelete(settingsGroupWithSubGroupsItem)
             }
 
-            val subGroupsAdapter = SubGroupsAdapter(groupWithSubGroupsItem.subgroups, listener)
+            val settingsSubGroupsAdapter = SettingsSubGroupsAdapter(settingsGroupWithSubGroupsItem.subgroups, listener)
             binding.historiesByDateRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
-            binding.historiesByDateRecyclerView.adapter = subGroupsAdapter
+            binding.historiesByDateRecyclerView.adapter = settingsSubGroupsAdapter
 
             binding.root.setOnClickListener {
-                groupListener?.navigateToUpdateGroup(groupWithSubGroupsItem.name)
+                groupListener?.navigateToUpdateGroup(settingsGroupWithSubGroupsItem.name)
             }
         }
     }

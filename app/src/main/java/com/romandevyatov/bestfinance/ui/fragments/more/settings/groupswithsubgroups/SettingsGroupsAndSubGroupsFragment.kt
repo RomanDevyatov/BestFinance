@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsGroupsAndSubGroupsBinding
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.groupswithsubgroups.GroupsAndSubGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.SettingsGroupsAndSubGroupsViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,7 +57,7 @@ class SettingsGroupsAndSubGroupsFragment : Fragment() {
         val viewPager = binding.groupViewPager
         val tabLayout = binding.groupTabLayout
 
-        val adapter = GroupsAndSubGroupsViewPagerAdapter(this)
+        val adapter = SettingsGroupsAndSubGroupsViewPagerAdapter(this)
         viewPager.adapter = adapter
 
         val initialTabIndex = arguments?.getInt("initialTabIndex") ?: 0

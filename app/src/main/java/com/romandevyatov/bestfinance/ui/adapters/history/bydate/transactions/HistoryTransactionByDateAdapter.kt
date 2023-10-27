@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryByIdBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.model.TransactionHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
 
 class HistoryTransactionByDateAdapter(
     private val listener: TransactionAdapter.OnHistoryItemListener? = null
