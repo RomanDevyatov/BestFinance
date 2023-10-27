@@ -90,7 +90,7 @@ class MoreFragment : Fragment() {
         return listOf(
             SettingsCategoryItem(
                 getString(R.string.categories),
-                R.drawable.ic_archive,
+                R.drawable.ic_category,
                 listOf(
                     SettingsSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
                     SettingsSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
