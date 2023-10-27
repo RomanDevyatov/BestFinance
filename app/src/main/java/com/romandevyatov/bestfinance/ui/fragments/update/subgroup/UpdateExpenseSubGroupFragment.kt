@@ -173,7 +173,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
                         requireContext(),
                         R.layout.item_with_del,
                         spinnerItems,
-                        Constants.ADD_NEW_EXPENSE_GROUP
+                        null
                     )
 
                     expenseGroupsGlobal = spinnerItems

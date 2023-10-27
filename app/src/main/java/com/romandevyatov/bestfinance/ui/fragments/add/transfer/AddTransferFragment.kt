@@ -30,7 +30,6 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SPINNER_FROM
@@ -60,6 +59,10 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
     private var fromSpinnerValueGlobalBeforeAdd: String? = null
     private var toSpinnerValueGlobalBeforeAdd: String? = null
+
+    private val ADD_NEW_WALLET: String by lazy {
+        getString(R.string.add_new_wallet)
+    }
 
     private var isButtonClickable = true
 

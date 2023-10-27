@@ -125,18 +125,16 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun onGroupDelete(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem) {
-            settingsGroupWithSubGroupsItem.id.let { id ->
-                if (id != null) {
-                    WindowUtil.showDeleteDialog(
-                        context = requireContext(),
-                        viewModel = incomeGroupsAndSubGroupsViewModel,
-                        message = getString(R.string.delete_confirmation_warning_message, settingsGroupWithSubGroupsItem.name),
-                        isCountdown = true,
-                        itemId = id,
-                        rootView = binding.root,
-                        groupOrSubGroup = true
-                    ) { }
-                }
+            settingsGroupWithSubGroupsItem.id?.let { id ->
+                WindowUtil.showDeleteDialog(
+                    context = requireContext(),
+                    viewModel = incomeGroupsAndSubGroupsViewModel,
+                    message = getString(R.string.delete_confirmation_warning_message, settingsGroupWithSubGroupsItem.name),
+                    isCountdown = true,
+                    itemId = id,
+                    rootView = binding.root,
+                    groupOrSubGroup = true
+                ) { }
             }
         }
 

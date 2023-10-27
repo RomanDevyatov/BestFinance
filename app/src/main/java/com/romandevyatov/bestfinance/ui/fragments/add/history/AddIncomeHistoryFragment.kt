@@ -33,9 +33,6 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_GROUP
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_INCOME_SUB_GROUP
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
@@ -65,6 +62,18 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
+
+    private val ADD_NEW_INCOME_GROUP: String by lazy {
+        getString(R.string.add_new_income_group)
+    }
+
+    private val ADD_NEW_INCOME_SUB_GROUP: String by lazy {
+        getString(R.string.add_new_income_sub_group)
+    }
+
+    private val ADD_NEW_WALLET: String by lazy {
+        getString(R.string.add_new_wallet)
+    }
 
     private var isButtonClickable = true
 

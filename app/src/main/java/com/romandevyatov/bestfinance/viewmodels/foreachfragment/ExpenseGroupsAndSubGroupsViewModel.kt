@@ -10,6 +10,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
+import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
 import com.romandevyatov.bestfinance.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,12 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
 
     fun deleteExpenseSubGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         expenseSubGroupRepository.deleteExpenseSubGroupById(id)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun archiveExpenseGroupByIdSpecific(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
+        val dateTime = (LocalDateTime.now()).format(LocalDateTimeRoomTypeConverter.dateTimeFormatter)
+        expenseSubGroupRepository.updateArchivedDateById(id, dateTime)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

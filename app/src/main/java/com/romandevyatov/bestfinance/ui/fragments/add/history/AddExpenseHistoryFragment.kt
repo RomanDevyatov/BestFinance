@@ -32,9 +32,6 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_GROUP
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_EXPENSE_SUB_GROUP
-import com.romandevyatov.bestfinance.utils.Constants.ADD_NEW_WALLET
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
@@ -64,6 +61,18 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     private var groupSpinnerValueGlobalBeforeAdd: String? = null
     private var subGroupSpinnerValueGlobalBeforeAdd: String? = null
     private var walletSpinnerValueGlobalBeforeAdd: String? = null
+
+    private val ADD_NEW_EXPENSE_GROUP: String by lazy {
+        getString(R.string.add_new_expense_group)
+    }
+
+    private val ADD_NEW_EXPENSE_SUB_GROUP: String by lazy {
+        getString(R.string.add_new_expense_sub_group)
+    }
+
+    private val ADD_NEW_WALLET: String by lazy {
+        getString(R.string.add_new_wallet)
+    }
 
     private var isButtonClickable = true
 
@@ -432,7 +441,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setTimeEditText() {
-        DateTimeUtils.setupDatePicker(binding.timeEditText, timeFormat)
+        DateTimeUtils.setupTimePicker(binding.timeEditText, timeFormat)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

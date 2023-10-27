@@ -65,4 +65,7 @@ interface ExpenseSubGroupDao {
 
     @Query("SELECT * FROM expense_sub_group WHERE id = :id AND archived_date IS NULL")
     fun getByIdNotArchived(id: Long): ExpenseSubGroup?
+
+    @Query("UPDATE expense_sub_group SET archived_date = :date WHERE id = :id")
+    fun updateArchivedDateById(id: Long?, date: String)
 }

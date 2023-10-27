@@ -5,6 +5,8 @@ import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -41,15 +43,28 @@ class WalletMenuAdapter(
         private val binding: CardItemWalletBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("RtlHardcoded")
         fun bind(wallet: WalletItem) {
-            binding.walletNameTextView.text = wallet.name
-
             if (wallet.id == null && wallet.name == addItemText && wallet.balance == null) {
-//                binding.walletNameTextView.layout.width = "ma"
-                binding.walletNameTextView.gravity = Gravity.CENTER
-                binding.amountTextView.text = ""
+                val linearLayout = LinearLayout(binding.root.context)
+                linearLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                linearLayout.orientation = LinearLayout.VERTICAL
+                linearLayout.gravity = Gravity.CENTER
+
+                val centeredTextView = TextView(binding.root.context)
+                centeredTextView.text = wallet.name
+                centeredTextView.gravity = Gravity.CENTER
+                centeredTextView.textSize = 24f
+
+                linearLayout.addView(centeredTextView)
+
+                // Add the LinearLayout to the root layout
+                binding.root.removeAllViews()
+                binding.root.addView(linearLayout)
             } else {
+                binding.walletNameTextView.text = wallet.name
                 binding.amountTextView.text = wallet.balance.toString()
             }
 

@@ -76,4 +76,8 @@ class ExpenseSubGroupRepository @Inject constructor(
         return expenseSubGroupDao.getByIdNotArchived(id)
     }
 
+    fun updateArchivedDateById(id: Long?, date: String) {
+        expenseSubGroupDao.updateArchivedDateById(id, date)
+    }
+
 }

@@ -36,6 +36,10 @@ class UpdateIncomeSubGroupFragment : Fragment() {
 
     private var incomeGroupsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
+    private val ADD_NEW_INCOME_GROUP: String by lazy {
+        getString(R.string.add_new_income_group)
+    }
+
     private var isButtonClickable = true
 
     override fun onCreateView(
@@ -190,7 +194,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
                             requireContext(),
                             R.layout.item_with_del,
                             spinnerItems,
-                            Constants.ADD_NEW_INCOME_GROUP
+                            ADD_NEW_INCOME_GROUP
                         )
 
                     incomeGroupsGlobal.clear()

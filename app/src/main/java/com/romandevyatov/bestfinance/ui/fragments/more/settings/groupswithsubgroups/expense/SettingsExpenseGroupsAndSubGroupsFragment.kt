@@ -13,13 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsExpenseGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsGroupWithSubgroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsSubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
+import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -33,9 +33,45 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
 
     private val generalGroupsAndSubGroupsViewModel: ExpenseGroupsAndSubGroupsViewModel by viewModels()
 
-    private var settingsGroupWithSubGroupsItemMutableList: MutableList<SettingsGroupWithSubGroupsItem> = mutableListOf()
+    private val settingsGroupWithSubgroupsAdapter: SettingsGroupWithSubgroupsAdapter by lazy {
+        SettingsGroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
+    }
 
-    private var settingsGroupWithSubgroupsAdapter: SettingsGroupWithSubgroupsAdapter? = null
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
+
+        setupGroupWithSubgroupsAdapter()
+
+        setOnBackPressedHandler()
+
+        generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData
+            .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
+                val settingsGroupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
+                    val settingsSubGroupItems = groups.expenseSubGroups.map {
+                        SettingsSubGroupItem(
+                            it.id!!,
+                            it.name,
+                            it.expenseGroupId,
+                            it.archivedDate == null
+                        )
+                    }.toMutableList()
+
+                    SettingsGroupWithSubGroupsItem(
+                        groups.expenseGroup.id,
+                        groups.expenseGroup.name,
+                        groups.expenseGroup.archivedDate == null,
+                        settingsSubGroupItems
+                    )
+                } ?: emptyList()
+
+                settingsGroupWithSubgroupsAdapter.submitList(settingsGroupWithSubGroupsItems)
+            }
+
+        return binding.root
+    }
 
     private val onSubGroupCheckedImpl = object : SettingsSubGroupsAdapter.OnSubGroupListener {
         @RequiresApi(Build.VERSION_CODES.O)
@@ -48,7 +84,17 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         }
 
         override fun onSubGroupDelete(settingsSubGroupItem: SettingsSubGroupItem) {
-            generalGroupsAndSubGroupsViewModel.deleteExpenseSubGroupById(settingsSubGroupItem.id)
+            settingsSubGroupItem.id.let { id ->
+                WindowUtil.showDeleteDialog(
+                    context = requireContext(),
+                    viewModel = generalGroupsAndSubGroupsViewModel,
+                    message = getString(R.string.delete_confirmation_warning_message, settingsSubGroupItem.name),
+                    isCountdown = true,
+                    itemId = id,
+                    rootView = binding.root,
+                    groupOrSubGroup = false
+                ) { }
+            }
         }
 
         override fun navigateToUpdateSubGroup(id: Long) {
@@ -65,15 +111,29 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         override fun onGroupChecked(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem, isChecked: Boolean) {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (isChecked) {
-                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(settingsGroupWithSubGroupsItem.id)
+                    generalGroupsAndSubGroupsViewModel.unarchiveExpenseGroupById(
+                        settingsGroupWithSubGroupsItem.id
+                    )
                 } else {
-                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupById(settingsGroupWithSubGroupsItem.id!!)
+                    generalGroupsAndSubGroupsViewModel.archiveExpenseGroupByIdSpecific(
+                        settingsGroupWithSubGroupsItem.id
+                    )
                 }
             }
         }
 
         override fun onGroupDelete(settingsGroupWithSubGroupsItem: SettingsGroupWithSubGroupsItem) {
-            generalGroupsAndSubGroupsViewModel.deleteExpenseGroupById(settingsGroupWithSubGroupsItem.id)
+            settingsGroupWithSubGroupsItem.id?.let { id ->
+                WindowUtil.showDeleteDialog(
+                    context = requireContext(),
+                    viewModel = generalGroupsAndSubGroupsViewModel,
+                    message = getString(R.string.delete_confirmation_warning_message, settingsGroupWithSubGroupsItem.name),
+                    isCountdown = true,
+                    itemId = id,
+                    rootView = binding.root,
+                    groupOrSubGroup = true
+                ) { }
+            }
         }
 
         override fun navigateToUpdateGroup(name: String) {
@@ -93,48 +153,9 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsExpenseGroupsAndSubGroupsBinding.inflate(inflater, container, false)
-
-        setupRecyclerView()
-
-        setOnBackPressedHandler()
-
-        generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData
-            .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
-                allGroupsWithSubGroups?.let { groupWithIncomeSubGroups ->
-                updateGroupWithSubGroupsList(groupWithIncomeSubGroups)
-                settingsGroupWithSubgroupsAdapter?.submitList(settingsGroupWithSubGroupsItemMutableList.toList())
-            }
-        }
-
-        return binding.root
-    }
-
-    private fun setupRecyclerView() {
-        settingsGroupWithSubgroupsAdapter = SettingsGroupWithSubgroupsAdapter(onGroupCheckedImpl, onSubGroupCheckedImpl)
-
+    private fun setupGroupWithSubgroupsAdapter() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = settingsGroupWithSubgroupsAdapter
     }
 
-    private fun updateGroupWithSubGroupsList(groupsWithSubGroups: List<ExpenseGroupWithExpenseSubGroups>) {
-        settingsGroupWithSubGroupsItemMutableList.clear()
-        settingsGroupWithSubGroupsItemMutableList.addAll(
-            groupsWithSubGroups.map { groupWithSubGroup ->
-                val subGroupsForAdapterItem = groupWithSubGroup.expenseSubGroups.map {
-                    SettingsSubGroupItem(it.id!!, it.name, it.expenseGroupId, it.archivedDate == null)
-                }.toMutableList()
-                SettingsGroupWithSubGroupsItem(
-                    groupWithSubGroup.expenseGroup.id,
-                    groupWithSubGroup.expenseGroup.name,
-                    groupWithSubGroup.expenseGroup.archivedDate == null,
-                    subGroupsForAdapterItem
-                )
-            }
-        )
-    }
 }
