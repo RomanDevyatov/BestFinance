@@ -56,11 +56,10 @@ class WalletMenuAdapter(
                 val centeredTextView = TextView(binding.root.context)
                 centeredTextView.text = wallet.name
                 centeredTextView.gravity = Gravity.CENTER
-                centeredTextView.textSize = 24f
+                centeredTextView.textSize = 28f
 
                 linearLayout.addView(centeredTextView)
 
-                // Add the LinearLayout to the root layout
                 binding.root.removeAllViews()
                 binding.root.addView(linearLayout)
             } else {
