@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
@@ -108,11 +109,11 @@ class IncomeHistoryFragment : Fragment() {
             val incomeSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.incomeSubGroup
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
-            if (incomeSubGroup != null && wallet != null) {
+            if (wallet != null) {
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = incomeGroupMap[incomeSubGroup.incomeGroupId]?.name,
-                    subGroupGroupName = incomeSubGroup.name,
+                    groupName = incomeGroupMap[incomeSubGroup?.incomeGroupId]?.name ?: "",
+                    subGroupGroupName = incomeSubGroup?.name ?: getString(R.string.changed_balance),
                     amount = incomeHistory.amount,
                     comment = incomeHistory.comment ?: "",
                     date = incomeHistory.date,

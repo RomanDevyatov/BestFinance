@@ -39,7 +39,7 @@ class TransactionAdapter(
         fun bind(transactionItem: TransactionItem) {
             binding.amountTextView.text = transactionItem.amount.toString()
 
-            binding.incomeGroupNameTextView.text = transactionItem.groupName ?: "Changing balance"
+            binding.incomeGroupNameTextView.text = transactionItem.groupName
 
             binding.subGroupNameTextView.text = transactionItem.subGroupGroupName
 
