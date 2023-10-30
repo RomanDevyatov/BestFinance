@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
@@ -57,7 +58,7 @@ class ExpenseHistoryFragment : Fragment() {
             }
         }
 
-        expenseHistoryAdapter = HistoryTransactionByDateAdapter(listener)
+        expenseHistoryAdapter = HistoryTransactionByDateAdapter(R.drawable.ic_arrow_upward, listener)
         binding.expenseHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.expenseHistoryRecyclerView.adapter = expenseHistoryAdapter
     }
@@ -108,12 +109,12 @@ class ExpenseHistoryFragment : Fragment() {
             val expenseSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.expenseSubGroup
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
-            if (expenseSubGroup != null && wallet != null) {
+            if (wallet != null) {
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = expenseGroupMap[expenseSubGroup.expenseGroupId]?.name,
-                    subGroupGroupName = expenseSubGroup.name,
-                    amount = incomeHistory.amount,
+                    groupName = expenseGroupMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
+                    subGroupGroupName = expenseSubGroup?.name ?: getString(R.string.changed_balance),
+                    amount = incomeHistory.amount * -1.0,
                     comment = incomeHistory.comment ?: "",
                     date = incomeHistory.date,
                     walletName = wallet.name

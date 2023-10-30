@@ -20,6 +20,7 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.models.ParentData
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AnalyzeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -103,8 +104,8 @@ class AnalyzeFragment : Fragment() {
 
             analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
                 val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
-
-                val result = (((totalIncomeValue - totalExpensesValue) * 100.0).roundToInt() / 100.0).toString()
+                val totalExpensesValueAbs = totalExpensesValue.absoluteValue
+                val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
 
                 binding.analyzeGroupTextView.text = result
             }
