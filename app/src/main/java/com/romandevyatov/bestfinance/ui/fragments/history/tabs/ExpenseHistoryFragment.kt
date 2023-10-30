@@ -58,7 +58,7 @@ class ExpenseHistoryFragment : Fragment() {
             }
         }
 
-        expenseHistoryAdapter = HistoryTransactionByDateAdapter(listener)
+        expenseHistoryAdapter = HistoryTransactionByDateAdapter(R.drawable.ic_arrow_upward, listener)
         binding.expenseHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.expenseHistoryRecyclerView.adapter = expenseHistoryAdapter
     }

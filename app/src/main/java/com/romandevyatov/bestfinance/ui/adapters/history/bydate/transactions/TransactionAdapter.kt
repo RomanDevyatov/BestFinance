@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransactionBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 
 class TransactionAdapter(
     private val transactionList: List<TransactionItem>,
-    val onTransactionClickListener: OnHistoryItemListener? = null
+    val onTransactionClickListener: OnHistoryItemListener? = null,
+    val imageId: Int? = null
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     interface OnHistoryItemListener {
@@ -46,6 +48,10 @@ class TransactionAdapter(
             binding.walletNameTextView.text = transactionItem.walletName
 
             binding.dateIncomeTextView.text = transactionItem.date?.toLocalTime().toString()
+
+            if (imageId != null) {
+                binding.imageView.setImageResource(imageId)
+            }
 
             binding.root.setOnClickListener {
                 if (transactionItem.id != null) {

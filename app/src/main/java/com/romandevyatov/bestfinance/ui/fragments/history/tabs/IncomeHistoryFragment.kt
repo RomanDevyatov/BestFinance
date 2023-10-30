@@ -58,7 +58,7 @@ class IncomeHistoryFragment : Fragment() {
             }
         }
 
-        incomeHistoryAdapter = HistoryTransactionByDateAdapter(listener)
+        incomeHistoryAdapter = HistoryTransactionByDateAdapter(R.drawable.ic_arrow_downward, listener)
         binding.incomeHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.incomeHistoryRecyclerView.adapter = incomeHistoryAdapter
     }
