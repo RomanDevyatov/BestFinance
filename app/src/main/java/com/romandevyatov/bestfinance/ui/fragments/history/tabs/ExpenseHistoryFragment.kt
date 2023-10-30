@@ -114,7 +114,7 @@ class ExpenseHistoryFragment : Fragment() {
                     id = incomeHistory.id,
                     groupName = expenseGroupMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
                     subGroupGroupName = expenseSubGroup?.name ?: getString(R.string.changed_balance),
-                    amount = incomeHistory.amount,
+                    amount = incomeHistory.amount * -1.0,
                     comment = incomeHistory.comment ?: "",
                     date = incomeHistory.date,
                     walletName = wallet.name
