@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Example"
         android:textSize="18sp"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:textStyle="bold"/>
 
     <TextView
@@ -22,8 +22,8 @@
         style="@style/CustomTextViewStyle"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginEnd="15dp"
-        android:text="2222" />
+        android:text="0000" />
 
 </androidx.cardview.widget.CardView>
