@@ -26,6 +26,7 @@ import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateWalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
+import kotlin.math.absoluteValue
 
 @AndroidEntryPoint
 class UpdateWalletFragment : Fragment() {
@@ -76,13 +77,6 @@ class UpdateWalletFragment : Fragment() {
             updateWalletViewModel.getWalletByNameLiveData(walletNameBinding)
                 .observe(viewLifecycleOwner) { wallet ->
                     if (walletNameBinding == args.walletName.toString() || wallet == null) {
-                        val updatedWallet = Wallet(
-                            id = walletId,
-                            name = walletNameBinding,
-                            balance = walletBalanceBinding,
-                            description = walletDescriptionBinding
-                        )
-
                         walletGlobal?.let { walletGlobal ->
                             walletId?.let { id ->
                                 val difference = walletBalanceBinding - walletGlobal.balance
@@ -96,6 +90,13 @@ class UpdateWalletFragment : Fragment() {
                                 }
                             }
                         }
+
+                        val updatedWallet = Wallet(
+                            id = walletId,
+                            name = walletNameBinding,
+                            balance = walletBalanceBinding,
+                            description = walletDescriptionBinding
+                        )
 
                         updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
 
@@ -157,7 +158,7 @@ class UpdateWalletFragment : Fragment() {
                 updateWalletViewModel.addOnlyWalletExpenseHistoryRecord(
                     ExpenseHistory(
                         expenseSubGroupId = null,
-                        amount = difference,
+                        amount = difference.absoluteValue,
                         comment = getString(R.string.changed_wallet_balance),
                         date = LocalDateTime.now(),
                         walletId = walletId

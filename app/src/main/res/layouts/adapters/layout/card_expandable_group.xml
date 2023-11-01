@@ -19,15 +19,15 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/label_global_group"
+                android:id="@+id/groupName"
                 style="@style/CustomTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
-                android:text="Incomes or Expenses"
-                android:textSize="28sp"
+                android:text="Group Name"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,11 +52,10 @@
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/arrow_imageview"
-                app:layout_constraintStart_toEndOf="@+id/label_global_group"
+                app:layout_constraintStart_toEndOf="@+id/groupName"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -64,7 +63,7 @@
             android:id="@+id/expandable_layout">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/child_rv"
+                android:id="@+id/sub_groups_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"

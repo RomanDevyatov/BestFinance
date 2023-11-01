@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardHistoryByIdBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
+import com.romandevyatov.bestfinance.utils.Constants
 
 class HistoryTransactionByDateAdapter(
+    private val imageId: Int,
     private val listener: TransactionAdapter.OnHistoryItemListener? = null
 ) : RecyclerView.Adapter<HistoryTransactionByDateAdapter.TransactionHistoryByDateViewHolder>() {
 
@@ -36,7 +38,7 @@ class HistoryTransactionByDateAdapter(
         fun bind(groupWithSubGroupsItem: TransactionHistoryItem) {
             binding.dateTextView.text = groupWithSubGroupsItem.date
 
-            val transactionAdapter = TransactionAdapter(groupWithSubGroupsItem.transactions, listener)
+            val transactionAdapter = TransactionAdapter(groupWithSubGroupsItem.transactions, listener, imageId)
             binding.historiesByDateRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)
             binding.historiesByDateRecyclerView.adapter = transactionAdapter
         }
