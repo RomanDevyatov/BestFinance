@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.history
 
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -98,6 +99,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.amountEditText.addGenericTextWatcher()
 
         setOnBackPressedCallback()
 

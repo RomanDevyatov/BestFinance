@@ -1,5 +1,6 @@
-package com.romandevyatov.bestfinance.ui.fragments.add.transfer
+package com.romandevyatov.bestfinance.ui.fragments.add.history.transfer
 
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -26,9 +27,7 @@ import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
-import com.romandevyatov.bestfinance.ui.adapters.spinner.SpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
-import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
@@ -39,6 +38,7 @@ import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
+import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddTransferViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
@@ -87,6 +87,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.amountEditText.addGenericTextWatcher()
 
         setOnBackPressedCallback()
 
@@ -481,10 +483,6 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun isNameInAdapter(subGroupSpinnerAdapter: SpinnerAdapter, savedSubGroupName: String?): Boolean {
-        return subGroupSpinnerAdapter.getPosition(savedSubGroupName) > -1
-    }
-
     private fun restoreAmountDateCommentValues() {
         val mod = sharedModViewModel.modelForm
 
@@ -506,7 +504,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun navigateAddNewWallet(spinnerType: String) {
-        val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationAddWallet()
+        val action =
+            AddTransferFragmentDirections.actionAddTransferFragmentToNavigationAddWallet()
         action.source = Constants.ADD_TRANSFER_HISTORY_FRAGMENT
         action.spinnerType = spinnerType
         findNavController().navigate(action)
@@ -600,8 +599,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                     )
 
                     sharedModViewModel.set(null)
-                    val action =
-                        AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
+                    val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
                     findNavController().navigate(action)
                 }
             }

@@ -183,7 +183,7 @@
     </fragment>
     <fragment
         android:id="@+id/add_transfer_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.add.history.transfer.AddTransferFragment"
         android:label="@string/transfer"
         tools:layout="@layout/fragment_add_transfer" >
         <action
@@ -375,7 +375,7 @@
     </fragment>
     <fragment
         android:id="@+id/update_transfer_history_fragment"
-        android:name="com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.update.history.transfer.UpdateTransferHistoryFragment"
         android:label="@string/update_transfer_history"
         tools:layout="@layout/fragment_update_transfer_history" >
 
