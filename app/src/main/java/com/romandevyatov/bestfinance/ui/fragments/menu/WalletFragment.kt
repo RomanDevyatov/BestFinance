@@ -116,6 +116,25 @@ class WalletFragment : Fragment() {
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
+
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val position = viewHolder.adapterPosition
+
+                val selectedWalletItem = walletMenuAdapter.walletDiffer.currentList[position]
+
+                if (selectedWalletItem.name == addNewWalletString) {
+                    return makeMovementFlags(0, 0)
+                }
+
+                val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+
+                return makeMovementFlags(dragFlags, swipeFlags)
+            }
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -126,9 +145,9 @@ class WalletFragment : Fragment() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos = viewHolder.adapterPosition
+                val position = viewHolder.adapterPosition
 
-                val selectedWalletItem = walletMenuAdapter.walletDiffer.currentList[pos]
+                val selectedWalletItem = walletMenuAdapter.walletDiffer.currentList[position]
 
                 walletViewModel.archiveWalletById(selectedWalletItem.id, LocalDateTime.now())
 
