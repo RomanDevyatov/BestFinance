@@ -5,7 +5,7 @@
     android:id="@+id/addTransferFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.add.transfer.AddTransferFragment">
+    tools:context=".ui.fragments.add.history.transfer.AddTransferFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fromWalletNameSpinnerLayout"
@@ -74,6 +74,8 @@
             android:id="@+id/amountEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:digits="0123456789.,-"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 

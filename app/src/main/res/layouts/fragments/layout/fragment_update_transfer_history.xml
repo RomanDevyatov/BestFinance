@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/updateIncomeHistoryFragment"
-    tools:context=".ui.fragments.update.history.UpdateTransferHistoryFragment">
+    tools:context=".ui.fragments.update.history.transfer.UpdateTransferHistoryFragment">
 
     <include
         android:id="@+id/reusable"

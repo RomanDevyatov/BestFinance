@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.update.wallet
 
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -68,6 +69,8 @@ class UpdateWalletFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.balanceEditText.addGenericTextWatcher()
 
         binding.updateWalletButton.setOnClickListener {
             val walletNameBinding = binding.nameEditText.text.toString()
