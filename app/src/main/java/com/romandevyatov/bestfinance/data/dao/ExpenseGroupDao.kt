@@ -118,4 +118,7 @@ interface ExpenseGroupDao {
     @Transaction
     @Query("SELECT * FROM expense_group WHERE id = :id")
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id: Long): ExpenseGroupWithExpenseSubGroups?
+
+    @Query("UPDATE expense_group SET archived_date = :date WHERE id = :id")
+    fun updateArchivedDateById(id: Long?, date: String)
 }
