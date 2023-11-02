@@ -26,7 +26,12 @@ fun TextInputEditText.addGenericTextWatcher() {
 }
 
 private fun processInput(text: String): String {
-    val updatedText = text.replace(",", ".").replace("-", "0")
+    var updatedText = text.replace(",", ".").replace("-", "0")
+
+    val decimalCount = updatedText.count { it == '.' }
+    if (decimalCount > 1) {
+        updatedText = updatedText.replaceFirst(".", "")
+    }
 
     if (updatedText.length > 1) {
       if (updatedText.count { it == '0' } > 1) {
