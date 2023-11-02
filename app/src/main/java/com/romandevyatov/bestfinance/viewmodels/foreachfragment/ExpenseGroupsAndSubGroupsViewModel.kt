@@ -53,7 +53,7 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveExpenseGroupByIdSpecific(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
         val dateTime = (LocalDateTime.now()).format(LocalDateTimeRoomTypeConverter.dateTimeFormatter)
-        expenseSubGroupRepository.updateArchivedDateById(id, dateTime)
+        expenseGroupRepository.updateArchivedDateById(id, dateTime)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

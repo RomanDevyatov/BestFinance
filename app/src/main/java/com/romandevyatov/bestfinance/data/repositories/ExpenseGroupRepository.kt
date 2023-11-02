@@ -110,4 +110,8 @@ class ExpenseGroupRepository @Inject constructor(
     fun getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id: Long): ExpenseGroupWithExpenseSubGroups? {
         return expenseGroupDao.getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id)
     }
+
+    fun updateArchivedDateById(id: Long?, date: String) {
+        expenseGroupDao.updateArchivedDateById(id, date)
+    }
 }
