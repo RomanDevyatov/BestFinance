@@ -1,5 +1,6 @@
-package com.romandevyatov.bestfinance.ui.fragments.update.history
+package com.romandevyatov.bestfinance.ui.fragments.update.history.transfer
 
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -65,6 +66,8 @@ class UpdateTransferHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.reusable.amountEditText.addGenericTextWatcher()
 
         setOnBackPressedHandler()
 
@@ -260,7 +263,8 @@ class UpdateTransferHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        val action = UpdateTransferHistoryFragmentDirections.actionUpdateTransferHistoryFragmentToHistoryFragment()
+        val action =
+            UpdateTransferHistoryFragmentDirections.actionUpdateTransferHistoryFragmentToHistoryFragment()
         action.initialTabIndex = 1
         findNavController().navigate(action)
     }

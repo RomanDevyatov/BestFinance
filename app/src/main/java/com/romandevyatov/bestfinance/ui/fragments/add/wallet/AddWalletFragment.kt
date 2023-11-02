@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.wallet
 
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -60,6 +61,8 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.balanceEditText.addGenericTextWatcher()
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 performNavigation(args.source, null)
@@ -79,7 +82,6 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
                 view.isEnabled = true
             }, Constants.CLICK_DELAY_MS)
         }
-
     }
 
     private fun sendWallet() {

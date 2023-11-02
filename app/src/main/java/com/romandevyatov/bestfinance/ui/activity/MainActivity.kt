@@ -28,11 +28,11 @@ import com.romandevyatov.bestfinance.ui.fragments.add.history.AddExpenseHistoryF
 import com.romandevyatov.bestfinance.ui.fragments.add.history.AddIncomeHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddExpenseSubGroupFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.subgroup.AddIncomeSubGroupFragment
-import com.romandevyatov.bestfinance.ui.fragments.add.transfer.AddTransferFragment
+import com.romandevyatov.bestfinance.ui.fragments.add.history.transfer.AddTransferFragment
 import com.romandevyatov.bestfinance.ui.fragments.add.wallet.AddWalletFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateExpenseHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHistoryFragment
-import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateTransferHistoryFragment
+import com.romandevyatov.bestfinance.ui.fragments.update.history.transfer.UpdateTransferHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
