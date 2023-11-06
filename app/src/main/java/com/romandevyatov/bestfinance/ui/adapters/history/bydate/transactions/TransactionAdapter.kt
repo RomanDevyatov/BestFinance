@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.CardItemHistoryTransactionBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 
@@ -39,7 +38,11 @@ class TransactionAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transactionItem: TransactionItem) {
-            binding.amountTextView.text = transactionItem.amount.toString()
+            var amount = transactionItem.amount.toString()
+            if (transactionItem.amount >= 0.0) {
+                amount = "+$amount"
+            }
+            binding.amountTextView.text = amount
 
             binding.incomeGroupNameTextView.text = transactionItem.groupName
 

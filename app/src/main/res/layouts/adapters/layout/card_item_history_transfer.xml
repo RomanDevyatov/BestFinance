@@ -2,24 +2,21 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="5dp">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="4dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.48"
             app:srcCompat="@drawable/ic_transfer_arrows" />
 
         <TextView
@@ -34,16 +31,17 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image2View"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/toNameTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/image2View"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/toNameTextView"
+            app:layout_constraintStart_toEndOf="@+id/fromNameTextView"
             app:layout_constraintTop_toBottomOf="@+id/amountTextView"
             app:srcCompat="@drawable/ic_right_arrow" />
 
@@ -55,10 +53,8 @@
             android:text="toNameTextView"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView" />
 
         <TextView
             android:id="@+id/amountTextView"
@@ -66,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="TextView"
+            android:text="amount"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -79,12 +75,9 @@
             android:gravity="left"
             android:text="dateIncomeTextView"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/fromNameTextView"
-            app:layout_constraintEnd_toStartOf="@+id/amountTextView"
-            app:layout_constraintHorizontal_bias="0.302"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.666" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toNameTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

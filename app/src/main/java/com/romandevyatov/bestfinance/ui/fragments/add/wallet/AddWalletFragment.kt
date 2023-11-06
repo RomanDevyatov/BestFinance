@@ -17,6 +17,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
+import com.romandevyatov.bestfinance.data.validation.TwoDigitsAfterPoint
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
 import com.romandevyatov.bestfinance.utils.Constants
@@ -92,7 +93,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
         val walletNameValidation = EmptyValidator(walletNameBinding).validate()
         binding.nameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
 
-        val walletBalanceValidation = BaseValidator.validate(EmptyValidator(walletBalanceBinding), IsDigitValidator(walletBalanceBinding))
+        val walletBalanceValidation = BaseValidator.validate(EmptyValidator(walletBalanceBinding), IsDigitValidator(walletBalanceBinding), TwoDigitsAfterPoint(walletBalanceBinding))
         binding.balanceLayout.error = if (!walletBalanceValidation.isSuccess) getString(walletBalanceValidation.message) else null
 
         if (walletNameValidation.isSuccess
