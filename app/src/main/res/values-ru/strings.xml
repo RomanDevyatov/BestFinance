@@ -128,6 +128,7 @@
     <string name="yes">да</string>
     <string name="no">нет</string>
 
+    <string name="delete">Удалить</string>
     <string name="groups_and_sub_groups">Группы и подгруппы</string>
     <string name="wallets">Кошельки</string>
     <string name="update_expense_group">Обновить группу расходов</string>
@@ -198,5 +199,6 @@
     <string name="add_new_wallet">Добавить новый кошелёк</string>
 
     <string name="text_validation_error_more_then_two_digits_after_point">Не больше 2 цифир после точки</string>
+
 
 </resources>

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.expense
+package com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.expense
 
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +18,7 @@ import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswit
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.SettingsSubGroupsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
-import com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
+import com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint

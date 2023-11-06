@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.settings.wallets
+package com.romandevyatov.bestfinance.ui.fragments.more.wallets
 
 import android.os.Build
 import android.os.Bundle
@@ -69,7 +69,7 @@ class SettingsWalletsFragment : Fragment() {
                 settingsWalletItemMutableList.clear()
                 settingsWalletItemMutableList.addAll(
                     wallets.map {
-                        SettingsWalletItem(it.id, it.name, it.archivedDate == null)
+                        SettingsWalletItem(it.id, it.name, it.balance.toString(), it.archivedDate == null)
                     }.toMutableList()
                 )
 

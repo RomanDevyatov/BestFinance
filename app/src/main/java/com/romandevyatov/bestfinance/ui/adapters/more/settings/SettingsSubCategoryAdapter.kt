@@ -9,8 +9,7 @@ import com.romandevyatov.bestfinance.databinding.ItemSubcategoryBinding
 class SettingsSubCategoryAdapter(
     private val subcategoryData: List<SettingsSubCategoryItem>,
     private val clickListener: OnSubCategoryClickListener
-) :
-    RecyclerView.Adapter<SettingsSubCategoryAdapter.SubCategoryViewHolder>() {
+) : RecyclerView.Adapter<SettingsSubCategoryAdapter.SubCategoryViewHolder>() {
 
     interface OnSubCategoryClickListener {
         fun onSubCategoryClick(subCategory: SettingsSubCategoryItem)

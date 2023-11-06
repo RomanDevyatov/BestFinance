@@ -57,6 +57,7 @@ class SettingsWalletsAdapter(
 
         fun bindSubgroup(settingsWalletItem: SettingsWalletItem) {
             binding.walletTextView.text = settingsWalletItem.name
+            binding.walletBalanceTextView.text = settingsWalletItem.balance
 
             binding.deleteButton.setOnClickListener {
                 walletItemDeleteListener?.onWalletItemDelete(settingsWalletItem)

@@ -1,4 +1,4 @@
-package com.romandevyatov.bestfinance.ui.fragments.more.settings.groupswithsubgroups
+package com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups
 
 import android.os.Bundle
 import android.view.LayoutInflater
