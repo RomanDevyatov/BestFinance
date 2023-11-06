@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
@@ -61,14 +61,14 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
         val selectExpenseGroup = expenseGroupRepository.getExpenseGroupById(id)
 
         if (selectExpenseGroup != null) {
-            val selectedExpenseGroupArchived = ExpenseGroup(
+            val selectedExpenseGroupEntityArchived = ExpenseGroupEntity(
                 id = selectExpenseGroup.id,
                 name = selectExpenseGroup.name,
                 description = selectExpenseGroup.description,
                 archivedDate = LocalDateTime.now()
             )
 
-            expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupArchived)
+            expenseGroupRepository.updateExpenseGroup(selectedExpenseGroupEntityArchived)
         }
     }
 
@@ -82,8 +82,8 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
 
     val allExpenseGroupsWithExpenseSubGroupsLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroups>> = expenseGroupRepository.getAllExpenseGroupsWithExpenseSubGroupsLiveData()
 
-    private var deletedItem: ExpenseGroup? = null
-    private val deletedItemList = mutableListOf<ExpenseGroup>()
+    private var deletedItem: ExpenseGroupEntity? = null
+    private val deletedItemList = mutableListOf<ExpenseGroupEntity>()
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {

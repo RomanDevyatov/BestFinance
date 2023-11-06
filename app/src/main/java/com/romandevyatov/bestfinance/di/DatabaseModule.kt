@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.romandevyatov.bestfinance.data.roomdb.BestFinanceDatabase
 import com.romandevyatov.bestfinance.utils.Constants.DATABASE_NAME
+import com.romandevyatov.bestfinance.utils.localization.Storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +60,14 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesTransferHistoryDao(db: BestFinanceDatabase) = db.getTransferHistoryDao()
+
+    @Provides
+    @Singleton
+    fun providesCurrencyDao(db: BestFinanceDatabase) = db.getCurrencyDao()
+
+    @Provides
+    @Singleton
+    fun providesStorage(@ApplicationContext context: Context): Storage {
+        return Storage(context)
+    }
 }

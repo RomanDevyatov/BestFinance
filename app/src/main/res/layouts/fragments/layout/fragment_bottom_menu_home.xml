@@ -24,47 +24,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/moneyFlowTextView"
-        style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="@string/money_flow"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/goToHistoryButton"
-        app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
-        app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
-
-    <TextView
-        android:id="@+id/totalExpensesTextView"
-        style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="@string/total_expenses"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/moneyFlowTextView"
-        app:layout_constraintStart_toStartOf="@+id/totalIncomeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/totalIncomeTextView" />
-
-    <TextView
-        android:id="@+id/totalIncomeTextView"
-        style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="@string/total_income"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/totalExpensesTextView"
-        app:layout_constraintStart_toStartOf="@+id/passiveIncomeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/passiveIncomeTextView" />
-
-    <TextView
         android:id="@+id/passiveIncomeTextView"
         style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:text="@string/passive_income"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/totalIncomeTextView"
@@ -72,25 +36,61 @@
         app:layout_constraintTop_toBottomOf="@+id/capitalTextView" />
 
     <TextView
-        android:id="@+id/totalExpensesValueTextView"
+        android:id="@+id/totalIncomeTextView"
         style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text=""
+        android:layout_marginTop="60dp"
+        android:text="@string/total_income"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/totalIncomeValueTextView"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/totalIncomeValueTextView"
-        app:layout_constraintTop_toBottomOf="@+id/totalIncomeValueTextView" />
+        app:layout_constraintBottom_toTopOf="@+id/totalExpensesTextView"
+        app:layout_constraintStart_toStartOf="@+id/passiveIncomeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/passiveIncomeTextView" />
+
+    <TextView
+        android:id="@+id/totalExpensesTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/total_expenses"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/moneyFlowTextView"
+        app:layout_constraintStart_toStartOf="@+id/totalIncomeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalIncomeTextView" />
+
+    <TextView
+        android:id="@+id/moneyFlowTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/money_flow"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/goToHistoryButton"
+        app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
+
+
+    <TextView
+        android:id="@+id/totalCapitalTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="32dp"
+        android:text="1"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/capitalTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/passiveIncomeValueTextView"
         style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text=""
+        android:layout_marginTop="60dp"
+        android:text="2"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/totalCapitalTextView"
         app:layout_constraintHorizontal_bias="1.0"
@@ -102,8 +102,8 @@
         style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text=""
+        android:layout_marginTop="60dp"
+        android:text="3"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/passiveIncomeValueTextView"
         app:layout_constraintHorizontal_bias="1.0"
@@ -111,29 +111,30 @@
         app:layout_constraintTop_toBottomOf="@+id/passiveIncomeValueTextView" />
 
     <TextView
+        android:id="@+id/totalExpensesValueTextView"
+        style="@style/CustomTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="4"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/totalIncomeValueTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/totalIncomeValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/totalIncomeValueTextView" />
+
+    <TextView
         android:id="@+id/moneyFlowValueTextView"
         style="@style/CustomTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text=""
+        android:layout_marginTop="60dp"
+        android:text="5"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/totalExpensesValueTextView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/totalExpensesValueTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesValueTextView" />
-
-    <TextView
-        android:id="@+id/totalCapitalTextView"
-        style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="32dp"
-        android:text=""
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/capitalTextView"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/goToAnalyzeButton"

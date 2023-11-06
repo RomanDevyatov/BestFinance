@@ -90,6 +90,12 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         recreate()
     }
 
+    fun updateIsFirstLaunch(locale: String) {
+        storage.setPreferredLocale(locale)
+        LocaleUtil.applyLocalizedContext(applicationContext, locale)
+        recreate()
+    }
+
     override fun onExitApp() {
         finish()
     }
@@ -105,7 +111,9 @@ class MainActivity : BaseActivity(), OnExitAppListener {
                 navController.navigate(R.id.home_fragment)
                 true
             }
-            R.id.groups_and_sub_groups_settings_fragment, R.id.wallets_settings_fragment -> {
+            R.id.groups_and_sub_groups_settings_fragment,
+            R.id.wallets_settings_fragment,
+            R.id.select_currency_fragment -> {
                 navController.navigate(R.id.more_fragment)
                 true
             }
@@ -180,7 +188,8 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.update_income_group_fragment,
             R.id.update_expense_sub_group_fragment,
             R.id.update_income_sub_group_fragment,
-            R.id.settings_fragment
+            R.id.settings_fragment,
+            R.id.select_currency_fragment
         )
 
         if (bottomNavViewExcludedArray.contains(destinationId)) {

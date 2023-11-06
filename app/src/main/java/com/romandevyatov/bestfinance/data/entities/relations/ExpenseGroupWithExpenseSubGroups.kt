@@ -3,13 +3,13 @@ package com.romandevyatov.bestfinance.data.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 
 data class ExpenseGroupWithExpenseSubGroups(
 
     @Embedded
-    val expenseGroup: ExpenseGroup,
+    val expenseGroupEntity: ExpenseGroupEntity,
 
     @Relation(
         parentColumn = "id", //ExpenseGroup

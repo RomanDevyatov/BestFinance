@@ -15,8 +15,10 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuHomeBinding
+import com.romandevyatov.bestfinance.ui.activity.MainActivity
 import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
@@ -65,8 +67,14 @@ class HomeFragment : Fragment() {
 
         setOnBackPressedHandler()
 
+        if (homeViewModel.getIsFirstLaunch()) {
+            homeViewModel.initializeCurrencyData()
+            homeViewModel.setIsFirstLaunch(false)
+        }
+
         return binding.root
     }
+
 
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {

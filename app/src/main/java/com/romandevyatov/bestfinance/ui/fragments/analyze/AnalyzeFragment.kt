@@ -141,7 +141,7 @@ class AnalyzeFragment : Fragment() {
         val categoryList = mutableListOf<GroupItem>()
 
         for (expenseHistories in expenseGroupWithExpenseSubGroupsIncludingExpenseHistories) {
-            val groupName = expenseHistories.expenseGroup?.name ?: getString(R.string.changed_balance)
+            val groupName = expenseHistories.expenseGroupEntity?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemExpens = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
                 SubGroupNameAndSumItem(

@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
@@ -29,7 +29,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     // expense group zone
-    fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroup>> {
+    fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroupEntity>> {
         return expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
     }
 
@@ -41,18 +41,18 @@ class AddExpenseHistoryViewModel @Inject constructor(
     fun archiveExpenseGroup(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val expenseGroupWithExpenseSubGroups = getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id)
         if (expenseGroupWithExpenseSubGroups != null) {
-            val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroup
+            val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroupEntity
             val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
 
             val archivedDate = LocalDateTime.now()
 
-            val expenseGroupArchived = ExpenseGroup(
+            val expenseGroupEntityArchived = ExpenseGroupEntity(
                 id = expenseGroup.id,
                 name = expenseGroup.name,
                 description = expenseGroup.description,
                 archivedDate = archivedDate
             )
-            updateExpenseGroup(expenseGroupArchived)
+            updateExpenseGroup(expenseGroupEntityArchived)
 
             expenseSubGroups.forEach { subGroup ->
                 val expenseSubGroupArchived = ExpenseSubGroup(
@@ -177,9 +177,9 @@ class AddExpenseHistoryViewModel @Inject constructor(
         }
     }
 
-    fun updateExpenseGroup(expenseGroupArchived: ExpenseGroup) {
+    fun updateExpenseGroup(expenseGroupEntityArchived: ExpenseGroupEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            expenseGroupRepository.updateExpenseGroup(expenseGroupArchived)
+            expenseGroupRepository.updateExpenseGroup(expenseGroupEntityArchived)
         }
     }
 
@@ -213,8 +213,8 @@ class AddExpenseHistoryViewModel @Inject constructor(
         }
     }
 
-    fun insertExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseGroupRepository.insertExpenseGroup(expenseGroup)
+    fun insertExpenseGroup(expenseGroupEntity: ExpenseGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseGroupRepository.insertExpenseGroup(expenseGroupEntity)
     }
 
     fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {

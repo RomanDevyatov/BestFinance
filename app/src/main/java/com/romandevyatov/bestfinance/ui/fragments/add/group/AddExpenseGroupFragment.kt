@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
 import com.romandevyatov.bestfinance.utils.Constants
@@ -149,7 +149,7 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
                 .observe(viewLifecycleOwner) { expenseGroup ->
                     if (expenseGroup == null) {
                         addGroupViewModel.insertExpenseGroup(
-                            ExpenseGroup(
+                            ExpenseGroupEntity(
                                 name = groupNameBinding,
                                 description = descriptionBinding
                             )

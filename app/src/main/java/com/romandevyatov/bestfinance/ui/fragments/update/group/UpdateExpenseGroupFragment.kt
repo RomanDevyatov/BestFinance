@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
 import com.romandevyatov.bestfinance.utils.Constants
@@ -32,7 +32,7 @@ class UpdateExpenseGroupFragment : Fragment() {
 
     private var expenseGroupId: Long? = null
 
-    private var expenseGroupGlobal: ExpenseGroup? = null
+    private var expenseGroupEntityGlobal: ExpenseGroupEntity? = null
 
     private var isButtonClickable = true
 
@@ -49,7 +49,7 @@ class UpdateExpenseGroupFragment : Fragment() {
         updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
             .observe(viewLifecycleOwner) { expenseGroup ->
                 expenseGroup?.let {
-                    expenseGroupGlobal = it.copy()
+                    expenseGroupEntityGlobal = it.copy()
                     binding.reusable.newExpenseGroupName.setText(it.name)
                     binding.reusable.descriptionEditText.setText(it.description)
                     expenseGroupId = it.id
@@ -117,13 +117,13 @@ class UpdateExpenseGroupFragment : Fragment() {
     }
 
     private fun updateExpenseGroup(nameBinding: String, descriptionBinding: String) {
-        val updatedExpenseGroup = ExpenseGroup(
-            id = expenseGroupGlobal?.id,
+        val updatedExpenseGroupEntity = ExpenseGroupEntity(
+            id = expenseGroupEntityGlobal?.id,
             name = nameBinding,
             description = descriptionBinding,
-            archivedDate = expenseGroupGlobal?.archivedDate
+            archivedDate = expenseGroupEntityGlobal?.archivedDate
         )
-        updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroup)
+        updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroupEntity)
     }
 
     override fun onDestroyView() {

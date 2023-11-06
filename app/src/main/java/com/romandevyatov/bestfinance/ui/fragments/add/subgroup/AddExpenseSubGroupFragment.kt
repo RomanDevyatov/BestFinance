@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
@@ -237,7 +237,7 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun initGroupSpinner() {
-        addSubGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+        addSubGroupViewModel.allEntityExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             val spinnerItems = getExpenseGroupListForSpinner(expenseGroupList)
 
             spinnerItemsGlobal.clear()
@@ -259,7 +259,7 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getExpenseGroupListForSpinner(groups: List<ExpenseGroup>): MutableList<SpinnerItem> {
+    private fun getExpenseGroupListForSpinner(groups: List<ExpenseGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()

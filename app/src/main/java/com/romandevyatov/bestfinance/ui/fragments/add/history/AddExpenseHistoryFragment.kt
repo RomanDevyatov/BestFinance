@@ -18,7 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
@@ -185,7 +185,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertExpenseGroup(
-                        ExpenseGroup(
+                        ExpenseGroupEntity(
                             name = spokenValue!!
                         )
                     )
@@ -768,7 +768,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<ExpenseGroup>): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<ExpenseGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()

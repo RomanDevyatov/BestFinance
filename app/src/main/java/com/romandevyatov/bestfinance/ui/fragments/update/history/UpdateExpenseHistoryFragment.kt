@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
@@ -49,7 +49,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
     private var prevGroupSpinnerValueGlobal: String? = null
 
     private lateinit var historyWithSubGroupAndWalletGlobal: ExpenseHistoryWithExpenseSubGroupAndWallet
-    private var expenseGroupGlobal: ExpenseGroup? = null
+    private var expenseGroupEntityGlobal: ExpenseGroupEntity? = null
 
     private var spinnerSubGroupItemsGlobal: MutableList<SpinnerItem>? = null
     private var walletSpinnerItemsGlobal: MutableList<SpinnerItem>? = null
@@ -110,7 +110,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateExpenseHistoryViewModel,
-            message = getString(R.string.delete_confirmation_warning_message, expenseGroupGlobal?.name),
+            message = getString(R.string.delete_confirmation_warning_message, expenseGroupEntityGlobal?.name),
             itemId = args.expenseHistoryId,
             isCountdown = false,
             rootView = binding.root
@@ -138,7 +138,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
         updateExpenseHistoryViewModel.getExpenseGroupByIdLiveData(expenseGroupId)
             .observe(viewLifecycleOwner) { expenseGroup ->
                 expenseGroup?.let {
-                    expenseGroupGlobal = it.copy()
+                    expenseGroupEntityGlobal = it.copy()
 
                     binding.reusable.groupSpinner.setText(it.name, false)
                 }
@@ -252,7 +252,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<ExpenseGroup>?): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<ExpenseGroupEntity>?): MutableList<SpinnerItem> {
         val spinnerItems: MutableList<SpinnerItem> = mutableListOf()
 
         groups?.forEach { it ->

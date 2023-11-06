@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
@@ -54,11 +54,11 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupNotArchivedWithExpenseSubGroupsNotArchivedByExpenseGroupNameLiveData(name)
     }
 
-    fun getAllExpenseGroupNotArchived(): LiveData<List<ExpenseGroup>> {
+    fun getAllExpenseGroupNotArchived(): LiveData<List<ExpenseGroupEntity>> {
         return expenseGroupRepository.getAllExpenseGroupNotArchivedLiveData()
     }
 
-    fun getExpenseGroupByIdLiveData(expenseGroupId: Long): LiveData<ExpenseGroup?> {
+    fun getExpenseGroupByIdLiveData(expenseGroupId: Long): LiveData<ExpenseGroupEntity?> {
         return expenseGroupRepository.getExpenseGroupByIdLiveData(expenseGroupId)
     }
 

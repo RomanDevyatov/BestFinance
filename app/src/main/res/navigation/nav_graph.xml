@@ -55,8 +55,23 @@
             android:id="@+id/action_more_fragment_to_groups_and_sub_groups_settings_fragment"
             app:destination="@id/groups_and_sub_groups_settings_fragment" />
         <action
+            android:id="@+id/action_more_fragment_to_select_currency_fragment"
+            app:destination="@id/select_currency_fragment" />
+        <action
             android:id="@+id/action_more_fragment_to_settingsFragment"
             app:destination="@id/settings_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/select_currency_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.selectcurrency.SelectCurrencyFragment"
+        android:label="@string/select_default_currency"
+        tools:layout="@layout/fragment_settings_select_currency" >
+
+        <action
+            android:id="@+id/action_select_currency_fragment_to_more_fragment"
+            app:destination="@id/more_fragment" />
     </fragment>
 
     <fragment

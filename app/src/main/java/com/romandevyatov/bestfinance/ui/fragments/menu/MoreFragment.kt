@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuMoreBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.MoreSubCategoryItem
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.MoreFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,6 +28,12 @@ class MoreFragment : Fragment() {
     private lateinit var GROUPS_AND_SUB_GROUPS_CATEGORY: String
     private lateinit var WALLETS_CATEGORY: String
 
+    private val moreFragmentViewModel: MoreFragmentViewModel by viewModels()
+
+    companion object {
+        lateinit var CURRENCY: String
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +43,7 @@ class MoreFragment : Fragment() {
 
         GROUPS_AND_SUB_GROUPS_CATEGORY = getString(R.string.groups_and_sub_groups)
         WALLETS_CATEGORY = getString(R.string.wallets)
+        CURRENCY = getString(R.string.default_currency)
 
         return binding.root
     }
@@ -61,23 +70,29 @@ class MoreFragment : Fragment() {
     private fun setupRecyclerView() {
         val onSubCategoryClickListener = object : SettingsSubCategoryAdapter.OnSubCategoryClickListener {
 
-            override fun onSubCategoryClick(subCategory: SettingsSubCategoryItem) {
+            override fun onSubCategoryClick(subCategory: MoreSubCategoryItem) {
                 navigateToSubCategory(subCategory)
             }
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = SettingsCategoryAdapter(createCategoryData(), onSubCategoryClickListener)
+            adapter = SettingsCategoryAdapter(
+                createCategoryRows(),
+                onSubCategoryClickListener,
+                moreFragmentViewModel.getDefaultCurrencyCode())
         }
     }
 
-    private fun navigateToSubCategory(subCategory: SettingsSubCategoryItem) {
+    private fun navigateToSubCategory(subCategory: MoreSubCategoryItem) {
         val navDirections: NavDirections = when (subCategory.name) {
             GROUPS_AND_SUB_GROUPS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
             WALLETS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
+            CURRENCY ->
+                MoreFragmentDirections.actionMoreFragmentToSelectCurrencyFragment()
+
             // Add more cases as needed
             // "Export" -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
             // "Import" -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
@@ -86,14 +101,15 @@ class MoreFragment : Fragment() {
         findNavController().navigate(navDirections)
     }
 
-    private fun createCategoryData(): List<SettingsCategoryItem> {
+    private fun createCategoryRows(): List<SettingsCategoryItem> {
         return listOf(
             SettingsCategoryItem(
                 getString(R.string.categories),
                 R.drawable.ic_category,
                 listOf(
-                    SettingsSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
-                    SettingsSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
+                    MoreSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
+                    MoreSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet),
+                    MoreSubCategoryItem(CURRENCY, R.drawable.ic_money)
                 )
             ),
 //            CategoryItem(

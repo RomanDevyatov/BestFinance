@@ -60,9 +60,9 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
                     }.toMutableList()
 
                     SettingsGroupWithSubGroupsItem(
-                        groups.expenseGroup.id,
-                        groups.expenseGroup.name,
-                        groups.expenseGroup.archivedDate == null,
+                        groups.expenseGroupEntity.id,
+                        groups.expenseGroupEntity.name,
+                        groups.expenseGroupEntity.archivedDate == null,
                         settingsSubGroupItems
                     )
                 } ?: emptyList()

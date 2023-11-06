@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.HistoryTransactionByDateAdapter
@@ -67,13 +67,13 @@ class ExpenseHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        groupViewModel.allExpenseGroupLiveData.observe(viewLifecycleOwner) { groups ->
-            val expenseGroupMap: Map<Long?, ExpenseGroup> = groups.associateBy { it.id }
+        groupViewModel.allExpenseGroupEntityLiveData.observe(viewLifecycleOwner) { groups ->
+            val expenseGroupEntityMap: Map<Long?, ExpenseGroupEntity> = groups.associateBy { it.id }
             expenseHistoryViewModel.allExpenseHistoryWithExpenseGroupAndWalletLiveData.observe(
                 viewLifecycleOwner
             ) { allExpenseHistoryWithExpenseGroupAndWallet ->
                 val transactionItems =
-                    convertHistoryToExpenseHistoryItemList(allExpenseHistoryWithExpenseGroupAndWallet, expenseGroupMap)
+                    convertHistoryToExpenseHistoryItemList(allExpenseHistoryWithExpenseGroupAndWallet, expenseGroupEntityMap)
                 val sortedTransactionItems = transactionItems.sortedByDescending { it.date }
                 val groupTransactionsByDate = groupTransactionsByDate(sortedTransactionItems)
                 expenseHistoryAdapter?.submitList(groupTransactionsByDate)
@@ -100,7 +100,7 @@ class ExpenseHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun convertHistoryToExpenseHistoryItemList(
         allExpenseHistoryWithExpenseGroupAndWallet: List<ExpenseHistoryWithExpenseSubGroupAndWallet>,
-        expenseGroupMap: Map<Long?, ExpenseGroup>
+        expenseGroupEntityMap: Map<Long?, ExpenseGroupEntity>
     ): MutableList<TransactionItem> {
         val transactionItemList = mutableListOf<TransactionItem>()
 
@@ -112,7 +112,7 @@ class ExpenseHistoryFragment : Fragment() {
             if (wallet != null) {
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = expenseGroupMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
+                    groupName = expenseGroupEntityMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
                     subGroupGroupName = expenseSubGroup?.name ?: getString(R.string.changed_balance),
                     amount = incomeHistory.amount * -1.0,
                     comment = incomeHistory.comment ?: "",

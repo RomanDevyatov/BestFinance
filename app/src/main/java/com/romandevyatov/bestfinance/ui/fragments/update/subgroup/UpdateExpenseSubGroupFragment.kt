@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseSubGroupBinding
@@ -185,7 +185,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
             }
     }
 
-    private fun getExpenseGroupList(groups: List<ExpenseGroup>?): ArrayList<SpinnerItem> {
+    private fun getExpenseGroupList(groups: List<ExpenseGroupEntity>?): ArrayList<SpinnerItem> {
         val spinnerItems = ArrayList<SpinnerItem>()
 
         groups?.forEach {

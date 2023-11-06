@@ -23,7 +23,7 @@ import java.time.LocalDateTime
         )
     ]
 )
-class ExpenseHistory(
+data class ExpenseHistory(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -2,13 +2,13 @@ package com.romandevyatov.bestfinance.data.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 
 data class ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(
 
     @Embedded
-    val expenseGroup: ExpenseGroup?,
+    val expenseGroupEntity: ExpenseGroupEntity?,
 
     @Relation(
         entity = ExpenseSubGroup::class,

@@ -200,5 +200,7 @@
 
     <string name="text_validation_error_more_then_two_digits_after_point">Не больше 2 цифир после точки</string>
 
+    <string name="default_currency">Валюта по умолчанию</string>
+    <string name="select_default_currency">Выберите валюту по умолчанию</string>
 
 </resources>
