@@ -28,23 +28,42 @@ fun TextInputEditText.addGenericTextWatcher() {
 private fun processInput(text: String): String {
     var updatedText = text.replace(",", ".").replace("-", "0")
 
+    updatedText = checkStartWithPoint(updatedText)
+
+    updatedText = checkDoublePoints(updatedText)
+
     if (updatedText.length > 1) {
         if (updatedText.count { it == '.' } > 1) {
-            return updatedText.replaceFirst(".", "")
+            updatedText.replaceFirst(".", "")
         }
 
-        if (updatedText[0] == '0') {
-            if (updatedText.count { it == '0' } > 1) {
-                return updatedText.replaceFirst("0", "")
-            } else {
-
-                val secondChar = updatedText[1]
-                if (secondChar in '1'..'9') {
-                    return secondChar + updatedText.substring(2)
-                }
-            }
+        if (updatedText.startsWith("0")) {
+            updatedText = removeBeginningZeros(updatedText)
         }
     }
 
     return updatedText
+}
+
+private fun checkStartWithPoint(text: String): String {
+    if (text.startsWith('.')) {
+        return "0$text"
+    }
+    return text
+}
+
+private fun checkDoublePoints(text: String): String {
+    if (text.count { it == '.' } > 1) {
+        return text.replaceFirst(".", "")
+    }
+    return text
+}
+
+private fun removeBeginningZeros(updatedText: String): String {
+    var newStart = 0
+    while (newStart < updatedText.length - 1 && updatedText[newStart] == '0' && updatedText[newStart + 1] != '.') {
+        newStart++
+    }
+
+    return updatedText.substring(newStart)
 }
