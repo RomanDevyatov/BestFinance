@@ -197,6 +197,6 @@
     <string name="add_new_income_group">Add new income group</string>
     <string name="add_new_expense_sub_group">Add new expense sub group</string>
     <string name="add_new_expense_group">Add new expense group</string>
-
+    <string name="text_validation_error_more_then_two_digits_after_point">No more then 2 digits after point</string>
 
 </resources>

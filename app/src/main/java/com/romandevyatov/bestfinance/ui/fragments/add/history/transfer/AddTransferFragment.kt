@@ -24,6 +24,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
+import com.romandevyatov.bestfinance.data.validation.TwoDigitsAfterPoint
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
@@ -560,10 +561,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                         isEqualSpinnerNamesValidation.message
                     ) else null
 
-                val amountValidation = BaseValidator.validate(
-                    EmptyValidator(amountBinding),
-                    IsDigitValidator(amountBinding)
-                )
+                val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding), TwoDigitsAfterPoint(amountBinding))
                 binding.amountEditText.error =
                     if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
