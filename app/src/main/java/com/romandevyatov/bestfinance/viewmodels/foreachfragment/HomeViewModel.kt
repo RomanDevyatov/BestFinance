@@ -32,6 +32,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getCurrencySymbol(): String {
+        val currency = java.util.Currency.getInstance(storage.getDefaultCurrencyCode())
+        return currency.symbol
+    }
+
     fun setIsFirstLaunch(isFirstLaunch: Boolean) {
         storage.setIsFirstLaunch(isFirstLaunch)
     }

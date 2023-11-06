@@ -24,6 +24,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewM
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import kotlin.math.absoluteValue
 
 @AndroidEntryPoint
@@ -109,7 +110,8 @@ class HomeFragment : Fragment() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             walletList?.let { wallets ->
                 val balanceValue = wallets.sumOf { it.balance }
-                binding.totalCapitalTextView.text = balanceValue.toString()
+                val totalCapitalText = balanceValue.toString() + homeViewModel.getCurrencySymbol()
+                binding.totalCapitalTextView.text = totalCapitalText
             }
         }
 
@@ -122,19 +124,23 @@ class HomeFragment : Fragment() {
                         }?.isPassive ?: false
                     }
                     .sumOf { it.incomeHistory.amount }
-                binding.passiveIncomeValueTextView.text = passiveIncomeValue.toString()
+                val passiveIncomeText = passiveIncomeValue.toString() + homeViewModel.getCurrencySymbol()
+                binding.passiveIncomeValueTextView.text = passiveIncomeText
             }
 
             totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
-            binding.totalIncomeValueTextView.text = totalIncomeValue.toString()
+            val totalIncomeText = totalIncomeValue.toString() + homeViewModel.getCurrencySymbol()
+            binding.totalIncomeValueTextView.text = totalIncomeText
 
             expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
                 expenseHistoryList?.let { histories ->
                     totalExpensesValue = histories.sumOf { it.amount }
-                    binding.totalExpensesValueTextView.text = totalExpensesValue.toString()
+                    val totalExpensesText = totalExpensesValue.toString() + homeViewModel.getCurrencySymbol()
+                    binding.totalExpensesValueTextView.text = totalExpensesText
 
                     moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!.absoluteValue)
-                    binding.moneyFlowValueTextView.text = moneyFlowValue.toString()
+                    val moneyFlowText = moneyFlowValue.toString() + homeViewModel.getCurrencySymbol()
+                    binding.moneyFlowValueTextView.text = moneyFlowText
                 }
             }
         }
