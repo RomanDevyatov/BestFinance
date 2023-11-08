@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.CardExpandableCategoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.CategoryItem
-import com.romandevyatov.bestfinance.ui.adapters.analyze.models.GroupItem
 
 class CategoryExpandableAdapter(
     private var categoryItems: ArrayList<CategoryItem>
@@ -60,24 +59,11 @@ class CategoryExpandableAdapter(
                 binding.arrowImageview.setImageResource(R.drawable.ic_arrow_down)
             }
 
-            val groupItemList = categoryItem.groups?.map {
-                GroupItem(
-                    groupName = it.groupName,
-                    subGroupNameAndSumItem = it.subGroupNameAndSumItem
-                )
-            }!!.toMutableList()
-
-            binding.groupsRecyclerview.adapter = GroupExpandableAdapter(groupItemList)
-
-            var summa = 0.0
-            for (groupData in groupItemList) {
-                val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
-                    it.sumOfSubGroup
-                }
-
-                summa += groupSumma ?: 0.0
+            if (categoryItem.groups != null) {
+                binding.groupsRecyclerview.adapter = GroupExpandableAdapter(categoryItem.groups)
             }
-            binding.globalSummaTextView.text = summa.toString()
+
+            binding.globalSummaTextView.text = categoryItem.categorySum
 
             binding.groupsRecyclerview.layoutManager = LinearLayoutManager(binding.root.context)
         }

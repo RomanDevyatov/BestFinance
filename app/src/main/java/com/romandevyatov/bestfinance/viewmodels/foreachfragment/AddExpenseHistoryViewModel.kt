@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
@@ -14,6 +13,8 @@ import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,11 +23,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddExpenseHistoryViewModel @Inject constructor(
+    storage: Storage,
     private val expenseGroupRepository: ExpenseGroupRepository,
     private val expenseSubGroupRepository: ExpenseSubGroupRepository,
     private val expenseHistoryRepository: ExpenseHistoryRepository,
     private val walletRepository: WalletRepository
-) : ViewModel() {
+) : BaseViewModel(storage) {
 
     // expense group zone
     fun getAllExpenseGroupNotArchivedLiveData(): LiveData<List<ExpenseGroupEntity>> {
@@ -230,4 +232,5 @@ class AddExpenseHistoryViewModel @Inject constructor(
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.insertWallet(wallet)
     }
+
 }

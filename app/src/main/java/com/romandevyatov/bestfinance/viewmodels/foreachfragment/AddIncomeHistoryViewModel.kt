@@ -3,7 +3,6 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.entities.IncomeHistory
@@ -14,6 +13,8 @@ import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,11 +23,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddIncomeHistoryViewModel @Inject constructor(
+    storage: Storage,
     private val incomeGroupRepository: IncomeGroupRepository,
     private val incomeSubGroupRepository: IncomeSubGroupRepository,
     private val incomeHistoryRepository: IncomeHistoryRepository,
     private val walletRepository: WalletRepository
-) : ViewModel() {
+) : BaseViewModel(storage) {
 
     // income group zone
     fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {

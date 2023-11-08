@@ -91,6 +91,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
         binding.amountEditText.addGenericTextWatcher()
 
+        binding.currencyEditText.setText(addTransferViewModel.getCurrencyCode())
+
         setOnBackPressedCallback()
 
         setSpinners()
@@ -613,7 +615,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         var isSend = true
         if (amountBinding.isNotBlank()) {
             val amountBindingValidation = IsDigitValidator(amountBinding).validate()
-            binding.amountEditTextLayout.error =
+            binding.amountLayout.error =
                 if (!amountBindingValidation.isSuccess) getString(amountBindingValidation.message) else null
 
             if (!amountBindingValidation.isSuccess) {

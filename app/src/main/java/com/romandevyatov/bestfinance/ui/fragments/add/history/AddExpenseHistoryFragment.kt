@@ -102,6 +102,8 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
         binding.amountEditText.addGenericTextWatcher()
 
+        binding.currencyEditText.setText(addHistoryViewModel.getCurrencyCode())
+
         setOnBackPressedCallback()
 
         setSpinners()

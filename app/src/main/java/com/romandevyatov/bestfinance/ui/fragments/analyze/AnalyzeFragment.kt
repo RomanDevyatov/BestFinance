@@ -34,6 +34,10 @@ class AnalyzeFragment : Fragment() {
 
     private lateinit var categoryExpandableAdapter: CategoryExpandableAdapter
 
+    private val currencySymbol: String by lazy {
+        analyzeViewModel.getCurrencySymbol()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,8 +71,18 @@ class AnalyzeFragment : Fragment() {
 
                     val groupIncomeDataList = convertToIncomeCategory(combinedIncomeList)
 
+                    var incomeCategorySum = 0.0
+                    for (groupData in groupIncomeDataList) {
+                        val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
+                            it.sumOfSubGroup
+                        }
+
+                        incomeCategorySum += groupSumma ?: 0.0
+                    }
+
                     val incomesParentData = CategoryItem(
                         categoryName = getString(R.string.incomes),
+                        categorySum = incomeCategorySum.toString() + currencySymbol,
                         groups = groupIncomeDataList
                     )
                     addToGroupAdapter(incomesParentData)
@@ -83,8 +97,19 @@ class AnalyzeFragment : Fragment() {
                         }
 
                         val groupExpenseDataList = convertToExpenseCategory(combinedExpenseList)
+
+                        val expenseCategorySum = 0.0
+                        for (groupData in groupExpenseDataList) {
+                            val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
+                                it.sumOfSubGroup
+                            }
+
+                            incomeCategorySum += groupSumma ?: 0.0
+                        }
+
                         val expensesParentData = CategoryItem(
                             categoryName = getString(R.string.expenses),
+                            categorySum = expenseCategorySum.toString() + currencySymbol,
                             groups = groupExpenseDataList
                         )
                         addToGroupAdapter(expensesParentData)
@@ -107,34 +132,40 @@ class AnalyzeFragment : Fragment() {
                 val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
+                val totalText = result + currencySymbol
 
-                binding.analyzeGroupTextView.text = result
+                binding.totalTextView.text = totalText
             }
         }
     }
 
     private fun convertToIncomeCategory(incomeGroups: List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>): List<GroupItem> {
-        val categoryList = mutableListOf<GroupItem>()
+        val groupItems = mutableListOf<GroupItem>()
 
         for (incomeGroup in incomeGroups) {
             val groupName = incomeGroup.incomeGroup?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemIncomes = incomeGroup.incomeSubGroupWithIncomeHistories.map { groupWithIncomeHistories ->
+                val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amount }
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amount },
+                    sumOfSubGroup = sumOfSubGroup,
                     subGroupName = groupWithIncomeHistories.incomeSubGroup?.name ?: ""
                 )
             }
 
-            categoryList.add(
+            val incomeGroupSum = subGroupNameAndSumItemIncomes.sumOf { it.sumOfSubGroup }
+
+            groupItems.add(
                 GroupItem(
                     groupName = groupName,
+                    groupSum = incomeGroupSum.toString() + currencySymbol,
                     subGroupNameAndSumItem = subGroupNameAndSumItemIncomes
                 )
             )
         }
 
-        return categoryList
+        return groupItems
     }
 
     private fun convertToExpenseCategory(expenseGroupWithExpenseSubGroupsIncludingExpenseHistories: MutableList<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>): List<GroupItem> {
@@ -143,17 +174,22 @@ class AnalyzeFragment : Fragment() {
         for (expenseHistories in expenseGroupWithExpenseSubGroupsIncludingExpenseHistories) {
             val groupName = expenseHistories.expenseGroupEntity?.name ?: getString(R.string.changed_balance)
 
-            val subGroupNameAndSumItemExpens = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
+            val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
+                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amount }
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amount },
+                    sumOfSubGroup = sumOfSubGroup,
                     subGroupName = subGroupWithIncomeHistories.expenseSubGroup?.name ?: ""
                 )
             }
 
+            val expenseGroupSum = subGroupNameAndSumItemExpenses.sumOf { it.sumOfSubGroup }
+
             categoryList.add(
                 GroupItem(
                     groupName = groupName,
-                    subGroupNameAndSumItem = subGroupNameAndSumItemExpens
+                    groupSum = expenseGroupSum.toString() + currencySymbol,
+                    subGroupNameAndSumItem = subGroupNameAndSumItemExpenses
                 )
             )
         }
