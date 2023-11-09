@@ -6,12 +6,12 @@ import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(private val storage: Storage) : ViewModel() {
 
-    fun getCurrencySymbol(): String {
+    fun getDefaultCurrencySymbol(): String {
         val currency = java.util.Currency.getInstance(storage.getDefaultCurrencyCode())
         return currency.symbol
     }
 
-    fun getCurrencyCode(): String {
+    fun getDefaultCurrencyCode(): String {
         return storage.getDefaultCurrencyCode()
     }
 }

@@ -25,7 +25,7 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ): BaseViewModel(storage) {
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 

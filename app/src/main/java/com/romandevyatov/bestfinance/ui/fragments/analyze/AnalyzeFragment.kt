@@ -79,7 +79,7 @@ class AnalyzeFragment : Fragment() {
 
                     val incomesParentData = CategoryItem(
                         categoryName = getString(R.string.incomes),
-                        categorySum = incomeCategorySum.toString() + analyzeViewModel.currentCurrencySymbol,
+                        categorySum = incomeCategorySum.toString() + analyzeViewModel.currentDefaultCurrencySymbol,
                         groups = groupIncomeDataList
                     )
                     addToGroupAdapter(incomesParentData)
@@ -106,7 +106,7 @@ class AnalyzeFragment : Fragment() {
 
                         val expensesParentData = CategoryItem(
                             categoryName = getString(R.string.expenses),
-                            categorySum = expenseCategorySum.toString() + analyzeViewModel.currentCurrencySymbol,
+                            categorySum = expenseCategorySum.toString() + analyzeViewModel.currentDefaultCurrencySymbol,
                             groups = groupExpenseDataList
                         )
                         addToGroupAdapter(expensesParentData)
@@ -129,7 +129,7 @@ class AnalyzeFragment : Fragment() {
                 val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
-                val formattedTotalText = removeTrailingZeros(result) + analyzeViewModel.currentCurrencySymbol
+                val formattedTotalText = removeTrailingZeros(result) + analyzeViewModel.currentDefaultCurrencySymbol
 
                 binding.totalTextView.text = formattedTotalText
             }
@@ -152,7 +152,7 @@ class AnalyzeFragment : Fragment() {
             }
 
             val incomeGroupSum = subGroupNameAndSumItemIncomes.sumOf { it.sumOfSubGroup }
-            val formattedIncomeGroupSum = removeTrailingZeros(incomeGroupSum.toString()) + analyzeViewModel.currentCurrencySymbol
+            val formattedIncomeGroupSum = removeTrailingZeros(incomeGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
 
             groupItems.add(
                 GroupItem(
@@ -182,7 +182,7 @@ class AnalyzeFragment : Fragment() {
             }
 
             val expenseGroupSum = subGroupNameAndSumItemExpenses.sumOf { it.sumOfSubGroup }
-            val formattedExpenseGroupSum = removeTrailingZeros(expenseGroupSum.toString()) + analyzeViewModel.currentCurrencySymbol
+            val formattedExpenseGroupSum = removeTrailingZeros(expenseGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
 
             categoryList.add(
                 GroupItem(

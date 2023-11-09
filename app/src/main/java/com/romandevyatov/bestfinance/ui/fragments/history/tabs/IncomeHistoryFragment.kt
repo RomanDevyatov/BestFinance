@@ -111,7 +111,7 @@ class IncomeHistoryFragment : Fragment() {
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
-                val formattedAmountText = "+".plus(removeTrailingZeros(incomeHistory.amount.toString()) + incomeHistoryViewModel.currentCurrencySymbol)
+                val formattedAmountText = "+".plus(removeTrailingZeros(incomeHistory.amount.toString()) + incomeHistoryViewModel.currentDefaultCurrencySymbol)
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
                     groupName = incomeGroupMap[incomeSubGroup?.incomeGroupId]?.name ?: "",

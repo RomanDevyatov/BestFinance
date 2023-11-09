@@ -74,7 +74,7 @@ class SettingsWalletsFragment : Fragment() {
                         SettingsWalletItem(
                             it.id,
                             it.name,
-                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.currentCurrencySymbol,
+                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.currentDefaultCurrencySymbol,
                             it.archivedDate == null)
                     }.toMutableList()
                 )

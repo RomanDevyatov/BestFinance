@@ -15,7 +15,7 @@ class ExpenseHistoryViewModel @Inject constructor(
     expenseHistoryRepository: ExpenseHistoryRepository
 ) : BaseViewModel(storage) {
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val expenseHistoryListLiveData: LiveData<List<ExpenseHistory>> = expenseHistoryRepository.getAllExpenseHistory()
 

@@ -160,8 +160,8 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun createIncomeGroup() {
-        val groupNameBinding = binding.groupNameInputEditText.text.toString()
-        val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString()
+        val groupNameBinding = binding.groupNameInputEditText.text.toString().trim()
+        val groupDescriptionBinding = binding.groupDescriptionInputEditText.text.toString().trim()
         val isPassiveBinding = binding.isPassiveCheckBox.isChecked
 
         val nameEmptyValidation = EmptyValidator(groupNameBinding).validate()

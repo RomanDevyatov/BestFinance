@@ -90,12 +90,6 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         recreate()
     }
 
-    fun updateIsFirstLaunch(locale: String) {
-        storage.setPreferredLocale(locale)
-        LocaleUtil.applyLocalizedContext(applicationContext, locale)
-        recreate()
-    }
-
     override fun onExitApp() {
         finish()
     }
@@ -112,9 +106,13 @@ class MainActivity : BaseActivity(), OnExitAppListener {
                 true
             }
             R.id.groups_and_sub_groups_settings_fragment,
-            R.id.wallets_settings_fragment,
-            R.id.select_currency_fragment -> {
+            R.id.wallets_settings_fragment -> {
                 navController.navigate(R.id.more_fragment)
+                true
+            }
+            R.id.add_wallet_fragment -> {
+                sharedModViewModel.set(null)
+                navController.navigate(R.id.wallet_fragment)
                 true
             }
             else -> navController.navigateUp()

@@ -87,9 +87,9 @@ class UpdateExpenseSubGroupFragment : Fragment() {
         isButtonClickable = false
         view.isEnabled = false
 
-        val newSubGroupNameBinding = binding.reusable.subGroupNameEditText.text.toString()
-        val newDescriptionBinding = binding.reusable.subGroupDescriptionEditText.text.toString()
-        val newGroupNameBinding = binding.reusable.groupSpinner.text.toString()
+        val newSubGroupNameBinding = binding.reusable.subGroupNameEditText.text.toString().trim()
+        val newDescriptionBinding = binding.reusable.subGroupDescriptionEditText.text.toString().trim()
+        val newGroupNameBinding = binding.reusable.groupSpinner.text.toString().trim()
 
         if (isValidForm(newSubGroupNameBinding, newGroupNameBinding)) {
             val groupSpinnerItem = getGroupSpinnerItemByName(newGroupNameBinding)

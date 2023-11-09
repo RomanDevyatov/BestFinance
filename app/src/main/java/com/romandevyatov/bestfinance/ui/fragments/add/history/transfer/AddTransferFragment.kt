@@ -91,7 +91,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
         binding.amountEditText.addGenericTextWatcher()
 
-        binding.currencyEditText.setText(addTransferViewModel.getCurrencyCode())
+        binding.currencyEditText.setText(addTransferViewModel.getDefaultCurrencyCode())
 
         setOnBackPressedCallback()
 

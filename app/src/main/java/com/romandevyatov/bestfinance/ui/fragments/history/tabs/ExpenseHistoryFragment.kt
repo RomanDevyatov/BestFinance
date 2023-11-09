@@ -111,7 +111,7 @@ class ExpenseHistoryFragment : Fragment() {
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
-                val formattedAmountText = removeTrailingZeros(expenseHistory.amount.toString()) + expenseHistoryViewModel.currentCurrencySymbol
+                val formattedAmountText = removeTrailingZeros(expenseHistory.amount.toString()) + expenseHistoryViewModel.currentDefaultCurrencySymbol
                 val transactionItem = TransactionItem(
                     id = expenseHistory.id,
                     groupName = expenseGroupEntityMap[expenseSubGroup?.expenseGroupId]?.name ?: "",

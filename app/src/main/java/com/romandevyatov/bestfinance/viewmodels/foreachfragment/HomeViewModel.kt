@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(
 
     val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     private val _resultLiveData = MutableLiveData<IncomeGroup>()
     val resultLiveData: LiveData<IncomeGroup> = _resultLiveData

@@ -14,7 +14,7 @@ class IncomeHistoryViewModel @Inject constructor(
     incomeHistoryRepository: IncomeHistoryRepository
 ) : BaseViewModel(storage) {
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val allIncomeHistoryWithIncomeSubGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeSubGroupAndWallet()
 

@@ -108,7 +108,7 @@ class HomeFragment : Fragment() {
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             walletList?.let { wallets ->
                 val balanceValue = wallets.sumOf { it.balance }
-                val totalCapitalText = removeTrailingZeros(balanceValue.toString()) + homeViewModel.currentCurrencySymbol
+                val totalCapitalText = removeTrailingZeros(balanceValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                 binding.totalCapitalTextView.text = totalCapitalText
             }
         }
@@ -122,22 +122,22 @@ class HomeFragment : Fragment() {
                         }?.isPassive ?: false
                     }
                     .sumOf { it.incomeHistory.amount }
-                val passiveIncomeText = removeTrailingZeros(passiveIncomeValue.toString()) + homeViewModel.currentCurrencySymbol
+                val passiveIncomeText = removeTrailingZeros(passiveIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                 binding.passiveIncomeValueTextView.text = passiveIncomeText
             }
 
             totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
-            val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.currentCurrencySymbol
+            val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
             binding.totalIncomeValueTextView.text = totalIncomeText
 
             expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
                 expenseHistoryList?.let { histories ->
                     totalExpensesValue = histories.sumOf { it.amount }
-                    val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.currentCurrencySymbol
+                    val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                     binding.totalExpensesValueTextView.text = totalExpensesText
 
                     moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!.absoluteValue)
-                    val moneyFlowText = removeTrailingZeros(moneyFlowValue.toString()) + homeViewModel.currentCurrencySymbol
+                    val moneyFlowText = removeTrailingZeros(moneyFlowValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                     binding.moneyFlowValueTextView.text = moneyFlowText
                 }
             }

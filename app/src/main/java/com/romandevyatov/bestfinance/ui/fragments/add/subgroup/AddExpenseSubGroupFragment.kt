@@ -75,9 +75,9 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun createExpenseSubGroup() {
-        val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
-        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
-        val selectedGroupNameBinding = binding.groupSpinner.text.toString()
+        val subGroupNameBinding = binding.subGroupNameEditText.text.toString().trim()
+        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString().trim()
+        val selectedGroupNameBinding = binding.groupSpinner.text.toString().trim()
 
         val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
         binding.subGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(R.string.error_empty_sub_group_name) else null

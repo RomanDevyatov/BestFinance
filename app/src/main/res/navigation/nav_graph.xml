@@ -72,6 +72,16 @@
         <action
             android:id="@+id/action_select_currency_fragment_to_more_fragment"
             app:destination="@id/more_fragment" />
+
+        <action
+            android:id="@+id/action_navigation_select_currency_to_add_wallet"
+            app:destination="@id/add_wallet_fragment" />
+
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment
@@ -444,6 +454,9 @@
         <action
             android:id="@+id/action_navigation_add_wallet_to_navigation_add_expense"
             app:destination="@id/add_expense_fragment" />
+        <action
+            android:id="@+id/action_navigation_add_wallet_to_navigation_select_currency"
+            app:destination="@id/select_currency_fragment" />
 
         <argument
             android:name="source"
@@ -452,6 +465,11 @@
             android:defaultValue="@null" />
         <argument
             android:name="spinnerType"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="currencyCode"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />

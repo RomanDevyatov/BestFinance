@@ -84,7 +84,7 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
                     val expenseHistory = it.expenseHistory
                     binding.reusable.commentEditText.setText(expenseHistory.comment)
-                    val formattedAmountText = TextFormatter.removeTrailingZeros(expenseHistory.amount.toString()) + updateExpenseHistoryViewModel.currentCurrencySymbol
+                    val formattedAmountText = TextFormatter.removeTrailingZeros(expenseHistory.amount.toString()) + updateExpenseHistoryViewModel.currentDefaultCurrencySymbol
                     binding.reusable.amountEditText.setText(formattedAmountText)
                 }
             }
@@ -363,10 +363,10 @@ class UpdateExpenseHistoryFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val subGroupNameBinding = binding.reusable.subGroupSpinner.text.toString()
+            val subGroupNameBinding = binding.reusable.subGroupSpinner.text.toString().trim()
             val amountBinding = binding.reusable.amountEditText.text.toString().trim()
             val commentBinding = binding.reusable.commentEditText.text.toString().trim()
-            val walletNameBinding = binding.reusable.walletSpinner.text.toString()
+            val walletNameBinding = binding.reusable.walletSpinner.text.toString().trim()
             val dateBinding = binding.reusable.dateEditText.text.toString().trim()
             val timeBinding = binding.reusable.timeEditText.text.toString().trim()
 

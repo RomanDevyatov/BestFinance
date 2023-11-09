@@ -82,8 +82,8 @@ class UpdateIncomeGroupFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val nameBinding = binding.reusable.groupNameInputEditText.text.toString()
-            val descriptionBinding = binding.reusable.groupDescriptionInputEditText.text.toString()
+            val nameBinding = binding.reusable.groupNameInputEditText.text.toString().trim()
+            val descriptionBinding = binding.reusable.groupDescriptionInputEditText.text.toString().trim()
             val isPassiveBinding = binding.reusable.isPassiveCheckBox.isChecked
 
             val nameEmptyValidation = EmptyValidator(nameBinding).validate()

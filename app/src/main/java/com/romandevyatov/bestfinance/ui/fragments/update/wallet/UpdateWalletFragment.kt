@@ -74,9 +74,9 @@ class UpdateWalletFragment : Fragment() {
         binding.balanceEditText.addGenericTextWatcher()
 
         binding.updateWalletButton.setOnClickListener {
-            val walletNameBinding = binding.nameEditText.text.toString()
-            val walletBalanceBinding = binding.balanceEditText.text.toString().toDouble()
-            val walletDescriptionBinding = binding.descriptionEditText.text.toString()
+            val walletNameBinding = binding.nameEditText.text.toString().trim()
+            val walletBalanceBinding = binding.balanceEditText.text.toString().trim().toDouble()
+            val walletDescriptionBinding = binding.descriptionEditText.text.toString().trim()
 
             updateWalletViewModel.getWalletByNameLiveData(walletNameBinding)
                 .observe(viewLifecycleOwner) { wallet ->

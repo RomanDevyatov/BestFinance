@@ -20,7 +20,7 @@ class SettingsWalletsViewModel @Inject constructor(
     private val walletRepository: WalletRepository
 ): BaseViewModel(storage) {
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
 

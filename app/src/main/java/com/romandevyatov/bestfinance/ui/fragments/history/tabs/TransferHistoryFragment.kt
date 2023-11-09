@@ -100,7 +100,7 @@ class TransferHistoryFragment : Fragment() {
             val walletFrom = transfer.walletFrom
             val walletTo = transfer.walletTo
 
-            val formattedAmountText = removeTrailingZeros(transferHistory.amount.toString()) + transferHistoryViewModel.currentCurrencySymbol
+            val formattedAmountText = removeTrailingZeros(transferHistory.amount.toString()) + transferHistoryViewModel.currentDefaultCurrencySymbol
 
             val transactionItem = TransferItem(
                 id = transferHistory.id,

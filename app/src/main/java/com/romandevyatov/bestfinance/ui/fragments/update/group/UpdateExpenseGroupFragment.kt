@@ -78,8 +78,8 @@ class UpdateExpenseGroupFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val nameBinding = binding.reusable.newExpenseGroupName.text.toString()
-            val descriptionBinding = binding.reusable.descriptionEditText.text.toString()
+            val nameBinding = binding.reusable.newExpenseGroupName.text.toString().trim()
+            val descriptionBinding = binding.reusable.descriptionEditText.text.toString().trim()
 
             val nameEmptyValidation = EmptyValidator(nameBinding).validate()
             binding.reusable.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null

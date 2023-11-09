@@ -102,7 +102,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
         binding.amountEditText.addGenericTextWatcher()
 
-        binding.currencyEditText.setText(addHistoryViewModel.getCurrencyCode())
+        binding.currencyEditText.setText(addHistoryViewModel.getDefaultCurrencyCode())
 
         setOnBackPressedCallback()
 
@@ -469,10 +469,10 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendExpenseHistory() {
-        val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+        val subGroupNameBinding = binding.subGroupSpinner.text.toString().trim()
         val amountBinding = binding.amountEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
-        val walletNameBinding = binding.walletSpinner.text.toString()
+        val walletNameBinding = binding.walletSpinner.text.toString().trim()
         val dateBinding = binding.dateEditText.text.toString().trim()
         val timeBinding = binding.timeEditText.text.toString().trim()
 

@@ -14,7 +14,7 @@ class TransferHistoryViewModel @Inject constructor(
     transferHistoryRepository: TransferHistoryRepository
 ) : BaseViewModel(storage) {
 
-    val currentCurrencySymbol: String = getCurrencySymbol()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val allTransferHistoryWithWalletsLiveData: LiveData<List<TransferHistoryWithWallets>> = transferHistoryRepository.getAllTransferHistoryWithWalletsLiveData()
 

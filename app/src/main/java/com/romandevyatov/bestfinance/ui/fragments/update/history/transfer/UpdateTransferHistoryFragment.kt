@@ -89,7 +89,7 @@ class UpdateTransferHistoryFragment : Fragment() {
                     val transferHistory = it.transferHistory
                     binding.reusable.commentEditText.setText(transferHistory.comment)
 
-                    val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString()) + updateTransferHistoryViewModel.currentCurrencySymbol
+                    val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString()) + updateTransferHistoryViewModel.currentDefaultCurrencySymbol
                     binding.reusable.amountEditText.setText(formattedAmountText)
                 }
 
