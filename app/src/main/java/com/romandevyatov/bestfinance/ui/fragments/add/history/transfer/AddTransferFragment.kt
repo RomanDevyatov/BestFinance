@@ -232,7 +232,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                 val newWallet = Wallet(
                     name = voicedWalletName.toString(),
                     balance = convertedNumber,
-                    currencyCode = "USD"
+                    currencyCode = addTransferViewModel.getDefaultCurrencyCode()
                 )
                 addTransferViewModel.insertWallet(newWallet)
 

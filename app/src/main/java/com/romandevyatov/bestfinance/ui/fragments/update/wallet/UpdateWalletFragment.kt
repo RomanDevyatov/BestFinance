@@ -103,7 +103,7 @@ class UpdateWalletFragment : Fragment() {
                             name = walletNameBinding,
                             balance = walletBalanceBinding,
                             description = walletDescriptionBinding,
-                            currencyCode = "USD"
+                            currencyCode = walletGlobal?.currencyCode ?: "USD"
                         )
 
                         updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
@@ -159,7 +159,8 @@ class UpdateWalletFragment : Fragment() {
                         amount = difference,
                         comment = getString(R.string.changed_wallet_balance),
                         date = LocalDateTime.now(),
-                        walletId = walletId
+                        walletId = walletId,
+                        amountBase = difference
                     )
                 )
             } else if (incomeOrExpenseType == -1) {
@@ -169,7 +170,8 @@ class UpdateWalletFragment : Fragment() {
                         amount = difference.absoluteValue,
                         comment = getString(R.string.changed_wallet_balance),
                         date = LocalDateTime.now(),
-                        walletId = walletId
+                        walletId = walletId,
+                        amountBase = difference.absoluteValue
                     )
                 )
             }

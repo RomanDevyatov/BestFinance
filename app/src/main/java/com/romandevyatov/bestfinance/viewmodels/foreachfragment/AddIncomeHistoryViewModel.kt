@@ -135,7 +135,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 comment = commentBinding,
                 date = parsedLocalDateTime,
                 walletId = walletId,
-                createdDate = LocalDateTime.now()
+                createdDate = LocalDateTime.now(),
+                amountBase = amountBinding
             )
         )
     }
@@ -150,7 +151,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 input = wallet.input + amountBinding,
                 output = wallet.output,
                 description = wallet.description,
-                currencyCode = "USD"
+                currencyCode = wallet.currencyCode
             )
         )
     }

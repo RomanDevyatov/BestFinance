@@ -12,15 +12,7 @@ import com.romandevyatov.bestfinance.data.dao.IncomeHistoryDao
 import com.romandevyatov.bestfinance.data.dao.ExpenseHistoryDao
 import com.romandevyatov.bestfinance.data.dao.TransferHistoryDao
 import com.romandevyatov.bestfinance.data.dao.CurrencyDao
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Currency
+import com.romandevyatov.bestfinance.data.entities.*
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
 
 @Database(
@@ -33,9 +25,10 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
         IncomeHistory::class,
         ExpenseHistory::class,
         TransferHistory::class,
-        Currency::class
+        Currency::class,
+        BaseCurrencyRates::class
     ],
-    version = 38,
+    version = 39,
     exportSchema = true
 )
 @TypeConverters(LocalDateTimeRoomTypeConverter::class)

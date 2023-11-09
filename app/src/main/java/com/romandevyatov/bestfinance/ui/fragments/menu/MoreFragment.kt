@@ -28,6 +28,7 @@ class MoreFragment : Fragment() {
 
     private lateinit var GROUPS_AND_SUB_GROUPS_CATEGORY: String
     private lateinit var WALLETS_CATEGORY: String
+    private lateinit var RATES_CATEGORY: String
 
     private val moreFragmentViewModel: MoreFragmentViewModel by viewModels()
 
@@ -45,6 +46,7 @@ class MoreFragment : Fragment() {
         GROUPS_AND_SUB_GROUPS_CATEGORY = getString(R.string.groups_and_sub_groups)
         WALLETS_CATEGORY = getString(R.string.wallets)
         CURRENCY = getString(R.string.default_currency)
+        RATES_CATEGORY = getString(R.string.rates)
 
         logBackStack(findNavController())
 
@@ -95,6 +97,8 @@ class MoreFragment : Fragment() {
                 MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
             CURRENCY ->
                 MoreFragmentDirections.actionMoreFragmentToSelectCurrencyFragment()
+            RATES_CATEGORY ->
+                MoreFragmentDirections.actionMoreFragmentToRatesFragment()
 
             // Add more cases as needed
             // "Export" -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
@@ -112,7 +116,8 @@ class MoreFragment : Fragment() {
                 listOf(
                     MoreSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
                     MoreSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet),
-                    MoreSubCategoryItem(CURRENCY, R.drawable.ic_money)
+                    MoreSubCategoryItem(CURRENCY, R.drawable.ic_money),
+                    MoreSubCategoryItem(RATES_CATEGORY, R.drawable.ic_money)
                 )
             ),
 //            CategoryItem(

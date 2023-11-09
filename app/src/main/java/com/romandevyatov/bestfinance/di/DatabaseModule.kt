@@ -2,7 +2,9 @@ package com.romandevyatov.bestfinance.di
 
 import android.content.Context
 import androidx.room.Room
+import com.romandevyatov.bestfinance.data.retrofit.OpenExchangeApi
 import com.romandevyatov.bestfinance.data.roomdb.BestFinanceDatabase
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.DATABASE_NAME
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import dagger.Module
@@ -10,7 +12,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -70,4 +74,17 @@ object DatabaseModule {
     fun providesStorage(@ApplicationContext context: Context): Storage {
         return Storage(context)
     }
+
+    @Provides
+    fun provideBaseUrl() = Constants.BASE_URL
+
+    @Provides
+    @Singleton
+    fun provideOpenExchangeApi(BASE_URL: String): OpenExchangeApi =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(OpenExchangeApi::class.java)
+
 }

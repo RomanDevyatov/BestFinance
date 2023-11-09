@@ -443,7 +443,8 @@ class UpdateIncomeHistoryFragment : Fragment() {
                         date = parsedLocalDateTime,
                         walletId = walletId,
                         archivedDate = incomeHistory.archivedDate,
-                        createdDate = incomeHistory.createdDate
+                        createdDate = incomeHistory.createdDate,
+                        amountBase = amountBinding.toDouble()
                     )
                 )
 
@@ -472,7 +473,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 output = wallet.output,
                 description = wallet.description,
                 archivedDate = wallet.archivedDate,
-                currencyCode = "USD"
+                currencyCode = wallet.currencyCode
             )
         )
     }

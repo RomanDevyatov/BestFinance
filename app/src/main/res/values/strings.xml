@@ -204,4 +204,6 @@
     <string name="currency">Currency</string>
     <string name="select_default_currency">Select default currency</string>
 
+    <string name="rates">Rates</string>
+
 </resources>

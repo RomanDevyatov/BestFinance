@@ -40,7 +40,7 @@ class UpdateWalletViewModel @Inject constructor(
             input = wallet.input,
             output = wallet.output,
             archivedDate = null,
-            currencyCode = "USD"
+            currencyCode = wallet.currencyCode
         )
         updateWallet(updatedWallet)
     }

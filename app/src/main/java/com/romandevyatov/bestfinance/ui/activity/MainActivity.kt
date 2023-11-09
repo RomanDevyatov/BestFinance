@@ -37,6 +37,7 @@ import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFrag
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
+import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm

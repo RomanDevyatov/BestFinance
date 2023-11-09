@@ -139,11 +139,8 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
         if (modifiedAddWalletForm?.description != null) {
             binding.descriptionEditText.setText(modifiedAddWalletForm.description)
         }
-
-        if (modifiedAddWalletForm?.currencyCode != null) {
-//            ?: walletViewModel.currentDefaultCurrencyCode
-            binding.currencyEditText.setText(modifiedAddWalletForm.currencyCode)
-        }
+        val currencyCode = modifiedAddWalletForm?.currencyCode ?: walletViewModel.currentDefaultCurrencyCode
+        binding.currencyEditText.text = currencyCode
     }
 
     private fun sendWallet() {

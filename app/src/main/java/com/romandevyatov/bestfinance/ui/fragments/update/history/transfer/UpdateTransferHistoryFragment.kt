@@ -301,7 +301,7 @@ class UpdateTransferHistoryFragment : Fragment() {
                 output = updatedOutput,
                 description = wallet.description,
                 archivedDate = wallet.archivedDate,
-                currencyCode = "USD"
+                currencyCode = wallet.currencyCode
             )
         )
     }
@@ -320,7 +320,7 @@ class UpdateTransferHistoryFragment : Fragment() {
                 output = wallet.output,
                 description = wallet.description,
                 archivedDate = wallet.archivedDate,
-                currencyCode = "USD"
+                currencyCode = wallet.currencyCode
             )
         )
     }

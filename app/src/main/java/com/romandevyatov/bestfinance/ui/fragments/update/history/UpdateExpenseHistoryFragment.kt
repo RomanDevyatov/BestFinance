@@ -425,7 +425,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
                         date = parsedLocalDateTime,
                         walletId = walletId!!,
                         archivedDate = expenseHistory.archivedDate,
-                        createdDate = expenseHistory.createdDate
+                        createdDate = expenseHistory.createdDate,
+                        amountBase = amountBinding.toDouble()
                     )
                 )
 
@@ -446,15 +447,9 @@ class UpdateExpenseHistoryFragment : Fragment() {
         updatedOutput: Double
     ) {
         updateExpenseHistoryViewModel.updateWallet(
-            Wallet(
-                id = wallet.id,
-                name = wallet.name,
+            wallet.copy(
                 balance = updatedBalance,
-                input = wallet.input,
-                output = updatedOutput,
-                description = wallet.description,
-                archivedDate = wallet.archivedDate,
-                currencyCode = "USD"
+                output = updatedOutput
             )
         )
     }

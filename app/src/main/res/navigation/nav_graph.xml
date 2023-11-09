@@ -60,7 +60,17 @@
         <action
             android:id="@+id/action_more_fragment_to_settingsFragment"
             app:destination="@id/settings_fragment" />
+        <action
+            android:id="@+id/action_more_fragment_to_ratesFragment"
+            app:destination="@id/rates_fragment" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/rates_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.rates.RatesFragment"
+        android:label="@string/rates"
+        tools:layout="@layout/fragment_rates" >
     </fragment>
 
     <fragment
