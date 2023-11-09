@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.Tra
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -105,18 +106,19 @@ class ExpenseHistoryFragment : Fragment() {
         val transactionItemList = mutableListOf<TransactionItem>()
 
         for (incomeHistoryWithIncomeSubGroupAndWallet in allExpenseHistoryWithExpenseGroupAndWallet) {
-            val incomeHistory = incomeHistoryWithIncomeSubGroupAndWallet.expenseHistory
+            val expenseHistory = incomeHistoryWithIncomeSubGroupAndWallet.expenseHistory
             val expenseSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.expenseSubGroup
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
+                val formattedAmountText = removeTrailingZeros(expenseHistory.amount.toString()) + expenseHistoryViewModel.currentCurrencySymbol
                 val transactionItem = TransactionItem(
-                    id = incomeHistory.id,
+                    id = expenseHistory.id,
                     groupName = expenseGroupEntityMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
                     subGroupGroupName = expenseSubGroup?.name ?: getString(R.string.changed_balance),
-                    amount = incomeHistory.amount * -1.0,
-                    comment = incomeHistory.comment ?: "",
-                    date = incomeHistory.date,
+                    amount = formattedAmountText,
+                    comment = expenseHistory.comment ?: "",
+                    date = expenseHistory.date,
                     walletName = wallet.name
                 )
                 transactionItemList.add(transactionItem)

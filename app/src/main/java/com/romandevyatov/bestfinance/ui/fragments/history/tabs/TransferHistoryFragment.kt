@@ -12,15 +12,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferHistoryItem
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.HistoryTransferByDateAdapter
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.TransferAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class TransferHistoryFragment : Fragment() {
@@ -99,11 +100,13 @@ class TransferHistoryFragment : Fragment() {
             val walletFrom = transfer.walletFrom
             val walletTo = transfer.walletTo
 
+            val formattedAmountText = removeTrailingZeros(transferHistory.amount.toString()) + transferHistoryViewModel.currentCurrencySymbol
+
             val transactionItem = TransferItem(
                 id = transferHistory.id,
                 fromName = walletFrom.name,
                 toName = walletTo.name,
-                amount = transferHistory.amount,
+                amount = formattedAmountText,
                 comment = transferHistory.comment ?: "",
                 date = transferHistory.date
             )

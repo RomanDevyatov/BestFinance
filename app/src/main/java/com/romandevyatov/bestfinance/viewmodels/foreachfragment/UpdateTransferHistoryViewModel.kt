@@ -1,13 +1,14 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,9 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateTransferHistoryViewModel @Inject constructor(
+    storage: Storage,
     private val transferHistoryRepository: TransferHistoryRepository,
     private val walletRepository: WalletRepository
-): ViewModel() {
+): BaseViewModel(storage) {
+
+    val currentCurrencySymbol: String = getCurrencySymbol()
 
     val allWalletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 

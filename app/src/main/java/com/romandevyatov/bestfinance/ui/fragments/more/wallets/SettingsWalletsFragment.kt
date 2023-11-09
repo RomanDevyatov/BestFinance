@@ -16,6 +16,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.SettingsWalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.models.SettingsWalletItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,10 +67,15 @@ class SettingsWalletsFragment : Fragment() {
     private fun observeWallets() {
         settingsWalletsViewModel.allWalletsLiveData.observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
+
                 settingsWalletItemMutableList.clear()
                 settingsWalletItemMutableList.addAll(
                     wallets.map {
-                        SettingsWalletItem(it.id, it.name, it.balance.toString(), it.archivedDate == null)
+                        SettingsWalletItem(
+                            it.id,
+                            it.name,
+                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.currentCurrencySymbol,
+                            it.archivedDate == null)
                     }.toMutableList()
                 )
 

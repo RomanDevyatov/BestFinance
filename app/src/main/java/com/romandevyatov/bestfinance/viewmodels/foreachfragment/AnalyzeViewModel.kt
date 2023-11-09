@@ -23,6 +23,8 @@ class AnalyzeViewModel @Inject constructor(
     incomeGroupRepository: IncomeGroupRepository
 ) : BaseViewModel(storage) {
 
+    val currentCurrencySymbol = getCurrencySymbol()
+
     fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
         return incomeHistoryRepository.getIncomeHistoriesWhereSubGroupIsNullLiveData()
     }

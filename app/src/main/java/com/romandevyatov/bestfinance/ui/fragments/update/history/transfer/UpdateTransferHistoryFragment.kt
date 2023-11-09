@@ -30,6 +30,7 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
+import com.romandevyatov.bestfinance.utils.TextFormatter
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -87,7 +88,9 @@ class UpdateTransferHistoryFragment : Fragment() {
 
                     val transferHistory = it.transferHistory
                     binding.reusable.commentEditText.setText(transferHistory.comment)
-                    binding.reusable.amountEditText.setText(transferHistory.amount.toString())
+
+                    val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString()) + updateTransferHistoryViewModel.currentCurrencySymbol
+                    binding.reusable.amountEditText.setText(formattedAmountText)
                 }
 
                 setButtonOnClickListener(view)

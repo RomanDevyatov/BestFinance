@@ -38,11 +38,8 @@ class TransactionAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transactionItem: TransactionItem) {
-            var amount = transactionItem.amount.toString()
-            if (transactionItem.amount >= 0.0) {
-                amount = "+$amount"
-            }
-            binding.amountTextView.text = amount
+
+            binding.amountTextView.text = transactionItem.amount
 
             binding.incomeGroupNameTextView.text = transactionItem.groupName
 

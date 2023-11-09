@@ -19,11 +19,12 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.Tra
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class IncomeHistoryFragment : Fragment() {
@@ -110,11 +111,12 @@ class IncomeHistoryFragment : Fragment() {
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
+                val formattedAmountText = "+".plus(removeTrailingZeros(incomeHistory.amount.toString()) + incomeHistoryViewModel.currentCurrencySymbol)
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
                     groupName = incomeGroupMap[incomeSubGroup?.incomeGroupId]?.name ?: "",
                     subGroupGroupName = incomeSubGroup?.name ?: getString(R.string.changed_balance),
-                    amount = incomeHistory.amount,
+                    amount = formattedAmountText,
                     comment = incomeHistory.comment ?: "",
                     date = incomeHistory.date,
                     walletName = wallet.name

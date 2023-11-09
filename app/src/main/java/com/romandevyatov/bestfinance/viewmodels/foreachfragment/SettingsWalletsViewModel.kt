@@ -3,10 +3,11 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,17 +16,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsWalletsViewModel @Inject constructor(
+    storage: Storage,
     private val walletRepository: WalletRepository
-) : ViewModel() {
+): BaseViewModel(storage) {
+
+    val currentCurrencySymbol: String = getCurrencySymbol()
 
     val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
 
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
-    }
-
-    fun deleteWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.deleteWalletById(id)
     }
 
     fun unarchiveWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {

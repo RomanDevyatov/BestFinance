@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.CategoryExpandableAdapt
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.GroupItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubGroupNameAndSumItem
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AnalyzeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.absoluteValue
@@ -33,10 +34,6 @@ class AnalyzeFragment : Fragment() {
     private val analyzeViewModel: AnalyzeViewModel by viewModels()
 
     private lateinit var categoryExpandableAdapter: CategoryExpandableAdapter
-
-    private val currencySymbol: String by lazy {
-        analyzeViewModel.getCurrencySymbol()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +79,7 @@ class AnalyzeFragment : Fragment() {
 
                     val incomesParentData = CategoryItem(
                         categoryName = getString(R.string.incomes),
-                        categorySum = incomeCategorySum.toString() + currencySymbol,
+                        categorySum = incomeCategorySum.toString() + analyzeViewModel.currentCurrencySymbol,
                         groups = groupIncomeDataList
                     )
                     addToGroupAdapter(incomesParentData)
@@ -109,7 +106,7 @@ class AnalyzeFragment : Fragment() {
 
                         val expensesParentData = CategoryItem(
                             categoryName = getString(R.string.expenses),
-                            categorySum = expenseCategorySum.toString() + currencySymbol,
+                            categorySum = expenseCategorySum.toString() + analyzeViewModel.currentCurrencySymbol,
                             groups = groupExpenseDataList
                         )
                         addToGroupAdapter(expensesParentData)
@@ -132,9 +129,9 @@ class AnalyzeFragment : Fragment() {
                 val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
-                val totalText = result + currencySymbol
+                val formattedTotalText = removeTrailingZeros(result) + analyzeViewModel.currentCurrencySymbol
 
-                binding.totalTextView.text = totalText
+                binding.totalTextView.text = formattedTotalText
             }
         }
     }
@@ -155,11 +152,12 @@ class AnalyzeFragment : Fragment() {
             }
 
             val incomeGroupSum = subGroupNameAndSumItemIncomes.sumOf { it.sumOfSubGroup }
+            val formattedIncomeGroupSum = removeTrailingZeros(incomeGroupSum.toString()) + analyzeViewModel.currentCurrencySymbol
 
             groupItems.add(
                 GroupItem(
                     groupName = groupName,
-                    groupSum = incomeGroupSum.toString() + currencySymbol,
+                    groupSum = formattedIncomeGroupSum,
                     subGroupNameAndSumItem = subGroupNameAndSumItemIncomes
                 )
             )
@@ -184,11 +182,12 @@ class AnalyzeFragment : Fragment() {
             }
 
             val expenseGroupSum = subGroupNameAndSumItemExpenses.sumOf { it.sumOfSubGroup }
+            val formattedExpenseGroupSum = removeTrailingZeros(expenseGroupSum.toString()) + analyzeViewModel.currentCurrencySymbol
 
             categoryList.add(
                 GroupItem(
                     groupName = groupName,
-                    groupSum = expenseGroupSum.toString() + currencySymbol,
+                    groupSum = formattedExpenseGroupSum,
                     subGroupNameAndSumItem = subGroupNameAndSumItemExpenses
                 )
             )

@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBindin
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletMenuAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -47,7 +48,7 @@ class WalletFragment : Fragment() {
         setOnBackPressedHandler()
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
+            walletList?.map { WalletItem(it.id, it.name, removeTrailingZeros(it.balance.toString())) }?.toMutableList()?.let { walletItems ->
                 val spinnerWalletItems: MutableList<WalletItem> = mutableListOf()
 
                 walletItems.let {

@@ -33,6 +33,7 @@ import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
+import com.romandevyatov.bestfinance.utils.TextFormatter
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +84,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
 
                     val expenseHistory = it.expenseHistory
                     binding.reusable.commentEditText.setText(expenseHistory.comment)
-                    binding.reusable.amountEditText.setText(expenseHistory.amount.toString())
+                    val formattedAmountText = TextFormatter.removeTrailingZeros(expenseHistory.amount.toString()) + updateExpenseHistoryViewModel.currentCurrencySymbol
+                    binding.reusable.amountEditText.setText(formattedAmountText)
                 }
             }
 

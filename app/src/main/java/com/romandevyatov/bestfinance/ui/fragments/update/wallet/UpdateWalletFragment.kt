@@ -23,6 +23,7 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateWalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +59,7 @@ class UpdateWalletFragment : Fragment() {
                     walletGlobal = it.copy()
 
                     binding.nameEditText.setText(it.name)
-                    binding.balanceEditText.setText(it.balance.toString())
+                    binding.balanceEditText.setText(removeTrailingZeros(it.balance.toString()))
                     binding.descriptionEditText.setText(it.description)
                 }
             }

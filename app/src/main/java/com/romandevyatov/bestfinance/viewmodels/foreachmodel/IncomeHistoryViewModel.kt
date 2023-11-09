@@ -1,34 +1,20 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
+import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class IncomeHistoryViewModel @Inject constructor(
-    private val incomeHistoryRepository: IncomeHistoryRepository
-) : ViewModel() {
+    storage: Storage,
+    incomeHistoryRepository: IncomeHistoryRepository
+) : BaseViewModel(storage) {
 
-    val incomeHistoryLiveData: LiveData<List<IncomeHistory>> = incomeHistoryRepository.getAllIncomeHistory()
-
-    fun insertIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.insertIncomeHistory(incomeHistory)
-    }
-
-    fun updateIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.updateIncomeHistory(incomeHistory)
-    }
-
-    fun deleteIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.deleteIncomeHistory(incomeHistory)
-    }
+    val currentCurrencySymbol: String = getCurrencySymbol()
 
     val allIncomeHistoryWithIncomeSubGroupAndWalletLiveData: LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> = incomeHistoryRepository.getAllIncomeHistoryWithIncomeSubGroupAndWallet()
 
