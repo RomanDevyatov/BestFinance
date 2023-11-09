@@ -155,6 +155,10 @@ class AddIncomeHistoryViewModel @Inject constructor(
         )
     }
 
+    fun getWalletById(id: Long): LiveData<Wallet?> {
+        return walletRepository.getWalletByIdLiveData(id)
+    }
+
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     private fun getWalletByNameNotArchived(walletName: String): Wallet? {

@@ -31,6 +31,7 @@ import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedAddWalletFormViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddWalletForm
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +44,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
 
     private val walletViewModel: WalletViewModel by viewModels()
 
-    private val sharedModViewModel: SharedModifiedViewModel<AddWalletForm> by activityViewModels()
+    private val sharedModViewModel: SharedModifiedAddWalletFormViewModel by activityViewModels()
 
     private val args: AddWalletFragmentArgs by navArgs()
 
@@ -135,7 +136,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
 
         val savedCurrencyCode = args.currencyCode ?: sharedModViewModel.modelForm?.currencyCode ?: walletViewModel.currentDefaultCurrencyCode
 
-        if (savedCurrencyCode.isNotBlank() == true) {
+        if (savedCurrencyCode.isNotBlank()) {
             currencyCodeValueGlobalBeforeAdd = savedCurrencyCode
 
             binding.currencyEditText.setText(savedCurrencyCode)
@@ -146,6 +147,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
         val walletNameBinding = binding.nameEditText.text.toString().trim()
         val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
         val walletDescriptionBinding = binding.descriptionEditText.text.toString().trim()
+        val currencyCodeBinding = binding.currencyEditText.text.toString().trim()
 
         val walletNameValidation = EmptyValidator(walletNameBinding).validate()
         binding.nameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
@@ -163,7 +165,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
                             name = walletNameBinding,
                             balance = walletBalanceBinding.toDouble(),
                             description = walletDescriptionBinding,
-                            currencyCode = "USD"
+                            currencyCode = currencyCodeBinding
                         )
 
                         sharedModViewModel.set(null)

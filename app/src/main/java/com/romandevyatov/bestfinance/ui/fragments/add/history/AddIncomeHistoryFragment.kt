@@ -706,6 +706,15 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
+            val selectedWalletId = walletItemsGlobal.find { it.name == selectedWalletName }?.id
+            if (selectedWalletId != null) {
+                addHistoryViewModel.getWalletById(selectedWalletId).observe(viewLifecycleOwner) { wallet ->
+                    wallet?.let {
+                        binding.currencyEditText.setText(it.currencyCode)
+                    }
+                }
+            }
+
             if (selectedWalletName == ADD_NEW_WALLET) {
                 setPrevValue(walletSpinnerValueGlobalBeforeAdd, binding.walletSpinner)
 

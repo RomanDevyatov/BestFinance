@@ -51,4 +51,8 @@ class WalletRepository @Inject constructor(
     fun archiveWalletById(id: Long?, date: LocalDateTime) {
         walletDao.updateArchivedDateById(id, date)
     }
+
+    fun getWalletByIdLiveData(id: Long): LiveData<Wallet?> {
+        return walletDao.getByIdLiveData(id)
+    }
 }

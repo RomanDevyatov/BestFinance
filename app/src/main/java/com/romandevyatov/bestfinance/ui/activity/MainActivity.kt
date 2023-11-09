@@ -37,8 +37,10 @@ import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFrag
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedAddWalletFormViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +52,9 @@ class MainActivity : BaseActivity(), OnExitAppListener {
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
 
-    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by viewModels()
+    private val sharedAddTransactionFromModViewModel: SharedModifiedViewModel<AddTransactionForm> by viewModels()
+    private val sharedModifiedAddWalletFormViewModel: SharedModifiedAddWalletFormViewModel by viewModels()
+    private val sharedAddTransferFormModViewModel: SharedModifiedViewModel<AddTransferForm> by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,18 +105,14 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.add_expense_fragment,
             R.id.add_transfer_fragment,
             R.id.history_fragment -> {
-                sharedModViewModel.set(null)
+                sharedAddTransactionFromModViewModel.set(null)
+                sharedAddTransferFormModViewModel.set(null)
                 navController.navigate(R.id.home_fragment)
                 true
             }
             R.id.groups_and_sub_groups_settings_fragment,
             R.id.wallets_settings_fragment -> {
                 navController.navigate(R.id.more_fragment)
-                true
-            }
-            R.id.add_wallet_fragment -> {
-                sharedModViewModel.set(null)
-                navController.navigate(R.id.wallet_fragment)
                 true
             }
             else -> navController.navigateUp()
