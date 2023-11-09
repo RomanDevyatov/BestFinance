@@ -18,6 +18,7 @@ import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseSubGroupViewModel
@@ -58,6 +59,8 @@ class UpdateExpenseSubGroupFragment : Fragment() {
                     binding.reusable.subGroupDescriptionEditText.setText(it.description)
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

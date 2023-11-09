@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
@@ -19,6 +20,7 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.CategoryExpandableAdapt
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.GroupItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubGroupNameAndSumItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AnalyzeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +43,9 @@ class AnalyzeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnalyzeBinding.inflate(inflater, container, false)
+
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 

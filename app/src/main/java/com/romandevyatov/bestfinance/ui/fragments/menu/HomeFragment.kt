@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuHomeBinding
 import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
@@ -70,6 +71,8 @@ class HomeFragment : Fragment() {
             homeViewModel.initializeCurrencyData()
             homeViewModel.setIsFirstLaunch(false)
         }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

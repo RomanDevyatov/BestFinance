@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,9 +16,11 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +30,8 @@ class UpdateExpenseGroupFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateExpenseGroupViewModel: UpdateExpenseGroupViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private val args: UpdateExpenseGroupFragmentArgs by navArgs()
 
@@ -57,6 +62,8 @@ class UpdateExpenseGroupFragment : Fragment() {
                     binding.checkedTextView.isEnabled = false
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -110,10 +117,8 @@ class UpdateExpenseGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
-        val action =
-            UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 1
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(1)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun updateExpenseGroup(nameBinding: String, descriptionBinding: String) {

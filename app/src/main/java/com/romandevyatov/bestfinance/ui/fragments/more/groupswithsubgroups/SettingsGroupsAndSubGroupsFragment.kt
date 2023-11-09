@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsGroupsAndSubGroupsBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.SettingsGroupsAndSubGroupsViewPagerAdapter
+import com.romandevyatov.bestfinance.utils.BackStackLogger
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +23,8 @@ class SettingsGroupsAndSubGroupsFragment : Fragment() {
 
     private var _binding: FragmentSettingsGroupsAndSubGroupsBinding? = null
     private val binding get() = _binding!!
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,8 @@ class SettingsGroupsAndSubGroupsFragment : Fragment() {
         _binding = FragmentSettingsGroupsAndSubGroupsBinding.inflate(inflater, container, false)
 
         setupViewPagerAndTabLayout()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -60,7 +67,7 @@ class SettingsGroupsAndSubGroupsFragment : Fragment() {
         val adapter = SettingsGroupsAndSubGroupsViewPagerAdapter(this)
         viewPager.adapter = adapter
 
-        val initialTabIndex = arguments?.getInt("initialTabIndex") ?: 0
+        val initialTabIndex = sharedInitialTabIndexViewModel.initialTabIndex ?: 0
         viewPager.setCurrentItem(initialTabIndex, false)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

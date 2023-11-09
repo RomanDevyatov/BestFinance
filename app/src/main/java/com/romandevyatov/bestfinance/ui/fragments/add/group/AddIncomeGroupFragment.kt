@@ -9,17 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +33,8 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
     private val binding get() = _binding!!
 
     private val addGroupViewModel: AddIncomeGroupViewModel by viewModels()
+
+    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private var isButtonClickable = true
 
@@ -43,6 +49,8 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
 
         setUpTextToSpeech()
 
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -51,12 +59,7 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val action =
-                    AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                action.incomeGroupName = null
-                action.incomeSubGroupName = null
-                action.walletName = null
-                findNavController().navigate(action)
+                findNavController().popBackStack(R.id.add_income_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -178,10 +181,8 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
                                 isPassive = isPassiveBinding
                             )
                         )
-                        val action =
-                            AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                        action.incomeGroupName = groupNameBinding
-                        findNavController().navigate(action)
+                        saveGroupName(groupNameBinding)
+                        findNavController().popBackStack(R.id.add_income_fragment, false)
                     } else if (incomeGroup.archivedDate == null) {
                         WindowUtil.showExistingDialog(
                             requireContext(),
@@ -193,13 +194,19 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
                             getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
                         ) {
                             addGroupViewModel.unarchiveIncomeGroup(incomeGroup)
-                            val action = AddIncomeGroupFragmentDirections.actionNavigationAddIncomeGroupToNavigationAddIncome()
-                            action.incomeGroupName = incomeGroup.name
-                            findNavController().navigate(action)
+                            saveGroupName(incomeGroup.name)
+                            findNavController().popBackStack(R.id.add_income_fragment, false)
                         }
                     }
                 }
         }
+    }
+
+    private fun saveGroupName(groupName: String) {
+        val updatedModelForm = sharedModViewModel.modelForm?.copy(
+            groupSpinnerValue = groupName
+        )
+        sharedModViewModel.modelForm = updatedModelForm
     }
 
     private fun handleButtonClick(view: View) {

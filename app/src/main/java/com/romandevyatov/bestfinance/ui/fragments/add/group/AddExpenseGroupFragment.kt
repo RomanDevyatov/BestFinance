@@ -9,17 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +33,8 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
     private val binding get() = _binding!!
 
     private val addGroupViewModel: AddExpenseGroupViewModel by viewModels()
+
+    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private var isButtonClickable = true
 
@@ -43,6 +49,8 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
 
         setUpTextToSpeech()
 
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -53,10 +61,7 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                val action =
-                    AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                action.expenseGroupName = null
-                findNavController().navigate(action)
+                findNavController().popBackStack(R.id.add_expense_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -155,10 +160,8 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
                             )
                         )
 
-                        val action =
-                            AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                        action.expenseGroupName = groupNameBinding
-                        findNavController().navigate(action)
+                        saveGroupName(groupNameBinding)
+                        findNavController().popBackStack(R.id.add_expense_fragment, false)
                     } else if (expenseGroup.archivedDate == null) {
                         WindowUtil.showExistingDialog(
                             requireContext(),
@@ -170,13 +173,19 @@ class AddExpenseGroupFragment : VoiceAssistanceBaseFragment() {
                             getString(R.string.group_is_archived, groupNameBinding, groupNameBinding)
                         ) {
                             addGroupViewModel.unarchiveExpenseGroup(expenseGroup)
-                            val action = AddExpenseGroupFragmentDirections.actionNavigationAddExpenseGroupToNavigationAddExpense()
-                            action.expenseGroupName = expenseGroup.name
-                            findNavController().navigate(action)
+                            saveGroupName(expenseGroup.name)
+                            findNavController().popBackStack(R.id.add_expense_fragment, false)
                         }
                     }
                 }
         }
+    }
+
+    private fun saveGroupName(groupName: String) {
+        val updatedModelForm = sharedModViewModel.modelForm?.copy(
+            groupSpinnerValue = groupName
+        )
+        sharedModViewModel.modelForm = updatedModelForm
     }
 
     private fun handleButtonClick(view: View) {

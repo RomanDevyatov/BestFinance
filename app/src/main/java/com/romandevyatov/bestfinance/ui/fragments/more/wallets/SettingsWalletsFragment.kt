@@ -15,6 +15,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.SettingsWalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.models.SettingsWalletItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.WindowUtil
@@ -40,6 +41,8 @@ class SettingsWalletsFragment : Fragment() {
 
         setupRecyclerView()
         observeWallets()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

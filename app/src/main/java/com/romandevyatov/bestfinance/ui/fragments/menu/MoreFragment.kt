@@ -16,6 +16,7 @@ import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryA
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.MoreSubCategoryItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger.logBackStack
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.MoreFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,6 +46,8 @@ class MoreFragment : Fragment() {
         WALLETS_CATEGORY = getString(R.string.wallets)
         CURRENCY = getString(R.string.default_currency)
 
+        logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -55,7 +58,7 @@ class MoreFragment : Fragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
+                findNavController().popBackStack(R.id.home_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
@@ -29,6 +28,7 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddTransferBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
@@ -56,7 +56,6 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     private val walletViewModel: WalletViewModel by viewModels()
     private val addTransferViewModel: AddTransferViewModel by viewModels()
     private val sharedModViewModel: SharedModifiedViewModel<AddTransferForm> by activityViewModels()
-    private val args: AddTransferFragmentArgs by navArgs()
 
     private var fromSpinnerValueGlobalBeforeAdd: String? = null
     private var toSpinnerValueGlobalBeforeAdd: String? = null
@@ -81,6 +80,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         setUpTextToSpeech()
 
         handler = Handler(Looper.getMainLooper())
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -466,24 +467,22 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableFromWalletSpinnersValue(spinnerWalletItems: MutableList<SpinnerItem>) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.fromWalletSpinnerValue
-        val spinnerTypeArg = args.spinnerType
+        val savedWalletFromName = sharedModViewModel.modelForm?.fromWalletSpinnerValue
 
-        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_FROM && spinnerWalletItems.find { it.name == savedWalletName } != null) {
-            fromSpinnerValueGlobalBeforeAdd = savedWalletName
+        if (savedWalletFromName?.isNotBlank() == true && spinnerWalletItems.find { it.name == savedWalletFromName } != null) {
+            fromSpinnerValueGlobalBeforeAdd = savedWalletFromName
 
-            binding.fromWalletNameSpinner.setText(savedWalletName, false)
+            binding.fromWalletNameSpinner.setText(savedWalletFromName, false)
         }
     }
 
     private fun setIfAvailableToWalletSpinnersValue(spinnerWalletItems: MutableList<SpinnerItem>) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.toWalletSpinnerValue
-        val spinnerTypeArg = args.spinnerType
+        val savedWalletToName = sharedModViewModel.modelForm?.toWalletSpinnerValue
 
-        if (savedWalletName?.isNotBlank() == true && spinnerTypeArg == SPINNER_TO && spinnerWalletItems.find { it.name == savedWalletName } != null) {
-            toSpinnerValueGlobalBeforeAdd = savedWalletName
+        if (savedWalletToName?.isNotBlank() == true && spinnerWalletItems.find { it.name == savedWalletToName } != null) {
+            toSpinnerValueGlobalBeforeAdd = savedWalletToName
 
-            binding.toWalletNameSpinner.setText(savedWalletName, false)
+            binding.toWalletNameSpinner.setText(savedWalletToName, false)
         }
     }
 

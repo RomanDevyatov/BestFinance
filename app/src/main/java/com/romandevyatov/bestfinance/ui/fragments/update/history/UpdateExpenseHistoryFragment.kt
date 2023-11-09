@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -31,11 +32,9 @@ import com.romandevyatov.bestfinance.data.validation.base.ValidateResult
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
-import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.utils.DateTimeUtils
-import com.romandevyatov.bestfinance.utils.TextFormatter
-import com.romandevyatov.bestfinance.utils.WindowUtil
+import com.romandevyatov.bestfinance.utils.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
@@ -46,6 +45,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateExpenseHistoryViewModel: UpdateExpenseHistoryViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private var prevGroupSpinnerValueGlobal: String? = null
 
@@ -88,6 +89,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
                     binding.reusable.amountEditText.setText(formattedAmountText)
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -457,9 +460,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        val action = UpdateExpenseHistoryFragmentDirections.actionUpdateExpenseHistoryFragmentToHistoryFragment()
-        action.initialTabIndex = 2
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(2)
+        findNavController().popBackStack(R.id.history_fragment, false)
     }
 
     private fun setOnBackPressedHandler() {

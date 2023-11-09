@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -31,11 +32,9 @@ import com.romandevyatov.bestfinance.data.validation.base.ValidateResult
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
-import com.romandevyatov.bestfinance.utils.Constants
-import com.romandevyatov.bestfinance.utils.DateTimeUtils
-import com.romandevyatov.bestfinance.utils.TextFormatter
-import com.romandevyatov.bestfinance.utils.WindowUtil
+import com.romandevyatov.bestfinance.utils.*
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.Calendar
@@ -47,6 +46,8 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateIncomeHistoryViewModel: UpdateIncomeHistoryViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private var prevGroupSpinnerValueGlobal: String? = null
 
@@ -90,6 +91,8 @@ class UpdateIncomeHistoryFragment : Fragment() {
                     binding.reusable.amountEditText.setText(formattedAmountText)
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -161,7 +164,6 @@ class UpdateIncomeHistoryFragment : Fragment() {
         setSubGroupSpinnerOnClickListener()
 
         setWalletSpinnerAdapter()
-
         setWalletSpinnerOnItemClickListener()
     }
 
@@ -254,6 +256,17 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setWalletSpinnerOnItemClickListener() {
         binding.reusable.walletSpinner.setOnItemClickListener {
                 _, _, _, _ ->
+            val selectedWalletName = binding.reusable.walletSpinner.text.toString()
+
+            val selectedWalletId = walletSpinnerItemsGlobal?.find { it.name == selectedWalletName }?.id
+            if (selectedWalletId != null) {
+                updateIncomeHistoryViewModel.getWalletById(selectedWalletId).observe(viewLifecycleOwner) { wallet ->
+                    wallet?.let {
+                        binding.reusable.currencyEditText.setText(it.currencyCode)
+                    }
+                }
+            }
+
         }
     }
 
@@ -465,13 +478,14 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        val action = UpdateIncomeHistoryFragmentDirections.actionUpdateIncomeHistoryFragmentToHistoryFragment()
-        action.initialTabIndex = 0
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(0)
+        findNavController().popBackStack(R.id.history_fragment, false)
     }
 
     private fun setOnBackPressedHandler() {
+
         val callback = object : OnBackPressedCallback(true) {
+
             override fun handleOnBackPressed() {
                 navigateToHistory()
             }

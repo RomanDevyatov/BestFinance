@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.WindowUtil
@@ -63,6 +64,8 @@ class UpdateWalletFragment : Fragment() {
                     binding.descriptionEditText.setText(it.description)
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -182,14 +185,10 @@ class UpdateWalletFragment : Fragment() {
     private fun performBackNavigation() {
         when (args.source.toString()) {
             Constants.MENU_WALLET_FRAGMENT -> {
-                val action =
-                    UpdateWalletFragmentDirections.actionNavigationUpdateWalletToNavigationWallet()
-                findNavController().navigate(action)
+                findNavController().popBackStack(R.id.wallet_fragment, false)
             }
             Constants.WALLETS_SETTINGS_FRAGMENT -> {
-                val action =
-                    UpdateWalletFragmentDirections.actionNavigationUpdateWalletToWalletsSettings()
-                findNavController().navigate(action)
+                findNavController().popBackStack(R.id.wallets_settings_fragment, false)
             }
         }
     }

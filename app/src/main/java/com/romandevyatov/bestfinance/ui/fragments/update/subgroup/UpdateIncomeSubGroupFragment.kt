@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,9 +19,11 @@ import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +32,8 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     private var _binding: FragmentUpdateIncomeSubGroupBinding? = null
     private val binding get() = _binding!!
     private val updateSubGroupViewModel: UpdateIncomeSubGroupViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private val args: UpdateIncomeSubGroupFragmentArgs by navArgs()
 
@@ -63,6 +68,8 @@ class UpdateIncomeSubGroupFragment : Fragment() {
                 }
 
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -140,10 +147,8 @@ class UpdateIncomeSubGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {
-        val action =
-            UpdateIncomeSubGroupFragmentDirections.actionNavigationUpdateIncomeSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 0
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(0)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun isValidForm(newSubGroupNameBinding: String, newGroupNameBinding: String): Boolean {

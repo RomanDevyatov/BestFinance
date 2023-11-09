@@ -48,6 +48,10 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         }
     }
 
+    fun getWalletById(id: Long): LiveData<Wallet?> {
+        return walletRepository.getWalletByIdLiveData(id)
+    }
+
     fun updateWallet(updatedWallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(updatedWallet)
     }

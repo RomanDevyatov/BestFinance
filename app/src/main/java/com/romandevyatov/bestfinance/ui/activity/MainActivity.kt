@@ -37,7 +37,6 @@ import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFrag
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
-import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedAddWalletFormViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
@@ -53,7 +52,6 @@ class MainActivity : BaseActivity(), OnExitAppListener {
     private lateinit var bottomNavigationView: BottomNavigationView
 
     private val sharedAddTransactionFromModViewModel: SharedModifiedViewModel<AddTransactionForm> by viewModels()
-    private val sharedModifiedAddWalletFormViewModel: SharedModifiedAddWalletFormViewModel by viewModels()
     private val sharedAddTransferFormModViewModel: SharedModifiedViewModel<AddTransferForm> by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,14 +105,19 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.history_fragment -> {
                 sharedAddTransactionFromModViewModel.set(null)
                 sharedAddTransferFormModViewModel.set(null)
-                navController.navigate(R.id.home_fragment)
+                navController.popBackStack(R.id.home_fragment, false)
                 true
             }
             R.id.groups_and_sub_groups_settings_fragment,
             R.id.wallets_settings_fragment -> {
-                navController.navigate(R.id.more_fragment)
+                navController.popBackStack(R.id.more_fragment, false)
                 true
             }
+//            R.id.add_wallet_fragment -> {
+//                sharedModifiedAddWalletFormViewModel.set(null)
+//                navController.navigateUp()
+//                true
+//            }
             else -> navController.navigateUp()
         }
     }
@@ -186,6 +189,8 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.update_income_group_fragment,
             R.id.update_expense_sub_group_fragment,
             R.id.update_income_sub_group_fragment,
+            R.id.update_income_history_fragment,
+            R.id.update_expense_history_fragment,
             R.id.settings_fragment,
             R.id.select_currency_fragment
         )

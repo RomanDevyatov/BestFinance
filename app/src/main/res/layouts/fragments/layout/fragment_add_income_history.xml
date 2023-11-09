@@ -115,17 +115,17 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/walletSpinnerLayout">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/currencyEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
-            android:clickable="false"
-            android:focusable="false"
+            android:text="USD"
+            android:textSize="22sp"
+            android:focusableInTouchMode="false"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 

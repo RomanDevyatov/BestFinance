@@ -17,6 +17,7 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.Transf
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferHistoryItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +52,8 @@ class TransferHistoryFragment : Fragment() {
         _binding = FragmentTransferHistoryBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

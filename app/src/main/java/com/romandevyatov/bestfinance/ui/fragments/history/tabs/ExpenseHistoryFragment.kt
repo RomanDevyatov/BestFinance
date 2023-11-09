@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.Tra
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionHistoryItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.model.TransactionItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
@@ -44,6 +45,8 @@ class ExpenseHistoryFragment : Fragment() {
         _binding = FragmentExpenseHistoryBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

@@ -16,7 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
@@ -32,6 +31,7 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
@@ -54,7 +54,6 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
     private val addHistoryViewModel: AddExpenseHistoryViewModel by viewModels()
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
-    private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     private val groupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
     private val subGroupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
@@ -92,6 +91,8 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         setUpTextToSpeech()
 
         handler = Handler(Looper.getMainLooper())
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -427,7 +428,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+                navigateToHome()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -521,7 +522,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun navigateToHome() {
-        findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+        findNavController().popBackStack(R.id.home_fragment, false)
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
@@ -718,7 +719,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableGroupSpinnersValue(spinnerGroupItems: MutableList<SpinnerItem>) {
-        val savedGroupName = args.expenseGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
+        val savedGroupName = sharedModViewModel.modelForm?.groupSpinnerValue
 
         if (savedGroupName?.isNotBlank() == true) {
             resetSubGroupSpinner()
@@ -732,7 +733,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableSubGroupSpinnersValue(spinnerSubItems: MutableList<SpinnerItem>) {
-        val savedSubGroupName = args.expenseSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
+        val savedSubGroupName = sharedModViewModel.modelForm?.subGroupSpinnerValue
 
         if (savedSubGroupName?.isNotBlank() == true && spinnerSubItems.find { it.name == savedSubGroupName} != null) {
             subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
@@ -742,7 +743,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableWalletSpinnerValue(spinnerWalletItems: MutableList<SpinnerItem>) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.walletSpinnerValue
+        val savedWalletName = sharedModViewModel.modelForm?.walletSpinnerValue
 
         if (savedWalletName?.isNotBlank() == true && spinnerWalletItems.find { it.name == savedWalletName} != null) {
             walletSpinnerValueGlobalBeforeAdd = savedWalletName

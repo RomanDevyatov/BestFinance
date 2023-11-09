@@ -18,6 +18,7 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletMenuAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -39,6 +40,9 @@ class WalletFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBottomMenuWalletsBinding.inflate(inflater, container, false)
+
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -68,7 +72,7 @@ class WalletFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
+                findNavController().popBackStack(R.id.home_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

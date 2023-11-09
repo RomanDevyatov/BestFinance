@@ -12,8 +12,4 @@ class SharedModifiedAddWalletFormViewModel @Inject constructor(): ViewModel() {
     fun set(transferForm: AddWalletForm?) {
         modelForm = transferForm
     }
-
-    override fun onCleared() {
-        modelForm = null
-    }
 }

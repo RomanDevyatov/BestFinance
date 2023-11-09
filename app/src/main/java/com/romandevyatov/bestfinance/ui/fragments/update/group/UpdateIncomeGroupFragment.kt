@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,9 +18,11 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,6 +33,8 @@ class UpdateIncomeGroupFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateIncomeGroupViewModel: UpdateIncomeGroupViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private val args: UpdateIncomeGroupFragmentArgs by navArgs()
 
@@ -60,6 +65,8 @@ class UpdateIncomeGroupFragment : Fragment() {
                     binding.checkedTextView.isEnabled = false
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -115,10 +122,8 @@ class UpdateIncomeGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
-        val action =
-            UpdateIncomeGroupFragmentDirections.actionNavigationUpdateIncomeGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 0
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(0)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun updateIncomeGroup(

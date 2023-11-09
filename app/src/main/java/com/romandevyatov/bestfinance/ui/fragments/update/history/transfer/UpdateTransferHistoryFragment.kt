@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,11 +29,13 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.TextFormatter
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.util.Calendar
@@ -44,6 +47,8 @@ class UpdateTransferHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val updateTransferHistoryViewModel: UpdateTransferHistoryViewModel by viewModels()
+
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
 
     private lateinit var historyWithWalletsGlobal: TransferHistoryWithWallets
 
@@ -60,6 +65,8 @@ class UpdateTransferHistoryFragment : Fragment() {
         _binding = FragmentUpdateTransferHistoryBinding.inflate(inflater, container, false)
 
         binding.reusable.transferButton.text = getString(R.string.update)
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -266,10 +273,8 @@ class UpdateTransferHistoryFragment : Fragment() {
     }
 
     private fun navigateToHistory() {
-        val action =
-            UpdateTransferHistoryFragmentDirections.actionUpdateTransferHistoryFragmentToHistoryFragment()
-        action.initialTabIndex = 1
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(1)
+        findNavController().popBackStack(R.id.history_fragment, false)
     }
 
     private fun updateOldWallets(walletFrom: Wallet, walletTo: Wallet, amount: Double) {
