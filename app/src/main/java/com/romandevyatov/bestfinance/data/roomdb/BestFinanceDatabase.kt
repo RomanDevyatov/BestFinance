@@ -35,7 +35,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
         TransferHistory::class,
         Currency::class
     ],
-    version = 36,
+    version = 38,
     exportSchema = true
 )
 @TypeConverters(LocalDateTimeRoomTypeConverter::class)

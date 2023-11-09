@@ -129,7 +129,8 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 archivedDate = wallet.archivedDate,
                 input = wallet.input,
                 output = wallet.output + amountBinding,
-                description = wallet.description
+                description = wallet.description,
+                currencyCode = "USD"
             )
         )
     }

@@ -450,7 +450,8 @@ class UpdateExpenseHistoryFragment : Fragment() {
                 input = wallet.input,
                 output = updatedOutput,
                 description = wallet.description,
-                archivedDate = wallet.archivedDate
+                archivedDate = wallet.archivedDate,
+                currencyCode = "USD"
             )
         )
     }

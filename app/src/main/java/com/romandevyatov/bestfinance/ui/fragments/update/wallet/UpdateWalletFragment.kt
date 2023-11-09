@@ -99,7 +99,8 @@ class UpdateWalletFragment : Fragment() {
                             id = walletId,
                             name = walletNameBinding,
                             balance = walletBalanceBinding,
-                            description = walletDescriptionBinding
+                            description = walletDescriptionBinding,
+                            currencyCode = "USD"
                         )
 
                         updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)

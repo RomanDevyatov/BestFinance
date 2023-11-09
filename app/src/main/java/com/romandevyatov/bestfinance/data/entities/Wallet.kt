@@ -1,13 +1,18 @@
 package com.romandevyatov.bestfinance.data.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.time.LocalDateTime
 
 @Entity(
     tableName = "wallet",
+    foreignKeys = [
+        ForeignKey(
+            entity = Currency::class,
+            parentColumns = ["code"],
+            childColumns = ["currency_code"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [Index(value = ["name"], unique = true)]
 )
 data class Wallet(
@@ -32,5 +37,9 @@ data class Wallet(
     val description: String? = null,
 
     @ColumnInfo(name = "archived_date")
-    val archivedDate: LocalDateTime? = null
+    val archivedDate: LocalDateTime? = null,
+
+    @ColumnInfo(name = "currency_code")
+    val currencyCode: String
+
 )

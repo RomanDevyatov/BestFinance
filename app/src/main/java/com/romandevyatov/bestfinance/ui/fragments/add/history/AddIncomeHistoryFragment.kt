@@ -331,7 +331,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
                 if (voicedWalletName != null) {
                     val newWallet = Wallet(
                         name = voicedWalletName!!,
-                        balance = convertedNumber
+                        balance = convertedNumber,
+                        currencyCode = "USD"
                     )
                     addHistoryViewModel.insertWallet(newWallet)
 

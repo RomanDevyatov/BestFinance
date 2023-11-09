@@ -149,7 +149,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 archivedDate = wallet.archivedDate,
                 input = wallet.input + amountBinding,
                 output = wallet.output,
-                description = wallet.description
+                description = wallet.description,
+                currencyCode = "USD"
             )
         )
     }

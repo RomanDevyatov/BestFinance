@@ -230,7 +230,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
             if (convertedNumber != null) {
                 val newWallet = Wallet(
                     name = voicedWalletName.toString(),
-                    balance = convertedNumber
+                    balance = convertedNumber,
+                    currencyCode = "USD"
                 )
                 addTransferViewModel.insertWallet(newWallet)
 

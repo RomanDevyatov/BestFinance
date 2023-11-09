@@ -105,7 +105,8 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
                         val newWallet = Wallet(
                             name = walletNameBinding,
                             balance = walletBalanceBinding.toDouble(),
-                            description = walletDescriptionBinding
+                            description = walletDescriptionBinding,
+                            currencyCode = "USD"
                         )
 
                         walletViewModel.insertWallet(newWallet)
