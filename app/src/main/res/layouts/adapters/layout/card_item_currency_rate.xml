@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="Currency"
             android:textSize="18sp"
-            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintWidth_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="Rate"
             android:textSize="18sp"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintWidth_percent="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
