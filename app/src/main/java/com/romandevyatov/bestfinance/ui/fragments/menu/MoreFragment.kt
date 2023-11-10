@@ -117,7 +117,7 @@ class MoreFragment : Fragment() {
                     MoreSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
                     MoreSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet),
                     MoreSubCategoryItem(CURRENCY, R.drawable.ic_money),
-                    MoreSubCategoryItem(RATES_CATEGORY, R.drawable.ic_money)
+                    MoreSubCategoryItem(RATES_CATEGORY, R.drawable.ic_currency_exchange)
                 )
             ),
 //            CategoryItem(

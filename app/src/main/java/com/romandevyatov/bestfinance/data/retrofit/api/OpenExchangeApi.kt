@@ -1,6 +1,6 @@
-package com.romandevyatov.bestfinance.data.retrofit
+package com.romandevyatov.bestfinance.data.retrofit.api
 
-import com.romandevyatov.bestfinance.data.retrofit.models.ExchangeRatesResponse
+import com.romandevyatov.bestfinance.data.retrofit.response.ExchangeRatesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -2,7 +2,7 @@ package com.romandevyatov.bestfinance.di
 
 import android.content.Context
 import androidx.room.Room
-import com.romandevyatov.bestfinance.data.retrofit.OpenExchangeApi
+import com.romandevyatov.bestfinance.data.retrofit.api.OpenExchangeApi
 import com.romandevyatov.bestfinance.data.roomdb.BestFinanceDatabase
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.DATABASE_NAME

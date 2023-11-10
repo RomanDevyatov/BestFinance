@@ -1,6 +1,6 @@
 package com.romandevyatov.bestfinance.data.retrofit.repository
 
-import com.romandevyatov.bestfinance.data.retrofit.OpenExchangeApi
+import com.romandevyatov.bestfinance.data.retrofit.api.OpenExchangeApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
