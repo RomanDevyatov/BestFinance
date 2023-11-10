@@ -2,6 +2,7 @@ package com.romandevyatov.bestfinance.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.romandevyatov.bestfinance.BuildConfig
 import com.romandevyatov.bestfinance.data.retrofit.repository.ExchangeRateRepository
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,7 @@ constructor(
         get() = _exchangeRates
 
     fun fetchExchangeRates() {
-        val apiKey = "3fe5f9b7c2f34aa79b50fa4e8c19a74d"
+        val apiKey = BuildConfig.API_KEY
         val baseCurrencyCode = storage.getDefaultCurrencyCode()
 
         viewModelScope.launch {
