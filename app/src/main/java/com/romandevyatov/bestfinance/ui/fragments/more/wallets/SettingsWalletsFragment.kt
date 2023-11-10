@@ -77,7 +77,7 @@ class SettingsWalletsFragment : Fragment() {
                         SettingsWalletItem(
                             it.id,
                             it.name,
-                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.currentDefaultCurrencySymbol,
+                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.getCurrencySymbolByCode(it.currencyCode),
                             it.archivedDate == null)
                     }.toMutableList()
                 )
@@ -142,7 +142,7 @@ class SettingsWalletsFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.more_fragment)
+                findNavController().popBackStack(R.id.more_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
