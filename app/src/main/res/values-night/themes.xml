@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.BestFinance" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/white</item> <!-- bottom chosen -->
@@ -14,8 +14,12 @@
 
     <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/black</item>
-        <item name="backgroundTint">@color/grey_700</item>
         <item name="android:background">@drawable/rounded_button</item>
+    </style>
+
+    <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <style name="CustomTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -41,16 +45,7 @@
 
     <style name="CustomTextViewStyle">
         <item name="android:textSize">16sp</item>
-<!--        <item name="android:background">@color/black</item>-->
-        <item name="android:textColor">@color/white</item>
-        <item name="android:padding">8dp</item>
-    </style>
-
-    <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/black</item>
-        <item name="cardCornerRadius">8dp</item>
-        <item name="cardElevation">4dp</item>
-        <!-- Add more card attributes as needed -->
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="CustomAutoCompleteTextViewStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
@@ -60,7 +55,6 @@
         <item name="boxStrokeWidth">2dp</item>
     </style>
 
-    <!-- Custom style for the AlertDialog -->
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>

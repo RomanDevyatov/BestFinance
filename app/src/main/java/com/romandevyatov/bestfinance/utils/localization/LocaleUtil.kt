@@ -6,13 +6,14 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
 import androidx.core.os.ConfigurationCompat
+import com.romandevyatov.bestfinance.utils.Constants
 import java.util.Locale
 
 class LocaleUtil {
 
     companion object {
 
-        private val supportedLocales = listOf("en", "ru")
+        private val supportedLocales = Constants.supportedLocales
         const val DEFAULT_PHONE_LANGUAGE = "default_system"
 
         fun getLocalizedConfiguration(prefLocaleCode: String): Configuration {
