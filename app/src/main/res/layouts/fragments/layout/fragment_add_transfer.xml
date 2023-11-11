@@ -17,7 +17,7 @@
         android:clickable="true"
         android:focusable="true"
         android:hint="@string/from"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,7 +42,7 @@
         android:clickable="true"
         android:focusable="true"
         android:hint="@string/to"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="@+id/fromWalletNameSpinnerLayout"
         app:layout_constraintStart_toStartOf="@+id/fromWalletNameSpinnerLayout"
         app:layout_constraintTop_toBottomOf="@+id/fromWalletNameSpinnerLayout" >
@@ -66,7 +66,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="@string/amount"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +111,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="@string/date"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +136,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="@string/time"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amountLayout">
 

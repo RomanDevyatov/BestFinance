@@ -41,13 +41,15 @@ class TransactionAdapter(
 
             binding.amountTextView.text = transactionItem.amount
 
+            binding.amountBaseTextView.text = transactionItem.amountBase
+
             binding.incomeGroupNameTextView.text = transactionItem.groupName
 
             binding.subGroupNameTextView.text = transactionItem.subGroupGroupName
 
             binding.walletNameTextView.text = transactionItem.walletName
 
-            binding.dateIncomeTextView.text = transactionItem.date?.toLocalTime().toString()
+            binding.timeTextView.text = transactionItem.date?.toLocalTime().toString()
 
             if (imageId != null) {
                 binding.imageView.setImageResource(imageId)

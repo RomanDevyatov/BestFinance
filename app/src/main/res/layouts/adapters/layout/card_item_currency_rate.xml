@@ -13,9 +13,10 @@
             android:id="@+id/textCurrency"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="Currency"
             android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/textRate"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.5" />
@@ -26,9 +27,11 @@
             android:layout_height="wrap_content"
             android:text="Rate"
             android:textSize="18sp"
-            app:layout_constraintWidth_percent="0.5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textCurrency"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

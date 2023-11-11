@@ -9,10 +9,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
-import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
-import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
-import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
-import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.data.repositories.*
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +24,8 @@ class AddExpenseHistoryViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository,
     private val expenseSubGroupRepository: ExpenseSubGroupRepository,
     private val expenseHistoryRepository: ExpenseHistoryRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val baseRatesRepository: BaseCurrencyRatesRepository
 ) : BaseViewModel(storage) {
 
     // expense group zone
@@ -86,28 +84,44 @@ class AddExpenseHistoryViewModel @Inject constructor(
                                          parsedLocalDateTime: LocalDateTime,
                                          walletId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            insertExpenseHistoryRecord(
-                expenseSubGroupId,
-                amountBinding,
-                commentBinding,
-                parsedLocalDateTime,
-                walletId
-            )
-
             val wallet = walletRepository.getWalletById(walletId)
             if (wallet != null) {
-                val updatedWallet = wallet.copy(
-                    balance = wallet.balance - amountBinding,
-                    output = wallet.output + amountBinding
-                )
+                val defaultCurrencyCode = getDefaultCurrencyCode()
+                val pairName = defaultCurrencyCode + wallet.currencyCode
+                val baseCurrencyRate = baseRatesRepository.getBaseCurrencyRateByPairName(pairName)
+                if (baseCurrencyRate != null) {
+                    val amountBase = amountBinding / baseCurrencyRate.value
 
-                updateWallet(updatedWallet)
+                    insertExpenseHistoryRecord(
+                        expenseSubGroupId,
+                        amountBinding,
+                        commentBinding,
+                        parsedLocalDateTime,
+                        walletId,
+                        amountBase
+                    )
+
+
+                    val updatedWallet = wallet.copy(
+                        balance = wallet.balance - amountBinding,
+                        output = wallet.output + amountBinding
+                    )
+
+                    updateWallet(updatedWallet)
+                }
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertExpenseHistoryRecord(expenseGroupId: Long, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletId: Long) {
+    private fun insertExpenseHistoryRecord(
+        expenseGroupId: Long,
+        amountBinding: Double,
+        commentBinding: String,
+        parsedLocalDateTime: LocalDateTime,
+        walletId: Long,
+        amountBase: Double
+    ) {
         insertExpenseHistory(
             ExpenseHistory(
                 expenseSubGroupId = expenseGroupId,
@@ -116,64 +130,44 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 date = parsedLocalDateTime,
                 walletId = walletId,
                 createdDate = LocalDateTime.now(),
-                amountBase = amountBinding
-            )
-        )
-    }
-
-    private fun updateWallet(walletId: Long, wallet: Wallet, amountBinding: Double) {
-        updateWallet(
-            Wallet(
-                id = walletId,
-                name = wallet.name,
-                balance = wallet.balance - amountBinding,
-                archivedDate = wallet.archivedDate,
-                input = wallet.input,
-                output = wallet.output + amountBinding,
-                description = wallet.description,
-                currencyCode = wallet.currencyCode
+                amountBase = amountBase
             )
         )
     }
 
     val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    private fun getWalletByNameNotArchived(walletName: String): Wallet? {
-        return walletRepository.getWalletByNameNotArchived(walletName)
-    }
-
     fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.updateWallet(wallet)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun archive(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameNotArchived(expenseSubGroupNameBinding)
-            if (expenseSubGroup != null) {
-                val expenseSubGroupId = expenseSubGroup.id
-
-                if (expenseSubGroupId != null) {
-                    val wallet = getWalletByNameNotArchived(walletNameBinding)
-
-                    if (wallet != null) {
-                        val walletId = wallet.id!!
-
-                        insertExpenseHistoryRecord(
-                            expenseSubGroupId,
-                            amountBinding,
-                            commentBinding,
-                            parsedLocalDateTime,
-                            walletId
-                        )
-
-                        updateWallet(walletId, wallet, amountBinding)
-                    }
-                }
-            }
-        }
-
-    }
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    fun archive(expenseSubGroupNameBinding: String, amountBinding: Double, commentBinding: String, parsedLocalDateTime: LocalDateTime, walletNameBinding: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameNotArchived(expenseSubGroupNameBinding)
+//            if (expenseSubGroup != null) {
+//                val expenseSubGroupId = expenseSubGroup.id
+//
+//                if (expenseSubGroupId != null) {
+//                    val wallet = getWalletByNameNotArchived(walletNameBinding)
+//
+//                    if (wallet != null) {
+//                        val walletId = wallet.id!!
+//
+//                        insertExpenseHistoryRecord(
+//                            expenseSubGroupId,
+//                            amountBinding,
+//                            commentBinding,
+//                            parsedLocalDateTime,
+//                            walletId
+//                        )
+//
+//                        updateWallet(walletId, wallet, amountBinding)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) {
         viewModelScope.launch(Dispatchers.IO) {

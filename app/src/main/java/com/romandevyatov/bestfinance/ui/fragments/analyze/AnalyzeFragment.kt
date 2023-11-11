@@ -128,10 +128,10 @@ class AnalyzeFragment : Fragment() {
         }
 
         analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { histories ->
-            val totalIncomeValue = histories?.sumOf { it.amount } ?: 0.0
+            val totalIncomeValue = histories?.sumOf { it.amountBase } ?: 0.0
 
             analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
-                val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
+                val totalExpensesValue = expenseHistory?.sumOf { it.amountBase } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
                 val formattedTotalText = removeTrailingZeros(result) + analyzeViewModel.currentDefaultCurrencySymbol
@@ -148,7 +148,7 @@ class AnalyzeFragment : Fragment() {
             val groupName = incomeGroup.incomeGroup?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemIncomes = incomeGroup.incomeSubGroupWithIncomeHistories.map { groupWithIncomeHistories ->
-                val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amount }
+                val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amountBase }
 
                 SubGroupNameAndSumItem(
                     sumOfSubGroup = sumOfSubGroup,
@@ -178,7 +178,7 @@ class AnalyzeFragment : Fragment() {
             val groupName = expenseHistories.expenseGroupEntity?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
-                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amount }
+                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amountBase }
 
                 SubGroupNameAndSumItem(
                     sumOfSubGroup = sumOfSubGroup,

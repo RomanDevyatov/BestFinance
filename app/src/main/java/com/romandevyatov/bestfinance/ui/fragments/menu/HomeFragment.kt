@@ -110,7 +110,14 @@ class HomeFragment : Fragment() {
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
             walletList?.let { wallets ->
-                val balanceValue = wallets.sumOf { it.balance }
+                val balanceValue = wallets.sumOf {
+                    val hv = homeViewModel.getBaseCurrencyRatesByPairName("${homeViewModel.getDefaultCurrencyCode()}${it.currencyCode}")
+                    if (hv != null) {
+                        it.balance / hv.value
+                    } else {
+                        0.0
+                    }
+                }
                 val totalCapitalText = removeTrailingZeros(balanceValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                 binding.totalCapitalTextView.text = totalCapitalText
             }
@@ -124,18 +131,18 @@ class HomeFragment : Fragment() {
                             it.id == historyWithSubGroupAndWallets.incomeSubGroup?.incomeGroupId
                         }?.isPassive ?: false
                     }
-                    .sumOf { it.incomeHistory.amount }
+                    .sumOf { it.incomeHistory.amountBase }
                 val passiveIncomeText = removeTrailingZeros(passiveIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                 binding.passiveIncomeValueTextView.text = passiveIncomeText
             }
 
-            totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amount }
+            totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amountBase }
             val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
             binding.totalIncomeValueTextView.text = totalIncomeText
 
             expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
                 expenseHistoryList?.let { histories ->
-                    totalExpensesValue = histories.sumOf { it.amount }
+                    totalExpensesValue = histories.sumOf { it.amountBase }
                     val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
                     binding.totalExpensesValueTextView.text = totalExpensesText
 

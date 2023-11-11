@@ -7,6 +7,7 @@ data class TransactionItem(
     val groupName: String?,
     val subGroupGroupName: String,
     val amount: String,
+    val amountBase: String,
     val comment: String,
     val date: LocalDateTime?,
     val walletName: String

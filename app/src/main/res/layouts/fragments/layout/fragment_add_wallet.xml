@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginHorizontal="32dp"
-        app:helperText="Required"
+        app:helperText="@string/required"
         android:hint="@string/name"
         app:layout_constraintTop_toTopOf="parent" >
 
@@ -34,7 +34,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:hint="@string/wallet_balance_hint"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

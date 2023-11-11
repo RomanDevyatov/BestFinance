@@ -7,6 +7,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
+import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
@@ -22,7 +23,8 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
     storage: Storage,
     private val incomeHistoryRepository: IncomeHistoryRepository,
     private val incomeGroupRepository: IncomeGroupRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 ): BaseViewModel(storage) {
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
@@ -34,17 +36,29 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
     }
 
     fun updateIncomeHistoryAndWallet(updatedIncomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.updateIncomeHistory(
-            updatedIncomeHistory
-        )
-
         val wallet = walletRepository.getWalletById(updatedIncomeHistory.walletId)
         if (wallet != null) {
-            val updatedWallet = wallet.copy(
-                balance = wallet.balance + updatedIncomeHistory.amount,
-                input = wallet.input + updatedIncomeHistory.amount
+            val defaultCurrencyCode = getDefaultCurrencyCode()
+            val pairName = defaultCurrencyCode + wallet.currencyCode
+            val baseCurrencyRate = baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
+
+            if (baseCurrencyRate != null) {
+                val amountBase = updatedIncomeHistory.amount / baseCurrencyRate.value
+
+                val updatedAmountBaseIncomeHistory = updatedIncomeHistory.copy(
+                    amountBase = amountBase
                 )
-            walletRepository.updateWallet(updatedWallet)
+
+                incomeHistoryRepository.updateIncomeHistory(
+                    updatedAmountBaseIncomeHistory
+                )
+
+                val updatedWallet = wallet.copy(
+                    balance = wallet.balance + updatedAmountBaseIncomeHistory.amount,
+                    input = wallet.input + updatedAmountBaseIncomeHistory.amount
+                )
+                walletRepository.updateWallet(updatedWallet)
+            }
         }
     }
 

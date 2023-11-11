@@ -206,5 +206,7 @@
 
     <string name="rates">Катировки</string>
     <string name="refresh_rates">Обновить катировки</string>
+    <string name="base">база</string>
+    <string name="required">Обязательно</string>
 
 </resources>

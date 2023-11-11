@@ -9,22 +9,26 @@ import javax.inject.Singleton
 @Singleton
 class BaseCurrencyRatesRepository
 @Inject
-constructor(private val currencyDao: BaseCurrencyRatesDao) {
+constructor(private val baseCurrencyRatesDao: BaseCurrencyRatesDao) {
 
     suspend fun insertAllBaseCurrencyRate(currencies: List<BaseCurrencyRate>) {
-        currencyDao.insertAll(currencies)
-    }
-
-    fun getAllBaseCurrencyRate(): List<BaseCurrencyRate> {
-        return currencyDao.getAll()
+        baseCurrencyRatesDao.insertAll(currencies)
     }
 
     fun getAllBaseCurrencyRateLiveData(): LiveData<List<BaseCurrencyRate>> {
-        return currencyDao.getAllLiveData()
+        return baseCurrencyRatesDao.getAllLiveData()
     }
 
     fun deleteAll() {
-        currencyDao.deleteAll()
+        baseCurrencyRatesDao.deleteAll()
+    }
+
+    suspend fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRate? {
+        return baseCurrencyRatesDao.getByPairName(pairName)
+    }
+
+    fun getBaseCurrencyRateByPairNameLiveData(pairName: String): LiveData<BaseCurrencyRate?> {
+        return baseCurrencyRatesDao.getByPairNameLiveData(pairName)
     }
 
 }

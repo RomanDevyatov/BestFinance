@@ -415,7 +415,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     private fun handleConfirmInput(handledSpokenValue: String) {
         when (handledSpokenValue.lowercase()) {
             getString(R.string.yes) -> { // sent
-                sendIncomeHistory()
+                saveIncomeHistory()
                 speakText(getString(R.string.history_added))
             }
             getString(R.string.no) -> { // no
@@ -461,7 +461,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            sendIncomeHistory()
+            saveIncomeHistory()
 
             handler.postDelayed({
                 isButtonClickable = true
@@ -471,7 +471,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendIncomeHistory() {
+    private fun saveIncomeHistory() {
         val subGroupNameBinding = binding.subGroupSpinner.text.toString().trim()
         val amountBinding = binding.amountEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()

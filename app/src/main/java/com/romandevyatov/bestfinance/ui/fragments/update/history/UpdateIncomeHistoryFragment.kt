@@ -33,6 +33,7 @@ import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeHistoryBind
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
 import com.romandevyatov.bestfinance.utils.*
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -87,7 +88,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                     val incomeHistory = it.incomeHistory
                     binding.reusable.commentEditText.setText(incomeHistory.comment)
 
-                    val formattedAmountText = TextFormatter.removeTrailingZeros(incomeHistory.amount.toString()) + updateIncomeHistoryViewModel.currentDefaultCurrencySymbol
+                    val formattedAmountText = removeTrailingZeros(incomeHistory.amount.toString())
                     binding.reusable.amountEditText.setText(formattedAmountText)
                 }
             }
@@ -256,6 +257,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setWalletSpinnerOnItemClickListener() {
         binding.reusable.walletSpinner.setOnItemClickListener {
                 _, _, _, _ ->
+
             val selectedWalletName = binding.reusable.walletSpinner.text.toString()
 
             val selectedWalletId = walletSpinnerItemsGlobal?.find { it.name == selectedWalletName }?.id
@@ -430,7 +432,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                     updateOldWallet(walletOld, updatedBalanceOld, updatedInputOld)
                 }
 
-                val walletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id!!
+                val newWalletId = walletSpinnerItemsGlobal?.find { it.name == walletNameBinding}?.id!!
 
                 val incomeSubGroupId = spinnerSubGroupItemsGlobal.find { it.name == subGroupNameBinding }?.id
 
@@ -441,7 +443,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                         amount = amountBinding.toDouble(),
                         comment = commentBinding,
                         date = parsedLocalDateTime,
-                        walletId = walletId,
+                        walletId = newWalletId,
                         archivedDate = incomeHistory.archivedDate,
                         createdDate = incomeHistory.createdDate,
                         amountBase = amountBinding.toDouble()

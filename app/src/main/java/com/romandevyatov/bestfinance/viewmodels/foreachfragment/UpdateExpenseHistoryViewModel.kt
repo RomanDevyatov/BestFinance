@@ -7,6 +7,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
+import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
@@ -22,7 +23,8 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
     storage: Storage,
     private val expenseHistoryRepository: ExpenseHistoryRepository,
     private val expenseGroupRepository: ExpenseGroupRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 ): BaseViewModel(storage) {
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
@@ -35,15 +37,28 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
 
     fun updateExpenseHistoryAndWallet(updatedExpenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            updateExpenseHistory(updatedExpenseHistory)
-
             val wallet = walletRepository.getWalletById(updatedExpenseHistory.walletId)
             if (wallet != null) {
-                val updatedWallet = wallet.copy(
-                    balance = wallet.balance - updatedExpenseHistory.amount,
-                    output = wallet.output + updatedExpenseHistory.amount
-                )
-                walletRepository.updateWallet(updatedWallet)
+                val defaultCurrencyCode = getDefaultCurrencyCode()
+                val pairName = defaultCurrencyCode + wallet.currencyCode
+                val baseCurrencyRate =
+                    baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
+
+                if (baseCurrencyRate != null) {
+                    val amountBase = updatedExpenseHistory.amount / baseCurrencyRate.value
+
+                    val updatedAmountBaseIncomeHistory = updatedExpenseHistory.copy(
+                        amountBase = amountBase
+                    )
+                    updateExpenseHistory(updatedAmountBaseIncomeHistory)
+
+
+                    val updatedWallet = wallet.copy(
+                        balance = wallet.balance - updatedAmountBaseIncomeHistory.amount,
+                        output = wallet.output + updatedAmountBaseIncomeHistory.amount
+                    )
+                    walletRepository.updateWallet(updatedWallet)
+                }
             }
         } catch (_: Exception) { }
     }
