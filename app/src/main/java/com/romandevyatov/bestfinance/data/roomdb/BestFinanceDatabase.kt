@@ -20,7 +20,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
         Currency::class,
         BaseCurrencyRate::class
     ],
-    version = 40,
+    version = 41,
     exportSchema = true
 )
 @TypeConverters(LocalDateTimeRoomTypeConverter::class)

@@ -32,6 +32,12 @@ data class TransferHistory (
     @ColumnInfo(name = "amount")
     val amount: Double,
 
+    @ColumnInfo(name = "amount_target")
+    val amountTarget: Double,
+
+    @ColumnInfo(name = "amount_base")
+    val amountBase: Double,
+
     @ColumnInfo(name = "from_wallet_id")
     val fromWalletId: Long,
 

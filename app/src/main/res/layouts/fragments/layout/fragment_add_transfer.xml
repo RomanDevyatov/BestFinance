@@ -45,7 +45,7 @@
         app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="@+id/fromWalletNameSpinnerLayout"
         app:layout_constraintStart_toStartOf="@+id/fromWalletNameSpinnerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/fromWalletNameSpinnerLayout" >
+        app:layout_constraintTop_toBottomOf="@+id/fromWalletNameSpinnerLayout">
 
         <AutoCompleteTextView
             android:id="@+id/toWalletNameSpinner"
@@ -61,55 +61,72 @@
         android:id="@+id/amountLayout"
         style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="20dp"
         android:hint="@string/amount"
         app:helperText="@string/required"
-        app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amountTextView"
+        app:layout_constraintStart_toStartOf="@+id/toWalletNameSpinnerLayout"
         app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amountEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:digits="0123456789.,-"
             android:inputType="numberDecimal"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amountTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="USD1"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toStartOf="@+id/amountTargetLayout"
+        app:layout_constraintStart_toEndOf="@+id/amountLayout"
+        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout" />
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/currencyLayout"
+        android:id="@+id/amountTargetLayout"
         style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="@string/amount"
+        app:helperText="@string/required"
+        app:layout_constraintStart_toEndOf="@+id/amountTextView"
+        app:layout_constraintEnd_toStartOf="@+id/amountTargetTextView"
         app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/currencyEditText"
+            android:id="@+id/amountTargetEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="false"
+            android:layout_height="match_parent"
             android:focusable="false"
             android:inputType="none"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amountTargetTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="USD2"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/toWalletNameSpinnerLayout"
+        app:layout_constraintStart_toEndOf="@+id/amountTargetLayout"
+        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateLayout"
         style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="2"
         android:hint="@string/date"
         app:helperText="@string/required"
         app:layout_constraintEnd_toStartOf="@+id/timeLayout"
@@ -121,8 +138,8 @@
             android:id="@+id/dateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:clickable="true"
+            android:focusable="false"
             android:inputType="none"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -131,10 +148,10 @@
         android:id="@+id/timeLayout"
         style="@style/CustomTextInputLayoutStyle"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="1"
         android:hint="@string/time"
         app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +176,7 @@
         android:layout_marginTop="20dp"
         android:hint="@string/comment"
         app:layout_constraintEnd_toEndOf="@+id/timeLayout"
-        app:layout_constraintStart_toStartOf="@+id/dateLayout"
+        app:layout_constraintStart_toStartOf="@+id/timeLayout"
         app:layout_constraintTop_toBottomOf="@+id/timeLayout">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -167,7 +184,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -175,8 +191,8 @@
         style="@style/MaterialButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="40dp"
         android:text="@string/add"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/commentLayout"

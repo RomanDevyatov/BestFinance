@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
+import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import com.romandevyatov.bestfinance.utils.localization.Storage
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class UpdateTransferHistoryViewModel @Inject constructor(
     storage: Storage,
     private val transferHistoryRepository: TransferHistoryRepository,
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 ): BaseViewModel(storage) {
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
@@ -38,30 +40,44 @@ class UpdateTransferHistoryViewModel @Inject constructor(
     }
 
     fun updateTransferHistoryAndWallets(updatedTransferHistory: TransferHistory) = viewModelScope.launch (Dispatchers.IO) {
-        updateTransferHistory(updatedTransferHistory)
-
-        val amount = updatedTransferHistory.amount
-        val to = walletRepository.getWalletById(updatedTransferHistory.toWalletId)
-        val from = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
-
-        if (to != null && from != null) {
-            val updatedWalletToBalance = to.balance.plus(amount)
-            val updatedWalletToInput = to.input.plus(amount)
-
-            val updatedWalletTo = to.copy(
-                balance = updatedWalletToBalance,
-                input = updatedWalletToInput
+        val walletFrom = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
+        if (walletFrom != null) {
+           val baseCurrencyRate = baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(
+                "${getDefaultCurrencyCode()}${walletFrom.currencyCode}"
             )
-            updateWallet(updatedWalletTo)
+            if (baseCurrencyRate != null) {
+                val amountBase = updatedTransferHistory.amount / baseCurrencyRate.value
+                updateTransferHistory(
+                    updatedTransferHistory.copy(
+                        amountBase = amountBase
+                    )
+                )
 
-            val updatedWalletFromBalance = from.balance.minus(amount)
-            val updatedWalletFromOutput = from.output.plus(amount)
+                val amount = updatedTransferHistory.amount
+                val amountTarget = updatedTransferHistory.amountTarget
+                val to = walletRepository.getWalletById(updatedTransferHistory.toWalletId)
+                val from = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
 
-            val updatedWalletFrom = from.copy(
-                balance = updatedWalletFromBalance,
-                output = updatedWalletFromOutput
-            )
-            updateWallet(updatedWalletFrom)
+                if (to != null && from != null) {
+                    val updatedWalletToBalance = to.balance.plus(amountTarget)
+                    val updatedWalletToInput = to.input.plus(amountTarget)
+
+                    val updatedWalletTo = to.copy(
+                        balance = updatedWalletToBalance,
+                        input = updatedWalletToInput
+                    )
+                    updateWallet(updatedWalletTo)
+
+                    val updatedWalletFromBalance = from.balance.minus(amount)
+                    val updatedWalletFromOutput = from.output.plus(amount)
+
+                    val updatedWalletFrom = from.copy(
+                        balance = updatedWalletFromBalance,
+                        output = updatedWalletFromOutput
+                    )
+                    updateWallet(updatedWalletFrom)
+                }
+            }
         }
     }
 

@@ -4,7 +4,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
 
+private var currencySymbol = ""
+
 fun TextInputEditText.addGenericTextWatcher() {
+
     val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -17,15 +20,20 @@ fun TextInputEditText.addGenericTextWatcher() {
             if (text != updatedText) {
                 removeTextChangedListener(this)
                 setText(updatedText)
-                setSelection(updatedText.length)
+                setSelection(updatedText.indexOf(" $currencySymbol"))
                 addTextChangedListener(this)
             }
         }
     }
+
     addTextChangedListener(textWatcher)
 }
 
-private fun processInput(text: String): String {
+fun TextInputEditText.setCurrencySymbol(symbol: String) {
+    currencySymbol = symbol
+}
+
+fun processInput(text: String, currencySymbollocal: String = currencySymbol): String {
     var updatedText = text.replace(",", ".").replace("-", "0")
 
     updatedText = checkStartWithPoint(updatedText)
@@ -41,6 +49,9 @@ private fun processInput(text: String): String {
             updatedText = removeBeginningZeros(updatedText)
         }
     }
+
+    updatedText = updatedText.replace(" $currencySymbol", "")
+    updatedText += " $currencySymbol"
 
     return updatedText
 }

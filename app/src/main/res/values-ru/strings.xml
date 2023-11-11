@@ -24,8 +24,8 @@
     <string name="income_group_description">Описание группы доходов</string>
     <string name="passive">Пассивный</string>
     <string name="income_groups">Группы доходов</string>
-    <string name="from">Источник</string>
-    <string name="to">Цель</string>
+    <string name="from">Из</string>
+    <string name="to">В</string>
     <string name="archived">Архивирован</string>
     <string name="money_flow">Денежный поток</string>
 

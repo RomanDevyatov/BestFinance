@@ -25,6 +25,7 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.IsEqualValidator
+import com.romandevyatov.bestfinance.data.validation.TwoDigitsAfterPoint
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
@@ -214,6 +215,7 @@ class UpdateTransferHistoryFragment : Fragment() {
             view.isEnabled = false
 
                 val amountBinding = binding.reusable.amountEditText.text.toString().trim()
+                val amountTargetBinding = binding.reusable.amountTargetEditText.text.toString().trim()
                 val dateBinding = binding.reusable.dateEditText.text.toString().trim()
                 val timeBinding = binding.reusable.timeEditText.text.toString().trim()
                 val comment = binding.reusable.commentEditText.text.toString().trim()
@@ -228,6 +230,10 @@ class UpdateTransferHistoryFragment : Fragment() {
                 val amountValidation = BaseValidator.validate(EmptyValidator(amountBinding), IsDigitValidator(amountBinding))
                 binding.reusable.amountEditText.error = if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
+                val amountTargetValidation = BaseValidator.validate(EmptyValidator(amountTargetBinding), IsDigitValidator(amountTargetBinding), TwoDigitsAfterPoint(amountTargetBinding))
+                binding.reusable.amountEditText.error =
+                if (!amountValidation.isSuccess) getString(amountValidation.message) else null
+
                 val dateBindingValidation = EmptyValidator(dateBinding).validate()
                 binding.reusable.dateLayout.error = if (!dateBindingValidation.isSuccess) getString(dateBindingValidation.message) else null
 
@@ -236,13 +242,15 @@ class UpdateTransferHistoryFragment : Fragment() {
 
                 if (isEqualSpinnerNamesValidation.isSuccess
                     && amountValidation.isSuccess
+                    && amountTargetValidation.isSuccess
                     && dateBindingValidation.isSuccess
                     && timeBindingValidation.isSuccess
                 ) {
                     updateOldWallets(
                         historyWithWalletsGlobal.walletFrom,
                         historyWithWalletsGlobal.walletTo,
-                        historyWithWalletsGlobal.transferHistory.amount)
+                        historyWithWalletsGlobal.transferHistory.amount,
+                        historyWithWalletsGlobal.transferHistory.amountTarget)
 
                     val walletFromId = walletSpinnerItemsGlobal?.find { it.name == walletFromNameBinding }?.id
                     val walletToId = walletSpinnerItemsGlobal?.find { it.name == walletToNameBinding }?.id
@@ -253,6 +261,8 @@ class UpdateTransferHistoryFragment : Fragment() {
                     val updatedTransferHistory = TransferHistory(
                         id = historyWithWalletsGlobal.transferHistory.id,
                         amount = amountBinding.toDouble(),
+                        amountTarget = amountTargetBinding.toDouble(),
+                        amountBase = amountBinding.toDouble(), // change
                         fromWalletId = walletFromId!!,
                         toWalletId = walletToId!!,
                         date = parsedLocalDateTime,
@@ -277,13 +287,18 @@ class UpdateTransferHistoryFragment : Fragment() {
         findNavController().popBackStack(R.id.history_fragment, false)
     }
 
-    private fun updateOldWallets(walletFrom: Wallet, walletTo: Wallet, amount: Double) {
+    private fun updateOldWallets(
+        walletFrom: Wallet,
+        walletTo: Wallet,
+        amount: Double,
+        amountTarget: Double
+    ) {
         val updatedBalanceFromOld = walletFrom.balance.plus(amount)
         val updatedOutputFromOld = walletFrom.output.minus(amount)
         updateOldWalletFrom(walletFrom, updatedBalanceFromOld, updatedOutputFromOld)
 
-        val updatedBalanceToOld = walletTo.balance.minus(amount)
-        val updatedInputToOld = walletTo.input.minus(amount)
+        val updatedBalanceToOld = walletTo.balance.minus(amountTarget)
+        val updatedInputToOld = walletTo.input.minus(amountTarget)
         updateOldWalletTo(walletTo, updatedBalanceToOld, updatedInputToOld)
     }
 
