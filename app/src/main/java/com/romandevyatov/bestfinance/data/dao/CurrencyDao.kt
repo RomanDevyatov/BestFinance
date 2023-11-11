@@ -14,7 +14,7 @@ interface CurrencyDao {
     suspend fun insertAll(currencies: List<Currency>)
 
     @Query("SELECT * FROM currency")
-    suspend fun getAllCurrencies(): List<Currency>
+    fun getAllCurrencies(): List<Currency>
 
     @Query("SELECT * FROM currency")
     fun getAllCurrenciesLiveData(): LiveData<List<Currency>>

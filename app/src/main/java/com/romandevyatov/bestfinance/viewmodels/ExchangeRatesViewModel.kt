@@ -15,7 +15,7 @@ class ExchangeRatesViewModel
 constructor(
     private val storage: Storage,
     private val exchangeRateRepository: ExchangeRateRepository
-    ) : ViewModel() {
+    ) : BaseViewModel(storage) {
 
     private val _exchangeRates = MutableLiveData<Map<String, Double>>()
     val exchangeRates: LiveData<Map<String, Double>>
@@ -27,8 +27,9 @@ constructor(
 
         viewModelScope.launch {
             val response = exchangeRateRepository.getExchangeRates(apiKey, baseCurrencyCode)
+
             if (response.isSuccessful) {
-                _exchangeRates.value = response.body()?.rates ?: emptyMap()
+                _exchangeRates.value = response.body()?.data ?: emptyMap()
             } else {
                 Log.d("tag", "getBaseRates error: ${response.code()}")
             }

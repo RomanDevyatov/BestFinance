@@ -7,13 +7,11 @@ import retrofit2.http.Query
 
 interface OpenExchangeApi {
 
-    @GET("latest.json")
+    @GET("latest")
     suspend fun getExchangeRates(
-        @Query("app_id") apiKey: String,
-        @Query("base") baseCurrencyCode: String,
-        @Query("symbols") symbols: String = "RUB,USD,EUR",
-        @Query("prettyprint") prettyprint: Boolean = false,
-        @Query("show_alternative") show_alternative: Boolean = false
+        @Query("apikey") apiKey: String,
+        @Query("base_currency") baseCurrencyCode: String,
+        @Query("currencies") symbols: String = "RUB,USD,EUR"
     ): Response<ExchangeRatesResponse>
 
 }

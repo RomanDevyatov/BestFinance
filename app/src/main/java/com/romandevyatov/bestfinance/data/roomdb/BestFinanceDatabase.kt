@@ -3,15 +3,7 @@ package com.romandevyatov.bestfinance.data.roomdb
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.romandevyatov.bestfinance.data.dao.IncomeGroupDao
-import com.romandevyatov.bestfinance.data.dao.ExpenseGroupDao
-import com.romandevyatov.bestfinance.data.dao.ExpenseSubGroupDao
-import com.romandevyatov.bestfinance.data.dao.IncomeSubGroupDao
-import com.romandevyatov.bestfinance.data.dao.WalletDao
-import com.romandevyatov.bestfinance.data.dao.IncomeHistoryDao
-import com.romandevyatov.bestfinance.data.dao.ExpenseHistoryDao
-import com.romandevyatov.bestfinance.data.dao.TransferHistoryDao
-import com.romandevyatov.bestfinance.data.dao.CurrencyDao
+import com.romandevyatov.bestfinance.data.dao.*
 import com.romandevyatov.bestfinance.data.entities.*
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
 
@@ -26,9 +18,9 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
         ExpenseHistory::class,
         TransferHistory::class,
         Currency::class,
-        BaseCurrencyRates::class
+        BaseCurrencyRate::class
     ],
-    version = 39,
+    version = 40,
     exportSchema = true
 )
 @TypeConverters(LocalDateTimeRoomTypeConverter::class)
@@ -51,4 +43,7 @@ abstract class BestFinanceDatabase : RoomDatabase() {
     abstract fun getTransferHistoryDao(): TransferHistoryDao
 
     abstract fun getCurrencyDao(): CurrencyDao
+
+    abstract fun getBaseCurrencyRatesDao(): BaseCurrencyRatesDao
+
 }

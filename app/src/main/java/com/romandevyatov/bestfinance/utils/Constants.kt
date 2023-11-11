@@ -1,7 +1,8 @@
 package com.romandevyatov.bestfinance.utils
 
+import com.romandevyatov.bestfinance.data.entities.Currency
+
 object Constants {
-    const val BASE_URL: String = "https://openexchangerates.org/api/"
     const val UNDO_DELAY: Long = 4000L
     const val SPINNER_TO = "spinner_to"
     const val SPINNER_FROM = "spinner_from"
@@ -18,4 +19,10 @@ object Constants {
     const val SHOW_DROP_DOWN_DELAY_MS: Long = 30
     const val CLICK_DELAY_MS = 1000L
     const val UNCALLABLE_WORD = "&&Rпизда%<хуй"
+
+    val DEFAULT_CURRENCIES = listOf(
+        Currency("USD", "United States Dollar"),
+        Currency("RUB", "Russian Rouble"),
+        Currency("EUR", "European euro")
+    )
 }

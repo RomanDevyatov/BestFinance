@@ -13,4 +13,5 @@ data class Currency(
 
     @ColumnInfo(name = "name")
     val name: String
+
 )

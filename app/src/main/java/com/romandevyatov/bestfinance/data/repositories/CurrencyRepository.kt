@@ -7,10 +7,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CurrencyRepository @Inject constructor(
-    private val currencyDao: CurrencyDao
-) {
-    suspend fun getAllCurrencies(): List<Currency> {
+class CurrencyRepository
+@Inject
+constructor(private val currencyDao: CurrencyDao) {
+
+    fun getAllCurrencies(): List<Currency> {
         return currencyDao.getAllCurrencies()
     }
 
@@ -21,4 +22,5 @@ class CurrencyRepository @Inject constructor(
     fun getAllCurrenciesLiveData(): LiveData<List<Currency>> {
         return currencyDao.getAllCurrenciesLiveData()
     }
+
 }

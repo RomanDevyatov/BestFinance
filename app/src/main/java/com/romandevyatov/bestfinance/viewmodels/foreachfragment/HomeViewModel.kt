@@ -7,9 +7,11 @@ import com.romandevyatov.bestfinance.data.entities.Currency
 import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.repositories.CurrencyRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
+import com.romandevyatov.bestfinance.utils.Constants.DEFAULT_CURRENCIES
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,16 +44,11 @@ class HomeViewModel @Inject constructor(
         return storage.getIsFirstLaunch()
     }
 
-    fun initializeCurrencyData() {
-        val currencies = listOf(
-            Currency("USD", "United States Dollar"),
-            Currency("RUB", "Russian Rouble")
-        )
-
-        viewModelScope.launch {
-            if (currencyRepository.getAllCurrencies().isEmpty()) {
-                currencyRepository.insertAllCurrencies(currencies)
-            }
+    fun initializeCurrencyData() = viewModelScope.launch(Dispatchers.IO) {
+        val allCurrenciesList = currencyRepository.getAllCurrencies()
+        if (allCurrenciesList.isEmpty()) {
+            currencyRepository.insertAllCurrencies(DEFAULT_CURRENCIES)
         }
+
     }
 }

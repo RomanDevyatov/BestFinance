@@ -63,10 +63,12 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "API_KEY", "\"$DEBUG_API_KEY\""
+            buildConfigField "String", "BASE_FREECURRENCY_API_URL", "\"$BASE_FREECURRENCY_API_URL\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_FREECURRENCY_API_URL", "\"$BASE_FREECURRENCY_API_URL\""
             buildConfigField "String", "API_KEY", "\"$RELEASE_API_KEY\""
         }
     }

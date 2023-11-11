@@ -205,5 +205,6 @@
     <string name="select_default_currency">Выберите валюту по умолчанию</string>
 
     <string name="rates">Катировки</string>
+    <string name="refresh_rates">Обновить катировки</string>
 
 </resources>

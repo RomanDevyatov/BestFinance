@@ -1,3 +1,3 @@
 package com.romandevyatov.bestfinance.data.retrofit.response
 
-data class ExchangeRatesResponse(val rates: Map<String, Double>)
+data class ExchangeRatesResponse(val data: Map<String, Double>)

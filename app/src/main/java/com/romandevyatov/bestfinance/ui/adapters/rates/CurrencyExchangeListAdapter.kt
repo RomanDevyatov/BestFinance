@@ -9,13 +9,13 @@ import com.romandevyatov.bestfinance.databinding.CardItemCurrencyRateBinding
 
 class CurrencyExchangeListAdapter : RecyclerView.Adapter<CurrencyExchangeListAdapter.CurrencyRateViewHolder>() {
 
-    private val differentCallback = object: DiffUtil.ItemCallback<CurrencyExchangeRate>() {
+    private val differentCallback = object: DiffUtil.ItemCallback<CurrencyExchangeRateItem>() {
 
-        override fun areItemsTheSame(oldItem: CurrencyExchangeRate, newItem: CurrencyExchangeRate): Boolean {
+        override fun areItemsTheSame(oldItem: CurrencyExchangeRateItem, newItem: CurrencyExchangeRateItem): Boolean {
             return oldItem.currencyCode == newItem.currencyCode
         }
 
-        override fun areContentsTheSame(oldItem: CurrencyExchangeRate, newItem: CurrencyExchangeRate): Boolean {
+        override fun areContentsTheSame(oldItem: CurrencyExchangeRateItem, newItem: CurrencyExchangeRateItem): Boolean {
             return oldItem == newItem
         }
     }
@@ -26,7 +26,7 @@ class CurrencyExchangeListAdapter : RecyclerView.Adapter<CurrencyExchangeListAda
         private val binding: CardItemCurrencyRateBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currency: CurrencyExchangeRate) {
+        fun bind(currency: CurrencyExchangeRateItem) {
                 binding.textCurrency.text = currency.currencyCode
                 binding.textRate.text = currency.rate.toString()
         }
@@ -46,7 +46,7 @@ class CurrencyExchangeListAdapter : RecyclerView.Adapter<CurrencyExchangeListAda
         return walletDiffer.currentList.size
     }
 
-    fun submitList(currencyExchangeRates: MutableList<CurrencyExchangeRate>) {
-        walletDiffer.submitList(currencyExchangeRates)
+    fun submitList(currencyExchangeRateItems: MutableList<CurrencyExchangeRateItem>) {
+        walletDiffer.submitList(currencyExchangeRateItems)
     }
 }
