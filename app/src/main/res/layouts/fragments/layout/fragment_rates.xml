@@ -6,12 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragments.more.rates.RatesFragment">
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fetchRatesButton"
         style="@style/MaterialButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:textSize="24sp"
         android:text="@string/refresh_rates"
         app:layout_constraintEnd_toEndOf="parent"

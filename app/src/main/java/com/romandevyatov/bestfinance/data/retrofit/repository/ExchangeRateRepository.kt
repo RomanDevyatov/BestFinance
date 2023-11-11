@@ -7,6 +7,6 @@ import javax.inject.Singleton
 @Singleton
 class ExchangeRateRepository @Inject constructor(private val openExchangeApi: OpenExchangeApi) {
 
-    suspend fun getExchangeRates(apiKey: String, defaultCurrencyCode: String) = openExchangeApi.getExchangeRates(apiKey, defaultCurrencyCode)
+    suspend fun getExchangeRates(apiKey: String, defaultCurrencyCode: String, currencies: String) = openExchangeApi.getExchangeRates(apiKey, defaultCurrencyCode, currencies)
 
 }

@@ -1,7 +1,9 @@
 package com.romandevyatov.bestfinance.ui.activity
 
 import android.Manifest.permission.RECORD_AUDIO
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -66,6 +68,12 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         setOnDestinationChangedListener()
 
         applySavedTheme()
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 
     override fun onDestroy() {

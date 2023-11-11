@@ -1,5 +1,7 @@
 package com.romandevyatov.bestfinance.ui.adapters.menu.wallet
 
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -53,6 +55,7 @@ class WalletMenuAdapter(
                 centeredTextView.text = wallet.name
                 centeredTextView.gravity = Gravity.CENTER
                 centeredTextView.textSize = 28f
+                centeredTextView.setPadding(0, 18, 0, 18)
 
                 linearLayout.addView(centeredTextView)
 

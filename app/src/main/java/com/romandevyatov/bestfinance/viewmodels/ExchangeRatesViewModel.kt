@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.romandevyatov.bestfinance.BuildConfig
 import com.romandevyatov.bestfinance.data.retrofit.repository.ExchangeRateRepository
+import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.localization.Storage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,9 +25,10 @@ constructor(
     fun fetchExchangeRates() {
         val apiKey = BuildConfig.API_KEY
         val baseCurrencyCode = storage.getDefaultCurrencyCode()
+        val currencies: String = Constants.DEFAULT_CURRENCIES.joinToString(separator = ",") { it.code }
 
         viewModelScope.launch {
-            val response = exchangeRateRepository.getExchangeRates(apiKey, baseCurrencyCode)
+            val response = exchangeRateRepository.getExchangeRates(apiKey, baseCurrencyCode, currencies)
 
             if (response.isSuccessful) {
                 _exchangeRates.value = response.body()?.data ?: emptyMap()

@@ -11,7 +11,7 @@ interface OpenExchangeApi {
     suspend fun getExchangeRates(
         @Query("apikey") apiKey: String,
         @Query("base_currency") baseCurrencyCode: String,
-        @Query("currencies") symbols: String = "RUB,USD,EUR"
+        @Query("currencies") symbols: String
     ): Response<ExchangeRatesResponse>
 
 }
