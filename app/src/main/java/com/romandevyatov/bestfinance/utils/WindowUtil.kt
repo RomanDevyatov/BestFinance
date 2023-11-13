@@ -221,7 +221,7 @@ class WindowUtil {
             customSnackbar.show()
         }
 
-        class CustomSnackbar(context: Context, rootView: View, ) {
+        class CustomSnackbar(val context: Context, rootView: View, ) {
             private val binding = CustomSnackbarBinding.inflate(LayoutInflater.from(context))
             private val snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
             private var timer: CountDownTimer? = null
@@ -257,7 +257,7 @@ class WindowUtil {
                     }
 
                     override fun onFinish() {
-                        binding.countdownText.text = "OK"
+                        binding.countdownText.text = context.getString(R.string.ok)
                         dismiss()
                     }
                 }

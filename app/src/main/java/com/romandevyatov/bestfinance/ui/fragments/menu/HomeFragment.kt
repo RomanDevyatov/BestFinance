@@ -21,7 +21,9 @@ import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
+import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.RatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -37,6 +39,8 @@ class HomeFragment : Fragment() {
     private val walletViewModel: WalletViewModel by viewModels()
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
+    private val exchangeRatesViewModel: ExchangeRatesViewModel by viewModels()
+    private val ratesViewModel: RatesViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -72,6 +76,16 @@ class HomeFragment : Fragment() {
         if (homeViewModel.getIsFirstLaunch()) {
             homeViewModel.initializeCurrencyData()
             homeViewModel.setIsFirstLaunch(false)
+            exchangeRatesViewModel.fetchExchangeRates()
+        }
+
+        exchangeRatesViewModel.exchangeRates.observe(viewLifecycleOwner) { ratesMap ->
+            ratesMap.let { rates ->
+                val ratesToSave = ratesViewModel.mapToBaseCurrencyExchangeRates(rates)
+
+                ratesViewModel.deleteAll()
+                ratesViewModel.insertAllBaseCurrencyRates(ratesToSave)
+            }
         }
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->

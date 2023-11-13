@@ -209,4 +209,6 @@
     <string name="base">base</string>
     <string name="required">Required</string>
 
+    <string name="ok">OK</string>
+
 </resources>

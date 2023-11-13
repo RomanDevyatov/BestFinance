@@ -22,6 +22,7 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.models.GroupItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubGroupNameAndSumItem
 import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AnalyzeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.absoluteValue
@@ -82,6 +83,8 @@ class AnalyzeFragment : Fragment() {
                         incomeCategorySum += groupSumma ?: 0.0
                     }
 
+                    incomeCategorySum = roundDoubleToTwoDecimalPlaces(incomeCategorySum)
+
                     val incomesParentData = CategoryItem(
                         categoryName = getString(R.string.incomes),
                         categorySum = incomeCategorySum.toString() + analyzeViewModel.currentDefaultCurrencySymbol,
@@ -100,14 +103,16 @@ class AnalyzeFragment : Fragment() {
 
                         val groupExpenseDataList = convertToExpenseCategory(combinedExpenseList)
 
-                        val expenseCategorySum = 0.0
+                        var expenseCategorySum = 0.0
                         for (groupData in groupExpenseDataList) {
                             val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
                                 it.sumOfSubGroup
                             }
 
-                            incomeCategorySum += groupSumma ?: 0.0
+                            expenseCategorySum += groupSumma ?: 0.0
                         }
+
+                        expenseCategorySum = roundDoubleToTwoDecimalPlaces(expenseCategorySum)
 
                         val expensesParentData = CategoryItem(
                             categoryName = getString(R.string.expenses),
@@ -150,19 +155,24 @@ class AnalyzeFragment : Fragment() {
             val subGroupNameAndSumItemIncomes = incomeGroup.incomeSubGroupWithIncomeHistories.map { groupWithIncomeHistories ->
                 val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amountBase }
 
+                val roundedSumOfSubGroup = roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = sumOfSubGroup,
+                    sumOfSubGroup = roundedSumOfSubGroup,
                     subGroupName = groupWithIncomeHistories.incomeSubGroup?.name ?: ""
                 )
             }
 
             val incomeGroupSum = subGroupNameAndSumItemIncomes.sumOf { it.sumOfSubGroup }
-            val formattedIncomeGroupSum = removeTrailingZeros(incomeGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
+
+            val roundedIncomeGroupSum = roundDoubleToTwoDecimalPlaces(incomeGroupSum)
+
+            val formattedRoundedIncomeGroupSum = removeTrailingZeros(roundedIncomeGroupSum.toString()) + analyzeViewModel.getDefaultCurrencySymbol()
 
             groupItems.add(
                 GroupItem(
                     groupName = groupName,
-                    groupSum = formattedIncomeGroupSum,
+                    groupSum = formattedRoundedIncomeGroupSum,
                     subGroupNameAndSumItem = subGroupNameAndSumItemIncomes
                 )
             )
@@ -180,19 +190,24 @@ class AnalyzeFragment : Fragment() {
             val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
                 val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amountBase }
 
+                val roundedSumOfSubGroup =roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = sumOfSubGroup,
+                    sumOfSubGroup = roundedSumOfSubGroup,
                     subGroupName = subGroupWithIncomeHistories.expenseSubGroup?.name ?: ""
                 )
             }
 
             val expenseGroupSum = subGroupNameAndSumItemExpenses.sumOf { it.sumOfSubGroup }
-            val formattedExpenseGroupSum = removeTrailingZeros(expenseGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
+
+            val roundedIncomeGroupSum = roundDoubleToTwoDecimalPlaces(expenseGroupSum)
+
+            val formattedRoundedIncomeGroupSum = removeTrailingZeros(roundedIncomeGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
 
             categoryList.add(
                 GroupItem(
                     groupName = groupName,
-                    groupSum = formattedExpenseGroupSum,
+                    groupSum = formattedRoundedIncomeGroupSum,
                     subGroupNameAndSumItem = subGroupNameAndSumItemExpenses
                 )
             )
@@ -200,7 +215,6 @@ class AnalyzeFragment : Fragment() {
 
         return categoryList
     }
-
 
     private fun addToGroupAdapter(categoryItem: CategoryItem) {
         val mList = categoryExpandableAdapter.getList()

@@ -10,6 +10,7 @@ import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.*
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -90,7 +91,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 val pairName = defaultCurrencyCode + wallet.currencyCode
                 val baseCurrencyRate = baseRatesRepository.getBaseCurrencyRateByPairName(pairName)
                 if (baseCurrencyRate != null) {
-                    val amountBase = amountBinding / baseCurrencyRate.value
+                    val amountBase = roundDoubleToTwoDecimalPlaces(amountBinding / baseCurrencyRate.value)
 
                     insertExpenseHistoryRecord(
                         expenseSubGroupId,

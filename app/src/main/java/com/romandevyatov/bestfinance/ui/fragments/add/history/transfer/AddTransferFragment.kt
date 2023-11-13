@@ -666,7 +666,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                 binding.amountEditText.error =
                     if (!amountValidation.isSuccess) getString(amountValidation.message) else null
 
-                val amountTargetValidation = BaseValidator.validate(EmptyValidator(amountTargetBinding), IsDigitValidator(amountTargetBinding))
+                val amountTargetValidation = BaseValidator.validate(EmptyValidator(amountTargetBinding), IsDigitValidator(amountTargetBinding), TwoDigitsAfterPoint(amountTargetBinding))
                 binding.amountTargetEditText.error =
                     if (!amountTargetValidation.isSuccess) getString(amountTargetValidation.message) else null
 
@@ -748,6 +748,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                                             amount: Double,
                                             amountTarget: Double,
                                             parsedLocalDateTime: LocalDateTime) {
+        // TODO: amount Base calculate
         val transferHistory = TransferHistory(
             amount = amount,
             amountTarget = amountTarget,

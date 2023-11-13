@@ -11,6 +11,7 @@ import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.repositories.*
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -110,7 +111,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
                 val pairName = defaultCurrencyCode + wallet.currencyCode
                 val baseCurrencyRate = baseRatesRepository.getBaseCurrencyRateByPairName(pairName)
                 if (baseCurrencyRate != null) {
-                    val amountBase = amountBinding / baseCurrencyRate.value
+                    val amountBase = roundDoubleToTwoDecimalPlaces(amountBinding / baseCurrencyRate.value)
 
                     insertIncomeHistoryRecord(
                         incomeSubGroupId,

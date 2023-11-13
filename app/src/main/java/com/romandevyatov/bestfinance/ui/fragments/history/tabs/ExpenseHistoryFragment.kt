@@ -114,8 +114,9 @@ class ExpenseHistoryFragment : Fragment() {
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
-                val formattedAmountText = removeTrailingZeros(expenseHistory.amount.toString()) + expenseHistoryViewModel.getCurrencySymbolByCode(wallet.currencyCode)
-                val formattedAmountBaseText = "".plus(removeTrailingZeros(expenseHistory.amountBase.toString()))
+                val formattedAmountText = "-".plus(removeTrailingZeros(expenseHistory.amount.toString()))
+                    .plus(expenseHistoryViewModel.getCurrencySymbolByCode(wallet.currencyCode))
+                val formattedAmountBaseText = "-".plus(removeTrailingZeros(expenseHistory.amountBase.toString()))
                     .plus(expenseHistoryViewModel.currentDefaultCurrencySymbol)
                     .plus("(${getString(R.string.base)})")
 

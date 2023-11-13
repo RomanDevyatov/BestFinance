@@ -209,4 +209,6 @@
     <string name="base">база</string>
     <string name="required">Обязательно</string>
 
+    <string name="ok">Ок</string>
+
 </resources>

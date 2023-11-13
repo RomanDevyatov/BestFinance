@@ -17,6 +17,12 @@
         <item name="android:background">@drawable/rounded_button</item>
     </style>
 
+
+    <style name="MaterialButtonWindowStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/rounded_button</item>
+    </style>
+
     <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">8dp</item>
         <item name="cardElevation">4dp</item>
@@ -44,6 +50,11 @@
     </style>
 
     <style name="CustomTextViewStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="CustomTextViewStyleWindow">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>

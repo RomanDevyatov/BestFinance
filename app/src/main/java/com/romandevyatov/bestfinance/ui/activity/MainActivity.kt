@@ -100,10 +100,6 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         recreate()
     }
 
-    fun updateDefaultCurrency(code: String) {
-        storage.setPreferredDefaultCurrencyCode(code)
-    }
-
     override fun onExitApp() {
         finish()
     }
