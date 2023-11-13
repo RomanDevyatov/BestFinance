@@ -114,7 +114,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                     binding.amountEditText.addTextChangedListener(this)
                 }
 
-                if (binding.toWalletNameSpinner.text != null && text.toDoubleOrNull() != null) {
+                if (updatedText.toDoubleOrNull() != null) {
                     walletItemsGlobal.find {
                         it.name == binding.fromWalletNameSpinner.text.toString()
                     }?.id?.let {

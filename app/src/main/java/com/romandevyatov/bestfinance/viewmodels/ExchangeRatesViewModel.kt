@@ -24,7 +24,7 @@ constructor(
 
     fun fetchExchangeRates() {
         val apiKey = BuildConfig.API_KEY
-        val baseCurrencyCode = storage.getDefaultCurrencyCode()
+        val baseCurrencyCode = getDefaultCurrencyCode()
         val currencies: String = supportedCurrencies.joinToString(separator = ",") { it.code }
 
         viewModelScope.launch {

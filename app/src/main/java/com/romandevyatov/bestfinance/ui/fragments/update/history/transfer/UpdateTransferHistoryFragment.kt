@@ -5,6 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
@@ -34,10 +38,13 @@ import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants.CLICK_DELAY_MS
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.TextFormatter
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.utils.WindowUtil
+import com.romandevyatov.bestfinance.utils.numberpad.processInput
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateTransferHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.Calendar
 
@@ -97,12 +104,111 @@ class UpdateTransferHistoryFragment : Fragment() {
                     val transferHistory = it.transferHistory
                     binding.reusable.commentEditText.setText(transferHistory.comment)
 
-                    val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString()) + updateTransferHistoryViewModel.currentDefaultCurrencySymbol
+                    val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString())
                     binding.reusable.amountEditText.setText(formattedAmountText)
+
+                    val formattedTargetAmountText = TextFormatter.removeTrailingZeros(transferHistory.amountTarget.toString())
+                    binding.reusable.amountTargetEditText.setText(formattedTargetAmountText)
                 }
 
                 setButtonOnClickListener(view)
             }
+
+        binding.reusable.amountEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(editable: Editable?) {
+                val text = editable.toString()
+                val updatedText = processInput(text)
+
+                if (text != updatedText) {
+                    binding.reusable.amountEditText.removeTextChangedListener(this)
+                    binding.reusable.amountEditText.setText(updatedText)
+                    binding.reusable.amountEditText.setSelection(updatedText.length)
+                    binding.reusable.amountEditText.addTextChangedListener(this)
+                }
+
+                text.toDoubleOrNull()?.let { amount ->
+                    val fromWalletName = binding.reusable.fromWalletNameSpinner.text.toString()
+                    val toWalletName = binding.reusable.toWalletNameSpinner.text.toString()
+
+                    val fromWalletId = walletSpinnerItemsGlobal?.find {
+                        it.name == fromWalletName
+                    }?.id
+
+                    val toWalletId = walletSpinnerItemsGlobal?.find {
+                        it.name == toWalletName
+                    }?.id
+
+                    lifecycleScope.launch {
+                        val fromWallet = updateTransferHistoryViewModel.getWalletById(fromWalletId)
+                        val toWallet = updateTransferHistoryViewModel.getWalletById(toWalletId)
+
+                        val result = updateTransferHistoryViewModel.calculateTransferAmount(amount, fromWallet, toWallet)
+
+                        binding.reusable.amountTargetEditText.setText(result.toString())
+                    }
+                } ?: run {
+                    binding.reusable.amountTargetEditText.setText("")
+                }
+            }
+//                val text = editable.toString()
+//                val updatedText = processInput(text)
+//
+//                if (text != updatedText) {
+//                    binding.reusable.amountEditText.removeTextChangedListener(this)
+//                    binding.reusable.amountEditText.setText(updatedText)
+//                    binding.reusable.amountEditText.setSelection(updatedText.length)
+//                    binding.reusable.amountEditText.addTextChangedListener(this)
+//                }
+//
+//                if (updatedText.toDoubleOrNull() != null) {
+//                    walletSpinnerItemsGlobal?.find {
+//                        it.name == binding.reusable.fromWalletNameSpinner.text.toString()
+//                    }?.id?.let {
+//                        updateTransferHistoryViewModel.getWalletByIdLiveData(it)
+//                            .observe(viewLifecycleOwner) { wallet ->
+//                                wallet?.let { wlt ->
+//                                    val defaultCurrencyCode =
+//                                        updateTransferHistoryViewModel.getDefaultCurrencyCode()
+//                                    val pairName = defaultCurrencyCode + wlt.currencyCode
+//                                    updateTransferHistoryViewModel.getBaseCurrencyRateByPairNameLiveData(pairName).observe(viewLifecycleOwner) { baseCurrencyRate ->
+//                                        Log.d("UpdateTransferFragment", "baseCurrencyRate(${pairName})=${baseCurrencyRate}")
+//                                        baseCurrencyRate?.let { bcr ->
+//                                            val amountBase =
+//                                                updatedText.toDouble() / bcr.value // in base
+//
+//                                            walletSpinnerItemsGlobal?.find { wallet2it ->
+//                                                wallet2it.name == binding.reusable.toWalletNameSpinner.text.toString()
+//                                            }?.id?.let { walletTargetId ->
+//                                                updateTransferHistoryViewModel.getWalletByIdLiveData(walletTargetId)
+//                                                    .observe(viewLifecycleOwner) { walletTarget ->
+//                                                        if (walletTarget != null) {
+//                                                            val pairName2 =
+//                                                                defaultCurrencyCode + walletTarget.currencyCode
+//                                                            updateTransferHistoryViewModel.getBaseCurrencyRateByPairNameLiveData(pairName2).observe(viewLifecycleOwner) { baseCurrencyRateTarget ->
+//                                                                Log.d("UpdateTransferFragment", "baseCurrencyRateTarget(${pairName2})=${baseCurrencyRateTarget}")
+//                                                                baseCurrencyRateTarget?.let { bcrTarget ->
+//                                                                    val res =
+//                                                                        roundDoubleToTwoDecimalPlaces(amountBase * bcrTarget.value) // in target
+//                                                                    binding.reusable.amountTargetEditText.setText(
+//                                                                        res.toString()
+//                                                                    )
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                    }
+//                }
+//            }
+        })
     }
 
     override fun onDestroyView() {
