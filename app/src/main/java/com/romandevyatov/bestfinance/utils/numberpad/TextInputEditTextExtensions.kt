@@ -20,7 +20,7 @@ fun TextInputEditText.addGenericTextWatcher() {
             if (text != updatedText) {
                 removeTextChangedListener(this)
                 setText(updatedText)
-                setSelection(updatedText.indexOf(" $currencySymbol"))
+                setSelection(updatedText.length)
                 addTextChangedListener(this)
             }
         }
@@ -29,11 +29,7 @@ fun TextInputEditText.addGenericTextWatcher() {
     addTextChangedListener(textWatcher)
 }
 
-fun TextInputEditText.setCurrencySymbol(symbol: String) {
-    currencySymbol = symbol
-}
-
-fun processInput(text: String, currencySymbollocal: String = currencySymbol): String {
+fun processInput(text: String): String {
     var updatedText = text.replace(",", ".").replace("-", "0")
 
     updatedText = checkStartWithPoint(updatedText)
@@ -50,8 +46,10 @@ fun processInput(text: String, currencySymbollocal: String = currencySymbol): St
         }
     }
 
-    updatedText = updatedText.replace(" $currencySymbol", "")
-    updatedText += " $currencySymbol"
+    if (currencySymbol.isNotEmpty()) {
+        updatedText = updatedText.replace(" $currencySymbol", "")
+        updatedText += " $currencySymbol"
+    }
 
     return updatedText
 }

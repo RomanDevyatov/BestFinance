@@ -15,7 +15,10 @@ import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIn
 interface IncomeHistoryDao {
 
     @Query("SELECT * FROM income_history order by id ASC")
-    fun getAll(): LiveData<List<IncomeHistory>>
+    fun getAllLivedata(): LiveData<List<IncomeHistory>>
+
+    @Query("SELECT * FROM income_history order by id ASC")
+    suspend fun getAll(): List<IncomeHistory>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(incomeHistory: IncomeHistory)

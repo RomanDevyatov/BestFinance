@@ -35,6 +35,7 @@ import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
+import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
@@ -184,7 +185,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.group_doesnt_exist, handledSpokenValue)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertExpenseGroup(
@@ -201,13 +202,13 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = getString(R.string.created_group_is_set))
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = Constants.UNCALLABLE_WORD // any
+                    spokenValue = UNCALLABLE_WORD // any
                     val ask = getString(R.string.call_group_one_more_time)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // start again
                     startVoiceAssistance()
@@ -235,7 +236,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.add_new_subgroup_prompt, handledSpokenValue)
                 speakTextAndRecognize(ask, false) // ask new
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) { // if i want to create new subgroup
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) { // if i want to create new subgroup
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // if I sad yes I want to create new subgroup
                     speakText(getString(R.string.adding_subgroup, spokenValue))
@@ -254,13 +255,13 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = getString(R.string.created_subgroup_is_set))
                 }
                 getString(R.string.no) -> { // if I sad no I don't want to create new subgroup
-                    spokenValue = Constants.UNCALLABLE_WORD
+                    spokenValue = UNCALLABLE_WORD
                     val ask = getString(R.string.continue_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) { // one more time
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) { // one more time
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> {
                     startVoiceAssistance()
@@ -291,7 +292,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.wallet_doesnt_exist, handledSpokenValue, handledSpokenValue)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> {
                     voicedWalletName = spokenValue as String
@@ -302,14 +303,14 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = message)
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = Constants.UNCALLABLE_WORD // any
+                    spokenValue = UNCALLABLE_WORD // any
 
                     val ask = getString(R.string.continue_wallet_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> startVoiceAssistance() // start again
                 getString(R.string.no) -> { // exit
@@ -342,18 +343,18 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     Log.e("AIH.balance", "voicedWalletName is null!")
                 }
             } else {
-                spokenValue = Constants.UNCALLABLE_WORD
+                spokenValue = UNCALLABLE_WORD
 
                 val askSpeechText = getString(R.string.incorrect_balance)
                 speakTextAndRecognize(askSpeechText, false)
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // start again setting balance
                     startVoiceAssistance()
                 }
                 getString(R.string.no) -> { // exit
-                    spokenValue = Constants.UNCALLABLE_WORD
+                    spokenValue = UNCALLABLE_WORD
                     voicedWalletName = null
                     steps.remove(InputState.SET_WALLET_BALANCE)
                     currentStageIndex -= 1
@@ -573,7 +574,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
             val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
 
-            if (groupWithSubGroups != null) {
+            groupWithSubGroups?.let {
                 spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(groupWithSubGroups))
             }
 
@@ -703,6 +704,15 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
+            val selectedWalletId = walletItemsGlobal.find { it.name == selectedWalletName }?.id
+            if (selectedWalletId != null) {
+                addHistoryViewModel.getWalletById(selectedWalletId).observe(viewLifecycleOwner) { wallet ->
+                    wallet?.let {
+                        binding.currencyEditText.setText(it.currencyCode)
+                    }
+                }
+            }
+
             if (selectedWalletName == ADD_NEW_WALLET) {
                 setPrevValue(walletSpinnerValueGlobalBeforeAdd, binding.walletSpinner)
 
@@ -753,22 +763,22 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun restoreAmountDateCommentValues() {
-        val mod = sharedModViewModel.modelForm
+        val addTransactionForm = sharedModViewModel.modelForm
 
-        if (mod?.amount != null) {
-            binding.amountEditText.setText(mod.amount)
+        if (addTransactionForm?.amount != null) {
+            binding.amountEditText.setText(addTransactionForm.amount)
         }
 
-        if (mod?.date != null) {
-            binding.dateEditText.setText(mod.date)
+        if (addTransactionForm?.date != null) {
+            binding.dateEditText.setText(addTransactionForm.date)
         }
 
-        if (mod?.time != null) {
-            binding.timeEditText.setText(mod.time)
+        if (addTransactionForm?.time != null) {
+            binding.timeEditText.setText(addTransactionForm.time)
         }
 
-        if (mod?.comment != null) {
-            binding.commentEditText.setText(mod.comment)
+        if (addTransactionForm?.comment != null) {
+            binding.commentEditText.setText(addTransactionForm.comment)
         }
     }
 

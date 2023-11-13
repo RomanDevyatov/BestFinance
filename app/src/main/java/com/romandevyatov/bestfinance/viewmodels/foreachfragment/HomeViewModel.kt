@@ -8,8 +8,8 @@ import com.romandevyatov.bestfinance.data.entities.IncomeGroup
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.CurrencyRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
-import com.romandevyatov.bestfinance.utils.Constants.DEFAULT_CURRENCIES
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.Constants.supportedCurrencies
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +25,7 @@ class HomeViewModel @Inject constructor(
     private val baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 ) : BaseViewModel(storage) {
 
-    val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
-
-    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
+    val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllIncomeGroupsLiveData()
 
     private val _resultLiveData = MutableLiveData<IncomeGroup>()
     val resultLiveData: LiveData<IncomeGroup> = _resultLiveData
@@ -50,13 +48,13 @@ class HomeViewModel @Inject constructor(
     fun initializeCurrencyData() = viewModelScope.launch(Dispatchers.IO) {
         val allCurrenciesList = currencyRepository.getAllCurrencies()
         if (allCurrenciesList.isEmpty()) {
-            currencyRepository.insertAllCurrencies(DEFAULT_CURRENCIES)
+            currencyRepository.insertAllCurrencies(supportedCurrencies)
         }
 
     }
 
-    fun getBaseCurrencyRatesLiveData(currencyCode: String): LiveData<BaseCurrencyRate?> {
-        return baseCurrencyRatesRepository.getBaseCurrencyRateByPairNameLiveData("${getDefaultCurrencyCode()}${currencyCode}")
+    fun getBaseCurrencyRatesLiveData(pairName: String): LiveData<BaseCurrencyRate?> {
+        return baseCurrencyRatesRepository.getBaseCurrencyRateByPairNameLiveData(pairName)
     }
 
     fun getBaseCurrencyRatesByPairName(pairName: String): BaseCurrencyRate? {

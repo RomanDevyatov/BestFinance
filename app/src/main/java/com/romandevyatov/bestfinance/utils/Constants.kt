@@ -57,7 +57,7 @@ object Constants {
         ZAR    South African Rand
     """.trimIndent()
 
-    val DEFAULT_CURRENCIES: List<Currency> = currencyData.lines().map { line ->
+    val supportedCurrencies: List<Currency> = currencyData.lines().map { line ->
         val (code, name) = line.trim().split(Regex("\\s+"), 2)
         Currency(code, name)
     }

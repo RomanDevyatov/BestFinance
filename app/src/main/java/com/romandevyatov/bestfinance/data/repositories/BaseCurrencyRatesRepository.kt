@@ -31,4 +31,5 @@ constructor(private val baseCurrencyRatesDao: BaseCurrencyRatesDao) {
         return baseCurrencyRatesDao.getByPairNameLiveData(pairName)
     }
 
+
 }

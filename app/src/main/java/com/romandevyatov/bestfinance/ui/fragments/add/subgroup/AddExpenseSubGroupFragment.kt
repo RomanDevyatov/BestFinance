@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.subgroup
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +8,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -44,6 +46,19 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
     private var isButtonClickable = true
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack(R.id.add_expense_fragment, false)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,10 +114,16 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
                 subGroupNameBinding, groupId
             ).observe(viewLifecycleOwner) { subGroup ->
                 if (subGroup == null) {
-                    addIncomeSubGroup(subGroupNameBinding, descriptionBinding, groupId)
+                    val newExpenseSubGroup = ExpenseSubGroup(
+                        name = subGroupNameBinding,
+                        description = descriptionBinding,
+                        expenseGroupId = groupId
+                    )
+
+                    addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
 
                     saveGroupAndSubGroupName(selectedGroupNameBinding, subGroupNameBinding)
-                    findNavController().popBackStack(R.id.add_income_fragment, false)
+                    findNavController().popBackStack(R.id.add_expense_fragment, false)
                 } else if (subGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -118,6 +139,11 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun calculateSteps(): MutableList<InputState> {
@@ -211,25 +237,6 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
             else -> speakText(getString(R.string.you_said, handledSpokenValue))
         }
         spokenValue = null
-    }
-
-    private fun addIncomeSubGroup(
-        subGroupNameBinding: String,
-        descriptionBinding: String,
-        groupId: Long
-    ) {
-        val newExpenseSubGroup = ExpenseSubGroup(
-            name = subGroupNameBinding,
-            description = descriptionBinding,
-            expenseGroupId = groupId
-        )
-
-        addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initGroupSpinner() {

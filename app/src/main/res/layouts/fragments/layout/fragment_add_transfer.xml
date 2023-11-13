@@ -57,67 +57,92 @@
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/amountLayout"
-        style="@style/CustomTextInputLayoutStyle"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/amount"
-        app:helperText="@string/required"
-        app:layout_constraintEnd_toStartOf="@+id/amountTextView"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/layout2"
         app:layout_constraintStart_toStartOf="@+id/toWalletNameSpinnerLayout"
         app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/amountEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:digits="0123456789.,-"
-            android:inputType="numberDecimal"
-            app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/amountLayout"
+            style="@style/CustomTextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/amount"
+            app:helperText="@string/required"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/amountTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amountTextView"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/amountEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:digits="0123456789.,-"
+                android:inputType="numberDecimal"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/amountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="22sp"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="USD1"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toStartOf="@+id/amountTargetLayout"
-        app:layout_constraintStart_toEndOf="@+id/amountLayout"
-        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/amountTargetLayout"
-        style="@style/CustomTextInputLayoutStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/amount"
-        app:helperText="@string/required"
-        app:layout_constraintStart_toEndOf="@+id/amountTextView"
-        app:layout_constraintEnd_toStartOf="@+id/amountTargetTextView"
+        app:layout_constraintStart_toEndOf="@+id/layout1"
+        app:layout_constraintEnd_toEndOf="@+id/toWalletNameSpinnerLayout"
         app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/amountTargetEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="false"
-            android:inputType="none"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/amountTargetTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="22sp"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amountTargetTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="USD2"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="@+id/toWalletNameSpinnerLayout"
-        app:layout_constraintStart_toEndOf="@+id/amountTargetLayout"
-        app:layout_constraintTop_toBottomOf="@+id/toWalletNameSpinnerLayout" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/amountTargetLayout"
+            style="@style/CustomTextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/amount"
+            app:helperText="@string/required"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/amountTargetTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/amountTargetEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateLayout"
@@ -132,7 +157,7 @@
         app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
+        app:layout_constraintTop_toBottomOf="@+id/layout1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dateEditText"
@@ -155,7 +180,7 @@
         android:hint="@string/time"
         app:helperText="@string/required"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountLayout">
+        app:layout_constraintTop_toBottomOf="@+id/layout1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/timeEditText"

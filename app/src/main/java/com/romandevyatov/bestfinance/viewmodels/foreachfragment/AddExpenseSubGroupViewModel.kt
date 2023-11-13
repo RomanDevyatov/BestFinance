@@ -21,7 +21,13 @@ class AddExpenseSubGroupViewModel @Inject constructor(
     val allEntityExpenseGroupsNotArchivedLiveData: LiveData<List<ExpenseGroupEntity>> = expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
     fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+        val existingIncomeSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroup.name, expenseSubGroup.expenseGroupId)
+
+        if (existingIncomeSubGroup == null) {
+            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+        } else if (existingIncomeSubGroup.archivedDate != null) {
+            expenseSubGroupRepository.unarchiveExpenseSubGroup(existingIncomeSubGroup)
+        }
     }
 
     fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {

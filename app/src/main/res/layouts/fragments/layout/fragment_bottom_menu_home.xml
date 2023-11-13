@@ -71,36 +71,37 @@
         app:layout_constraintStart_toStartOf="@+id/totalExpensesTextView"
         app:layout_constraintTop_toBottomOf="@+id/totalExpensesTextView" />
 
-
     <TextView
         android:id="@+id/totalCapitalTextView"
         style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="180dp"
         android:layout_marginTop="32dp"
-        android:text="1"
+        android:text="0dp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/capitalTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/passiveIncomeValueTextView"
         style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="2"
         android:textSize="20sp"
+        android:text="Test Value1"
         app:layout_constraintEnd_toEndOf="@+id/totalCapitalTextView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/totalCapitalTextView"
-        app:layout_constraintTop_toBottomOf="@+id/totalCapitalTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/totalCapitalTextView"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/totalIncomeValueTextView"
         style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:text="3"
@@ -113,7 +114,7 @@
     <TextView
         android:id="@+id/totalExpensesValueTextView"
         style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:text="4"
@@ -126,10 +127,9 @@
     <TextView
         android:id="@+id/moneyFlowValueTextView"
         style="@style/CustomTextViewStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="5"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/totalExpensesValueTextView"
         app:layout_constraintHorizontal_bias="1.0"

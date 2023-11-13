@@ -11,7 +11,7 @@ import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesReposito
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

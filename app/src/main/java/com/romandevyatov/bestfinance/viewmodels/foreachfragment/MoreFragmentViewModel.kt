@@ -1,7 +1,7 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.lifecycle.ViewModel
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

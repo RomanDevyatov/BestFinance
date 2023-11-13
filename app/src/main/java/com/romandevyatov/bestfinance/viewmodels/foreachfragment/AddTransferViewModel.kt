@@ -10,7 +10,7 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,13 +30,6 @@ class AddTransferViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWalletById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         walletRepository.archiveWalletById(id, LocalDateTime.now())
-
-//        val selectedWallet = walletRepository.getWalletByNameNotArchived(name)
-//        if (selectedWallet != null) {
-//            val selectedWalletArchived = selectedWallet.copy(archivedDate = LocalDateTime.now())
-//
-//            walletRepository.updateWallet(selectedWalletArchived)
-//        }
     }
 
     fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
@@ -54,6 +47,26 @@ class AddTransferViewModel @Inject constructor(
     fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRate? {
         return runBlocking {
             baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
+        }
+    }
+
+    fun sendAndUpdateBaseAmount(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
+        val wallet = walletRepository.getWalletById(transferHistory.fromWalletId)
+        wallet?.let {
+            val defaultCurrencyCode =
+                getDefaultCurrencyCode()
+            val pairName = defaultCurrencyCode + it.currencyCode
+            val baseCurrencyRate =
+                getBaseCurrencyRateByPairName(
+                    pairName
+                )
+            if (baseCurrencyRate != null) {
+                val amountBase = transferHistory.amount / baseCurrencyRate.value // in usd
+
+                insertTransferHistory(transferHistory.copy(
+                    amountBase = amountBase
+                ))
+            }
         }
     }
 }

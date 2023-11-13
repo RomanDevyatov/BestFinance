@@ -1,5 +1,8 @@
 package com.romandevyatov.bestfinance.utils
 
+import java.math.BigDecimal
+import java.math.RoundingMode
+
 object TextFormatter {
 
     fun removeTrailingZeros(inputText: String): String {
@@ -11,5 +14,9 @@ object TextFormatter {
             input = input.replace("\\.$".toRegex(), "")
         }
         return input
+    }
+
+    fun roundDoubleToTwoDecimalPlaces(value: Double): Double {
+        return BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 }

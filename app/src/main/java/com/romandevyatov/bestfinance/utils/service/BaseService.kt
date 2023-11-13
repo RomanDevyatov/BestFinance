@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.annotation.CallSuper
 import com.romandevyatov.bestfinance.BudgetApplication
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 
 abstract class BaseService : Service() {
     protected val myApp : BudgetApplication by lazy {

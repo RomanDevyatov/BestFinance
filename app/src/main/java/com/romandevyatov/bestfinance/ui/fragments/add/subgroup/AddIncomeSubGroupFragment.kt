@@ -96,7 +96,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    fun createIncomeSubGroup() {
+    private fun createIncomeSubGroup() {
         val subGroupNameBinding = binding.subGroupNameEditText.text.toString().trim()
         val descriptionBinding = binding.subGroupDescriptionEditText.text.toString().trim()
         val selectedGroupNameBinding = binding.groupSpinner.text.toString().trim()
@@ -124,12 +124,6 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
 
                     saveGroupAndSubGroupName(selectedGroupNameBinding, subGroupNameBinding)
                     findNavController().popBackStack(R.id.add_income_fragment, false)
-
-//                    val action =
-//                        AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-//                    action.incomeGroupName = selectedGroupNameBinding
-//                    action.incomeSubGroupName = subGroupNameBinding
-//                    findNavController().navigate(action)
                 } else if (subGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -283,4 +277,5 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
+
 }

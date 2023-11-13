@@ -13,7 +13,7 @@ class IncomeGroupRepository @Inject constructor(
     private val incomeGroupDao: IncomeGroupDao
 ) {
 
-    fun getAllLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
+    fun getAllIncomeGroupsLiveData(): LiveData<List<IncomeGroup>> = incomeGroupDao.getAllLiveData()
 
     suspend fun insertIncomeGroup(incomeGroup: IncomeGroup) {
         incomeGroupDao.insert(incomeGroup)

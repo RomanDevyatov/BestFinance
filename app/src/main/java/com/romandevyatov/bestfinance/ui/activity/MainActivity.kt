@@ -37,9 +37,8 @@ import com.romandevyatov.bestfinance.ui.fragments.update.history.UpdateIncomeHis
 import com.romandevyatov.bestfinance.ui.fragments.update.history.transfer.UpdateTransferHistoryFragment
 import com.romandevyatov.bestfinance.ui.fragments.update.wallet.UpdateWalletFragment
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.utils.theme.ThemeHelper
-import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
@@ -69,7 +68,7 @@ class MainActivity : BaseActivity(), OnExitAppListener {
 
         applySavedTheme()
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -99,6 +98,10 @@ class MainActivity : BaseActivity(), OnExitAppListener {
         storage.setPreferredLocale(locale)
         LocaleUtil.applyLocalizedContext(applicationContext, locale)
         recreate()
+    }
+
+    fun updateDefaultCurrency(code: String) {
+        storage.setPreferredDefaultCurrencyCode(code)
     }
 
     override fun onExitApp() {

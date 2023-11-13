@@ -7,6 +7,7 @@ class TransferItem(
     val fromName: String?,
     val toName: String,
     val amount: String,
+    val amountBase: String,
     val comment: String,
     val date: LocalDateTime?
 )

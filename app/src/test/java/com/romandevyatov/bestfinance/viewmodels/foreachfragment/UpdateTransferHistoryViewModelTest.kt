@@ -3,9 +3,10 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
 import io.mockk.coVerify
@@ -32,6 +33,7 @@ class UpdateTransferHistoryViewModelTest {
     private lateinit var storage: Storage
     private lateinit var transferHistoryRepository: TransferHistoryRepository
     private lateinit var walletRepository: WalletRepository
+    private lateinit var baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -42,8 +44,9 @@ class UpdateTransferHistoryViewModelTest {
 
         transferHistoryRepository = mockk()
         walletRepository = mockk()
+        baseCurrencyRatesRepository = mockk()
 
-        viewModel = UpdateTransferHistoryViewModel(storage, transferHistoryRepository, walletRepository)
+        viewModel = UpdateTransferHistoryViewModel(storage, transferHistoryRepository, walletRepository, baseCurrencyRatesRepository)
     }
 
     @After
@@ -54,7 +57,7 @@ class UpdateTransferHistoryViewModelTest {
     @Test
     fun `test updateTransferHistoryAndWallets`() = runTest {
         // Mock data
-        val transferHistory = TransferHistory(1, 100.0, 1, 2, null, "", null, LocalDateTime.now())
+        val transferHistory = TransferHistory(1, 100.0, 1.0, 2.0, 1, 2, null, "", null, LocalDateTime.now())
         val walletFrom = Wallet(1, "wallet_mock_1", 200.0, 0.0, 0.0, "", null, "USD")
         val walletTo = Wallet(2, "wallet_mock_2", 100.0, 0.0, 0.0, "", null, "USD")
 

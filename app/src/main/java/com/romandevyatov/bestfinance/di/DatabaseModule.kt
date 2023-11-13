@@ -5,9 +5,8 @@ import androidx.room.Room
 import com.romandevyatov.bestfinance.BuildConfig
 import com.romandevyatov.bestfinance.data.retrofit.api.OpenExchangeApi
 import com.romandevyatov.bestfinance.data.roomdb.BestFinanceDatabase
-import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.DATABASE_NAME
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +28,7 @@ object DatabaseModule {
             context,
             BestFinanceDatabase::class.java,
             DATABASE_NAME)
-//        .fallbackToDestructiveMigration()
+        .fallbackToDestructiveMigration()
         .build()
 
 //        .createFromAsset("database/bestfinance_database_pre.db")

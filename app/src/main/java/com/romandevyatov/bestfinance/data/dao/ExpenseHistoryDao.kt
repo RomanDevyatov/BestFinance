@@ -45,4 +45,7 @@ interface ExpenseHistoryDao {
 
     @Query("SELECT * FROM expense_history WHERE expense_sub_group_id IS NULL")
     fun getAllWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>>
+
+    @Query("SELECT * FROM expense_history order by id ASC")
+    fun getAll(): List<ExpenseHistory>
 }

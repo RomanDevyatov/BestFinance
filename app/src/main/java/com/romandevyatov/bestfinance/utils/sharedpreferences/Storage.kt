@@ -1,21 +1,24 @@
-package com.romandevyatov.bestfinance.utils.localization
+package com.romandevyatov.bestfinance.utils.sharedpreferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class Storage @Inject constructor(context: Context) {
 
+    companion object {
+        const val SELECTED_DEFAULT_CURRENCY_CODE: String = "DefaultCurrency.Helper.Selected.CurrencyCode"
+    }
     private val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
-    private val SELECTED_DEFAULT_CURRENCY_CODE = "DefaultCurrency.Helper.Selected.CurrencyCode"
     private val IS_FIRST_LAUNCH = "isFirstLaunch"
 
     private val BESTFINANCE_APP_PREFRENCE = "BestFinanceAppPreferences"
     private var sharedPreferences: SharedPreferences = context.getSharedPreferences(BESTFINANCE_APP_PREFRENCE, Context.MODE_PRIVATE)
 
-    private val defaultCurrencyCode = "USD"
+    private val defaultCurrencyCode: String = "USD"
 
     fun getPreferredLocale(): String {
         return sharedPreferences.getString(SELECTED_LANGUAGE, LocaleUtil.DEFAULT_PHONE_LANGUAGE)!!
@@ -61,5 +64,13 @@ class Storage @Inject constructor(context: Context) {
 
     fun getString(key: String, defaultValue: String): String {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
+    }
+
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
 }

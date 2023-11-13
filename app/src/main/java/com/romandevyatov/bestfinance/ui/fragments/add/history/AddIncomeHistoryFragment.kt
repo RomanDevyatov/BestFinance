@@ -158,7 +158,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
-        when (currentStageName) {
+        when (currentStage) {
             InputState.GROUP -> handleGroupInput(handledSpokenValue)
             InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
             InputState.WALLET -> handleWalletInput(handledSpokenValue)
@@ -528,7 +528,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllIncomeGroupNotArchived()
+        addHistoryViewModel.getAllIncomeGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { incomeGroups ->
                 incomeGroups?.let { groups ->
                     val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
@@ -570,7 +570,6 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setSubGroupSpinnerAdapterByGroupName(groupSpinnerBinding: String, isSetIfAvailable: Boolean) {
-        // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
         addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
@@ -691,8 +690,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
                 saveAddTransactionForm()
 
-                val action =
-                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
+                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
                 action.incomeGroupName = binding.groupSpinner.text.toString()
                 findNavController().navigate(action)
             } else {
@@ -721,8 +719,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
                 saveAddTransactionForm()
 
-                val action =
-                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
+                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
                 action.source = ADD_INCOME_HISTORY_FRAGMENT
                 action.spinnerType = null
                 findNavController().navigate(action)

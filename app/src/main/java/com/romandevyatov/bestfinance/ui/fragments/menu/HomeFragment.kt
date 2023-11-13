@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.romandevyatov.bestfinance.ui.activity.OnExitAppListener
 import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
@@ -72,11 +74,74 @@ class HomeFragment : Fragment() {
             homeViewModel.setIsFirstLaunch(false)
         }
 
+        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
+            var balanceValue = walletList.sumOf { wallet ->
+                val pairName = "${homeViewModel.getDefaultCurrencyCode()}${wallet.currencyCode}"
+
+                val baseRate = homeViewModel.getBaseCurrencyRatesByPairName(pairName)
+                    if (baseRate != null) {
+                        wallet.balance / baseRate.value
+                    }
+                    else {
+                        0.0
+                    }
+                }
+
+
+
+            balanceValue = roundDoubleToTwoDecimalPlaces(balanceValue)
+
+            val totalCapitalText = removeTrailingZeros(balanceValue.toString()) + homeViewModel.getDefaultCurrencySymbol()
+            Log.d("HomeFragment", "totalCapitalText: $totalCapitalText")
+            binding.totalCapitalTextView.text = totalCapitalText
+
+            incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
+                homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
+                    val passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
+                        .filter { historyWithSubGroupAndWallets ->
+                            incomeGroups.find {
+                                it.id == historyWithSubGroupAndWallets.incomeSubGroup?.incomeGroupId
+                            }?.isPassive ?: false
+                        }
+                        .sumOf { it.incomeHistory.amountBase }
+
+                    val passiveIncomeText =
+                        removeTrailingZeros(passiveIncomeValue.toString()).plus(homeViewModel.getDefaultCurrencySymbol())
+                    Log.d("HomeFragment", "passiveIncomeText: $passiveIncomeText")
+                    binding.passiveIncomeValueTextView.text = passiveIncomeText
+                }
+
+                val totalIncomeValue = roundDoubleToTwoDecimalPlaces(incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amountBase })
+                val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.getDefaultCurrencySymbol()
+                Log.d("HomeFragment", "totalIncomeText: $totalIncomeText")
+                binding.totalIncomeValueTextView.text = totalIncomeText
+
+                expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
+                    expenseHistoryList?.let { histories ->
+                        val totalExpensesValue = roundDoubleToTwoDecimalPlaces(histories.sumOf { it.amountBase })
+                        val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.getDefaultCurrencySymbol()
+                        Log.d("HomeFragment", "totalExpensesText: $totalExpensesText")
+                        binding.totalExpensesValueTextView.text = totalExpensesText
+
+                        val moneyFlowValue = roundDoubleToTwoDecimalPlaces(totalIncomeValue - totalExpensesValue.absoluteValue)
+                        val moneyFlowText = removeTrailingZeros(moneyFlowValue.toString()) + homeViewModel.getDefaultCurrencySymbol()
+
+                        Log.d("HomeFragment", "totalIncomeValue: $totalIncomeValue")
+                        Log.d("HomeFragment", "totalExpensesValue: $totalExpensesValue")
+                        Log.d("HomeFragment", "moneyFlowValue: $moneyFlowValue")
+
+                        Log.d("HomeFragment", "moneyFlowText: $moneyFlowText")
+
+                        binding.moneyFlowValueTextView.text = moneyFlowText
+                    }
+                }
+            }
+        }
+
         BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
-
 
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
@@ -101,57 +166,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var passiveIncomeValue: Double?
-        var totalIncomeValue: Double?
-        var totalExpensesValue: Double?
-        var moneyFlowValue: Double?
-
         setButtonListeners()
 
-        walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.let { wallets ->
-                val balanceValue = wallets.sumOf {
-                    val hv = homeViewModel.getBaseCurrencyRatesByPairName("${homeViewModel.getDefaultCurrencyCode()}${it.currencyCode}")
-                    if (hv != null) {
-                        it.balance / hv.value
-                    } else {
-                        0.0
-                    }
-                }
-                val totalCapitalText = removeTrailingZeros(balanceValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
-                binding.totalCapitalTextView.text = totalCapitalText
-            }
-        }
-
-        incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
-            homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
-                passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
-                    .filter { historyWithSubGroupAndWallets ->
-                        incomeGroups.find {
-                            it.id == historyWithSubGroupAndWallets.incomeSubGroup?.incomeGroupId
-                        }?.isPassive ?: false
-                    }
-                    .sumOf { it.incomeHistory.amountBase }
-                val passiveIncomeText = removeTrailingZeros(passiveIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
-                binding.passiveIncomeValueTextView.text = passiveIncomeText
-            }
-
-            totalIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amountBase }
-            val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
-            binding.totalIncomeValueTextView.text = totalIncomeText
-
-            expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
-                expenseHistoryList?.let { histories ->
-                    totalExpensesValue = histories.sumOf { it.amountBase }
-                    val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
-                    binding.totalExpensesValueTextView.text = totalExpensesText
-
-                    moneyFlowValue = totalIncomeValue!!.minus(totalExpensesValue!!.absoluteValue)
-                    val moneyFlowText = removeTrailingZeros(moneyFlowValue.toString()) + homeViewModel.currentDefaultCurrencySymbol
-                    binding.moneyFlowValueTextView.text = moneyFlowText
-                }
-            }
-        }
     }
 
     private fun setButtonListeners() {

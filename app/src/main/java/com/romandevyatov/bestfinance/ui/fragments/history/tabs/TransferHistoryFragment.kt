@@ -110,6 +110,7 @@ class TransferHistoryFragment : Fragment() {
                 fromName = walletFrom.name,
                 toName = walletTo.name,
                 amount = formattedAmountText,
+                amountBase = transferHistory.amountBase.toString(),
                 comment = transferHistory.comment ?: "",
                 date = transferHistory.date
             )

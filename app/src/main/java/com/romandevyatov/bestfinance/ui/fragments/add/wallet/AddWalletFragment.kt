@@ -168,8 +168,8 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
                             currencyCode = currencyCodeBinding
                         )
 
-                        sharedModifiedAddWalletFormViewModel.set(null)
                         walletViewModel.insertWallet(newWallet)
+                        sharedModifiedAddWalletFormViewModel.set(null)
                         performNavigation(args.source, walletNameBinding)
                     } else if (wallet.archivedDate == null) {
                         WindowUtil.showExistingDialog(

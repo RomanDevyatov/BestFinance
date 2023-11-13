@@ -12,11 +12,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
+import com.romandevyatov.bestfinance.data.entities.BaseCurrencyRate
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsSelectCurrencyBinding
 import com.romandevyatov.bestfinance.ui.adapters.currency.CurrencyAdapter
 import com.romandevyatov.bestfinance.ui.adapters.currency.CurrencyItem
 import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.RatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SelectCurrencyViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedAddWalletFormViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +35,8 @@ class SelectCurrencyFragment : Fragment() {
     private val args: SelectCurrencyFragmentArgs by navArgs()
 
     private val selectCurrencyViewModel: SelectCurrencyViewModel by viewModels()
+    private val ratesViewModel: RatesViewModel by viewModels()
+    private val exchangeRatesViewModel: ExchangeRatesViewModel by viewModels()
     private val sharedModifiedAddWalletFormViewModel: SharedModifiedAddWalletFormViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -43,13 +48,14 @@ class SelectCurrencyFragment : Fragment() {
 
         BackStackLogger.logBackStack(findNavController())
 
-        return binding.root
-    }
+        selectCurrencyViewModel.exchangeRates.observe(viewLifecycleOwner) { ratesMap ->
+            ratesMap.let { rates ->
+                val ratesToSave = mapToBaseCurrencyExchangeRates(rates)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setOnBackPressedHandler()
+                ratesViewModel.deleteAll()
+                ratesViewModel.insertAllBaseCurrencyRates(ratesToSave)
+            }
+        }
 
         selectCurrencyViewModel.allCurrenciesLiveData.observe(viewLifecycleOwner) { currencyList ->
             currencyList?.map { CurrencyItem(it.code, it.name) }?.toMutableList()?.let { currencyItems ->
@@ -64,6 +70,14 @@ class SelectCurrencyFragment : Fragment() {
         }
 
         initCurrencyRecyclerView()
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setOnBackPressedHandler()
     }
 
     private fun setOnBackPressedHandler() {
@@ -90,16 +104,6 @@ class SelectCurrencyFragment : Fragment() {
     }
 
     private fun performNavigation(prevFragmentString: String?, currencyItem: CurrencyItem?) {
-//        val navController = findNavController()
-//        if (navController.popBackStack()) {
-//            val previousBackStackEntry = navController.previousBackStackEntry
-//            // Now you can access information about the previous destination
-//            val previousDestinationId = previousBackStackEntry?.destination?.id
-//            if (previousDestinationId != null) {
-//                navController.navigate(previousDestinationId)
-//            }
-//        }
-
         when (prevFragmentString) {
             Constants.ADD_WALLET_FRAGMENT -> {
                 val mod = sharedModifiedAddWalletFormViewModel.modelForm
@@ -112,11 +116,27 @@ class SelectCurrencyFragment : Fragment() {
             }
             else -> {
                 if (currencyItem != null) {
-                    selectCurrencyViewModel.setDefaultCurrencyCode(currencyItem.code)
+                    selectCurrencyViewModel.recalculateBaseAmountForHistory(currencyItem.code)
                 }
                 findNavController().popBackStack(R.id.more_fragment, false)
             }
         }
+    }
+
+    private fun mapToBaseCurrencyExchangeRates(exchangeRates: Map<String, Double>?): MutableList<BaseCurrencyRate> {
+        val currencyExchangeRates = mutableListOf<BaseCurrencyRate>()
+
+        val defaultCurrencySymbol = exchangeRatesViewModel.getDefaultCurrencyCode()
+
+        exchangeRates?.forEach { (currencyCode, exchangeRate) ->
+            val currencyExchangeRate = BaseCurrencyRate(
+                pairName = defaultCurrencySymbol + currencyCode,
+                value = exchangeRate
+            )
+            currencyExchangeRates.add(currencyExchangeRate)
+        }
+
+        return currencyExchangeRates
     }
 
 }
