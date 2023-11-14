@@ -40,6 +40,7 @@ import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
+import com.romandevyatov.bestfinance.utils.numberpad.addGenericTextWatcher
 import com.romandevyatov.bestfinance.utils.numberpad.processInput
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
@@ -97,7 +98,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.amountEditText.addGenericTextWatcher()
+        binding.amountEditText.addGenericTextWatcher()
 
 //        binding.amountEditText.addTextChangedListener(object : TextWatcher {
 //            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

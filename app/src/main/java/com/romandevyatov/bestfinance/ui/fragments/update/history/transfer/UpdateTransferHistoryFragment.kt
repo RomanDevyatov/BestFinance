@@ -82,7 +82,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.reusable.amountEditText.addGenericTextWatcher()
+        binding.reusable.amountEditText.addGenericTextWatcher()
 
         setOnBackPressedHandler()
 
