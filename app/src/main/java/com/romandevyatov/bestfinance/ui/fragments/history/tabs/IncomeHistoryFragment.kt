@@ -21,6 +21,7 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.mod
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeGroupViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -114,10 +115,11 @@ class IncomeHistoryFragment : Fragment() {
             val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
 
             if (wallet != null) {
-                val formattedAmountText = "+".plus(removeTrailingZeros(incomeHistory.amount.toString()) + incomeHistoryViewModel.getCurrencySymbolByCode(wallet.currencyCode))
+                val formattedAmountText = "+".plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(incomeHistory.amount).toString()))
+                    .plus(wallet.currencyCode)
                 val formattedAmountBaseText = "+"
-                    .plus(removeTrailingZeros(incomeHistory.amountBase.toString()))
-                    .plus(incomeHistoryViewModel.currentDefaultCurrencySymbol)
+                    .plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(incomeHistory.amountBase).toString()))
+                    .plus(incomeHistoryViewModel.getDefaultCurrencyCode())
                     .plus("(${getString(R.string.base)})")
 
                 val transactionItem = TransactionItem(

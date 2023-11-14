@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.HistoryTransferByDateAdapter
@@ -19,6 +20,7 @@ import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
 import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
@@ -103,15 +105,17 @@ class TransferHistoryFragment : Fragment() {
             val walletFrom = transfer.walletFrom
             val walletTo = transfer.walletTo
 
-            val formattedAmountText = removeTrailingZeros(transferHistory.amount.toString()) + walletFrom.currencyCode
-            val formattedAmountBaseText = removeTrailingZeros(transferHistory.amountBase.toString()) + transferHistoryViewModel.getDefaultCurrencyCode()
+            val formattedAmountText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amount).toString()) + walletFrom.currencyCode
+            val formattedAmountBaseText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amountBase).toString()) + transferHistoryViewModel.getDefaultCurrencyCode()
+
+            val formattedAmountBaseTextString = "${formattedAmountBaseText}(${getString(R.string.base)})"
 
             val transactionItem = TransferItem(
                 id = transferHistory.id,
                 fromName = walletFrom.name,
                 toName = walletTo.name,
                 amount = formattedAmountText,
-                amountBase = formattedAmountBaseText,
+                amountBase = formattedAmountBaseTextString,
                 comment = transferHistory.comment ?: "",
                 date = transferHistory.date
             )
