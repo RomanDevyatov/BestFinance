@@ -36,7 +36,7 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
     }
 
     fun updateIncomeHistoryAndWallet(updatedIncomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(updatedIncomeHistory.walletId)
+        val wallet = walletRepository.getWalletByIdAsync(updatedIncomeHistory.walletId)
         if (wallet != null) {
             val defaultCurrencyCode = getDefaultCurrencyCode()
             val pairName = defaultCurrencyCode + wallet.currencyCode

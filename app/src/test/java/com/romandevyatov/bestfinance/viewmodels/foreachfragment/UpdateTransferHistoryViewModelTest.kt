@@ -63,8 +63,8 @@ class UpdateTransferHistoryViewModelTest {
 
         // Mock repository behavior
         coEvery { transferHistoryRepository.updateTransferHistory(any()) } just runs
-        coEvery { walletRepository.getWalletById(walletFrom.id!!) } returns walletFrom
-        coEvery { walletRepository.getWalletById(walletTo.id!!) } returns walletTo
+        coEvery { walletRepository.getWalletByIdAsync(walletFrom.id!!) } returns walletFrom
+        coEvery { walletRepository.getWalletByIdAsync(walletTo.id!!) } returns walletTo
         coEvery { walletRepository.updateWallet(any()) } just runs
 
         // Call the function under test
@@ -72,8 +72,8 @@ class UpdateTransferHistoryViewModelTest {
 
         // Verify the expected behavior using assertions or verifications
         coVerify { transferHistoryRepository.updateTransferHistory(transferHistory) }
-        coVerify { walletRepository.getWalletById(walletFrom.id!!) }
-        coVerify { walletRepository.getWalletById(walletTo.id!!) }
+        coVerify { walletRepository.getWalletByIdAsync(walletFrom.id!!) }
+        coVerify { walletRepository.getWalletByIdAsync(walletTo.id!!) }
         coVerify { walletRepository.updateWallet(any()) } // Perform necessary verifications
 
         assertEquals("", "result")

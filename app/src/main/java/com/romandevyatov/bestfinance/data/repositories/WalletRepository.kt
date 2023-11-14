@@ -32,7 +32,7 @@ class WalletRepository @Inject constructor(
         return walletDao.getByNameNotArchived(walletName)
     }
 
-    suspend fun getWalletById(id: Long?): Wallet? {
+    suspend fun getWalletByIdAsync(id: Long?): Wallet? {
         return walletDao.getById(id)
     }
 

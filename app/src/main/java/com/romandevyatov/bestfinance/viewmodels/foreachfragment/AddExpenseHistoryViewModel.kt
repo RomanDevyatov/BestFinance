@@ -85,7 +85,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                                          parsedLocalDateTime: LocalDateTime,
                                          walletId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val wallet = walletRepository.getWalletById(walletId)
+            val wallet = walletRepository.getWalletByIdAsync(walletId)
             if (wallet != null) {
                 val defaultCurrencyCode = getDefaultCurrencyCode()
                 val pairName = defaultCurrencyCode + wallet.currencyCode
@@ -201,7 +201,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWallet(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        val selectedWallet = walletRepository.getWalletById(id)
+        val selectedWallet = walletRepository.getWalletByIdAsync(id)
 
         if (selectedWallet != null) {
             val selectedWalletArchived = selectedWallet.copy(

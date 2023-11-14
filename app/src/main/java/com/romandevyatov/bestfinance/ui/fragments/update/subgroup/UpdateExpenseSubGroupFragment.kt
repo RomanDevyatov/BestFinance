@@ -29,6 +29,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
     private var _binding: FragmentUpdateExpenseSubGroupBinding? = null
     private val binding get() = _binding!!
+
     private val updateSubGroupViewModel: UpdateExpenseSubGroupViewModel by viewModels()
 
     private val args: UpdateExpenseSubGroupFragmentArgs by navArgs()
@@ -81,7 +82,6 @@ class UpdateExpenseSubGroupFragment : Fragment() {
 
         binding.reusable.addSubGroupNameButton.setOnClickListener {
             handleUpdateSubGroup(view)
-
         }
     }
 
@@ -123,10 +123,7 @@ class UpdateExpenseSubGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingGroupsAndSubGroups() {
-        val action =
-            UpdateExpenseSubGroupFragmentDirections.actionNavigationUpdateExpenseSubGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 1
-        findNavController().navigate(action)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun isValidForm(newSubGroupNameBinding: String, newGroupNameBinding: String): Boolean {

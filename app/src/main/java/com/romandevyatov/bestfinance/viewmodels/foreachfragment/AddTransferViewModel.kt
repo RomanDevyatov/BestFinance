@@ -10,12 +10,14 @@ import com.romandevyatov.bestfinance.data.entities.Wallet
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.TextFormatter
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -44,14 +46,12 @@ class AddTransferViewModel @Inject constructor(
         return walletRepository.getWalletByIdLiveData(id)
     }
 
-    fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRate? {
-        return runBlocking {
-            baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
-        }
+    suspend fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRate? {
+        return baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
     }
 
     fun sendAndUpdateBaseAmount(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(transferHistory.fromWalletId)
+        val wallet = walletRepository.getWalletByIdAsync(transferHistory.fromWalletId)
         wallet?.let {
             val defaultCurrencyCode =
                 getDefaultCurrencyCode()
@@ -67,6 +67,42 @@ class AddTransferViewModel @Inject constructor(
                     amountBase = amountBase
                 ))
             }
+        }
+    }
+
+    suspend fun getWalletById(id: Long?): Wallet? = withContext(Dispatchers.IO) {
+            walletRepository.getWalletByIdAsync(id)
+    }
+
+    suspend fun calculateTransferAmount(
+        amount: Double,
+        fromWallet: Wallet?,
+        toWallet: Wallet?
+    ): Double = withContext(Dispatchers.IO) {
+        fromWallet?.let { fromWlt ->
+            val defaultCurrencyCode = getDefaultCurrencyCode()
+            val pairName = defaultCurrencyCode + fromWlt.currencyCode
+            val baseCurrencyRate = getBaseCurrencyRateByPairNameAsync(pairName)
+
+            toWallet?.let { toWlt ->
+                val pairName2 = defaultCurrencyCode + toWlt.currencyCode
+                val baseCurrencyRateTarget = getBaseCurrencyRateByPairNameAsync(pairName2)
+
+                val result = if (baseCurrencyRate != null && baseCurrencyRateTarget != null) {
+                    val amountBase = amount / baseCurrencyRate.value
+                    TextFormatter.roundDoubleToTwoDecimalPlaces(amountBase * baseCurrencyRateTarget.value)
+                } else {
+                    0.0
+                }
+
+                return@withContext result
+            } ?: 0.0
+        } ?: 0.0
+    }
+
+    suspend fun getBaseCurrencyRateByPairNameAsync(pairName: String): BaseCurrencyRate? {
+        return withContext(Dispatchers.IO) {
+            baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
         }
     }
 }

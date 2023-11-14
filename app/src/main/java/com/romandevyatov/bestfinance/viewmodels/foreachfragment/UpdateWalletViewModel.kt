@@ -46,7 +46,7 @@ class UpdateWalletViewModel @Inject constructor(
     }
 
     fun updateNameAndDescriptionAndBalanceWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
+        val wallet = walletRepository.getWalletByIdAsync(updatedWalletBinding.id)
 
         if (wallet != null) {
             val updatedWallet = wallet.copy(
@@ -73,7 +73,7 @@ class UpdateWalletViewModel @Inject constructor(
     fun deleteItem(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val itemToDelete = walletRepository.getWalletById(id)
+                val itemToDelete = walletRepository.getWalletByIdAsync(id)
                 if (itemToDelete != null) {
                     deletedItem = itemToDelete
                     deletedItemList.add(itemToDelete)

@@ -37,7 +37,7 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
 
     fun updateExpenseHistoryAndWallet(updatedExpenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val wallet = walletRepository.getWalletById(updatedExpenseHistory.walletId)
+            val wallet = walletRepository.getWalletByIdAsync(updatedExpenseHistory.walletId)
             if (wallet != null) {
                 val defaultCurrencyCode = getDefaultCurrencyCode()
                 val pairName = defaultCurrencyCode + wallet.currencyCode

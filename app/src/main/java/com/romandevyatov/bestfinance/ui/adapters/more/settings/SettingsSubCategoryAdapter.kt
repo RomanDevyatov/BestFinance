@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.romandevyatov.bestfinance.databinding.CardExpandableGroupBinding
 import com.romandevyatov.bestfinance.databinding.ItemSubcategoryBinding
 import com.romandevyatov.bestfinance.ui.fragments.menu.MoreFragment
 
@@ -24,7 +23,7 @@ class SettingsSubCategoryAdapter(
         fun bind(item: MoreSubCategoryItem) {
             binding.subcategoryName.text = item.name
             binding.subcategoryIcon.setImageResource(item.icon)
-            if (item.name == MoreFragment.CURRENCY) {
+            if (item.name == MoreFragment.DEFAULT_CURRENCY) {
                 binding.currencyCodeTextView.visibility = View.VISIBLE
 
                 binding.currencyCodeTextView.text = currencyCode.toString()

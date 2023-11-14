@@ -9,7 +9,6 @@ import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWith
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
-import com.romandevyatov.bestfinance.utils.TextFormatter
 import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
@@ -44,7 +43,7 @@ class UpdateTransferHistoryViewModel @Inject constructor(
     }
 
     fun updateTransferHistoryAndWallets(updatedTransferHistory: TransferHistory) = viewModelScope.launch (Dispatchers.IO) {
-        val walletFrom = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
+        val walletFrom = walletRepository.getWalletByIdAsync(updatedTransferHistory.fromWalletId)
         if (walletFrom != null) {
            val baseCurrencyRate = baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(
                 "${getDefaultCurrencyCode()}${walletFrom.currencyCode}"
@@ -59,8 +58,8 @@ class UpdateTransferHistoryViewModel @Inject constructor(
 
                 val amount = updatedTransferHistory.amount
                 val amountTarget = updatedTransferHistory.amountTarget
-                val to = walletRepository.getWalletById(updatedTransferHistory.toWalletId)
-                val from = walletRepository.getWalletById(updatedTransferHistory.fromWalletId)
+                val to = walletRepository.getWalletByIdAsync(updatedTransferHistory.toWalletId)
+                val from = walletRepository.getWalletByIdAsync(updatedTransferHistory.fromWalletId)
 
                 if (to != null && from != null) {
                     val updatedWalletToBalance = to.balance.plus(amountTarget)
@@ -114,7 +113,7 @@ class UpdateTransferHistoryViewModel @Inject constructor(
 
     suspend fun getWalletById(id: Long?): Wallet? =
         withContext(Dispatchers.IO) {
-            walletRepository.getWalletById(id)
+            walletRepository.getWalletByIdAsync(id)
         }
 
     suspend fun calculateTransferAmount(

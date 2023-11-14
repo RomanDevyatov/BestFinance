@@ -34,7 +34,7 @@ class SettingsWalletsViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWalletById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(id)
+        val wallet = walletRepository.getWalletByIdAsync(id)
         if (wallet != null) {
             val walletArchived = wallet.copy(
                 archivedDate = LocalDateTime.now()
@@ -48,7 +48,7 @@ class SettingsWalletsViewModel @Inject constructor(
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {
-            val itemToDelete = walletRepository.getWalletById(id)
+            val itemToDelete = walletRepository.getWalletByIdAsync(id)
             deletedWalletItem = itemToDelete
             walletRepository.deleteWalletById(id)
         } catch (_: Exception) {

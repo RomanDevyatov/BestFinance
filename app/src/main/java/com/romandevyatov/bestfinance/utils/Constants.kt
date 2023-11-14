@@ -7,6 +7,7 @@ object Constants {
     const val SPINNER_TO = "spinner_to"
     const val SPINNER_FROM = "spinner_from"
     const val ADD_WALLET_FRAGMENT: String = "add_wallet_fragment"
+    const val MORE_FRAGMENT: String = "more_fragment"
     const val ADD_TRANSFER_HISTORY_FRAGMENT = "add_transfer_history_fragment"
     const val WALLETS_FRAGMENT: String = "WalletsFragment"
     const val ADD_INCOME_HISTORY_FRAGMENT = "add_income_history_fragment"

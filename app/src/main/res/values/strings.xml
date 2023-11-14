@@ -210,5 +210,6 @@
     <string name="required">Required</string>
 
     <string name="ok">OK</string>
+    <string name="select_currency">Select currency</string>
 
 </resources>

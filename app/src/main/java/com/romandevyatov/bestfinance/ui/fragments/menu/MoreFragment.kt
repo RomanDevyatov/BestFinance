@@ -17,6 +17,8 @@ import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryI
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.MoreSubCategoryItem
 import com.romandevyatov.bestfinance.utils.BackStackLogger.logBackStack
+import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.MORE_FRAGMENT
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.MoreFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +35,7 @@ class MoreFragment : Fragment() {
     private val moreFragmentViewModel: MoreFragmentViewModel by viewModels()
 
     companion object {
-        lateinit var CURRENCY: String
+        lateinit var DEFAULT_CURRENCY: String
     }
 
     override fun onCreateView(
@@ -45,7 +47,7 @@ class MoreFragment : Fragment() {
 
         GROUPS_AND_SUB_GROUPS_CATEGORY = getString(R.string.groups_and_sub_groups)
         WALLETS_CATEGORY = getString(R.string.wallets)
-        CURRENCY = getString(R.string.default_currency)
+        DEFAULT_CURRENCY = getString(R.string.default_currency)
         RATES_CATEGORY = getString(R.string.rates)
 
         logBackStack(findNavController())
@@ -95,8 +97,8 @@ class MoreFragment : Fragment() {
                 MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
             WALLETS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
-            CURRENCY ->
-                MoreFragmentDirections.actionMoreFragmentToSelectCurrencyFragment()
+            DEFAULT_CURRENCY ->
+                MoreFragmentDirections.actionMoreFragmentToSelectCurrencyFragment().setSource(MORE_FRAGMENT)
             RATES_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToRatesFragment()
 
@@ -116,7 +118,7 @@ class MoreFragment : Fragment() {
                 listOf(
                     MoreSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
                     MoreSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet),
-                    MoreSubCategoryItem(CURRENCY, R.drawable.ic_money),
+                    MoreSubCategoryItem(DEFAULT_CURRENCY, R.drawable.ic_money),
                     MoreSubCategoryItem(RATES_CATEGORY, R.drawable.ic_currency_exchange)
                 )
             ),

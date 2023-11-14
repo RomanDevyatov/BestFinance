@@ -56,7 +56,7 @@ class SelectCurrencyViewModel @Inject constructor(
 
                 val incomeHistories = incomeHistoryRepository.getAllIncomeHistory()
                 incomeHistories.forEach { incomeHistory ->
-                    val wallet = walletRepository.getWalletById(incomeHistory.walletId)
+                    val wallet = walletRepository.getWalletByIdAsync(incomeHistory.walletId)
                     if (wallet != null) {
                         val pairName = "${code}${wallet.currencyCode}"
 
@@ -75,7 +75,7 @@ class SelectCurrencyViewModel @Inject constructor(
 
                 val expenseHistories = expenseHistoryRepository.getAllExpenseHistory()
                 expenseHistories.forEach { expenseHistory ->
-                    val wallet = walletRepository.getWalletById(expenseHistory.walletId)
+                    val wallet = walletRepository.getWalletByIdAsync(expenseHistory.walletId)
                     if (wallet != null) {
                         val pairName = "${storage.getDefaultCurrencyCode()}${wallet.currencyCode}"
                         val baseCurrencyRate = baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)

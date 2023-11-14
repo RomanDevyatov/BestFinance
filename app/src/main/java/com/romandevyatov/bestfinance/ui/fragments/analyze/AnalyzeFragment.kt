@@ -190,7 +190,7 @@ class AnalyzeFragment : Fragment() {
             val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
                 val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amountBase }
 
-                val roundedSumOfSubGroup =roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
+                val roundedSumOfSubGroup = roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
 
                 SubGroupNameAndSumItem(
                     sumOfSubGroup = roundedSumOfSubGroup,

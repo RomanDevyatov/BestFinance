@@ -71,7 +71,6 @@
             style="@style/CustomTextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/amount"
             app:helperText="@string/required"
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -83,6 +82,7 @@
                 android:id="@+id/amountEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:text="0"
                 android:digits="0123456789.,-"
                 android:inputType="numberDecimal"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -92,7 +92,6 @@
             android:id="@+id/amountTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text=""
             android:textSize="22sp"
             app:layout_constraintWidth_percent="0.3"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -126,7 +125,7 @@
             style="@style/CustomTextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/amount"
+            android:hint=""
             app:helperText="@string/required"
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -138,8 +137,10 @@
                 android:id="@+id/amountTargetEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
-                android:inputType="none" />
+                android:text="0"
+                android:digits="0123456789.,-"
+                android:inputType="numberDecimal"
+                app:layout_constraintTop_toTopOf="parent" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

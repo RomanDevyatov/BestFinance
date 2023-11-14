@@ -201,7 +201,8 @@ class MainActivity : BaseActivity(), OnExitAppListener {
             R.id.update_expense_history_fragment,
             R.id.settings_fragment,
             R.id.select_currency_fragment,
-            R.id.rates_fragment
+            R.id.rates_fragment,
+            R.id.update_transfer_history_fragment
         )
 
         if (bottomNavViewExcludedArray.contains(destinationId)) {

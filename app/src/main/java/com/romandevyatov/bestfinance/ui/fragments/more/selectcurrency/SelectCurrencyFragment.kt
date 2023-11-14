@@ -17,7 +17,8 @@ import com.romandevyatov.bestfinance.databinding.FragmentSettingsSelectCurrencyB
 import com.romandevyatov.bestfinance.ui.adapters.currency.CurrencyAdapter
 import com.romandevyatov.bestfinance.ui.adapters.currency.CurrencyItem
 import com.romandevyatov.bestfinance.utils.BackStackLogger
-import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.ADD_WALLET_FRAGMENT
+import com.romandevyatov.bestfinance.utils.Constants.MORE_FRAGMENT
 import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.RatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SelectCurrencyViewModel
@@ -78,6 +79,15 @@ class SelectCurrencyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setOnBackPressedHandler()
+
+        when(args.source) {
+            ADD_WALLET_FRAGMENT -> {
+                activity?.title = "ХУЙ"
+            }
+            MORE_FRAGMENT -> {
+
+            }
+        }
     }
 
     private fun setOnBackPressedHandler() {
@@ -105,7 +115,7 @@ class SelectCurrencyFragment : Fragment() {
 
     private fun performNavigation(prevFragmentString: String?, currencyItem: CurrencyItem?) {
         when (prevFragmentString) {
-            Constants.ADD_WALLET_FRAGMENT -> {
+            ADD_WALLET_FRAGMENT -> {
                 val mod = sharedModifiedAddWalletFormViewModel.modelForm
                 val addWalletForm = mod?.copy(
                     currencyCode = currencyItem?.code
@@ -114,7 +124,7 @@ class SelectCurrencyFragment : Fragment() {
 
                 findNavController().popBackStack(R.id.add_wallet_fragment, false)
             }
-            else -> {
+            MORE_FRAGMENT -> {
                 if (currencyItem != null) {
                     selectCurrencyViewModel.recalculateBaseAmountForHistory(currencyItem.code)
                 }

@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.TransferHistory
 import com.romandevyatov.bestfinance.data.entities.Wallet
@@ -39,7 +40,6 @@ import com.romandevyatov.bestfinance.utils.Constants.SPINNER_TO
 import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
-import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.utils.numberpad.processInput
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
@@ -49,6 +49,7 @@ import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
 import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
@@ -98,72 +99,25 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
 //        binding.amountEditText.addGenericTextWatcher()
 
-        binding.amountEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(editable: Editable?) {
-                val text = editable.toString()
-                val updatedText = processInput(text)
-
-                if (text != updatedText) {
-                    binding.amountEditText.removeTextChangedListener(this)
-                    binding.amountEditText.setText(updatedText)
-                    binding.amountEditText.setSelection(updatedText.length)
-                    binding.amountEditText.addTextChangedListener(this)
-                }
-
-                if (updatedText.toDoubleOrNull() != null) {
-                    walletItemsGlobal.find {
-                        it.name == binding.fromWalletNameSpinner.text.toString()
-                    }?.id?.let {
-                        addTransferViewModel.getWalletByIdLiveData(it)
-                            .observe(viewLifecycleOwner) { wallet ->
-                                wallet?.let {
-                                    val defaultCurrencyCode =
-                                        addTransferViewModel.getDefaultCurrencyCode()
-                                    val pairName = defaultCurrencyCode + it.currencyCode
-                                    val baseCurrencyRate =
-                                        addTransferViewModel.getBaseCurrencyRateByPairName(
-                                            pairName
-                                        )
-                                    Log.d("AddTransferFragment", "baseCurrencyRate(${pairName})=${baseCurrencyRate}")
-                                    if (baseCurrencyRate != null) {
-                                        val amountBase =
-                                            updatedText.toDouble() / baseCurrencyRate.value // in base
-
-                                        walletItemsGlobal.find { wallet2it ->
-                                            wallet2it.name == binding.toWalletNameSpinner.text.toString()
-                                        }?.id?.let { foundId ->
-                                            addTransferViewModel.getWalletByIdLiveData(foundId)
-                                                .observe(viewLifecycleOwner) { wallet2 ->
-                                                    if (wallet2 != null) {
-                                                        val pairName2 =
-                                                            defaultCurrencyCode + wallet2.currencyCode
-                                                        val baseCurrencyRate2 =
-                                                            addTransferViewModel.getBaseCurrencyRateByPairName(
-                                                                pairName2
-                                                            )
-                                                        Log.d("AddTransferFragment", "baseCurrencyRate(${pairName2})=${baseCurrencyRate2}")
-                                                        if (baseCurrencyRate2 != null) {
-                                                            val res =
-                                                                amountBase * baseCurrencyRate2.value // in target
-                                                            binding.amountTargetEditText.setText(
-                                                                roundDoubleToTwoDecimalPlaces(res).toString()
-                                                            )
-                                                        }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                }
-
-                            }
-                    }
-                }
-            }
-        })
+//        binding.amountEditText.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//
+//            override fun afterTextChanged(editable: Editable?) {
+//                processAmount(this, editable, binding.amountEditText, binding.amountTargetEditText)
+//            }
+//        })
+//
+//        binding.amountTargetEditText.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//
+//            override fun afterTextChanged(editable: Editable?) {
+//                processAmount(this, editable, binding.amountTargetEditText, binding.amountEditText)
+//            }
+//        })
 
         setOnBackPressedCallback()
 
@@ -175,6 +129,54 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         setButtonOnClickListener(view)
 
         restoreAmountDateCommentValues()
+    }
+
+    private fun processAmount(
+        watcher: TextWatcher,
+        editable: Editable?,
+        currentAmountEditText: TextInputEditText,
+        anotherAmountEditText: TextInputEditText) {
+        val text = editable.toString()
+        val updatedText = processInput(text)
+
+        if (text != updatedText) {
+            currentAmountEditText.removeTextChangedListener(watcher)
+            currentAmountEditText.setText(updatedText)
+            currentAmountEditText.setSelection(updatedText.length)
+            currentAmountEditText.addTextChangedListener(watcher)
+        }
+
+        if (binding.toWalletNameSpinner.text.isNotEmpty() && binding.fromWalletNameSpinner.text.isNotEmpty()) {
+            if (updatedText.toDoubleOrNull() != null) {
+                updatedText.toDoubleOrNull()?.let { amount ->
+                    val fromWalletName = binding.fromWalletNameSpinner.text.toString()
+                    val toWalletName = binding.toWalletNameSpinner.text.toString()
+
+                    val fromWalletId = walletItemsGlobal.find {
+                        it.name == fromWalletName
+                    }?.id
+
+                    val toWalletId = walletItemsGlobal.find {
+                        it.name == toWalletName
+                    }?.id
+
+                    lifecycleScope.launch {
+                        val fromWallet = addTransferViewModel.getWalletById(fromWalletId)
+                        val toWallet = addTransferViewModel.getWalletById(toWalletId)
+
+                        val result = addTransferViewModel.calculateTransferAmount(
+                            amount,
+                            fromWallet,
+                            toWallet
+                        )
+
+                        anotherAmountEditText.setText(result.toString())
+                    }
+                } ?: run {
+                    anotherAmountEditText.setText("")
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -398,7 +400,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_add_transfer_fragment_to_navigation_home)
+                findNavController().popBackStack(R.id.home_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -704,8 +706,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                     )
 
                     sharedModViewModel.set(null)
-                    val action = AddTransferFragmentDirections.actionAddTransferFragmentToNavigationHome()
-                    findNavController().navigate(action)
+                    findNavController().popBackStack(R.id.home_fragment, false)
                 }
             }
         }
@@ -748,7 +749,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                                             amount: Double,
                                             amountTarget: Double,
                                             parsedLocalDateTime: LocalDateTime) {
-        // TODO: amount Base calculate
+
         val transferHistory = TransferHistory(
             amount = amount,
             amountTarget = amountTarget,
@@ -819,3 +820,52 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         }
 
 }
+
+
+
+//                    walletItemsGlobal.find {
+//                        it.name == binding.fromWalletNameSpinner.text.toString()
+//                    }?.id?.let {
+//                        addTransferViewModel.getWalletByIdLiveData(it)
+//                            .observe(viewLifecycleOwner) { wallet ->
+//                                wallet?.let {
+//                                    val defaultCurrencyCode =
+//                                        addTransferViewModel.getDefaultCurrencyCode()
+//                                    val pairName = defaultCurrencyCode + it.currencyCode
+//                                    val baseCurrencyRate =
+//                                        addTransferViewModel.getBaseCurrencyRateByPairName(
+//                                            pairName
+//                                        )
+//                                    Log.d("AddTransferFragment", "baseCurrencyRate(${pairName})=${baseCurrencyRate}")
+//                                    if (baseCurrencyRate != null) {
+//                                        val amountBase =
+//                                            updatedText.toDouble() / baseCurrencyRate.value // in base
+//
+//                                        walletItemsGlobal.find { wallet2it ->
+//                                            wallet2it.name == binding.toWalletNameSpinner.text.toString()
+//                                        }?.id?.let { foundId ->
+//                                            addTransferViewModel.getWalletByIdLiveData(foundId)
+//                                                .observe(viewLifecycleOwner) { wallet2 ->
+//                                                    if (wallet2 != null) {
+//                                                        val pairName2 =
+//                                                            defaultCurrencyCode + wallet2.currencyCode
+//                                                        val baseCurrencyRate2 =
+//                                                            addTransferViewModel.getBaseCurrencyRateByPairName(
+//                                                                pairName2
+//                                                            )
+//                                                        Log.d("AddTransferFragment", "baseCurrencyRate(${pairName2})=${baseCurrencyRate2}")
+//                                                        if (baseCurrencyRate2 != null) {
+//                                                            val res =
+//                                                                amountBase * baseCurrencyRate2.value // in target
+//                                                            binding.amountTargetEditText.setText(
+//                                                                roundDoubleToTwoDecimalPlaces(res).toString()
+//                                                            )
+//                                                        }
+//                                                    }
+//                                                }
+//                                        }
+//                                    }
+//                                }
+//
+//                            }
+//                    }
