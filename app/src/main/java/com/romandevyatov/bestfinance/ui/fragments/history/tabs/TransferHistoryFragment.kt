@@ -108,7 +108,7 @@ class TransferHistoryFragment : Fragment() {
             val formattedAmountText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amount).toString()) + walletFrom.currencyCode
             val formattedAmountBaseText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amountBase).toString()) + transferHistoryViewModel.getDefaultCurrencyCode()
 
-            val formattedAmountBaseTextString = "${formattedAmountBaseText}(${getString(R.string.base)})"
+            val formattedAmountBaseTextString = formattedAmountBaseText.plus("(${getString(R.string.base)})")
 
             val transactionItem = TransferItem(
                 id = transferHistory.id,
