@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseSubGroupWithExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
@@ -132,10 +132,10 @@ class AnalyzeFragment : Fragment() {
             }
         }
 
-        analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { histories ->
+        analyzeViewModel.incomeHistoryEntityLiveData.observe(viewLifecycleOwner) { histories ->
             val totalIncomeValue = histories?.sumOf { it.amountBase } ?: 0.0
 
-            analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
+            analyzeViewModel.expenseHistoryEntityLiveData.observe(viewLifecycleOwner) { expenseHistory ->
                 val totalExpensesValue = expenseHistory?.sumOf { it.amountBase } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
@@ -150,7 +150,7 @@ class AnalyzeFragment : Fragment() {
         val groupItems = mutableListOf<GroupItem>()
 
         for (incomeGroup in incomeGroups) {
-            val groupName = incomeGroup.incomeGroup?.name ?: getString(R.string.changed_balance)
+            val groupName = incomeGroup.incomeGroupEntity?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemIncomes = incomeGroup.incomeSubGroupWithIncomeHistories.map { groupWithIncomeHistories ->
                 val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amountBase }
@@ -187,14 +187,14 @@ class AnalyzeFragment : Fragment() {
         for (expenseHistories in expenseGroupWithExpenseSubGroupsIncludingExpenseHistories) {
             val groupName = expenseHistories.expenseGroupEntity?.name ?: getString(R.string.changed_balance)
 
-            val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
-                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amountBase }
+            val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistoriesEntity.map { subGroupWithIncomeHistories ->
+                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistoryEntities.sumOf { it.amountBase }
 
                 val roundedSumOfSubGroup = roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
 
                 SubGroupNameAndSumItem(
                     sumOfSubGroup = roundedSumOfSubGroup,
-                    subGroupName = subGroupWithIncomeHistories.expenseSubGroup?.name ?: ""
+                    subGroupName = subGroupWithIncomeHistories.expenseSubGroupEntity?.name ?: ""
                 )
             }
 
@@ -222,7 +222,7 @@ class AnalyzeFragment : Fragment() {
         categoryExpandableAdapter.setList(mList)
     }
 
-    private fun getIncomeChangingBalanceRecords(it: List<IncomeHistory>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
+    private fun getIncomeChangingBalanceRecords(it: List<IncomeHistoryEntity>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
         if (it.isNotEmpty()) {
             val incomeSubGroupWithIncomeHistories = arrayListOf(IncomeSubGroupWithIncomeHistories(null, it))
             return IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(null, incomeSubGroupWithIncomeHistories)
@@ -230,7 +230,7 @@ class AnalyzeFragment : Fragment() {
         return null
     }
 
-    private fun getExpenseChangingBalanceRecords(it: List<ExpenseHistory>): ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories? {
+    private fun getExpenseChangingBalanceRecords(it: List<ExpenseHistoryEntity>): ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories? {
         if (it.isNotEmpty()) {
             val expenseSubGroupWithExpenseHistories = arrayListOf(ExpenseSubGroupWithExpenseHistories(null, it))
             return ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(null, expenseSubGroupWithExpenseHistories)

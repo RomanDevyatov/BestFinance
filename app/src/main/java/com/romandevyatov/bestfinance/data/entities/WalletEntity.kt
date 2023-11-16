@@ -7,7 +7,7 @@ import java.time.LocalDateTime
     tableName = "wallet",
     foreignKeys = [
         ForeignKey(
-            entity = Currency::class,
+            entity = CurrencyEntity::class,
             parentColumns = ["code"],
             childColumns = ["currency_code"],
             onDelete = ForeignKey.CASCADE
@@ -15,7 +15,7 @@ import java.time.LocalDateTime
     ],
     indices = [Index(value = ["name"], unique = true)]
 )
-data class Wallet(
+data class WalletEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

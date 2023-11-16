@@ -3,8 +3,8 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.BaseCurrencyRate
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.BaseCurrencyRateEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.CurrencyRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
@@ -25,10 +25,10 @@ class HomeViewModel @Inject constructor(
     private val baseCurrencyRatesRepository: BaseCurrencyRatesRepository
 ) : BaseViewModel(storage) {
 
-    val incomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllIncomeGroupsLiveData()
+    val incomeGroupsLiveDataEntity: LiveData<List<IncomeGroupEntity>> = incomeGroupRepository.getAllIncomeGroupsLiveData()
 
-    private val _resultLiveData = MutableLiveData<IncomeGroup>()
-    val resultLiveData: LiveData<IncomeGroup> = _resultLiveData
+    private val _resultLiveData = MutableLiveData<IncomeGroupEntity>()
+    val resultLiveData: LiveData<IncomeGroupEntity> = _resultLiveData
 
     fun get(id: Long) {
         viewModelScope.launch {
@@ -53,11 +53,11 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun getBaseCurrencyRatesLiveData(pairName: String): LiveData<BaseCurrencyRate?> {
+    fun getBaseCurrencyRatesLiveData(pairName: String): LiveData<BaseCurrencyRateEntity?> {
         return baseCurrencyRatesRepository.getBaseCurrencyRateByPairNameLiveData(pairName)
     }
 
-    fun getBaseCurrencyRatesByPairName(pairName: String): BaseCurrencyRate? {
+    fun getBaseCurrencyRatesByPairName(pairName: String): BaseCurrencyRateEntity? {
         return runBlocking {
             baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
         }

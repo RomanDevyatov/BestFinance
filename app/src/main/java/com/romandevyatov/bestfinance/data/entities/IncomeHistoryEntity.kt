@@ -6,49 +6,45 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-@Entity(
-    tableName = "transfer_history",
+@Entity(tableName = "income_history",
     foreignKeys = [
         ForeignKey(
-            entity = Wallet::class,
-            parentColumns = ["id"],
-            childColumns = ["from_wallet_id"],
+            entity = IncomeSubGroup::class,
+            parentColumns = ["id"], // IncomeGroup
+            childColumns = ["income_sub_group_id"], // in IncomeHistory
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = Wallet::class,
-            parentColumns = ["id"],
-            childColumns = ["to_wallet_id"],
+            entity = WalletEntity::class,
+            parentColumns = ["id"], // Wallet
+            childColumns = ["wallet_id"], // in IncomeHistory
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class TransferHistory (
+data class IncomeHistoryEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
+    @ColumnInfo(name = "income_sub_group_id")
+    val incomeSubGroupId: Long?,
+
     @ColumnInfo(name = "amount")
     val amount: Double,
-
-    @ColumnInfo(name = "amount_target")
-    val amountTarget: Double,
 
     @ColumnInfo(name = "amount_base")
     val amountBase: Double,
 
-    @ColumnInfo(name = "from_wallet_id")
-    val fromWalletId: Long,
-
-    @ColumnInfo(name = "to_wallet_id")
-    val toWalletId: Long,
+    @ColumnInfo(name = "comment")
+    val comment: String?,
 
     @ColumnInfo(name = "date")
     val date: LocalDateTime? = null,
 
-    @ColumnInfo(name = "comment")
-    val comment: String? = null,
+    @ColumnInfo(name = "wallet_id")
+    val walletId: Long,
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null,

@@ -101,9 +101,9 @@ class TransferHistoryFragment : Fragment() {
         val transferItems = mutableListOf<TransferItem>()
 
         for (transfer in transfers) {
-            val transferHistory = transfer.transferHistory
-            val walletFrom = transfer.walletFrom
-            val walletTo = transfer.walletTo
+            val transferHistory = transfer.transferHistoryEntity
+            val walletFrom = transfer.walletEntityFrom
+            val walletTo = transfer.walletEntityTo
 
             val formattedAmountText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amount).toString()) + walletFrom.currencyCode
             val formattedAmountBaseText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amountBase).toString()) + transferHistoryViewModel.getDefaultCurrencyCode()

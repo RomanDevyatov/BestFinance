@@ -69,6 +69,18 @@
         tools:layout="@layout/fragment_rates" >
     </fragment>
     <fragment
+        android:id="@+id/select_currency_from_add_wallet_fragment"
+        android:name="com.romandevyatov.bestfinance.ui.fragments.more.selectcurrency.SelectCurrencyFragment"
+        android:label="@string/select_currency"
+        tools:layout="@layout/fragment_settings_select_currency" >
+
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
         android:id="@+id/select_currency_fragment"
         android:name="com.romandevyatov.bestfinance.ui.fragments.more.selectcurrency.SelectCurrencyFragment"
         android:label="@string/select_default_currency"
@@ -366,7 +378,7 @@
 
         <action
             android:id="@+id/action_navigation_add_wallet_to_navigation_select_currency"
-            app:destination="@id/select_currency_fragment" />
+            app:destination="@id/select_currency_from_add_wallet_fragment" />
 
         <argument
             android:name="source"

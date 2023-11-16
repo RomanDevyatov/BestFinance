@@ -2,14 +2,14 @@ package com.romandevyatov.bestfinance.data.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 
 data class IncomeHistoryWithIncomeSubGroupAndWallet (
 
     @Embedded
-    var incomeHistory: IncomeHistory,
+    var incomeHistoryEntity: IncomeHistoryEntity,
 
     @Relation(
         entity = IncomeSubGroup::class,
@@ -18,8 +18,8 @@ data class IncomeHistoryWithIncomeSubGroupAndWallet (
     var incomeSubGroup: IncomeSubGroup?,
 
     @Relation(
-        entity = Wallet::class,
+        entity = WalletEntity::class,
         parentColumn = "wallet_id",
         entityColumn = "id")
-    var wallet: Wallet?
+    var walletEntity: WalletEntity?
 )

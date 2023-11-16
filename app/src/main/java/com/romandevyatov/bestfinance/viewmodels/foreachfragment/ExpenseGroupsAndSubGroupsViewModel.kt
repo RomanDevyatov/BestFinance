@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
@@ -30,7 +30,7 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
         val expenseSubGroup = expenseSubGroupRepository.getByNameNotArchived(name)
 
         if (expenseSubGroup != null) {
-            val expenseSubGroupArchived = ExpenseSubGroup(
+            val expenseSubGroupEntityArchived = ExpenseSubGroupEntity(
                 id = expenseSubGroup.id,
                 name = expenseSubGroup.name,
                 description = expenseSubGroup.description,
@@ -38,7 +38,7 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
                 archivedDate = LocalDateTime.now()
             )
 
-            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupArchived)
+            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupEntityArchived)
         }
     }
 
@@ -111,8 +111,8 @@ class ExpenseGroupsAndSubGroupsViewModel @Inject constructor(
         }
     }
 
-    private var deletedSubItem: ExpenseSubGroup? = null
-    private val deletedSubItemList = mutableListOf<ExpenseSubGroup>()
+    private var deletedSubItem: ExpenseSubGroupEntity? = null
+    private val deletedSubItemList = mutableListOf<ExpenseSubGroupEntity>()
 
     fun deleteSubItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {

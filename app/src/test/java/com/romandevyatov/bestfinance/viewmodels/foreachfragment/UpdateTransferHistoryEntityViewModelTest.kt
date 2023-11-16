@@ -1,8 +1,8 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
@@ -24,7 +24,7 @@ import org.junit.Test
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
-class UpdateTransferHistoryViewModelTest {
+class UpdateTransferHistoryEntityViewModelTest {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -57,23 +57,23 @@ class UpdateTransferHistoryViewModelTest {
     @Test
     fun `test updateTransferHistoryAndWallets`() = runTest {
         // Mock data
-        val transferHistory = TransferHistory(1, 100.0, 1.0, 2.0, 1, 2, null, "", null, LocalDateTime.now())
-        val walletFrom = Wallet(1, "wallet_mock_1", 200.0, 0.0, 0.0, "", null, "USD")
-        val walletTo = Wallet(2, "wallet_mock_2", 100.0, 0.0, 0.0, "", null, "USD")
+        val transferHistoryEntity = TransferHistoryEntity(1, 100.0, 1.0, 2.0, 1, 2, null, "", null, LocalDateTime.now())
+        val walletEntityFrom = WalletEntity(1, "wallet_mock_1", 200.0, 0.0, 0.0, "", null, "USD")
+        val walletEntityTo = WalletEntity(2, "wallet_mock_2", 100.0, 0.0, 0.0, "", null, "USD")
 
         // Mock repository behavior
         coEvery { transferHistoryRepository.updateTransferHistory(any()) } just runs
-        coEvery { walletRepository.getWalletByIdAsync(walletFrom.id!!) } returns walletFrom
-        coEvery { walletRepository.getWalletByIdAsync(walletTo.id!!) } returns walletTo
+        coEvery { walletRepository.getWalletByIdAsync(walletEntityFrom.id!!) } returns walletEntityFrom
+        coEvery { walletRepository.getWalletByIdAsync(walletEntityTo.id!!) } returns walletEntityTo
         coEvery { walletRepository.updateWallet(any()) } just runs
 
         // Call the function under test
-        viewModel.updateTransferHistoryAndWallets(transferHistory)
+        viewModel.updateTransferHistoryAndWallets(transferHistoryEntity)
 
         // Verify the expected behavior using assertions or verifications
-        coVerify { transferHistoryRepository.updateTransferHistory(transferHistory) }
-        coVerify { walletRepository.getWalletByIdAsync(walletFrom.id!!) }
-        coVerify { walletRepository.getWalletByIdAsync(walletTo.id!!) }
+        coVerify { transferHistoryRepository.updateTransferHistory(transferHistoryEntity) }
+        coVerify { walletRepository.getWalletByIdAsync(walletEntityFrom.id!!) }
+        coVerify { walletRepository.getWalletByIdAsync(walletEntityTo.id!!) }
         coVerify { walletRepository.updateWallet(any()) } // Perform necessary verifications
 
         assertEquals("", "result")

@@ -2,45 +2,45 @@ package com.romandevyatov.bestfinance.data.repositories
 
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.IncomeHistoryDao
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IncomeHistoryRepository @Inject constructor(
-    private val incomeHistoryDao: IncomeHistoryDao
-) {
+class IncomeHistoryRepository
+@Inject
+constructor(private val incomeHistoryDao: IncomeHistoryDao) {
 
     fun getAllIncomeHistoryWithIncomeSubGroupAndWallet(): LiveData<List<IncomeHistoryWithIncomeSubGroupAndWallet>> {
         return incomeHistoryDao.getAllWithIncomeSubGroupAndWallet()
     }
 
-    fun getAllIncomeHistoryLiveData(): LiveData<List<IncomeHistory>> {
+    fun getAllIncomeHistoryLiveData(): LiveData<List<IncomeHistoryEntity>> {
         return incomeHistoryDao.getAllLivedata()
     }
 
-    suspend fun getAllIncomeHistory(): List<IncomeHistory> {
+    suspend fun getAllIncomeHistory(): List<IncomeHistoryEntity> {
         return incomeHistoryDao.getAll()
     }
 
-    suspend fun insertIncomeHistory(incomeHistory: IncomeHistory) {
-        incomeHistoryDao.insert(incomeHistory)
+    suspend fun insertIncomeHistory(incomeHistoryEntity: IncomeHistoryEntity) {
+        incomeHistoryDao.insert(incomeHistoryEntity)
     }
 
-    suspend fun updateIncomeHistory(incomeHistory: IncomeHistory) {
-        incomeHistoryDao.update(incomeHistory)
+    suspend fun updateIncomeHistory(incomeHistoryEntity: IncomeHistoryEntity) {
+        incomeHistoryDao.update(incomeHistoryEntity)
     }
 
-    suspend fun deleteIncomeHistory(incomeHistory: IncomeHistory) {
-        incomeHistoryDao.delete(incomeHistory)
+    suspend fun deleteIncomeHistory(incomeHistoryEntity: IncomeHistoryEntity) {
+        incomeHistoryDao.delete(incomeHistoryEntity)
     }
 
     fun getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?> {
         return incomeHistoryDao.getWithIncomeSubGroupAndWalletByIdLiveData(id)
     }
 
-    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
+    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistoryEntity>> {
         return incomeHistoryDao.getWhereSubGroupIdIsNullLiveData()
     }
 
@@ -48,7 +48,7 @@ class IncomeHistoryRepository @Inject constructor(
         incomeHistoryDao.deleteById(id)
     }
 
-    fun getIncomeHistoryById(id: Long): IncomeHistory? {
+    fun getIncomeHistoryById(id: Long): IncomeHistoryEntity? {
         return incomeHistoryDao.getById(id)
     }
 }

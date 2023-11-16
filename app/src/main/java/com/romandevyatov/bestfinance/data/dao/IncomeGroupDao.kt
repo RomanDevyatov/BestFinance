@@ -8,7 +8,7 @@ import androidx.room.Delete
 import androidx.room.Update
 import androidx.room.Query
 import androidx.room.Transaction
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 
@@ -16,16 +16,16 @@ import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithInco
 interface IncomeGroupDao {
 
     @Query("SELECT * FROM income_group ORDER BY id ASC")
-    fun getAllLiveData(): LiveData<List<IncomeGroup>>
+    fun getAllLiveData(): LiveData<List<IncomeGroupEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(incomeGroup: IncomeGroup)
+    suspend fun insert(incomeGroupEntity: IncomeGroupEntity)
 
     @Delete
-    suspend fun delete(incomeGroup: IncomeGroup)
+    suspend fun delete(incomeGroupEntity: IncomeGroupEntity)
 
     @Update
-    suspend fun update(incomeGroup: IncomeGroup)
+    suspend fun update(incomeGroupEntity: IncomeGroupEntity)
 
     @Query("DELETE FROM income_group")
     suspend fun deleteAll()
@@ -41,13 +41,13 @@ interface IncomeGroupDao {
     Not Archived
      */
     @Query("SELECT * FROM income_group WHERE name = :selectedIncomeGroupName AND archived_date IS NULL")
-    fun getByNameNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroup?>
+    fun getByNameNotArchivedLiveData(selectedIncomeGroupName: String): LiveData<IncomeGroupEntity?>
 
     @Query("SELECT * FROM income_group WHERE archived_date IS NULL ORDER BY id ASC")
-    fun getAllNotArchivedLiveData(): LiveData<List<IncomeGroup>>
+    fun getAllNotArchivedLiveData(): LiveData<List<IncomeGroupEntity>>
 
     @Query("SELECT * FROM income_group WHERE id = :groupId AND archived_date IS NULL")
-    fun getByIdNotArchived(groupId: Long): IncomeGroup
+    fun getByIdNotArchived(groupId: Long): IncomeGroupEntity
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE name = :name AND archived_date IS NULL")
@@ -71,10 +71,10 @@ interface IncomeGroupDao {
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(incomeGroupName: String): LiveData<IncomeGroupWithIncomeSubGroups?>
 
     @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
-    fun getByNameLiveData(name: String): LiveData<IncomeGroup?>
+    fun getByNameLiveData(name: String): LiveData<IncomeGroupEntity?>
 
     @Query("SELECT * FROM income_group WHERE name = :name LIMIT 1")
-    fun getByName(name: String): IncomeGroup
+    fun getByName(name: String): IncomeGroupEntity
 
     @Transaction
     @Query("SELECT * FROM income_group WHERE name = :name")
@@ -85,10 +85,10 @@ interface IncomeGroupDao {
     fun getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id: Long?): LiveData<IncomeGroupWithIncomeSubGroups>
 
     @Query("SELECT * FROM income_group WHERE archived_date IS NOT NULL")
-    fun getAllIncomeGroupArchivedLiveData(): LiveData<List<IncomeGroup>>
+    fun getAllIncomeGroupArchivedLiveData(): LiveData<List<IncomeGroupEntity>>
 
     @Query("SELECT * FROM income_group WHERE name = :name AND archived_date IS NOT NULL")
-    fun getIncomeGroupArchivedByNameLiveData(name: String): LiveData<IncomeGroup?>
+    fun getIncomeGroupArchivedByNameLiveData(name: String): LiveData<IncomeGroupEntity?>
 
     @Transaction
     @Query("SELECT " +
@@ -133,10 +133,10 @@ interface IncomeGroupDao {
     fun getAllWithIncomeSubGroupsLiveData(): LiveData<List<IncomeGroupWithIncomeSubGroups>>
 
     @Query("SELECT * FROM income_group WHERE id = :id LIMIT 1")
-    fun getById(id: Long): IncomeGroup?
+    fun getById(id: Long): IncomeGroupEntity?
 
     @Query("SELECT * FROM income_group WHERE id = :id")
-    fun getByIdLiveData(id: Long?): LiveData<IncomeGroup?>
+    fun getByIdLiveData(id: Long?): LiveData<IncomeGroupEntity?>
 
     @Query("UPDATE income_group SET archived_date = :date WHERE id = :id")
     fun updateArchivedDateById(id: Long?, date: String)

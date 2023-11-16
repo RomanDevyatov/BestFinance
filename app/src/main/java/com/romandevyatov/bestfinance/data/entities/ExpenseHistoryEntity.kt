@@ -10,20 +10,20 @@ import java.time.LocalDateTime
     tableName = "expense_history",
     foreignKeys = [
         ForeignKey(
-            entity = ExpenseSubGroup::class,
+            entity = ExpenseSubGroupEntity::class,
             parentColumns = ["id"], // ExpenseSubGroup
             childColumns = ["expense_sub_group_id"], // in ExpenseHistory
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = Wallet::class,
+            entity = WalletEntity::class,
             parentColumns = ["id"], // Wallet
             childColumns = ["wallet_id"], // in ExpenseHistory
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class ExpenseHistory(
+data class ExpenseHistoryEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

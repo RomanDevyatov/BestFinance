@@ -27,7 +27,7 @@ class AddExpenseGroupViewModel @Inject constructor(
             if (expenseGroupWithExpenseSubGroups != null) {
                 expenseGroupRepository.unarchiveExpenseGroup(expenseGroupWithExpenseSubGroups.expenseGroupEntity)
 
-                expenseGroupWithExpenseSubGroups.expenseSubGroups.forEach {
+                expenseGroupWithExpenseSubGroups.expenseSubGroupEntities.forEach {
                     expenseSubGroupRepository.unarchiveExpenseSubGroup(it)
                 }
             }

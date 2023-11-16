@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
@@ -240,7 +240,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun initGroupSpinner() {
-        addSubGroupViewModel.incomeGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
+        addSubGroupViewModel.incomeGroupsNotArchivedLiveDataEntity.observe(viewLifecycleOwner) { incomeGroupList ->
             incomeGroupList?.let { groups ->
                 val spinnerItems = getIncomeGroupList(groups)
 
@@ -272,7 +272,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
         sharedModViewModel.modelForm = updatedModelForm
     }
 
-    private fun getIncomeGroupList(groups: List<IncomeGroup>): MutableList<SpinnerItem> {
+    private fun getIncomeGroupList(groups: List<IncomeGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()

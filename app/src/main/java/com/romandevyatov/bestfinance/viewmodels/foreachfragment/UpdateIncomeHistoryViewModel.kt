@@ -2,9 +2,9 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
@@ -29,23 +29,23 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
-    val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+    val walletsNotArchivedLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     fun getIncomeHistoryWithIncomeSubGroupAndWalletById(incomeHistoryId: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?> {
         return incomeHistoryRepository.getIncomeHistoryWithIncomeSubGroupAndWalletByIdLiveData(incomeHistoryId)
     }
 
-    fun updateIncomeHistoryAndWallet(updatedIncomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletByIdAsync(updatedIncomeHistory.walletId)
+    fun updateIncomeHistoryAndWallet(updatedIncomeHistoryEntity: IncomeHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val wallet = walletRepository.getWalletByIdAsync(updatedIncomeHistoryEntity.walletId)
         if (wallet != null) {
             val defaultCurrencyCode = getDefaultCurrencyCode()
             val pairName = defaultCurrencyCode + wallet.currencyCode
             val baseCurrencyRate = baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
 
             if (baseCurrencyRate != null) {
-                val amountBase = updatedIncomeHistory.amount / baseCurrencyRate.value
+                val amountBase = updatedIncomeHistoryEntity.amount / baseCurrencyRate.value
 
-                val updatedAmountBaseIncomeHistory = updatedIncomeHistory.copy(
+                val updatedAmountBaseIncomeHistory = updatedIncomeHistoryEntity.copy(
                     amountBase = amountBase
                 )
 
@@ -62,27 +62,27 @@ class UpdateIncomeHistoryViewModel @Inject constructor(
         }
     }
 
-    fun getWalletById(id: Long): LiveData<Wallet?> {
+    fun getWalletById(id: Long): LiveData<WalletEntity?> {
         return walletRepository.getWalletByIdLiveData(id)
     }
 
-    fun updateWallet(updatedWallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(updatedWallet)
+    fun updateWallet(updatedWalletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(updatedWalletEntity)
     }
 
     fun getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name: String): LiveData<IncomeGroupWithIncomeSubGroups?> {
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchived(): LiveData<List<IncomeGroupEntity>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
-    fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroup?> {
+    fun getIncomeGroupById(incomeGroupId: Long): LiveData<IncomeGroupEntity?> {
         return incomeGroupRepository.getIncomeGroupByIdLiveData(incomeGroupId)
     }
 
-    private var deletedItem: IncomeHistory? = null
+    private var deletedItem: IncomeHistoryEntity? = null
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {

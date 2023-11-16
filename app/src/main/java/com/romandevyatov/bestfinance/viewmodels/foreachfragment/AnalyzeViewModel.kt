@@ -1,8 +1,8 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 
 import androidx.lifecycle.LiveData
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
@@ -25,11 +25,11 @@ class AnalyzeViewModel @Inject constructor(
 
     val currentDefaultCurrencySymbol = getDefaultCurrencySymbol()
 
-    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistory>> {
+    fun getIncomeHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<IncomeHistoryEntity>> {
         return incomeHistoryRepository.getIncomeHistoriesWhereSubGroupIsNullLiveData()
     }
 
-    fun getExpenseHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistory>> {
+    fun getExpenseHistoriesWhereSubGroupIsNullLiveData(): LiveData<List<ExpenseHistoryEntity>> {
         return expenseHistoryRepository.getExpenseHistoriesWhereSubGroupIsNullLiveData()
     }
 
@@ -37,9 +37,9 @@ class AnalyzeViewModel @Inject constructor(
 
     val allExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoryAndLiveData: LiveData<List<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>> = expenseGroupRepository.getAllExpenseGroupWithExpenseSubGroupsIncludingExpenseHistoriesLiveData()
 
-    val incomeHistoryLiveData: LiveData<List<IncomeHistory>> = incomeHistoryRepository.getAllIncomeHistoryLiveData()
+    val incomeHistoryEntityLiveData: LiveData<List<IncomeHistoryEntity>> = incomeHistoryRepository.getAllIncomeHistoryLiveData()
 
-    val expenseHistoryLiveData: LiveData<List<ExpenseHistory>> = expenseHistoryRepository.getAllExpenseHistoryLiveData()
+    val expenseHistoryEntityLiveData: LiveData<List<ExpenseHistoryEntity>> = expenseHistoryRepository.getAllExpenseHistoryLiveData()
 
 
 }

@@ -20,8 +20,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.textfield.TextInputEditText
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
@@ -92,15 +92,15 @@ class UpdateTransferHistoryFragment : Fragment() {
                     historyWithWalletsGlobal = it.copy()
 
                     setupSpinnersValues(
-                        it.walletFrom,
-                        it.walletTo
+                        it.walletEntityFrom,
+                        it.walletEntityTo
                     )
 
                     setupSpinners()
 
                     setupDateTimeFiledValues()
 
-                    val transferHistory = it.transferHistory
+                    val transferHistory = it.transferHistoryEntity
                     binding.reusable.commentEditText.setText(transferHistory.comment)
 
                     val formattedAmountText = TextFormatter.removeTrailingZeros(transferHistory.amount.toString())
@@ -199,7 +199,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupSpinnersValues(from: Wallet, to: Wallet) {
+    private fun setupSpinnersValues(from: WalletEntity, to: WalletEntity) {
         binding.reusable.fromWalletNameSpinner.setText(from.name, false)
         binding.reusable.toWalletNameSpinner.setText(to.name, false)
     }
@@ -248,10 +248,10 @@ class UpdateTransferHistoryFragment : Fragment() {
         }
     }
 
-    private fun getWalletItemsForSpinner(walletList: List<Wallet>?): MutableList<SpinnerItem> {
+    private fun getWalletItemsForSpinner(walletEntityList: List<WalletEntity>?): MutableList<SpinnerItem> {
         val spinnerItems: MutableList<SpinnerItem> = mutableListOf()
 
-        walletList?.forEach { it ->
+        walletEntityList?.forEach { it ->
             spinnerItems.add(SpinnerItem(it.id, it.name))
         }
 
@@ -270,7 +270,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
         selectedDate.timeInMillis =
-            historyWithWalletsGlobal.transferHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithWalletsGlobal.transferHistoryEntity.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         DateTimeUtils.setupDatePicker(binding.reusable.dateEditText, dateFormat, selectedDate)
     }
@@ -279,7 +279,7 @@ class UpdateTransferHistoryFragment : Fragment() {
     private fun setTimeEditText() {
         val selectedTime = Calendar.getInstance()
         selectedTime.timeInMillis =
-            historyWithWalletsGlobal.transferHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithWalletsGlobal.transferHistoryEntity.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         DateTimeUtils.setupTimePicker(binding.reusable.timeEditText, timeFormat, selectedTime)
     }
@@ -324,10 +324,10 @@ class UpdateTransferHistoryFragment : Fragment() {
                     && timeBindingValidation.isSuccess
                 ) {
                     updateOldWallets(
-                        historyWithWalletsGlobal.walletFrom,
-                        historyWithWalletsGlobal.walletTo,
-                        historyWithWalletsGlobal.transferHistory.amount,
-                        historyWithWalletsGlobal.transferHistory.amountTarget)
+                        historyWithWalletsGlobal.walletEntityFrom,
+                        historyWithWalletsGlobal.walletEntityTo,
+                        historyWithWalletsGlobal.transferHistoryEntity.amount,
+                        historyWithWalletsGlobal.transferHistoryEntity.amountTarget)
 
                     val walletFromId = walletSpinnerItemsGlobal?.find { it.name == walletFromNameBinding }?.id
                     val walletToId = walletSpinnerItemsGlobal?.find { it.name == walletToNameBinding }?.id
@@ -335,8 +335,8 @@ class UpdateTransferHistoryFragment : Fragment() {
                     val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                     val parsedLocalDateTime = LocalDateTime.from(LocalDateTimeRoomTypeConverter.dateTimeFormatter.parse(fullDateTime))
 
-                    val updatedTransferHistory = TransferHistory(
-                        id = historyWithWalletsGlobal.transferHistory.id,
+                    val updatedTransferHistoryEntity = TransferHistoryEntity(
+                        id = historyWithWalletsGlobal.transferHistoryEntity.id,
                         amount = amountBinding.toDouble(),
                         amountTarget = amountTargetBinding.toDouble(),
                         amountBase = amountBinding.toDouble(), // change
@@ -344,9 +344,9 @@ class UpdateTransferHistoryFragment : Fragment() {
                         toWalletId = walletToId!!,
                         date = parsedLocalDateTime,
                         comment = comment,
-                        createdDate = historyWithWalletsGlobal.transferHistory.createdDate
+                        createdDate = historyWithWalletsGlobal.transferHistoryEntity.createdDate
                     )
-                    updateTransferHistoryViewModel.updateTransferHistoryAndWallets(updatedTransferHistory)
+                    updateTransferHistoryViewModel.updateTransferHistoryAndWallets(updatedTransferHistoryEntity)
 
                     navigateToHistory()
             }
@@ -365,54 +365,54 @@ class UpdateTransferHistoryFragment : Fragment() {
     }
 
     private fun updateOldWallets(
-        walletFrom: Wallet,
-        walletTo: Wallet,
+        walletEntityFrom: WalletEntity,
+        walletEntityTo: WalletEntity,
         amount: Double,
         amountTarget: Double
     ) {
-        val updatedBalanceFromOld = walletFrom.balance.plus(amount)
-        val updatedOutputFromOld = walletFrom.output.minus(amount)
-        updateOldWalletFrom(walletFrom, updatedBalanceFromOld, updatedOutputFromOld)
+        val updatedBalanceFromOld = walletEntityFrom.balance.plus(amount)
+        val updatedOutputFromOld = walletEntityFrom.output.minus(amount)
+        updateOldWalletFrom(walletEntityFrom, updatedBalanceFromOld, updatedOutputFromOld)
 
-        val updatedBalanceToOld = walletTo.balance.minus(amountTarget)
-        val updatedInputToOld = walletTo.input.minus(amountTarget)
-        updateOldWalletTo(walletTo, updatedBalanceToOld, updatedInputToOld)
+        val updatedBalanceToOld = walletEntityTo.balance.minus(amountTarget)
+        val updatedInputToOld = walletEntityTo.input.minus(amountTarget)
+        updateOldWalletTo(walletEntityTo, updatedBalanceToOld, updatedInputToOld)
     }
 
     private fun updateOldWalletFrom(
-        wallet: Wallet,
+        walletEntity: WalletEntity,
         updatedBalance: Double,
         updatedOutput: Double
     ) {
         updateTransferHistoryViewModel.updateWallet(
-            Wallet(
-                id = wallet.id,
-                name = wallet.name,
+            WalletEntity(
+                id = walletEntity.id,
+                name = walletEntity.name,
                 balance = updatedBalance,
-                input = wallet.input,
+                input = walletEntity.input,
                 output = updatedOutput,
-                description = wallet.description,
-                archivedDate = wallet.archivedDate,
-                currencyCode = wallet.currencyCode
+                description = walletEntity.description,
+                archivedDate = walletEntity.archivedDate,
+                currencyCode = walletEntity.currencyCode
             )
         )
     }
 
     private fun updateOldWalletTo(
-        wallet: Wallet,
+        walletEntity: WalletEntity,
         updatedBalance: Double,
         updatedInput: Double
     ) {
         updateTransferHistoryViewModel.updateWallet(
-            Wallet(
-                id = wallet.id,
-                name = wallet.name,
+            WalletEntity(
+                id = walletEntity.id,
+                name = walletEntity.name,
                 balance = updatedBalance,
                 input = updatedInput,
-                output = wallet.output,
-                description = wallet.description,
-                archivedDate = wallet.archivedDate,
-                currencyCode = wallet.currencyCode
+                output = walletEntity.output,
+                description = walletEntity.description,
+                archivedDate = walletEntity.archivedDate,
+                currencyCode = walletEntity.currencyCode
             )
         )
     }

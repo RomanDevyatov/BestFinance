@@ -17,9 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.databinding.DialogAlertBinding
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateWalletBinding
 import com.romandevyatov.bestfinance.utils.BackStackLogger
@@ -44,7 +44,7 @@ class UpdateWalletFragment : Fragment() {
 
     private var walletId: Long? = null
 
-    private var walletGlobal: Wallet? = null
+    private var walletEntityGlobal: WalletEntity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +57,9 @@ class UpdateWalletFragment : Fragment() {
             .observe(viewLifecycleOwner) { wallet ->
                 wallet?.let {
                     walletId = it.id
-                    walletGlobal = it.copy()
+                    walletEntityGlobal = it.copy()
+
+                    binding.currencyCodeTextView.text = it.currencyCode
 
                     binding.nameEditText.setText(it.name)
                     binding.balanceEditText.setText(removeTrailingZeros(it.balance.toString()))
@@ -84,7 +86,7 @@ class UpdateWalletFragment : Fragment() {
             updateWalletViewModel.getWalletByNameLiveData(walletNameBinding)
                 .observe(viewLifecycleOwner) { wallet ->
                     if (walletNameBinding == args.walletName.toString() || wallet == null) {
-                        walletGlobal?.let { walletGlobal ->
+                        walletEntityGlobal?.let { walletGlobal ->
                             walletId?.let { id ->
                                 val difference = walletBalanceBinding - walletGlobal.balance
                                 if (difference != 0.0) {
@@ -98,15 +100,15 @@ class UpdateWalletFragment : Fragment() {
                             }
                         }
 
-                        val updatedWallet = Wallet(
+                        val updatedWalletEntity = WalletEntity(
                             id = walletId,
                             name = walletNameBinding,
                             balance = walletBalanceBinding,
                             description = walletDescriptionBinding,
-                            currencyCode = walletGlobal?.currencyCode ?: "USD"
+                            currencyCode = walletEntityGlobal?.currencyCode ?: "USD"
                         )
 
-                        updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWallet)
+                        updateWalletViewModel.updateNameAndDescriptionAndBalanceWalletById(updatedWalletEntity)
 
                         performBackNavigation()
                     } else if (wallet.archivedDate == null) {
@@ -154,7 +156,7 @@ class UpdateWalletFragment : Fragment() {
             val incomeOrExpenseType = difference.compareTo(0.0)
             if (incomeOrExpenseType == 1) {
                 updateWalletViewModel.addOnlyWalletIncomeHistoryRecord(
-                    IncomeHistory(
+                    IncomeHistoryEntity(
                         incomeSubGroupId = null,
                         amount = difference,
                         comment = getString(R.string.changed_wallet_balance),
@@ -165,7 +167,7 @@ class UpdateWalletFragment : Fragment() {
                 )
             } else if (incomeOrExpenseType == -1) {
                 updateWalletViewModel.addOnlyWalletExpenseHistoryRecord(
-                    ExpenseHistory(
+                    ExpenseHistoryEntity(
                         expenseSubGroupId = null,
                         amount = difference.absoluteValue,
                         comment = getString(R.string.changed_wallet_balance),
@@ -200,7 +202,7 @@ class UpdateWalletFragment : Fragment() {
             WindowUtil.showDeleteDialog(
                 context = requireContext(),
                 viewModel = updateWalletViewModel,
-                message = getString(R.string.delete_confirmation_warning_message, walletGlobal?.name),
+                message = getString(R.string.delete_confirmation_warning_message, walletEntityGlobal?.name),
                 isCountdown = true,
                 itemId = it,
                 rootView = binding.root

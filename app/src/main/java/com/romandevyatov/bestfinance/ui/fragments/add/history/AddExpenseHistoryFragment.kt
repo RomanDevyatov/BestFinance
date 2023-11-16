@@ -18,8 +18,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
@@ -243,11 +243,11 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
                     val groupId = groupSpinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
 
-                    val newExpenseSubGroup = ExpenseSubGroup(
+                    val newExpenseSubGroupEntity = ExpenseSubGroupEntity(
                         name = spokenValue!!,
                         expenseGroupId = groupId
                     )
-                    addHistoryViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+                    addHistoryViewModel.insertExpenseSubGroup(newExpenseSubGroupEntity)
                     binding.subGroupSpinner.setText(spokenValue, false)
 
                     spokenValue = null
@@ -329,12 +329,12 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
             if (convertedNumber != null) {
                 if (voicedWalletName != null) {
-                    val newWallet = Wallet(
+                    val newWalletEntity = WalletEntity(
                         name = voicedWalletName!!,
                         balance = convertedNumber,
                         currencyCode = addHistoryViewModel.getDefaultCurrencyCode()
                     )
-                    addHistoryViewModel.insertWallet(newWallet)
+                    addHistoryViewModel.insertWallet(newWalletEntity)
 
                     binding.walletSpinner.setText(voicedWalletName, false)
 
@@ -789,15 +789,15 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun getSpinnerSubItemsNotArchived(groupWithSubGroups: ExpenseGroupWithExpenseSubGroups): MutableList<SpinnerItem> {
-        return groupWithSubGroups.expenseSubGroups.filter {
+        return groupWithSubGroups.expenseSubGroupEntities.filter {
             it.archivedDate == null
         }.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
 
-    private fun getWalletItemsForSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
-        return wallets.map {
+    private fun getWalletItemsForSpinner(walletEntities: List<WalletEntity>): MutableList<SpinnerItem> {
+        return walletEntities.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }

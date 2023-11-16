@@ -132,7 +132,7 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
 
-    <string name="groups_and_sub_groups">Groups and Sub groups</string>
+    <string name="groups_and_sub_groups">Groups and subgroups</string>
     <string name="wallets">Wallets</string>
     <string name="update_expense_group">Update expense group</string>
     <string name="update_income_group">Update income group</string>

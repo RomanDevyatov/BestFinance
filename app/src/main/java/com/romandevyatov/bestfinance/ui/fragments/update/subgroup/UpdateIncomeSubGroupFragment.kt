@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeSubGroupBinding
@@ -214,7 +214,7 @@ class UpdateIncomeSubGroupFragment : Fragment() {
             }
     }
 
-    private fun getIncomeGroupList(groups: List<IncomeGroup>?): ArrayList<SpinnerItem> {
+    private fun getIncomeGroupList(groups: List<IncomeGroupEntity>?): ArrayList<SpinnerItem> {
         val spinnerItems = ArrayList<SpinnerItem>()
 
         groups?.forEach {

@@ -18,8 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.timeFormat
@@ -303,12 +303,12 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
 
         if (spokenValue == null) {
             if (convertedNumber != null) {
-                val newWallet = Wallet(
+                val newWalletEntity = WalletEntity(
                     name = voicedWalletName.toString(),
                     balance = convertedNumber,
                     currencyCode = addTransferViewModel.getDefaultCurrencyCode()
                 )
-                addTransferViewModel.insertWallet(newWallet)
+                addTransferViewModel.insertWallet(newWalletEntity)
 
                 currentStageName = steps[currentStageIndex-1]
                 if (currentStageName == InputState.WALLET_FROM) {
@@ -478,8 +478,8 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getWalletItemsSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
-        return wallets.map {
+    private fun getWalletItemsSpinner(walletEntities: List<WalletEntity>): MutableList<SpinnerItem> {
+        return walletEntities.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
@@ -751,7 +751,7 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
                                             amountTarget: Double,
                                             parsedLocalDateTime: LocalDateTime) {
 
-        val transferHistory = TransferHistory(
+        val transferHistoryEntity = TransferHistoryEntity(
             amount = amount,
             amountTarget = amountTarget,
             amountBase = 0.0,
@@ -761,25 +761,25 @@ class AddTransferFragment : VoiceAssistanceBaseFragment() {
             comment = comment,
             createdDate = LocalDateTime.now()
         )
-        addTransferViewModel.sendAndUpdateBaseAmount(transferHistory)
+        addTransferViewModel.sendAndUpdateBaseAmount(transferHistoryEntity)
     }
 
-    private fun updateWalletTo(walletTo: Wallet, amount: Double) {
-        val updatedWalletToInput = walletTo.input.plus(amount)
-        val updatedWalletToBalance = walletTo.balance.plus(amount)
+    private fun updateWalletTo(walletEntityTo: WalletEntity, amount: Double) {
+        val updatedWalletToInput = walletEntityTo.input.plus(amount)
+        val updatedWalletToBalance = walletEntityTo.balance.plus(amount)
 
-        val updatedWalletTo = walletTo.copy(
+        val updatedWalletTo = walletEntityTo.copy(
             balance = updatedWalletToBalance,
             input = updatedWalletToInput
         )
         walletViewModel.updateWallet(updatedWalletTo)
     }
 
-    private fun updateWalletFrom(walletFrom: Wallet, amount: Double) {
-        val updatedWalletFromOutput = walletFrom.output.plus(amount)
-        val updatedWalletFromBalance = walletFrom.balance.minus(amount)
+    private fun updateWalletFrom(walletEntityFrom: WalletEntity, amount: Double) {
+        val updatedWalletFromOutput = walletEntityFrom.output.plus(amount)
+        val updatedWalletFromBalance = walletEntityFrom.balance.minus(amount)
 
-        val updatedWalletFrom = walletFrom.copy(
+        val updatedWalletFrom = walletEntityFrom.copy(
             balance = updatedWalletFromBalance,
             output = updatedWalletFromOutput
         )

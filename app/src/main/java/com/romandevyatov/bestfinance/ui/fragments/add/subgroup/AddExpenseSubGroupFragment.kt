@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
@@ -114,13 +114,13 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
                 subGroupNameBinding, groupId
             ).observe(viewLifecycleOwner) { subGroup ->
                 if (subGroup == null) {
-                    val newExpenseSubGroup = ExpenseSubGroup(
+                    val newExpenseSubGroupEntity = ExpenseSubGroupEntity(
                         name = subGroupNameBinding,
                         description = descriptionBinding,
                         expenseGroupId = groupId
                     )
 
-                    addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+                    addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroupEntity)
 
                     saveGroupAndSubGroupName(selectedGroupNameBinding, subGroupNameBinding)
                     findNavController().popBackStack(R.id.add_expense_fragment, false)

@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Entity(tableName = "income_sub_group",
     foreignKeys = [
         ForeignKey(
-            entity = IncomeGroup::class,
+            entity = IncomeGroupEntity::class,
             parentColumns = ["id"],
             childColumns = ["income_group_id"],
             onDelete = ForeignKey.CASCADE

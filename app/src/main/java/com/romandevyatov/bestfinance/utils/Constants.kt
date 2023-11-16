@@ -1,6 +1,6 @@
 package com.romandevyatov.bestfinance.utils
 
-import com.romandevyatov.bestfinance.data.entities.Currency
+import com.romandevyatov.bestfinance.data.entities.CurrencyEntity
 
 object Constants {
     const val UNDO_DELAY: Long = 4000L
@@ -58,8 +58,8 @@ object Constants {
         ZAR    South African Rand
     """.trimIndent()
 
-    val supportedCurrencies: List<Currency> = currencyData.lines().map { line ->
+    val supportedCurrencies: List<CurrencyEntity> = currencyData.lines().map { line ->
         val (code, name) = line.trim().split(Regex("\\s+"), 2)
-        Currency(code, name)
+        CurrencyEntity(code, name)
     }
 }

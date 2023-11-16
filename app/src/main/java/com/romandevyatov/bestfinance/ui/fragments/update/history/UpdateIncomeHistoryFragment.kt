@@ -16,10 +16,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter
@@ -53,7 +53,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private var prevGroupSpinnerValueGlobal: String? = null
 
     private lateinit var historyWithSubGroupAndWalletGlobal: IncomeHistoryWithIncomeSubGroupAndWallet
-    private var incomeGroupGlobal: IncomeGroup? = null
+    private var incomeGroupEntityGlobal: IncomeGroupEntity? = null
 
     private val spinnerSubGroupItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
     private var walletSpinnerItemsGlobal: MutableList<SpinnerItem>? = null
@@ -78,14 +78,14 @@ class UpdateIncomeHistoryFragment : Fragment() {
 
                     setupSpinnersValues(
                         it.incomeSubGroup,
-                        it.wallet
+                        it.walletEntity
                     )
 
                     setupSpinners()
 
                     setupDateTimeFiledValues()
 
-                    val incomeHistory = it.incomeHistory
+                    val incomeHistory = it.incomeHistoryEntity
                     binding.reusable.commentEditText.setText(incomeHistory.comment)
 
                     val formattedAmountText = removeTrailingZeros(incomeHistory.amount.toString())
@@ -118,7 +118,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
         WindowUtil.showDeleteDialog(
             context = requireContext(),
             viewModel = updateIncomeHistoryViewModel,
-            message = getString(R.string.delete_confirmation_warning_message, incomeGroupGlobal?.name),
+            message = getString(R.string.delete_confirmation_warning_message, incomeGroupEntityGlobal?.name),
             itemId = args.incomeHistoryId,
             isCountdown = false,
             rootView = binding.root
@@ -126,14 +126,14 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupSpinnersValues(incomeSubGroup: IncomeSubGroup?, wallet: Wallet?) {
+    private fun setupSpinnersValues(incomeSubGroup: IncomeSubGroup?, walletEntity: WalletEntity?) {
         if (incomeSubGroup != null) {
             setSubGroupSpinnerValue(incomeSubGroup)
             setGroupSpinnerValue(incomeSubGroup.incomeGroupId)
         }
 
-        if (wallet != null) {
-            setWalletSpinnerValue(wallet)
+        if (walletEntity != null) {
+            setWalletSpinnerValue(walletEntity)
         }
     }
 
@@ -146,15 +146,15 @@ class UpdateIncomeHistoryFragment : Fragment() {
         updateIncomeHistoryViewModel.getIncomeGroupById(incomeGroupId)
             .observe(viewLifecycleOwner) { incomeGroup ->
                 incomeGroup?.let {
-                    incomeGroupGlobal = it.copy()
+                    incomeGroupEntityGlobal = it.copy()
 
                     binding.reusable.groupSpinner.setText(it.name, false)
                 }
             }
     }
 
-    private fun setWalletSpinnerValue(wallet: Wallet) {
-        binding.reusable.walletSpinner.setText(wallet.name, false)
+    private fun setWalletSpinnerValue(walletEntity: WalletEntity) {
+        binding.reusable.walletSpinner.setText(walletEntity.name, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -272,7 +272,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<IncomeGroup>?): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<IncomeGroupEntity>?): MutableList<SpinnerItem> {
         val spinnerItems: MutableList<SpinnerItem> = mutableListOf()
 
         groups?.forEach { it ->
@@ -282,10 +282,10 @@ class UpdateIncomeHistoryFragment : Fragment() {
         return spinnerItems
     }
 
-    private fun getWalletItemsForSpinner(walletList: List<Wallet>?): MutableList<SpinnerItem> {
+    private fun getWalletItemsForSpinner(walletEntityList: List<WalletEntity>?): MutableList<SpinnerItem> {
         val spinnerItems: MutableList<SpinnerItem> = mutableListOf()
 
-        walletList?.forEach { it ->
+        walletEntityList?.forEach { it ->
             spinnerItems.add(SpinnerItem(it.id, it.name))
         }
 
@@ -368,7 +368,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setDateEditText() {
         val selectedDate = Calendar.getInstance()
         selectedDate.timeInMillis =
-            historyWithSubGroupAndWalletGlobal.incomeHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.incomeHistoryEntity.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
         DateTimeUtils.setupDatePicker(binding.reusable.dateEditText, dateFormat, selectedDate)
     }
 
@@ -376,7 +376,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
     private fun setTimeEditText() {
         val selectedTime = Calendar.getInstance()
         selectedTime.timeInMillis =
-            historyWithSubGroupAndWalletGlobal.incomeHistory.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
+            historyWithSubGroupAndWalletGlobal.incomeHistoryEntity.date?.atZone(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()!!
 
         DateTimeUtils.setupTimePicker(binding.reusable.timeEditText, timeFormat, selectedTime)
     }
@@ -423,9 +423,9 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 val fullDateTime = dateBinding.plus(" ").plus(timeBinding)
                 val parsedLocalDateTime = LocalDateTime.from(LocalDateTimeRoomTypeConverter.dateTimeFormatter.parse(fullDateTime))
 
-                val incomeHistory = historyWithSubGroupAndWalletGlobal.incomeHistory
+                val incomeHistory = historyWithSubGroupAndWalletGlobal.incomeHistoryEntity
 
-                val walletOld = historyWithSubGroupAndWalletGlobal.wallet
+                val walletOld = historyWithSubGroupAndWalletGlobal.walletEntity
                 if (walletOld != null) {
                     val updatedBalanceOld = walletOld.balance - incomeHistory.amount
                     val updatedInputOld = walletOld.input.minus(incomeHistory.amount)
@@ -437,7 +437,7 @@ class UpdateIncomeHistoryFragment : Fragment() {
                 val incomeSubGroupId = spinnerSubGroupItemsGlobal.find { it.name == subGroupNameBinding }?.id
 
                 updateIncomeHistoryViewModel.updateIncomeHistoryAndWallet(
-                    IncomeHistory(
+                    IncomeHistoryEntity(
                         id = incomeHistory.id,
                         incomeSubGroupId = incomeSubGroupId,
                         amount = amountBinding.toDouble(),
@@ -462,20 +462,20 @@ class UpdateIncomeHistoryFragment : Fragment() {
     }
 
     private fun updateOldWallet(
-        wallet: Wallet,
+        walletEntity: WalletEntity,
         updatedBalance: Double,
         updatedInput: Double
     ) {
         updateIncomeHistoryViewModel.updateWallet(
-            Wallet(
-                id = wallet.id,
-                name = wallet.name,
+            WalletEntity(
+                id = walletEntity.id,
+                name = walletEntity.name,
                 balance = updatedBalance,
                 input = updatedInput,
-                output = wallet.output,
-                description = wallet.description,
-                archivedDate = wallet.archivedDate,
-                currencyCode = wallet.currencyCode
+                output = walletEntity.output,
+                description = walletEntity.description,
+                archivedDate = walletEntity.archivedDate,
+                currencyCode = walletEntity.currencyCode
             )
         )
     }

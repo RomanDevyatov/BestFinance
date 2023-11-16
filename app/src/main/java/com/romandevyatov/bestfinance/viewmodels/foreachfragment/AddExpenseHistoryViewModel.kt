@@ -5,9 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.*
 import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
@@ -43,7 +43,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
         val expenseGroupWithExpenseSubGroups = getExpenseGroupWithExpenseSubGroupsByExpenseGroupIdNotArchived(id)
         if (expenseGroupWithExpenseSubGroups != null) {
             val expenseGroup = expenseGroupWithExpenseSubGroups.expenseGroupEntity
-            val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroups
+            val expenseSubGroups = expenseGroupWithExpenseSubGroups.expenseSubGroupEntities
 
             val archivedDate = LocalDateTime.now()
 
@@ -56,7 +56,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
             updateExpenseGroup(expenseGroupEntityArchived)
 
             expenseSubGroups.forEach { subGroup ->
-                val expenseSubGroupArchived = ExpenseSubGroup(
+                val expenseSubGroupEntityArchived = ExpenseSubGroupEntity(
                     id = subGroup.id,
                     name = subGroup.name,
                     description = subGroup.description,
@@ -64,7 +64,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                     archivedDate = archivedDate
                 )
 
-                updateExpenseSubGroup(expenseSubGroupArchived)
+                updateExpenseSubGroup(expenseSubGroupEntityArchived)
             }
         }
     }
@@ -74,8 +74,8 @@ class AddExpenseHistoryViewModel @Inject constructor(
     }
 
     // expense history zone
-    fun insertExpenseHistory(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
-        expenseHistoryRepository.insertExpenseHistory(expenseHistory)
+    fun insertExpenseHistory(expenseHistoryEntity: ExpenseHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseHistoryRepository.insertExpenseHistory(expenseHistoryEntity)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -124,7 +124,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
         amountBase: Double
     ) {
         insertExpenseHistory(
-            ExpenseHistory(
+            ExpenseHistoryEntity(
                 expenseSubGroupId = expenseGroupId,
                 amount = amountBinding,
                 comment = commentBinding,
@@ -136,10 +136,10 @@ class AddExpenseHistoryViewModel @Inject constructor(
         )
     }
 
-    val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+    val walletsNotArchivedLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
 //    @RequiresApi(Build.VERSION_CODES.O)
@@ -170,9 +170,9 @@ class AddExpenseHistoryViewModel @Inject constructor(
 //        }
 //    }
 
-    fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) {
+    fun updateExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroup)
+            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupEntity)
         }
     }
 
@@ -187,7 +187,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
         val expenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByIdNotArchived(id)
 
         if (expenseSubGroup != null) {
-            val expenseSubGroupArchived = ExpenseSubGroup(
+            val expenseSubGroupEntityArchived = ExpenseSubGroupEntity(
                 id = expenseSubGroup.id,
                 name = expenseSubGroup.name,
                 description = expenseSubGroup.description,
@@ -195,7 +195,7 @@ class AddExpenseHistoryViewModel @Inject constructor(
                 archivedDate = LocalDateTime.now()
             )
 
-            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupArchived)
+            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupEntityArchived)
         }
     }
 
@@ -216,21 +216,21 @@ class AddExpenseHistoryViewModel @Inject constructor(
         expenseGroupRepository.insertExpenseGroup(expenseGroupEntity)
     }
 
-    fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroup.name, expenseSubGroup.expenseGroupId)
+    fun insertExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroupEntity.name, expenseSubGroupEntity.expenseGroupId)
 
         if (existingExpenseSubGroup == null) {
-            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroupEntity)
         } else if (existingExpenseSubGroup.archivedDate != null) {
             expenseSubGroupRepository.unarchiveExpenseSubGroup(existingExpenseSubGroup)
         }
     }
 
-    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.insertWallet(wallet)
+    fun insertWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(walletEntity)
     }
 
-    fun getWalletById(id: Long): LiveData<Wallet?> {
+    fun getWalletById(id: Long): LiveData<WalletEntity?> {
         return walletRepository.getWalletByIdLiveData(id)
     }
 

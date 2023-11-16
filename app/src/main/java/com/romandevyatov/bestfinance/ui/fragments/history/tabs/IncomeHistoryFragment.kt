@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.databinding.FragmentIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transactions.HistoryTransactionByDateAdapter
@@ -72,13 +72,13 @@ class IncomeHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        groupViewModel.allIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
-            val incomeGroupMap: Map<Long?, IncomeGroup> = groups.associateBy { it.id }
+        groupViewModel.allEntityIncomeGroupsLiveData.observe(viewLifecycleOwner) { groups ->
+            val incomeGroupEntityMap: Map<Long?, IncomeGroupEntity> = groups.associateBy { it.id }
             incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(
                 viewLifecycleOwner
             ) { allIncomeHistoryWithIncomeGroupAndWallet ->
                 val transactionItems =
-                    convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet, incomeGroupMap)
+                    convertHistoryToIncomeHistoryItemList(allIncomeHistoryWithIncomeGroupAndWallet, incomeGroupEntityMap)
                 val sortedTransactionItems = transactionItems.sortedByDescending { it.date }
                 val groupTransactionsByDate = groupTransactionsByDate(sortedTransactionItems)
                 incomeHistoryAdapter?.submitList(groupTransactionsByDate)
@@ -105,14 +105,14 @@ class IncomeHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun convertHistoryToIncomeHistoryItemList(
         allIncomeHistoryWithIncomeGroupAndWallet: List<IncomeHistoryWithIncomeSubGroupAndWallet>,
-        incomeGroupMap: Map<Long?, IncomeGroup>
+        incomeGroupEntityMap: Map<Long?, IncomeGroupEntity>
     ): MutableList<TransactionItem> {
         val transactionItemList = mutableListOf<TransactionItem>()
 
         for (incomeHistoryWithIncomeSubGroupAndWallet in allIncomeHistoryWithIncomeGroupAndWallet) {
-            val incomeHistory = incomeHistoryWithIncomeSubGroupAndWallet.incomeHistory
+            val incomeHistory = incomeHistoryWithIncomeSubGroupAndWallet.incomeHistoryEntity
             val incomeSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.incomeSubGroup
-            val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
+            val wallet = incomeHistoryWithIncomeSubGroupAndWallet.walletEntity
 
             if (wallet != null) {
                 val formattedAmountText = "+".plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(incomeHistory.amount).toString()))
@@ -124,7 +124,7 @@ class IncomeHistoryFragment : Fragment() {
 
                 val transactionItem = TransactionItem(
                     id = incomeHistory.id,
-                    groupName = incomeGroupMap[incomeSubGroup?.incomeGroupId]?.name ?: "",
+                    groupName = incomeGroupEntityMap[incomeSubGroup?.incomeGroupId]?.name ?: "",
                     subGroupGroupName = incomeSubGroup?.name ?: getString(R.string.changed_balance),
                     amount = formattedAmountText,
                     amountBase = formattedAmountBaseText,

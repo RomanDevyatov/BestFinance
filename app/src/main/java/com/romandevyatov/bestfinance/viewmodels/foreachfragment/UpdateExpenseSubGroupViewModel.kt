@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
@@ -26,13 +26,13 @@ class UpdateExpenseSubGroupViewModel @Inject constructor(
         return expenseGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
     }
 
-    fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) {
+    fun updateExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroup)
+            expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupEntity)
         }
     }
 
-    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroup?> {
+    fun getExpenseSubGroupByIdLiveData(id: Long?): LiveData<ExpenseSubGroupEntity?> {
         return expenseSubGroupRepository.getExpenseSubGroupByIdLiveData(id)
     }
 }

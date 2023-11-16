@@ -3,8 +3,8 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
@@ -29,15 +29,15 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
-    val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+    val walletsNotArchivedLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
     fun getExpenseHistoryWithExpenseSubGroupAndWalletById(expenseHistoryId: Long): LiveData<ExpenseHistoryWithExpenseSubGroupAndWallet?> {
         return expenseHistoryRepository.getExpenseHistoryWithExpenseSubGroupAndWalletByIdLiveData(expenseHistoryId)
     }
 
-    fun updateExpenseHistoryAndWallet(updatedExpenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateExpenseHistoryAndWallet(updatedExpenseHistoryEntity: ExpenseHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val wallet = walletRepository.getWalletByIdAsync(updatedExpenseHistory.walletId)
+            val wallet = walletRepository.getWalletByIdAsync(updatedExpenseHistoryEntity.walletId)
             if (wallet != null) {
                 val defaultCurrencyCode = getDefaultCurrencyCode()
                 val pairName = defaultCurrencyCode + wallet.currencyCode
@@ -45,9 +45,9 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
                     baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
 
                 if (baseCurrencyRate != null) {
-                    val amountBase = updatedExpenseHistory.amount / baseCurrencyRate.value
+                    val amountBase = updatedExpenseHistoryEntity.amount / baseCurrencyRate.value
 
-                    val updatedAmountBaseIncomeHistory = updatedExpenseHistory.copy(
+                    val updatedAmountBaseIncomeHistory = updatedExpenseHistoryEntity.copy(
                         amountBase = amountBase
                     )
                     updateExpenseHistory(updatedAmountBaseIncomeHistory)
@@ -63,9 +63,9 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
         } catch (_: Exception) { }
     }
 
-    fun updateExpenseHistory(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateExpenseHistory(expenseHistoryEntity: ExpenseHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
         expenseHistoryRepository.updateExpenseHistory(
-            expenseHistory
+            expenseHistoryEntity
         )
     }
 
@@ -81,11 +81,11 @@ class UpdateExpenseHistoryViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupByIdLiveData(expenseGroupId)
     }
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch (Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch (Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
-    private var deletedItem: ExpenseHistory? = null
+    private var deletedItem: ExpenseHistoryEntity? = null
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {

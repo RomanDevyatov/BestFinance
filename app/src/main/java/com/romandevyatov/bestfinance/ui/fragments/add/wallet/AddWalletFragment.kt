@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.TwoDigitsAfterPoint
@@ -161,14 +161,14 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
             walletViewModel.getWalletByNameLiveData(walletNameBinding)
                 .observe(viewLifecycleOwner) { wallet ->
                     if (wallet == null) {
-                        val newWallet = Wallet(
+                        val newWalletEntity = WalletEntity(
                             name = walletNameBinding,
                             balance = walletBalanceBinding.toDouble(),
                             description = walletDescriptionBinding,
                             currencyCode = currencyCodeBinding
                         )
 
-                        walletViewModel.insertWallet(newWallet)
+                        walletViewModel.insertWallet(newWalletEntity)
                         sharedModifiedAddWalletFormViewModel.set(null)
                         performNavigation(args.source, walletNameBinding)
                     } else if (wallet.archivedDate == null) {

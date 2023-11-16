@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.ui.fragments.add
 import org.junit.Assert
 import org.junit.Test
 
-class AddIncomeHistoryFragmentTest {
+class AddIncomeHistoryEntityFragmentTest {
 
     @Test
     fun isCorrect() {

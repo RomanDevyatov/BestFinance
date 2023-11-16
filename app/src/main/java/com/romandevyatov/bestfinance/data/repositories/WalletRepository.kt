@@ -2,41 +2,41 @@ package com.romandevyatov.bestfinance.data.repositories
 
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.WalletDao
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WalletRepository @Inject constructor(
-    private val walletDao: WalletDao
-) {
+class WalletRepository
+@Inject
+constructor(private val walletDao: WalletDao) {
 
-    fun getAllWalletLiveData(): LiveData<List<Wallet>> = walletDao.getAllLiveData()
+    fun getAllWalletLiveData(): LiveData<List<WalletEntity>> = walletDao.getAllLiveData()
 
-    fun getAllWalletsNotArchivedLiveData(): LiveData<List<Wallet>> = walletDao.getAllNotArchivedLiveData()
+    fun getAllWalletsNotArchivedLiveData(): LiveData<List<WalletEntity>> = walletDao.getAllNotArchivedLiveData()
 
-    suspend fun insertWallet(wallet: Wallet) {
-        walletDao.insert(wallet)
+    suspend fun insertWallet(walletEntity: WalletEntity) {
+        walletDao.insert(walletEntity)
     }
 
-    suspend fun updateWallet(wallet: Wallet) {
-        walletDao.update(wallet)
+    suspend fun updateWallet(walletEntity: WalletEntity) {
+        walletDao.update(walletEntity)
     }
 
-    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<Wallet?> {
+    fun getWalletByNameNotArchivedLiveData(walletName: String): LiveData<WalletEntity?> {
         return walletDao.getByNameNotArchivedLiveData(walletName)
     }
 
-    fun getWalletByNameNotArchived(walletName: String): Wallet? {
+    fun getWalletByNameNotArchived(walletName: String): WalletEntity? {
         return walletDao.getByNameNotArchived(walletName)
     }
 
-    suspend fun getWalletByIdAsync(id: Long?): Wallet? {
+    suspend fun getWalletByIdAsync(id: Long?): WalletEntity? {
         return walletDao.getById(id)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet?> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<WalletEntity?> {
         return walletDao.getByNameLiveData(walletName)
     }
 
@@ -52,7 +52,7 @@ class WalletRepository @Inject constructor(
         walletDao.updateArchivedDateById(id, date)
     }
 
-    fun getWalletByIdLiveData(id: Long): LiveData<Wallet?> {
+    fun getWalletByIdLiveData(id: Long): LiveData<WalletEntity?> {
         return walletDao.getByIdLiveData(id)
     }
 }

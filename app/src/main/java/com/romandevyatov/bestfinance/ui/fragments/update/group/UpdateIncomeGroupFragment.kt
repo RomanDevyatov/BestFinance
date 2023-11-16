@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
 import com.romandevyatov.bestfinance.utils.BackStackLogger
@@ -40,7 +40,7 @@ class UpdateIncomeGroupFragment : Fragment() {
 
     private var incomeGroupId: Long? = null
 
-    private var incomeGroupGlobal: IncomeGroup? = null
+    private var incomeGroupEntityGlobal: IncomeGroupEntity? = null
 
     private var isButtonClickable = true
 
@@ -57,7 +57,7 @@ class UpdateIncomeGroupFragment : Fragment() {
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
             .observe(viewLifecycleOwner) { incomeGroup ->
                 incomeGroup?.let {
-                    incomeGroupGlobal = it.copy()
+                    incomeGroupEntityGlobal = it.copy()
                     binding.reusable.groupNameInputEditText.setText(it.name)
                     binding.reusable.groupDescriptionInputEditText.setText(it.description)
                     incomeGroupId = it.id
@@ -131,15 +131,15 @@ class UpdateIncomeGroupFragment : Fragment() {
         descriptionBinding: String,
         isPassiveBinding: Boolean
     ) {
-        val updatedIncomeGroup = IncomeGroup(
+        val updatedIncomeGroupEntity = IncomeGroupEntity(
             id = incomeGroupId,
             name = nameBinding,
             isPassive = isPassiveBinding,
             description = descriptionBinding,
-            archivedDate = incomeGroupGlobal?.archivedDate
+            archivedDate = incomeGroupEntityGlobal?.archivedDate
         )
 
-        updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroup)
+        updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroupEntity)
     }
 
     override fun onDestroyView() {

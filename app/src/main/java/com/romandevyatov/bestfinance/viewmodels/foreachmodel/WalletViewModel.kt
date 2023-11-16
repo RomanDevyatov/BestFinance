@@ -2,7 +2,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
@@ -20,32 +20,32 @@ class WalletViewModel @Inject constructor(
 
     val currentDefaultCurrencyCode: String = getDefaultCurrencyCode()
 
-    val allWalletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+    val allWalletsNotArchivedLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.insertWallet(wallet)
+    fun insertWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(walletEntity)
     }
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet?> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<WalletEntity?> {
         return walletRepository.getWalletByNameLiveData(walletName)
     }
 
-    fun unarchiveWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val updatedWallet = Wallet(
-            id = wallet.id,
-            name = wallet.name,
-            description = wallet.description,
-            balance = wallet.balance,
-            input = wallet.input,
-            output = wallet.output,
+    fun unarchiveWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val updatedWalletEntity = WalletEntity(
+            id = walletEntity.id,
+            name = walletEntity.name,
+            description = walletEntity.description,
+            balance = walletEntity.balance,
+            input = walletEntity.input,
+            output = walletEntity.output,
             archivedDate = null,
-            currencyCode = wallet.currencyCode
+            currencyCode = walletEntity.currencyCode
         )
-        updateWallet(updatedWallet)
+        updateWallet(updatedWalletEntity)
     }
 
     fun archiveWalletById(id: Long?, date: LocalDateTime) = viewModelScope.launch(Dispatchers.IO) {

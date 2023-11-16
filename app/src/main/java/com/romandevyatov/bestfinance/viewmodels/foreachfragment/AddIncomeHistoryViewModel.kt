@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.repositories.*
 import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
@@ -31,7 +31,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
 ) : BaseViewModel(storage) {
 
     // income group zone
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroupEntity>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 
@@ -39,8 +39,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(name)
     }
 
-    fun insertIncomeGroup(incomeGroup: IncomeGroup) = viewModelScope.launch(Dispatchers.IO) {
-        incomeGroupRepository.insertIncomeGroup(incomeGroup)
+    fun insertIncomeGroup(incomeGroupEntity: IncomeGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        incomeGroupRepository.insertIncomeGroup(incomeGroupEntity)
     }
 
     fun insertIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
@@ -53,27 +53,27 @@ class AddIncomeHistoryViewModel @Inject constructor(
         }
     }
 
-    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.insertWallet(wallet)
+    fun insertWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(walletEntity)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveIncomeGroup(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         val incomeGroupWithIncomeSubGroups = getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdNotArchived(id)
         if (incomeGroupWithIncomeSubGroups != null) {
-            val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroup
+            val incomeGroup = incomeGroupWithIncomeSubGroups.incomeGroupEntity
             val incomeSubGroups = incomeGroupWithIncomeSubGroups.incomeSubGroups
 
             val archivedDate = LocalDateTime.now()
 
-            val incomeGroupArchived = IncomeGroup(
+            val incomeGroupEntityArchived = IncomeGroupEntity(
                 id = incomeGroup.id,
                 name = incomeGroup.name,
                 isPassive = incomeGroup.isPassive,
                 description = incomeGroup.description,
                 archivedDate = archivedDate
             )
-            updateIncomeGroup(incomeGroupArchived)
+            updateIncomeGroup(incomeGroupEntityArchived)
 
             incomeSubGroups.forEach { subGroup ->
                 val incomeSubGroupArchived = IncomeSubGroup(
@@ -94,8 +94,8 @@ class AddIncomeHistoryViewModel @Inject constructor(
     }
 
     // income history zone
-    private fun insertIncomeHistory(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.insertIncomeHistory(incomeHistory)
+    private fun insertIncomeHistory(incomeHistoryEntity: IncomeHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        incomeHistoryRepository.insertIncomeHistory(incomeHistoryEntity)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -145,7 +145,7 @@ class AddIncomeHistoryViewModel @Inject constructor(
         walletId: Long,
         amountBase: Double) {
         insertIncomeHistory(
-            IncomeHistory(
+            IncomeHistoryEntity(
                 incomeSubGroupId = incomeSubGroupId,
                 amount = amountBinding,
                 comment = commentBinding,
@@ -157,14 +157,14 @@ class AddIncomeHistoryViewModel @Inject constructor(
         )
     }
 
-    fun getWalletById(id: Long): LiveData<Wallet?> {
+    fun getWalletById(id: Long): LiveData<WalletEntity?> {
         return walletRepository.getWalletByIdLiveData(id)
     }
 
-    val walletsNotArchivedLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletsNotArchivedLiveData()
+    val walletsNotArchivedLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletsNotArchivedLiveData()
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
 //    @RequiresApi(Build.VERSION_CODES.O)
@@ -199,9 +199,9 @@ class AddIncomeHistoryViewModel @Inject constructor(
         }
     }
 
-    fun updateIncomeGroup(incomeGroupArchived: IncomeGroup) {
+    fun updateIncomeGroup(incomeGroupEntityArchived: IncomeGroupEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            incomeGroupRepository.updateIncomeGroup(incomeGroupArchived)
+            incomeGroupRepository.updateIncomeGroup(incomeGroupEntityArchived)
         }
     }
 

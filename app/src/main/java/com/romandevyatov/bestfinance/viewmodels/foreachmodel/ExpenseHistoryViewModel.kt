@@ -1,7 +1,7 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseHistoryWithExpenseSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
@@ -17,7 +17,7 @@ class ExpenseHistoryViewModel @Inject constructor(
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
-    val expenseHistoryListLiveData: LiveData<List<ExpenseHistory>> = expenseHistoryRepository.getAllExpenseHistoryLiveData()
+    val expenseHistoryEntityListLiveData: LiveData<List<ExpenseHistoryEntity>> = expenseHistoryRepository.getAllExpenseHistoryLiveData()
 
     val allExpenseHistoryWithExpenseGroupAndWalletLiveData: LiveData<List<ExpenseHistoryWithExpenseSubGroupAndWallet>> = expenseHistoryRepository.getAllExpenseHistoryWithExpenseGroupAndWallet()
 

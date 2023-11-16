@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
         Index(value = ["pair_name"], unique = true)
     ]
 )
-data class BaseCurrencyRate (
+data class BaseCurrencyRateEntity (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

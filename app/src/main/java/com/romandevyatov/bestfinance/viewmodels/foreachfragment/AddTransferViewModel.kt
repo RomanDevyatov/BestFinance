@@ -4,9 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.BaseCurrencyRate
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.BaseCurrencyRateEntity
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.BaseCurrencyRatesRepository
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
@@ -16,7 +16,6 @@ import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -34,24 +33,24 @@ class AddTransferViewModel @Inject constructor(
         walletRepository.archiveWalletById(id, LocalDateTime.now())
     }
 
-    fun insertWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.insertWallet(wallet)
+    fun insertWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.insertWallet(walletEntity)
     }
 
-    fun insertTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.insertTransferHistory(transferHistory)
+    fun insertTransferHistory(transferHistoryEntity: TransferHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        transferHistoryRepository.insertTransferHistory(transferHistoryEntity)
     }
 
-    fun getWalletByIdLiveData(id: Long): LiveData<Wallet?> {
+    fun getWalletByIdLiveData(id: Long): LiveData<WalletEntity?> {
         return walletRepository.getWalletByIdLiveData(id)
     }
 
-    suspend fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRate? {
+    suspend fun getBaseCurrencyRateByPairName(pairName: String): BaseCurrencyRateEntity? {
         return baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
     }
 
-    fun sendAndUpdateBaseAmount(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletByIdAsync(transferHistory.fromWalletId)
+    fun sendAndUpdateBaseAmount(transferHistoryEntity: TransferHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val wallet = walletRepository.getWalletByIdAsync(transferHistoryEntity.fromWalletId)
         wallet?.let {
             val defaultCurrencyCode =
                 getDefaultCurrencyCode()
@@ -61,30 +60,30 @@ class AddTransferViewModel @Inject constructor(
                     pairName
                 )
             if (baseCurrencyRate != null) {
-                val amountBase = transferHistory.amount / baseCurrencyRate.value // in usd
+                val amountBase = transferHistoryEntity.amount / baseCurrencyRate.value // in usd
 
-                insertTransferHistory(transferHistory.copy(
+                insertTransferHistory(transferHistoryEntity.copy(
                     amountBase = amountBase
                 ))
             }
         }
     }
 
-    suspend fun getWalletById(id: Long?): Wallet? = withContext(Dispatchers.IO) {
+    suspend fun getWalletById(id: Long?): WalletEntity? = withContext(Dispatchers.IO) {
             walletRepository.getWalletByIdAsync(id)
     }
 
     suspend fun calculateTransferAmount(
         amount: Double,
-        fromWallet: Wallet?,
-        toWallet: Wallet?
+        fromWalletEntity: WalletEntity?,
+        toWalletEntity: WalletEntity?
     ): Double = withContext(Dispatchers.IO) {
-        fromWallet?.let { fromWlt ->
+        fromWalletEntity?.let { fromWlt ->
             val defaultCurrencyCode = getDefaultCurrencyCode()
             val pairName = defaultCurrencyCode + fromWlt.currencyCode
             val baseCurrencyRate = getBaseCurrencyRateByPairNameAsync(pairName)
 
-            toWallet?.let { toWlt ->
+            toWalletEntity?.let { toWlt ->
                 val pairName2 = defaultCurrencyCode + toWlt.currencyCode
                 val baseCurrencyRateTarget = getBaseCurrencyRateByPairNameAsync(pairName2)
 
@@ -100,7 +99,7 @@ class AddTransferViewModel @Inject constructor(
         } ?: 0.0
     }
 
-    suspend fun getBaseCurrencyRateByPairNameAsync(pairName: String): BaseCurrencyRate? {
+    suspend fun getBaseCurrencyRateByPairNameAsync(pairName: String): BaseCurrencyRateEntity? {
         return withContext(Dispatchers.IO) {
             baseCurrencyRatesRepository.getBaseCurrencyRateByPairName(pairName)
         }

@@ -9,16 +9,16 @@ import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTyp
 
 @Database(
     entities = [
-        IncomeGroup::class,
+        IncomeGroupEntity::class,
         ExpenseGroupEntity::class,
         IncomeSubGroup::class,
-        ExpenseSubGroup::class,
-        Wallet::class,
-        IncomeHistory::class,
-        ExpenseHistory::class,
-        TransferHistory::class,
-        Currency::class,
-        BaseCurrencyRate::class
+        ExpenseSubGroupEntity::class,
+        WalletEntity::class,
+        IncomeHistoryEntity::class,
+        ExpenseHistoryEntity::class,
+        TransferHistoryEntity::class,
+        CurrencyEntity::class,
+        BaseCurrencyRateEntity::class
     ],
     version = 41,
     exportSchema = true

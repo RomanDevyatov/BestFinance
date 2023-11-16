@@ -110,9 +110,9 @@ class ExpenseHistoryFragment : Fragment() {
         val transactionItemList = mutableListOf<TransactionItem>()
 
         for (incomeHistoryWithIncomeSubGroupAndWallet in allExpenseHistoryWithExpenseGroupAndWallet) {
-            val expenseHistory = incomeHistoryWithIncomeSubGroupAndWallet.expenseHistory
-            val expenseSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.expenseSubGroup
-            val wallet = incomeHistoryWithIncomeSubGroupAndWallet.wallet
+            val expenseHistory = incomeHistoryWithIncomeSubGroupAndWallet.expenseHistoryEntity
+            val expenseSubGroup = incomeHistoryWithIncomeSubGroupAndWallet.expenseSubGroupEntity
+            val wallet = incomeHistoryWithIncomeSubGroupAndWallet.walletEntity
 
             if (wallet != null) {
                 val formattedAmountText = "-".plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(expenseHistory.amount).toString()))

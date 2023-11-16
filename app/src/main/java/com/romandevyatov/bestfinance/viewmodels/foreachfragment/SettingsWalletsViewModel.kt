@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
@@ -22,10 +22,10 @@ class SettingsWalletsViewModel @Inject constructor(
 
     val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
-    val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
+    val allWalletsLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletLiveData()
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
     fun unarchiveWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -44,12 +44,12 @@ class SettingsWalletsViewModel @Inject constructor(
         }
     }
 
-    private var deletedWalletItem: Wallet? = null
+    private var deletedWalletItemEntity: WalletEntity? = null
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {
             val itemToDelete = walletRepository.getWalletByIdAsync(id)
-            deletedWalletItem = itemToDelete
+            deletedWalletItemEntity = itemToDelete
             walletRepository.deleteWalletById(id)
         } catch (_: Exception) {
 
@@ -57,10 +57,10 @@ class SettingsWalletsViewModel @Inject constructor(
     }
 
     fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
-        deletedWalletItem?.let { walletToRestore ->
+        deletedWalletItemEntity?.let { walletToRestore ->
             try {
                 walletRepository.insertWallet(walletToRestore)
-                deletedWalletItem = null
+                deletedWalletItemEntity = null
             } catch (_: Exception) { }
         }
     }

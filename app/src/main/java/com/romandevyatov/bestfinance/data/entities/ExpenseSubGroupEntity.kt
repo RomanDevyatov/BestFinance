@@ -16,7 +16,7 @@ import java.time.LocalDateTime
         )
     ]
 )
-data class ExpenseSubGroup(
+data class ExpenseSubGroupEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

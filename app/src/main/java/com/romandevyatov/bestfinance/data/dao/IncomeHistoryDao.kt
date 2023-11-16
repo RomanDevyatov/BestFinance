@@ -8,26 +8,26 @@ import androidx.room.Delete
 import androidx.room.Update
 import androidx.room.Query
 import androidx.room.Transaction
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 
 @Dao
 interface IncomeHistoryDao {
 
     @Query("SELECT * FROM income_history order by id ASC")
-    fun getAllLivedata(): LiveData<List<IncomeHistory>>
+    fun getAllLivedata(): LiveData<List<IncomeHistoryEntity>>
 
     @Query("SELECT * FROM income_history order by id ASC")
-    suspend fun getAll(): List<IncomeHistory>
+    suspend fun getAll(): List<IncomeHistoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(incomeHistory: IncomeHistory)
+    suspend fun insert(incomeHistoryEntity: IncomeHistoryEntity)
 
     @Delete
-    suspend fun delete(incomeHistory: IncomeHistory)
+    suspend fun delete(incomeHistoryEntity: IncomeHistoryEntity)
 
     @Update
-    suspend fun update(incomeHistory: IncomeHistory)
+    suspend fun update(incomeHistoryEntity: IncomeHistoryEntity)
 
     @Query("DELETE FROM income_history")
     suspend fun deleteAll()
@@ -44,11 +44,11 @@ interface IncomeHistoryDao {
     fun getWithIncomeSubGroupAndWalletByIdLiveData(id: Long): LiveData<IncomeHistoryWithIncomeSubGroupAndWallet?>
 
     @Query("SELECT * FROM income_history WHERE id = :id LIMIT 1")
-    fun getByIdLiveData(id: Long): LiveData<IncomeHistory?>
+    fun getByIdLiveData(id: Long): LiveData<IncomeHistoryEntity?>
 
     @Query("SELECT * FROM income_history WHERE income_sub_group_id IS NULL")
-    fun getWhereSubGroupIdIsNullLiveData(): LiveData<List<IncomeHistory>>
+    fun getWhereSubGroupIdIsNullLiveData(): LiveData<List<IncomeHistoryEntity>>
 
     @Query("SELECT * FROM income_history WHERE id = :id")
-    fun getById(id: Long): IncomeHistory?
+    fun getById(id: Long): IncomeHistoryEntity?
 }

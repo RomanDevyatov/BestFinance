@@ -61,9 +61,9 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                     }.toMutableList()
 
                     SettingsGroupWithSubGroupsItem(
-                        groups.incomeGroup.id,
-                        groups.incomeGroup.name,
-                        groups.incomeGroup.archivedDate == null,
+                        groups.incomeGroupEntity.id,
+                        groups.incomeGroupEntity.name,
+                        groups.incomeGroupEntity.archivedDate == null,
                         settingsSubGroupItems
                     )
                 } ?: emptyList()

@@ -23,7 +23,7 @@ import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.ExchangeRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.HomeViewModel
-import com.romandevyatov.bestfinance.viewmodels.foreachfragment.RatesViewModel
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.BaseCurrencyRatesViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.ExpenseHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.IncomeHistoryViewModel
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
     private val incomeHistoryViewModel: IncomeHistoryViewModel by viewModels()
     private val expenseHistoryViewModel: ExpenseHistoryViewModel by viewModels()
     private val exchangeRatesViewModel: ExchangeRatesViewModel by viewModels()
-    private val ratesViewModel: RatesViewModel by viewModels()
+    private val baseCurrencyRatesViewModel: BaseCurrencyRatesViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -81,10 +81,10 @@ class HomeFragment : Fragment() {
 
         exchangeRatesViewModel.exchangeRates.observe(viewLifecycleOwner) { ratesMap ->
             ratesMap.let { rates ->
-                val ratesToSave = ratesViewModel.mapToBaseCurrencyExchangeRates(rates)
+                val ratesToSave = baseCurrencyRatesViewModel.mapToBaseCurrencyExchangeRates(rates)
 
-                ratesViewModel.deleteAll()
-                ratesViewModel.insertAllBaseCurrencyRates(ratesToSave)
+                baseCurrencyRatesViewModel.deleteAll()
+                baseCurrencyRatesViewModel.insertAllBaseCurrencyRates(ratesToSave)
             }
         }
 
@@ -110,14 +110,14 @@ class HomeFragment : Fragment() {
             binding.totalCapitalTextView.text = totalCapitalText
 
             incomeHistoryViewModel.allIncomeHistoryWithIncomeSubGroupAndWalletLiveData.observe(viewLifecycleOwner) { incomeHistoryWithIncomeSubGroupAndWallets ->
-                homeViewModel.incomeGroupsLiveData.observe(viewLifecycleOwner) { incomeGroups ->
+                homeViewModel.incomeGroupsLiveDataEntity.observe(viewLifecycleOwner) { incomeGroups ->
                     val passiveIncomeValue = incomeHistoryWithIncomeSubGroupAndWallets
                         .filter { historyWithSubGroupAndWallets ->
                             incomeGroups.find {
                                 it.id == historyWithSubGroupAndWallets.incomeSubGroup?.incomeGroupId
                             }?.isPassive ?: false
                         }
-                        .sumOf { it.incomeHistory.amountBase }
+                        .sumOf { it.incomeHistoryEntity.amountBase }
 
                     val passiveIncomeText =
                         removeTrailingZeros(passiveIncomeValue.toString()).plus(homeViewModel.getDefaultCurrencySymbol())
@@ -125,12 +125,12 @@ class HomeFragment : Fragment() {
                     binding.passiveIncomeValueTextView.text = passiveIncomeText
                 }
 
-                val totalIncomeValue = roundDoubleToTwoDecimalPlaces(incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistory.amountBase })
+                val totalIncomeValue = roundDoubleToTwoDecimalPlaces(incomeHistoryWithIncomeSubGroupAndWallets.sumOf { it.incomeHistoryEntity.amountBase })
                 val totalIncomeText = removeTrailingZeros(totalIncomeValue.toString()) + homeViewModel.getDefaultCurrencySymbol()
                 Log.d("HomeFragment", "totalIncomeText: $totalIncomeText")
                 binding.totalIncomeValueTextView.text = totalIncomeText
 
-                expenseHistoryViewModel.expenseHistoryListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
+                expenseHistoryViewModel.expenseHistoryEntityListLiveData.observe(viewLifecycleOwner) { expenseHistoryList ->
                     expenseHistoryList?.let { histories ->
                         val totalExpensesValue = roundDoubleToTwoDecimalPlaces(histories.sumOf { it.amountBase })
                         val totalExpensesText = removeTrailingZeros(totalExpensesValue.toString()) + homeViewModel.getDefaultCurrencySymbol()

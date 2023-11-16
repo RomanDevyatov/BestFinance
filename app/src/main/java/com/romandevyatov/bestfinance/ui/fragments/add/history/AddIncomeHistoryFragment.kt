@@ -17,9 +17,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
@@ -189,7 +189,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertIncomeGroup(
-                        IncomeGroup(
+                        IncomeGroupEntity(
                             name = spokenValue!!,
                             isPassive = false
                         )
@@ -330,12 +330,12 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
             if (convertedNumber != null) {
                 if (voicedWalletName != null) {
-                    val newWallet = Wallet(
+                    val newWalletEntity = WalletEntity(
                         name = voicedWalletName!!,
                         balance = convertedNumber,
                         currencyCode = addHistoryViewModel.getDefaultCurrencyCode()
                     )
-                    addHistoryViewModel.insertWallet(newWallet)
+                    addHistoryViewModel.insertWallet(newWalletEntity)
 
                     binding.walletSpinner.setText(voicedWalletName, false)
 
@@ -783,7 +783,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<IncomeGroup>): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<IncomeGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
@@ -797,8 +797,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         }.toMutableList()
     }
 
-    private fun getWalletItemsForSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
-        return wallets.map {
+    private fun getWalletItemsForSpinner(walletEntities: List<WalletEntity>): MutableList<SpinnerItem> {
+        return walletEntities.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }

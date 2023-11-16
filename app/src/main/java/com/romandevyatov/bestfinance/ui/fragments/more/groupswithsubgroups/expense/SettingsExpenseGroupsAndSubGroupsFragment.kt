@@ -51,7 +51,7 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData
             .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
                 val settingsGroupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
-                    val settingsSubGroupItems = groups.expenseSubGroups.map {
+                    val settingsSubGroupItems = groups.expenseSubGroupEntities.map {
                         SettingsSubGroupItem(
                             it.id!!,
                             it.name,

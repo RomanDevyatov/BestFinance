@@ -13,7 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeGroupBinding
 import com.romandevyatov.bestfinance.utils.BackStackLogger
@@ -175,7 +175,7 @@ class AddIncomeGroupFragment : VoiceAssistanceBaseFragment() {
                 .observe(viewLifecycleOwner) { incomeGroup ->
                     if (incomeGroup == null) {
                         addGroupViewModel.insertIncomeGroup(
-                            IncomeGroup(
+                            IncomeGroupEntity(
                                 name = groupNameBinding,
                                 description = groupDescriptionBinding,
                                 isPassive = isPassiveBinding
