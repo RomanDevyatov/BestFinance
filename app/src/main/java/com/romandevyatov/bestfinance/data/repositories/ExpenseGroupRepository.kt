@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ExpenseGroupRepository @Inject constructor(
-    private val expenseGroupDao: ExpenseGroupDao
-) {
+class ExpenseGroupRepository
+@Inject
+constructor(private val expenseGroupDao: ExpenseGroupDao) {
 
     fun getAllExpenseGroupsLiveData(): LiveData<List<ExpenseGroupEntity>> = expenseGroupDao.getAllExpenseGroupsLiveData()
 
