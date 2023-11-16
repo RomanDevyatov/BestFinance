@@ -7,42 +7,48 @@ import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
 @Entity(
-    tableName = "expense_history",
+    tableName = "transfer_history",
     foreignKeys = [
         ForeignKey(
-            entity = ExpenseSubGroup::class,
-            parentColumns = ["id"], // ExpenseSubGroup
-            childColumns = ["expense_sub_group_id"], // in ExpenseHistory
+            entity = WalletEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["from_wallet_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = Wallet::class,
-            parentColumns = ["id"], // Wallet
-            childColumns = ["wallet_id"], // in ExpenseHistory
+            entity = WalletEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["to_wallet_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-class ExpenseHistory(
+data class TransferHistoryEntity (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long? = null,
 
-    @ColumnInfo(name = "expense_sub_group_id")
-    val expenseSubGroupId: Long?,
-
     @ColumnInfo(name = "amount")
     val amount: Double,
 
-    @ColumnInfo(name = "comment")
-    val comment: String? = null,
+    @ColumnInfo(name = "amount_target")
+    val amountTarget: Double,
+
+    @ColumnInfo(name = "amount_base")
+    val amountBase: Double,
+
+    @ColumnInfo(name = "from_wallet_id")
+    val fromWalletId: Long,
+
+    @ColumnInfo(name = "to_wallet_id")
+    val toWalletId: Long,
 
     @ColumnInfo(name = "date")
     val date: LocalDateTime? = null,
 
-    @ColumnInfo(name = "wallet_id")
-    val walletId: Long,
+    @ColumnInfo(name = "comment")
+    val comment: String? = null,
 
     @ColumnInfo(name = "archived_date")
     val archivedDate: LocalDateTime? = null,

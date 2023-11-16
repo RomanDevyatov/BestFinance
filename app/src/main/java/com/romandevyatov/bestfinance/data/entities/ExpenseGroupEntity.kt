@@ -11,7 +11,7 @@ import java.time.LocalDateTime
     indices = [Index(value = ["name"], unique = true)]
 )
 
-data class ExpenseGroup(
+data class ExpenseGroupEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -7,9 +7,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IncomeSubGroupRepository @Inject constructor(
-    private val incomeSubGroupDao: IncomeSubGroupDao
-) {
+class IncomeSubGroupRepository
+@Inject
+constructor(private val incomeSubGroupDao: IncomeSubGroupDao) {
 
     fun getAllIncomeSubGroups(): LiveData<List<IncomeSubGroup>> = incomeSubGroupDao.getAll()
 

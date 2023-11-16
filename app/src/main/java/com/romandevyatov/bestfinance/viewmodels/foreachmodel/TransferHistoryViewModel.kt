@@ -1,29 +1,21 @@
 package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.relations.IncomeHistoryWithIncomeSubGroupAndWallet
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.data.repositories.TransferHistoryRepository
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransferHistoryViewModel @Inject constructor(
-    private val transferHistoryRepository: TransferHistoryRepository
-) : ViewModel() {
+    storage: Storage,
+    transferHistoryRepository: TransferHistoryRepository
+) : BaseViewModel(storage) {
 
-    val allTransferHistoriesLiveData: LiveData<List<TransferHistory>> = transferHistoryRepository.getAllTransferHistories()
-
-    fun insertTransferHistory(transferHistory: TransferHistory) = viewModelScope.launch(Dispatchers.IO) {
-        transferHistoryRepository.insertTransferHistory(transferHistory)
-    }
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
     val allTransferHistoryWithWalletsLiveData: LiveData<List<TransferHistoryWithWallets>> = transferHistoryRepository.getAllTransferHistoryWithWalletsLiveData()
-
 
 }

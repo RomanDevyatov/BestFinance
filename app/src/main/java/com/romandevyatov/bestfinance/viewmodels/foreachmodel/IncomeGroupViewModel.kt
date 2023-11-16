@@ -2,7 +2,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,9 +12,9 @@ class IncomeGroupViewModel @Inject constructor(
     private val incomeGroupRepository: IncomeGroupRepository
 ) : ViewModel() {
 
-    val allIncomeGroupsLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllLiveData()
+    val allEntityIncomeGroupsLiveData: LiveData<List<IncomeGroupEntity>> = incomeGroupRepository.getAllIncomeGroupsLiveData()
 
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroupEntity>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 

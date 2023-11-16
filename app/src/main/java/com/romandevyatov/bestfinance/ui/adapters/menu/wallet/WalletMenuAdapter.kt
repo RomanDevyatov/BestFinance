@@ -1,19 +1,17 @@
 package com.romandevyatov.bestfinance.ui.adapters.menu.wallet
 
-import android.annotation.SuppressLint
-import android.text.Layout
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.CardItemWalletBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
-import com.romandevyatov.bestfinance.utils.Constants
 
 class WalletMenuAdapter(
     private val listener: ItemClickListener,
@@ -57,6 +55,7 @@ class WalletMenuAdapter(
                 centeredTextView.text = wallet.name
                 centeredTextView.gravity = Gravity.CENTER
                 centeredTextView.textSize = 28f
+                centeredTextView.setPadding(0, 18, 0, 18)
 
                 linearLayout.addView(centeredTextView)
 

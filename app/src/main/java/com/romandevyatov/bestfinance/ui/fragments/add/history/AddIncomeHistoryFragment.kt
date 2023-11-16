@@ -16,11 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
@@ -32,6 +31,7 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
@@ -55,7 +55,6 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
     private val addHistoryViewModel: AddIncomeHistoryViewModel by viewModels()
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
-    private val args: AddIncomeHistoryFragmentArgs by navArgs()
 
     private val groupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
     private val subGroupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
@@ -94,6 +93,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
         handler = Handler(Looper.getMainLooper())
 
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -102,6 +103,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.amountEditText.addGenericTextWatcher()
+
+        binding.currencyEditText.setText(addHistoryViewModel.getDefaultCurrencyCode())
 
         setOnBackPressedCallback()
 
@@ -155,7 +158,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun handleUserInput(handledSpokenValue: String, currentStage: InputState) {
-        when (currentStageName) {
+        when (currentStage) {
             InputState.GROUP -> handleGroupInput(handledSpokenValue)
             InputState.SUB_GROUP -> handleSubGroupInput(handledSpokenValue)
             InputState.WALLET -> handleWalletInput(handledSpokenValue)
@@ -186,7 +189,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertIncomeGroup(
-                        IncomeGroup(
+                        IncomeGroupEntity(
                             name = spokenValue!!,
                             isPassive = false
                         )
@@ -327,11 +330,12 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
             if (convertedNumber != null) {
                 if (voicedWalletName != null) {
-                    val newWallet = Wallet(
+                    val newWalletEntity = WalletEntity(
                         name = voicedWalletName!!,
-                        balance = convertedNumber
+                        balance = convertedNumber,
+                        currencyCode = addHistoryViewModel.getDefaultCurrencyCode()
                     )
-                    addHistoryViewModel.insertWallet(newWallet)
+                    addHistoryViewModel.insertWallet(newWalletEntity)
 
                     binding.walletSpinner.setText(voicedWalletName, false)
 
@@ -411,7 +415,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     private fun handleConfirmInput(handledSpokenValue: String) {
         when (handledSpokenValue.lowercase()) {
             getString(R.string.yes) -> { // sent
-                sendIncomeHistory()
+                saveIncomeHistory()
                 speakText(getString(R.string.history_added))
             }
             getString(R.string.no) -> { // no
@@ -426,7 +430,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+                navigateToHome()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -457,7 +461,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            sendIncomeHistory()
+            saveIncomeHistory()
 
             handler.postDelayed({
                 isButtonClickable = true
@@ -467,11 +471,11 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendIncomeHistory() {
-        val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+    private fun saveIncomeHistory() {
+        val subGroupNameBinding = binding.subGroupSpinner.text.toString().trim()
         val amountBinding = binding.amountEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
-        val walletNameBinding = binding.walletSpinner.text.toString()
+        val walletNameBinding = binding.walletSpinner.text.toString().trim()
         val dateBinding = binding.dateEditText.text.toString().trim()
         val timeBinding = binding.timeEditText.text.toString().trim()
 
@@ -520,11 +524,11 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun navigateToHome() {
-        findNavController().navigate(R.id.action_navigation_add_income_to_navigation_home)
+        findNavController().popBackStack(R.id.home_fragment, false)
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
-        addHistoryViewModel.getAllIncomeGroupNotArchived()
+        addHistoryViewModel.getAllIncomeGroupNotArchivedLiveData()
             .observe(viewLifecycleOwner) { incomeGroups ->
                 incomeGroups?.let { groups ->
                     val spinnerGroupItems: MutableList<SpinnerItem> = mutableListOf()
@@ -566,7 +570,6 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setSubGroupSpinnerAdapterByGroupName(groupSpinnerBinding: String, isSetIfAvailable: Boolean) {
-        // TODO: getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData doesn't work
         addHistoryViewModel.getIncomeGroupNotArchivedWithIncomeSubGroupsNotArchivedByIncomeGroupNameLiveData(
             groupSpinnerBinding
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
@@ -687,8 +690,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
                 saveAddTransactionForm()
 
-                val action =
-                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
+                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddSubIncomeGroup()
                 action.incomeGroupName = binding.groupSpinner.text.toString()
                 findNavController().navigate(action)
             } else {
@@ -703,13 +705,21 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
+            val selectedWalletId = walletItemsGlobal.find { it.name == selectedWalletName }?.id
+            if (selectedWalletId != null) {
+                addHistoryViewModel.getWalletById(selectedWalletId).observe(viewLifecycleOwner) { wallet ->
+                    wallet?.let {
+                        binding.currencyEditText.setText(it.currencyCode)
+                    }
+                }
+            }
+
             if (selectedWalletName == ADD_NEW_WALLET) {
                 setPrevValue(walletSpinnerValueGlobalBeforeAdd, binding.walletSpinner)
 
                 saveAddTransactionForm()
 
-                val action =
-                    AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
+                val action = AddIncomeHistoryFragmentDirections.actionNavigationAddIncomeToNavigationAddWallet()
                 action.source = ADD_INCOME_HISTORY_FRAGMENT
                 action.spinnerType = null
                 findNavController().navigate(action)
@@ -719,22 +729,22 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun setIfAvailableGroupSpinnersValue(spinnerGroupItems: MutableList<SpinnerItem>) {
-        val savedGroupName = args.incomeGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
+        private fun setIfAvailableGroupSpinnersValue(spinnerGroupItems: MutableList<SpinnerItem>) {
+            val savedGroupName = sharedModViewModel.modelForm?.groupSpinnerValue
 
-        if (savedGroupName?.isNotBlank() == true) {
-            resetSubGroupSpinner()
+            if (savedGroupName?.isNotBlank() == true) {
+                resetSubGroupSpinner()
 
-            if (spinnerGroupItems.find { it.name == savedGroupName } != null) {
-                groupSpinnerValueGlobalBeforeAdd = savedGroupName
+                if (spinnerGroupItems.find { it.name == savedGroupName } != null) {
+                    groupSpinnerValueGlobalBeforeAdd = savedGroupName
 
-                binding.groupSpinner.setText(savedGroupName, false)
+                    binding.groupSpinner.setText(savedGroupName, false)
+                }
             }
         }
-    }
 
     private fun setIfAvailableSubGroupSpinnersValue(spinnerSubItems: MutableList<SpinnerItem>) {
-        val savedSubGroupName = args.incomeSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
+        val savedSubGroupName = sharedModViewModel.modelForm?.subGroupSpinnerValue
 
         if (savedSubGroupName?.isNotBlank() == true && spinnerSubItems.find { it.name == savedSubGroupName} != null) {
             subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
@@ -744,7 +754,7 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableWalletSpinnerValue(spinnerWalletItems: MutableList<SpinnerItem>) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.walletSpinnerValue
+        val savedWalletName = sharedModViewModel.modelForm?.walletSpinnerValue
 
         if (savedWalletName?.isNotBlank() == true && spinnerWalletItems.find { it.name == savedWalletName} != null) {
             walletSpinnerValueGlobalBeforeAdd = savedWalletName
@@ -754,26 +764,26 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun restoreAmountDateCommentValues() {
-        val mod = sharedModViewModel.modelForm
+        val addTransactionForm = sharedModViewModel.modelForm
 
-        if (mod?.amount != null) {
-            binding.amountEditText.setText(mod.amount)
+        if (addTransactionForm?.amount != null) {
+            binding.amountEditText.setText(addTransactionForm.amount)
         }
 
-        if (mod?.date != null) {
-            binding.dateEditText.setText(mod.date)
+        if (addTransactionForm?.date != null) {
+            binding.dateEditText.setText(addTransactionForm.date)
         }
 
-        if (mod?.time != null) {
-            binding.timeEditText.setText(mod.time)
+        if (addTransactionForm?.time != null) {
+            binding.timeEditText.setText(addTransactionForm.time)
         }
 
-        if (mod?.comment != null) {
-            binding.commentEditText.setText(mod.comment)
+        if (addTransactionForm?.comment != null) {
+            binding.commentEditText.setText(addTransactionForm.comment)
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<IncomeGroup>): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<IncomeGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
@@ -787,8 +797,8 @@ class AddIncomeHistoryFragment : VoiceAssistanceBaseFragment() {
         }.toMutableList()
     }
 
-    private fun getWalletItemsForSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
-        return wallets.map {
+    private fun getWalletItemsForSpinner(walletEntities: List<WalletEntity>): MutableList<SpinnerItem> {
+        return walletEntities.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }

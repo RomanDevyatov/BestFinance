@@ -20,7 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.more_fragment)
+                findNavController().popBackStack(R.id.more_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)

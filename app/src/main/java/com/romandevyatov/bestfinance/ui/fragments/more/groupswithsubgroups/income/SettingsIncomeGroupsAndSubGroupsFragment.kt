@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswit
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.IncomeGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,15 +61,17 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
                     }.toMutableList()
 
                     SettingsGroupWithSubGroupsItem(
-                        groups.incomeGroup.id,
-                        groups.incomeGroup.name,
-                        groups.incomeGroup.archivedDate == null,
+                        groups.incomeGroupEntity.id,
+                        groups.incomeGroupEntity.name,
+                        groups.incomeGroupEntity.archivedDate == null,
                         settingsSubGroupItems
                     )
                 } ?: emptyList()
 
                 settingsGroupWithSubgroupsAdapter.submitList(settingsGroupWithSubGroupsItems)
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -147,9 +150,11 @@ class SettingsIncomeGroupsAndSubGroupsFragment : Fragment() {
     }
 
     private fun setOnBackPressedHandler() {
+
         val callback = object : OnBackPressedCallback(true) {
+
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.more_fragment)
+                findNavController().popBackStack(R.id.more_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

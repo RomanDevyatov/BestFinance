@@ -19,6 +19,7 @@ import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswit
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsGroupWithSubGroupsItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingsgroupswithsubgroups.tabs.models.SettingsSubGroupItem
 import com.romandevyatov.bestfinance.ui.fragments.more.groupswithsubgroups.SettingsGroupsAndSubGroupsFragmentDirections
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.ExpenseGroupsAndSubGroupsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +51,7 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
         generalGroupsAndSubGroupsViewModel.allExpenseGroupsWithExpenseSubGroupsLiveData
             .observe(viewLifecycleOwner) { allGroupsWithSubGroups ->
                 val settingsGroupWithSubGroupsItems = allGroupsWithSubGroups?.map { groups ->
-                    val settingsSubGroupItems = groups.expenseSubGroups.map {
+                    val settingsSubGroupItems = groups.expenseSubGroupEntities.map {
                         SettingsSubGroupItem(
                             it.id!!,
                             it.name,
@@ -60,15 +61,17 @@ class SettingsExpenseGroupsAndSubGroupsFragment : Fragment() {
                     }.toMutableList()
 
                     SettingsGroupWithSubGroupsItem(
-                        groups.expenseGroup.id,
-                        groups.expenseGroup.name,
-                        groups.expenseGroup.archivedDate == null,
+                        groups.expenseGroupEntity.id,
+                        groups.expenseGroupEntity.name,
+                        groups.expenseGroupEntity.archivedDate == null,
                         settingsSubGroupItems
                     )
                 } ?: emptyList()
 
                 settingsGroupWithSubgroupsAdapter.submitList(settingsGroupWithSubGroupsItems)
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }

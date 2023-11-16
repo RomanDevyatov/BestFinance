@@ -2,24 +2,24 @@ package com.romandevyatov.bestfinance.data.repositories
 
 import androidx.lifecycle.LiveData
 import com.romandevyatov.bestfinance.data.dao.TransferHistoryDao
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransferHistoryRepository @Inject constructor(
-    private val transferHistoryDao: TransferHistoryDao
-) {
+class TransferHistoryRepository
+@Inject
+constructor(private val transferHistoryDao: TransferHistoryDao) {
 
-    fun getAllTransferHistories(): LiveData<List<TransferHistory>> = transferHistoryDao.getAll()
+    fun getAllTransferHistoriesLiveData(): LiveData<List<TransferHistoryEntity>> = transferHistoryDao.getAllLiveData()
 
-    suspend fun insertTransferHistory(transferHistory: TransferHistory) {
-        transferHistoryDao.insert(transferHistory)
+    suspend fun insertTransferHistory(transferHistoryEntity: TransferHistoryEntity) {
+        transferHistoryDao.insert(transferHistoryEntity)
     }
 
-    suspend fun updateTransferHistory(transferHistory: TransferHistory) {
-        transferHistoryDao.update(transferHistory)
+    suspend fun updateTransferHistory(transferHistoryEntity: TransferHistoryEntity) {
+        transferHistoryDao.update(transferHistoryEntity)
     }
 
     fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets?> {
@@ -30,11 +30,15 @@ class TransferHistoryRepository @Inject constructor(
         transferHistoryDao.deleteById(id)
     }
 
-    fun getTransferHistoryById(id: Long): TransferHistory? {
+    fun getTransferHistoryById(id: Long): TransferHistoryEntity? {
         return transferHistoryDao.getById(id)
     }
 
     fun getAllTransferHistoryWithWalletsLiveData(): LiveData<List<TransferHistoryWithWallets>> {
         return transferHistoryDao.getAllWithWallets()
+    }
+
+    fun getAllTransferHistories(): List<TransferHistoryEntity> {
+        return transferHistoryDao.getAll()
     }
 }

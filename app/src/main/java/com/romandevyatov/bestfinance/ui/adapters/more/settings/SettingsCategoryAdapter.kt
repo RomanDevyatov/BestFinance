@@ -8,7 +8,8 @@ import com.romandevyatov.bestfinance.databinding.ItemCategoryBinding
 
 class SettingsCategoryAdapter(
     private val categoryData: List<SettingsCategoryItem>,
-    private val subCategoryClickListener: SettingsSubCategoryAdapter.OnSubCategoryClickListener
+    private val subCategoryClickListener: SettingsSubCategoryAdapter.OnSubCategoryClickListener,
+    private val currencyCode: String? = null
 ) :
     RecyclerView.Adapter<SettingsCategoryAdapter.CategoryViewHolder>() {
 
@@ -34,7 +35,7 @@ class SettingsCategoryAdapter(
         holder.categoryName.text = currentItem.name
         holder.categoryIcon.setImageResource(currentItem.icon)
 
-        val subcategoryAdapterSettings = SettingsSubCategoryAdapter(currentItem.subcategories, subCategoryClickListener)
+        val subcategoryAdapterSettings = SettingsSubCategoryAdapter(currentItem.subcategories, subCategoryClickListener, currencyCode)
         holder.subcategoriesList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = subcategoryAdapterSettings

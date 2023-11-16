@@ -10,17 +10,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 import com.romandevyatov.bestfinance.databinding.FragmentTransferHistoryBinding
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferHistoryItem
-import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.HistoryTransferByDateAdapter
 import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.TransferAdapter
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferHistoryItem
+import com.romandevyatov.bestfinance.ui.adapters.history.bydate.transfers.models.TransferItem
 import com.romandevyatov.bestfinance.ui.fragments.history.HistoryFragmentDirections
+import com.romandevyatov.bestfinance.utils.BackStackLogger
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.TransferHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class TransferHistoryFragment : Fragment() {
@@ -50,6 +54,8 @@ class TransferHistoryFragment : Fragment() {
         _binding = FragmentTransferHistoryBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -95,15 +101,21 @@ class TransferHistoryFragment : Fragment() {
         val transferItems = mutableListOf<TransferItem>()
 
         for (transfer in transfers) {
-            val transferHistory = transfer.transferHistory
-            val walletFrom = transfer.walletFrom
-            val walletTo = transfer.walletTo
+            val transferHistory = transfer.transferHistoryEntity
+            val walletFrom = transfer.walletEntityFrom
+            val walletTo = transfer.walletEntityTo
+
+            val formattedAmountText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amount).toString()) + walletFrom.currencyCode
+            val formattedAmountBaseText = removeTrailingZeros(roundDoubleToTwoDecimalPlaces(transferHistory.amountBase).toString()) + transferHistoryViewModel.getDefaultCurrencyCode()
+
+            val formattedAmountBaseTextString = formattedAmountBaseText.plus("(${getString(R.string.base)})")
 
             val transactionItem = TransferItem(
                 id = transferHistory.id,
                 fromName = walletFrom.name,
                 toName = walletTo.name,
-                amount = transferHistory.amount,
+                amount = formattedAmountText,
+                amountBase = formattedAmountBaseTextString,
                 comment = transferHistory.comment ?: "",
                 date = transferHistory.date
             )

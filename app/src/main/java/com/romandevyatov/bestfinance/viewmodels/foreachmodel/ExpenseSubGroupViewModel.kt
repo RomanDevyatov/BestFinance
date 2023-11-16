@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,24 +15,24 @@ class ExpenseSubGroupViewModel @Inject constructor(
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
-    val expenseSubGroupsLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseSubGroups()
+    val expenseSubGroupsLiveDataEntity: LiveData<List<ExpenseSubGroupEntity>> = expenseSubGroupRepository.getAllExpenseSubGroups()
 
-    fun insertExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroup.name, expenseSubGroup.expenseGroupId)
+    fun insertExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val existingExpenseSubGroup = expenseSubGroupRepository.getExpenseSubGroupByNameAndExpenseGroupId(expenseSubGroupEntity.name, expenseSubGroupEntity.expenseGroupId)
 
         if (existingExpenseSubGroup == null) {
-            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroup)
+            expenseSubGroupRepository.insertExpenseSubGroup(expenseSubGroupEntity)
         } else if (existingExpenseSubGroup.archivedDate != null) {
             expenseSubGroupRepository.unarchiveExpenseSubGroup(existingExpenseSubGroup)
         }
     }
 
-    fun updateExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroup)
+    fun updateExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseSubGroupRepository.updateExpenseSubGroup(expenseSubGroupEntity)
     }
 
-    fun deleteExpenseSubGroup(expenseSubGroup: ExpenseSubGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseSubGroupRepository.deleteExpenseSubGroup(expenseSubGroup)
+    fun deleteExpenseSubGroup(expenseSubGroupEntity: ExpenseSubGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseSubGroupRepository.deleteExpenseSubGroup(expenseSubGroupEntity)
     }
 
     fun deleteExpenseSubGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -43,10 +43,10 @@ class ExpenseSubGroupViewModel @Inject constructor(
         expenseSubGroupRepository.deleteAllExpenseSubGroups()
     }
 
-    val expenseSubGroupsWhereArchivedDateIsNullLiveData: LiveData<List<ExpenseSubGroup>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
+    val expenseSubGroupsWhereArchivedDateIsNullLiveDataEntity: LiveData<List<ExpenseSubGroupEntity>> = expenseSubGroupRepository.getAllExpenseGroupsNotArchivedLiveData()
 
 
-    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroup?> {
+    fun getExpenseSubGroupByNameWhereArchivedDateIsNull(name: String): LiveData<ExpenseSubGroupEntity?> {
         return expenseSubGroupRepository.getExpenseSubGroupByNameNotArchivedLiveData(name)
     }
 

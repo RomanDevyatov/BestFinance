@@ -3,9 +3,9 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.ExpenseHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeHistoryRepository
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
@@ -23,56 +23,57 @@ class UpdateWalletViewModel @Inject constructor(
     private val expenseHistoryRepository: ExpenseHistoryRepository
 ) : ViewModel() {
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
-    fun getWalletByNameLiveData(walletName: String): LiveData<Wallet?> {
+    fun getWalletByNameLiveData(walletName: String): LiveData<WalletEntity?> {
         return walletRepository.getWalletByNameLiveData(walletName)
     }
 
-    fun unarchiveWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val updatedWallet = Wallet(
-            id = wallet.id,
-            name = wallet.name,
-            description = wallet.description,
-            balance = wallet.balance,
-            input = wallet.input,
-            output = wallet.output,
-            archivedDate = null
+    fun unarchiveWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val updatedWalletEntity = WalletEntity(
+            id = walletEntity.id,
+            name = walletEntity.name,
+            description = walletEntity.description,
+            balance = walletEntity.balance,
+            input = walletEntity.input,
+            output = walletEntity.output,
+            archivedDate = null,
+            currencyCode = walletEntity.currencyCode
         )
-        updateWallet(updatedWallet)
+        updateWallet(updatedWalletEntity)
     }
 
-    fun updateNameAndDescriptionAndBalanceWalletById(updatedWalletBinding: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(updatedWalletBinding.id)
+    fun updateNameAndDescriptionAndBalanceWalletById(updatedWalletBindingEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        val wallet = walletRepository.getWalletByIdAsync(updatedWalletBindingEntity.id)
 
         if (wallet != null) {
             val updatedWallet = wallet.copy(
-                name = updatedWalletBinding.name,
-                description = updatedWalletBinding.description,
-                balance = updatedWalletBinding.balance
+                name = updatedWalletBindingEntity.name,
+                description = updatedWalletBindingEntity.description,
+                balance = updatedWalletBindingEntity.balance
             )
 
             updateWallet(updatedWallet)
         }
     }
 
-    fun addOnlyWalletIncomeHistoryRecord(incomeHistory: IncomeHistory) = viewModelScope.launch(Dispatchers.IO) {
-        incomeHistoryRepository.insertIncomeHistory(incomeHistory)
+    fun addOnlyWalletIncomeHistoryRecord(incomeHistoryEntity: IncomeHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        incomeHistoryRepository.insertIncomeHistory(incomeHistoryEntity)
     }
 
-    fun addOnlyWalletExpenseHistoryRecord(expenseHistory: ExpenseHistory) = viewModelScope.launch(Dispatchers.IO) {
-        expenseHistoryRepository.insertExpenseHistory(expenseHistory)
+    fun addOnlyWalletExpenseHistoryRecord(expenseHistoryEntity: ExpenseHistoryEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseHistoryRepository.insertExpenseHistory(expenseHistoryEntity)
     }
 
-    private var deletedItem: Wallet? = null
-    private val deletedItemList = mutableListOf<Wallet>()
+    private var deletedItem: WalletEntity? = null
+    private val deletedItemList = mutableListOf<WalletEntity>()
 
     fun deleteItem(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val itemToDelete = walletRepository.getWalletById(id)
+                val itemToDelete = walletRepository.getWalletByIdAsync(id)
                 if (itemToDelete != null) {
                     deletedItem = itemToDelete
                     deletedItemList.add(itemToDelete)

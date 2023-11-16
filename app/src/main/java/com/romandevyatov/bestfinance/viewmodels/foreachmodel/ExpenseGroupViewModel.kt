@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
@@ -17,14 +17,14 @@ class ExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
 ) : ViewModel() {
 
-    val allExpenseGroupLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupsLiveData()
+    val allExpenseGroupEntityLiveData: LiveData<List<ExpenseGroupEntity>> = expenseGroupRepository.getAllExpenseGroupsLiveData()
 
-    fun updateExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseGroupRepository.updateExpenseGroup(expenseGroup)
+    fun updateExpenseGroup(expenseGroupEntity: ExpenseGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseGroupRepository.updateExpenseGroup(expenseGroupEntity)
     }
 
-    fun deleteExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseGroupRepository.deleteExpenseGroup(expenseGroup)
+    fun deleteExpenseGroup(expenseGroupEntity: ExpenseGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseGroupRepository.deleteExpenseGroup(expenseGroupEntity)
     }
 
     fun deleteExpenseGroupById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -39,7 +39,7 @@ class ExpenseGroupViewModel @Inject constructor(
         return expenseGroupRepository.getExpenseGroupWithExpenseSubGroupsByExpenseGroupNameLiveData(name)
     }
 
-    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroup?> {
+    fun getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName: String): LiveData<ExpenseGroupEntity?> {
         return expenseGroupRepository.getExpenseGroupNotArchivedByNameLiveData(selectedExpenseGroupName)
     }
 

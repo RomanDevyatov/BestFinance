@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.localization.LocaleUtil
-import com.romandevyatov.bestfinance.utils.localization.Storage
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 
 class CustomTextToSpeech(
     private val context: Context,

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginHorizontal="32dp"
-        app:helperText="Required"
+        app:helperText="@string/required"
         android:hint="@string/name"
         app:layout_constraintTop_toTopOf="parent" >
 
@@ -28,14 +28,16 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/balanceLayout"
         style="@style/CustomTextInputLayoutStyle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/wallet_balance_hint"
-        app:helperText="Required"
-        app:layout_constraintEnd_toEndOf="@+id/nameLayout"
-        app:layout_constraintStart_toStartOf="@+id/nameLayout"
+        app:helperText="@string/required"
+        app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameLayout">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -44,6 +46,26 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:digits="0123456789.,-"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/currencyLayout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/currencyEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="USD"
+            android:textSize="22sp"
+            android:focusableInTouchMode="false"
             app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
 

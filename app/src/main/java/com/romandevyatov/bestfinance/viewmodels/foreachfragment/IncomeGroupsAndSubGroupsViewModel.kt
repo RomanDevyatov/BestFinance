@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
@@ -47,8 +47,8 @@ class IncomeGroupsAndSubGroupsViewModel @Inject constructor(
 
     val allIncomeGroupsWithIncomeSubGroupsLiveData: LiveData<List<IncomeGroupWithIncomeSubGroups>> = incomeGroupRepository.getAllIncomeGroupsWithIncomeSubGroupsLiveData()
 
-    private var deletedItem: IncomeGroup? = null
-    private val deletedItemList = mutableListOf<IncomeGroup>()
+    private var deletedItem: IncomeGroupEntity? = null
+    private val deletedItemList = mutableListOf<IncomeGroupEntity>()
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {

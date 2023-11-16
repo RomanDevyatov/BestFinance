@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.IncomeSubGroupRepository
@@ -19,7 +19,7 @@ class AddIncomeSubGroupViewModel @Inject constructor(
 ) : ViewModel() {
 
     // GENERAL
-    val incomeGroupsNotArchivedLiveData: LiveData<List<IncomeGroup>> = incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
+    val incomeGroupsNotArchivedLiveDataEntity: LiveData<List<IncomeGroupEntity>> = incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
 
     fun insertIncomeSubGroup(incomeSubGroup: IncomeSubGroup) = viewModelScope.launch(Dispatchers.IO) {
         val existingIncomeSubGroup = incomeSubGroupRepository.getIncomeSubGroupByNameAndIncomeGroupId(incomeSubGroup.name, incomeSubGroup.incomeGroupId)

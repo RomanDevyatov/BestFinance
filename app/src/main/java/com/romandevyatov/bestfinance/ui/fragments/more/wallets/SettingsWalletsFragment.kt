@@ -15,7 +15,9 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentSettingsWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.SettingsWalletsAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.settingswallets.models.SettingsWalletItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.SettingsWalletsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +41,8 @@ class SettingsWalletsFragment : Fragment() {
 
         setupRecyclerView()
         observeWallets()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -66,10 +70,15 @@ class SettingsWalletsFragment : Fragment() {
     private fun observeWallets() {
         settingsWalletsViewModel.allWalletsLiveData.observe(viewLifecycleOwner) { allWallets ->
             allWallets?.let { wallets ->
+
                 settingsWalletItemMutableList.clear()
                 settingsWalletItemMutableList.addAll(
                     wallets.map {
-                        SettingsWalletItem(it.id, it.name, it.balance.toString(), it.archivedDate == null)
+                        SettingsWalletItem(
+                            it.id,
+                            it.name,
+                            removeTrailingZeros(it.balance.toString()) + settingsWalletsViewModel.getCurrencySymbolByCode(it.currencyCode),
+                            it.archivedDate == null)
                     }.toMutableList()
                 )
 
@@ -133,7 +142,7 @@ class SettingsWalletsFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.more_fragment)
+                findNavController().popBackStack(R.id.more_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

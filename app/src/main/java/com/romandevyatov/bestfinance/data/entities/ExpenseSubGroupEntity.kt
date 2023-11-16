@@ -9,14 +9,14 @@ import java.time.LocalDateTime
 @Entity(tableName = "expense_sub_group",
     foreignKeys = [
         ForeignKey(
-            entity = ExpenseGroup::class,
+            entity = ExpenseGroupEntity::class,
             parentColumns = ["id"], // ExpenseGroup
             childColumns = ["expense_group_id"], // ExpenseSubGroup
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class ExpenseSubGroup(
+data class ExpenseSubGroupEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

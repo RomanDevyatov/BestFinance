@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,7 +18,27 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_transfer_arrows" />
+            app:srcCompat="@drawable/ic_transfer_arrows"/>
+
+        <TextView
+            android:id="@+id/amountTextView"
+            style="@style/CustomTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="amount"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/amountBaseTextView"
+            style="@style/CustomTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="amountBase"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView" />
 
         <TextView
             android:id="@+id/fromNameTextView"
@@ -29,12 +50,10 @@
             android:text="fromNameTextView"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image2View"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/amountBaseTextView" />
 
         <ImageView
             android:id="@+id/image2View"
@@ -42,7 +61,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/toNameTextView"
             app:layout_constraintStart_toEndOf="@+id/fromNameTextView"
-            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
+            app:layout_constraintTop_toBottomOf="@+id/amountBaseTextView"
             app:srcCompat="@drawable/ic_right_arrow" />
 
         <TextView
@@ -54,18 +73,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountTextView" />
-
-        <TextView
-            android:id="@+id/amountTextView"
-            style="@style/CustomTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="amount"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/amountBaseTextView" />
 
         <TextView
             android:id="@+id/dateIncomeTextView"

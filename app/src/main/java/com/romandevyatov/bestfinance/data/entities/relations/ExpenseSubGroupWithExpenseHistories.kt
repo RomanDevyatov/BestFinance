@@ -2,18 +2,18 @@ package com.romandevyatov.bestfinance.data.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 
 data class ExpenseSubGroupWithExpenseHistories(
 
     @Embedded
-    var expenseSubGroup: ExpenseSubGroup?,
+    var expenseSubGroupEntity: ExpenseSubGroupEntity?,
 
     @Relation(
-        entity = ExpenseHistory::class,
+        entity = ExpenseHistoryEntity::class,
         parentColumn = "id",
         entityColumn = "expense_sub_group_id"
     )
-    var expenseHistory: List<ExpenseHistory>
+    var expenseHistoryEntities: List<ExpenseHistoryEntity>
 )

@@ -8,16 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateExpenseGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateExpenseGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,11 +31,13 @@ class UpdateExpenseGroupFragment : Fragment() {
 
     private val updateExpenseGroupViewModel: UpdateExpenseGroupViewModel by viewModels()
 
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
+
     private val args: UpdateExpenseGroupFragmentArgs by navArgs()
 
     private var expenseGroupId: Long? = null
 
-    private var expenseGroupGlobal: ExpenseGroup? = null
+    private var expenseGroupEntityGlobal: ExpenseGroupEntity? = null
 
     private var isButtonClickable = true
 
@@ -49,7 +54,7 @@ class UpdateExpenseGroupFragment : Fragment() {
         updateExpenseGroupViewModel.getExpenseGroupByNameLiveData(args.expenseGroupName.toString())
             .observe(viewLifecycleOwner) { expenseGroup ->
                 expenseGroup?.let {
-                    expenseGroupGlobal = it.copy()
+                    expenseGroupEntityGlobal = it.copy()
                     binding.reusable.newExpenseGroupName.setText(it.name)
                     binding.reusable.descriptionEditText.setText(it.description)
                     expenseGroupId = it.id
@@ -57,6 +62,8 @@ class UpdateExpenseGroupFragment : Fragment() {
                     binding.checkedTextView.isEnabled = false
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -78,8 +85,8 @@ class UpdateExpenseGroupFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val nameBinding = binding.reusable.newExpenseGroupName.text.toString()
-            val descriptionBinding = binding.reusable.descriptionEditText.text.toString()
+            val nameBinding = binding.reusable.newExpenseGroupName.text.toString().trim()
+            val descriptionBinding = binding.reusable.descriptionEditText.text.toString().trim()
 
             val nameEmptyValidation = EmptyValidator(nameBinding).validate()
             binding.reusable.newExpenseGroupNameLayout.error = if (!nameEmptyValidation.isSuccess) getString(nameEmptyValidation.message) else null
@@ -110,20 +117,18 @@ class UpdateExpenseGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
-        val action =
-            UpdateExpenseGroupFragmentDirections.actionNavigationUpdateExpenseGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 1
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(1)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun updateExpenseGroup(nameBinding: String, descriptionBinding: String) {
-        val updatedExpenseGroup = ExpenseGroup(
-            id = expenseGroupGlobal?.id,
+        val updatedExpenseGroupEntity = ExpenseGroupEntity(
+            id = expenseGroupEntityGlobal?.id,
             name = nameBinding,
             description = descriptionBinding,
-            archivedDate = expenseGroupGlobal?.archivedDate
+            archivedDate = expenseGroupEntityGlobal?.archivedDate
         )
-        updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroup)
+        updateExpenseGroupViewModel.updateExpenseGroup(updatedExpenseGroupEntity)
     }
 
     override fun onDestroyView() {

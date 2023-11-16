@@ -2,23 +2,23 @@ package com.romandevyatov.bestfinance.data.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 
 data class TransferHistoryWithWallets(
 
     @Embedded
-    var transferHistory: TransferHistory,
+    var transferHistoryEntity: TransferHistoryEntity,
 
     @Relation(
-        entity = Wallet::class,
+        entity = WalletEntity::class,
         parentColumn = "from_wallet_id",
         entityColumn = "id")
-    var walletFrom: Wallet,
+    var walletEntityFrom: WalletEntity,
 
     @Relation(
-        entity = Wallet::class,
+        entity = WalletEntity::class,
         parentColumn = "to_wallet_id",
         entityColumn = "id")
-    var walletTo: Wallet
+    var walletEntityTo: WalletEntity
 )

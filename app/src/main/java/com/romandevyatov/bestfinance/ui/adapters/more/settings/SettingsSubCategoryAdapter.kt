@@ -5,21 +5,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.romandevyatov.bestfinance.databinding.ItemSubcategoryBinding
+import com.romandevyatov.bestfinance.ui.fragments.menu.MoreFragment
 
 class SettingsSubCategoryAdapter(
-    private val subcategoryData: List<SettingsSubCategoryItem>,
-    private val clickListener: OnSubCategoryClickListener
+    private val subcategoryData: List<MoreSubCategoryItem>,
+    private val clickListener: OnSubCategoryClickListener,
+    private val currencyCode: String? = null
 ) : RecyclerView.Adapter<SettingsSubCategoryAdapter.SubCategoryViewHolder>() {
 
     interface OnSubCategoryClickListener {
-        fun onSubCategoryClick(subCategory: SettingsSubCategoryItem)
+        fun onSubCategoryClick(subCategory: MoreSubCategoryItem)
     }
 
-    class SubCategoryViewHolder(binding: ItemSubcategoryBinding) :
+    inner class SubCategoryViewHolder(private val binding: ItemSubcategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val subcategoryName = binding.subcategoryName
-        val subcategoryIcon = binding.subcategoryIcon
-        val tickIcon = binding.tickIcon
+
+        fun bind(item: MoreSubCategoryItem) {
+            binding.subcategoryName.text = item.name
+            binding.subcategoryIcon.setImageResource(item.icon)
+            if (item.name == MoreFragment.DEFAULT_CURRENCY) {
+                binding.currencyCodeTextView.visibility = View.VISIBLE
+
+                binding.currencyCodeTextView.text = currencyCode.toString()
+            } else {
+                binding.currencyCodeTextView.visibility = View.GONE
+            }
+
+            binding.tickIcon.visibility = View.VISIBLE
+
+            binding.root.setOnClickListener {
+                clickListener.onSubCategoryClick(item)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubCategoryViewHolder {
@@ -34,14 +51,7 @@ class SettingsSubCategoryAdapter(
     override fun onBindViewHolder(holder: SubCategoryViewHolder, position: Int) {
         val currentItem = subcategoryData[position]
 
-        holder.subcategoryName.text = currentItem.name
-        holder.subcategoryIcon.setImageResource(currentItem.icon)
-
-        holder.tickIcon.visibility = View.VISIBLE
-
-        holder.itemView.setOnClickListener {
-            clickListener.onSubCategoryClick(currentItem)
-        }
+        holder.bind(currentItem)
     }
 
     override fun getItemCount() = subcategoryData.size

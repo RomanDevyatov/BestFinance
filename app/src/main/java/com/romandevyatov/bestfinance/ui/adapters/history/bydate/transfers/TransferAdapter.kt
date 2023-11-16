@@ -37,7 +37,9 @@ class TransferAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transactionItem: TransferItem) {
-            binding.amountTextView.text = transactionItem.amount.toString()
+            binding.amountTextView.text = transactionItem.amount
+
+            binding.amountBaseTextView.text = transactionItem.amountBase
 
             binding.fromNameTextView.text = transactionItem.fromName
 
