@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
 import javax.inject.Inject
 
-open class BaseViewModel @Inject constructor(private val storage: Storage) : ViewModel() {
+open class BaseViewModel
+@Inject
+constructor(private val storage: Storage) : ViewModel() {
 
     fun getDefaultCurrencySymbol(): String {
         return getCurrencySymbolByCode(getDefaultCurrencyCode())
