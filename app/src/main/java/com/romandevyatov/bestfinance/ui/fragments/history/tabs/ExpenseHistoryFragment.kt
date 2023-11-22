@@ -116,8 +116,9 @@ class ExpenseHistoryFragment : Fragment() {
 
             if (wallet != null) {
                 val formattedAmountText = "-".plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(expenseHistory.amount).toString()))
-                    .plus(expenseHistoryViewModel.getCurrencySymbolByCode(wallet.currencyCode))
-                val formattedAmountBaseText = "-".plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(expenseHistory.amountBase).toString()))
+                    .plus(wallet.currencyCode)
+                val formattedAmountBaseText = "-"
+                    .plus(removeTrailingZeros(roundDoubleToTwoDecimalPlaces(expenseHistory.amountBase).toString()))
                     .plus(expenseHistoryViewModel.getDefaultCurrencyCode())
                     .plus("(${getString(R.string.base)})")
 
@@ -126,10 +127,10 @@ class ExpenseHistoryFragment : Fragment() {
                     groupName = expenseGroupEntityMap[expenseSubGroup?.expenseGroupId]?.name ?: "",
                     subGroupGroupName = expenseSubGroup?.name ?: getString(R.string.changed_balance),
                     amount = formattedAmountText,
+                    amountBase = formattedAmountBaseText,
                     comment = expenseHistory.comment ?: "",
                     date = expenseHistory.date,
-                    walletName = wallet.name,
-                    amountBase = formattedAmountBaseText
+                    walletName = wallet.name
                 )
                 transactionItemList.add(transactionItem)
             }
@@ -137,5 +138,4 @@ class ExpenseHistoryFragment : Fragment() {
 
         return transactionItemList
     }
-
 }
