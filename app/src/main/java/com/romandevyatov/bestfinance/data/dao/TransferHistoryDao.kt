@@ -8,23 +8,23 @@ import androidx.room.Delete
 import androidx.room.Update
 import androidx.room.Query
 import androidx.room.Transaction
-import com.romandevyatov.bestfinance.data.entities.TransferHistory
+import com.romandevyatov.bestfinance.data.entities.TransferHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.TransferHistoryWithWallets
 
 @Dao
 interface TransferHistoryDao {
     
     @Query("SELECT * FROM transfer_history ORDER BY id ASC")
-    fun getAll(): LiveData<List<TransferHistory>>
+    fun getAllLiveData(): LiveData<List<TransferHistoryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(transferHistory: TransferHistory)
+    suspend fun insert(transferHistoryEntity: TransferHistoryEntity)
 
     @Delete
-    suspend fun delete(transferHistory: TransferHistory)
+    suspend fun delete(transferHistoryEntity: TransferHistoryEntity)
 
     @Update
-    suspend fun update(transferHistory: TransferHistory)
+    suspend fun update(transferHistoryEntity: TransferHistoryEntity)
 
     @Query("DELETE FROM transfer_history")
     suspend fun deleteAll()
@@ -41,9 +41,12 @@ interface TransferHistoryDao {
     fun getWithWalletsByIdLiveData(id: Long?): LiveData<TransferHistoryWithWallets?>
 
     @Query("SELECT * FROM transfer_history WHERE id = :id")
-    fun getById(id: Long): TransferHistory?
+    fun getById(id: Long): TransferHistoryEntity?
 
     @Transaction
     @Query("SELECT * FROM transfer_history")
     fun getAllWithWallets(): LiveData<List<TransferHistoryWithWallets>>
+
+    @Query("SELECT * FROM transfer_history")
+    fun getAll(): List<TransferHistoryEntity>
 }

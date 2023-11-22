@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,11 @@ import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuMoreBinding
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryAdapter
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsCategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryAdapter
-import com.romandevyatov.bestfinance.ui.adapters.more.settings.SettingsSubCategoryItem
+import com.romandevyatov.bestfinance.ui.adapters.more.settings.MoreSubCategoryItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger.logBackStack
+import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.Constants.MORE_FRAGMENT
+import com.romandevyatov.bestfinance.viewmodels.foreachfragment.MoreFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +30,13 @@ class MoreFragment : Fragment() {
 
     private lateinit var GROUPS_AND_SUB_GROUPS_CATEGORY: String
     private lateinit var WALLETS_CATEGORY: String
+    private lateinit var RATES_CATEGORY: String
+
+    private val moreFragmentViewModel: MoreFragmentViewModel by viewModels()
+
+    companion object {
+        lateinit var DEFAULT_CURRENCY: String
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +47,10 @@ class MoreFragment : Fragment() {
 
         GROUPS_AND_SUB_GROUPS_CATEGORY = getString(R.string.groups_and_sub_groups)
         WALLETS_CATEGORY = getString(R.string.wallets)
+        DEFAULT_CURRENCY = getString(R.string.default_currency)
+        RATES_CATEGORY = getString(R.string.rates)
+
+        logBackStack(findNavController())
 
         return binding.root
     }
@@ -46,7 +62,7 @@ class MoreFragment : Fragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
+                findNavController().popBackStack(R.id.home_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -61,23 +77,31 @@ class MoreFragment : Fragment() {
     private fun setupRecyclerView() {
         val onSubCategoryClickListener = object : SettingsSubCategoryAdapter.OnSubCategoryClickListener {
 
-            override fun onSubCategoryClick(subCategory: SettingsSubCategoryItem) {
+            override fun onSubCategoryClick(subCategory: MoreSubCategoryItem) {
                 navigateToSubCategory(subCategory)
             }
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = SettingsCategoryAdapter(createCategoryData(), onSubCategoryClickListener)
+            adapter = SettingsCategoryAdapter(
+                createCategoryRows(),
+                onSubCategoryClickListener,
+                moreFragmentViewModel.getDefaultCurrencyCode())
         }
     }
 
-    private fun navigateToSubCategory(subCategory: SettingsSubCategoryItem) {
+    private fun navigateToSubCategory(subCategory: MoreSubCategoryItem) {
         val navDirections: NavDirections = when (subCategory.name) {
             GROUPS_AND_SUB_GROUPS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToGroupsAndSubGroupsSettingsFragment()
             WALLETS_CATEGORY ->
                 MoreFragmentDirections.actionMoreFragmentToArchivedWalletsFragment()
+            DEFAULT_CURRENCY ->
+                MoreFragmentDirections.actionMoreFragmentToSelectCurrencyFragment().setSource(MORE_FRAGMENT)
+            RATES_CATEGORY ->
+                MoreFragmentDirections.actionMoreFragmentToRatesFragment()
+
             // Add more cases as needed
             // "Export" -> SettingsFragmentDirections.actionCategoryPageFragmentToExportFragment()
             // "Import" -> SettingsFragmentDirections.actionCategoryPageFragmentToImportFragment()
@@ -86,14 +110,16 @@ class MoreFragment : Fragment() {
         findNavController().navigate(navDirections)
     }
 
-    private fun createCategoryData(): List<SettingsCategoryItem> {
+    private fun createCategoryRows(): List<SettingsCategoryItem> {
         return listOf(
             SettingsCategoryItem(
                 getString(R.string.categories),
                 R.drawable.ic_category,
                 listOf(
-                    SettingsSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
-                    SettingsSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet)
+                    MoreSubCategoryItem(GROUPS_AND_SUB_GROUPS_CATEGORY, R.drawable.ic_group_and_subgroups),
+                    MoreSubCategoryItem(WALLETS_CATEGORY, R.drawable.ic_wallet),
+                    MoreSubCategoryItem(DEFAULT_CURRENCY, R.drawable.ic_money),
+                    MoreSubCategoryItem(RATES_CATEGORY, R.drawable.ic_currency_exchange)
                 )
             ),
 //            CategoryItem(

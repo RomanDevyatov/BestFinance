@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment.deprecated
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import com.romandevyatov.bestfinance.data.repositories.ExpenseSubGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,27 +17,27 @@ class ArchivedExpenseGroupsViewModel @Inject constructor(
     private val expenseSubGroupRepository: ExpenseSubGroupRepository
 ) : ViewModel() {
 
-    fun getExpenseGroupsArchivedByNameLiveData(name: String): LiveData<ExpenseGroup?> {
+    fun getExpenseGroupsArchivedByNameLiveData(name: String): LiveData<ExpenseGroupEntity?> {
         return expenseGroupRepository.getExpenseGroupArchivedByNameLiveData(name)
     }
 
-    val allExpenseGroupsArchivedLiveData: LiveData<List<ExpenseGroup>> = expenseGroupRepository.getAllExpenseGroupArchivedLiveData()
+    val allEntityExpenseGroupsArchivedLiveData: LiveData<List<ExpenseGroupEntity>> = expenseGroupRepository.getAllExpenseGroupArchivedLiveData()
 
-    suspend fun updateExpenseGroup(expenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseGroupRepository.updateExpenseGroup(expenseGroup)
+    suspend fun updateExpenseGroup(expenseGroupEntity: ExpenseGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseGroupRepository.updateExpenseGroup(expenseGroupEntity)
     }
 
-    fun unarchiveExpenseGroup(expenseGroup: ExpenseGroup, isIncludeSubGroups: Boolean) = viewModelScope.launch(Dispatchers.IO) {
-        val expenseGroupNotArchived = ExpenseGroup(
-            id = expenseGroup.id,
-            name = expenseGroup.name,
-            description = expenseGroup.description,
+    fun unarchiveExpenseGroup(expenseGroupEntity: ExpenseGroupEntity, isIncludeSubGroups: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        val expenseGroupEntityNotArchived = ExpenseGroupEntity(
+            id = expenseGroupEntity.id,
+            name = expenseGroupEntity.name,
+            description = expenseGroupEntity.description,
             archivedDate = null
         )
         if (isIncludeSubGroups) {
-            unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupNotArchived.id)
+            unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupEntityNotArchived.id)
         }
-        updateExpenseGroup(expenseGroupNotArchived)
+        updateExpenseGroup(expenseGroupEntityNotArchived)
     }
 
     fun unarchiveExpenseSubGroupsByExpenseGroupId(expenseGroupId: Long?) = viewModelScope.launch (Dispatchers.IO) {

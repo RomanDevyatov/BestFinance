@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseHistory
-import com.romandevyatov.bestfinance.data.entities.IncomeHistory
+import com.romandevyatov.bestfinance.data.entities.ExpenseHistoryEntity
+import com.romandevyatov.bestfinance.data.entities.IncomeHistoryEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseSubGroupWithExpenseHistories
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories
@@ -19,6 +20,9 @@ import com.romandevyatov.bestfinance.ui.adapters.analyze.CategoryExpandableAdapt
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.CategoryItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.GroupItem
 import com.romandevyatov.bestfinance.ui.adapters.analyze.models.SubGroupNameAndSumItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
+import com.romandevyatov.bestfinance.utils.TextFormatter.roundDoubleToTwoDecimalPlaces
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AnalyzeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.absoluteValue
@@ -40,6 +44,9 @@ class AnalyzeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnalyzeBinding.inflate(inflater, container, false)
+
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -67,8 +74,20 @@ class AnalyzeFragment : Fragment() {
 
                     val groupIncomeDataList = convertToIncomeCategory(combinedIncomeList)
 
+                    var incomeCategorySum = 0.0
+                    for (groupData in groupIncomeDataList) {
+                        val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
+                            it.sumOfSubGroup
+                        }
+
+                        incomeCategorySum += groupSumma ?: 0.0
+                    }
+
+                    incomeCategorySum = roundDoubleToTwoDecimalPlaces(incomeCategorySum)
+
                     val incomesParentData = CategoryItem(
                         categoryName = getString(R.string.incomes),
+                        categorySum = incomeCategorySum.toString() + analyzeViewModel.currentDefaultCurrencySymbol,
                         groups = groupIncomeDataList
                     )
                     addToGroupAdapter(incomesParentData)
@@ -83,8 +102,21 @@ class AnalyzeFragment : Fragment() {
                         }
 
                         val groupExpenseDataList = convertToExpenseCategory(combinedExpenseList)
+
+                        var expenseCategorySum = 0.0
+                        for (groupData in groupExpenseDataList) {
+                            val groupSumma = groupData.subGroupNameAndSumItem?.sumOf {
+                                it.sumOfSubGroup
+                            }
+
+                            expenseCategorySum += groupSumma ?: 0.0
+                        }
+
+                        expenseCategorySum = roundDoubleToTwoDecimalPlaces(expenseCategorySum)
+
                         val expensesParentData = CategoryItem(
                             categoryName = getString(R.string.expenses),
+                            categorySum = expenseCategorySum.toString() + analyzeViewModel.currentDefaultCurrencySymbol,
                             groups = groupExpenseDataList
                         )
                         addToGroupAdapter(expensesParentData)
@@ -100,67 +132,89 @@ class AnalyzeFragment : Fragment() {
             }
         }
 
-        analyzeViewModel.incomeHistoryLiveData.observe(viewLifecycleOwner) { histories ->
-            val totalIncomeValue = histories?.sumOf { it.amount } ?: 0.0
+        analyzeViewModel.incomeHistoryEntityLiveData.observe(viewLifecycleOwner) { histories ->
+            val totalIncomeValue = histories?.sumOf { it.amountBase } ?: 0.0
 
-            analyzeViewModel.expenseHistoryLiveData.observe(viewLifecycleOwner) { expenseHistory ->
-                val totalExpensesValue = expenseHistory?.sumOf { it.amount } ?: 0.0
+            analyzeViewModel.expenseHistoryEntityLiveData.observe(viewLifecycleOwner) { expenseHistory ->
+                val totalExpensesValue = expenseHistory?.sumOf { it.amountBase } ?: 0.0
                 val totalExpensesValueAbs = totalExpensesValue.absoluteValue
                 val result = (((totalIncomeValue - totalExpensesValueAbs) * 100.0).roundToInt() / 100.0).toString()
+                val formattedTotalText = removeTrailingZeros(result) + analyzeViewModel.currentDefaultCurrencySymbol
 
-                binding.analyzeGroupTextView.text = result
+                binding.totalTextView.text = formattedTotalText
             }
         }
     }
 
     private fun convertToIncomeCategory(incomeGroups: List<IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories>): List<GroupItem> {
-        val categoryList = mutableListOf<GroupItem>()
+        val groupItems = mutableListOf<GroupItem>()
 
         for (incomeGroup in incomeGroups) {
-            val groupName = incomeGroup.incomeGroup?.name ?: getString(R.string.changed_balance)
+            val groupName = incomeGroup.incomeGroupEntity?.name ?: getString(R.string.changed_balance)
 
             val subGroupNameAndSumItemIncomes = incomeGroup.incomeSubGroupWithIncomeHistories.map { groupWithIncomeHistories ->
+                val sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amountBase }
+
+                val roundedSumOfSubGroup = roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = groupWithIncomeHistories.incomeHistories.sumOf { it.amount },
+                    sumOfSubGroup = roundedSumOfSubGroup,
                     subGroupName = groupWithIncomeHistories.incomeSubGroup?.name ?: ""
                 )
             }
 
-            categoryList.add(
+            val incomeGroupSum = subGroupNameAndSumItemIncomes.sumOf { it.sumOfSubGroup }
+
+            val roundedIncomeGroupSum = roundDoubleToTwoDecimalPlaces(incomeGroupSum)
+
+            val formattedRoundedIncomeGroupSum = removeTrailingZeros(roundedIncomeGroupSum.toString()) + analyzeViewModel.getDefaultCurrencySymbol()
+
+            groupItems.add(
                 GroupItem(
                     groupName = groupName,
+                    groupSum = formattedRoundedIncomeGroupSum,
                     subGroupNameAndSumItem = subGroupNameAndSumItemIncomes
                 )
             )
         }
 
-        return categoryList
+        return groupItems
     }
 
     private fun convertToExpenseCategory(expenseGroupWithExpenseSubGroupsIncludingExpenseHistories: MutableList<ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories>): List<GroupItem> {
         val categoryList = mutableListOf<GroupItem>()
 
         for (expenseHistories in expenseGroupWithExpenseSubGroupsIncludingExpenseHistories) {
-            val groupName = expenseHistories.expenseGroup?.name ?: getString(R.string.changed_balance)
+            val groupName = expenseHistories.expenseGroupEntity?.name ?: getString(R.string.changed_balance)
 
-            val subGroupNameAndSumItemExpens = expenseHistories.expenseSubGroupWithExpenseHistories.map { subGroupWithIncomeHistories ->
+            val subGroupNameAndSumItemExpenses = expenseHistories.expenseSubGroupWithExpenseHistoriesEntity.map { subGroupWithIncomeHistories ->
+                val sumOfSubGroup = subGroupWithIncomeHistories.expenseHistoryEntities.sumOf { it.amountBase }
+
+                val roundedSumOfSubGroup = roundDoubleToTwoDecimalPlaces(sumOfSubGroup)
+
                 SubGroupNameAndSumItem(
-                    sumOfSubGroup = subGroupWithIncomeHistories.expenseHistory.sumOf { it.amount },
-                    subGroupName = subGroupWithIncomeHistories.expenseSubGroup?.name ?: ""
+                    sumOfSubGroup = roundedSumOfSubGroup,
+                    subGroupName = subGroupWithIncomeHistories.expenseSubGroupEntity?.name ?: ""
                 )
             }
+
+            val expenseGroupSum = subGroupNameAndSumItemExpenses.sumOf { it.sumOfSubGroup }
+
+            val roundedIncomeGroupSum = roundDoubleToTwoDecimalPlaces(expenseGroupSum)
+
+            val formattedRoundedIncomeGroupSum = removeTrailingZeros(roundedIncomeGroupSum.toString()) + analyzeViewModel.currentDefaultCurrencySymbol
 
             categoryList.add(
                 GroupItem(
                     groupName = groupName,
-                    subGroupNameAndSumItem = subGroupNameAndSumItemExpens
+                    groupSum = formattedRoundedIncomeGroupSum,
+                    subGroupNameAndSumItem = subGroupNameAndSumItemExpenses
                 )
             )
         }
 
         return categoryList
     }
-
 
     private fun addToGroupAdapter(categoryItem: CategoryItem) {
         val mList = categoryExpandableAdapter.getList()
@@ -168,7 +222,7 @@ class AnalyzeFragment : Fragment() {
         categoryExpandableAdapter.setList(mList)
     }
 
-    private fun getIncomeChangingBalanceRecords(it: List<IncomeHistory>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
+    private fun getIncomeChangingBalanceRecords(it: List<IncomeHistoryEntity>): IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories? {
         if (it.isNotEmpty()) {
             val incomeSubGroupWithIncomeHistories = arrayListOf(IncomeSubGroupWithIncomeHistories(null, it))
             return IncomeGroupWithIncomeSubGroupsIncludingIncomeHistories(null, incomeSubGroupWithIncomeHistories)
@@ -176,7 +230,7 @@ class AnalyzeFragment : Fragment() {
         return null
     }
 
-    private fun getExpenseChangingBalanceRecords(it: List<ExpenseHistory>): ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories? {
+    private fun getExpenseChangingBalanceRecords(it: List<ExpenseHistoryEntity>): ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories? {
         if (it.isNotEmpty()) {
             val expenseSubGroupWithExpenseHistories = arrayListOf(ExpenseSubGroupWithExpenseHistories(null, it))
             return ExpenseGroupWithExpenseSubGroupsIncludingExpenseHistories(null, expenseSubGroupWithExpenseHistories)

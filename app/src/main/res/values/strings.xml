@@ -132,7 +132,7 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
 
-    <string name="groups_and_sub_groups">Groups and Sub groups</string>
+    <string name="groups_and_sub_groups">Groups and subgroups</string>
     <string name="wallets">Wallets</string>
     <string name="update_expense_group">Update expense group</string>
     <string name="update_income_group">Update income group</string>
@@ -198,5 +198,18 @@
     <string name="add_new_expense_sub_group">Add new expense sub group</string>
     <string name="add_new_expense_group">Add new expense group</string>
     <string name="text_validation_error_more_then_two_digits_after_point">No more then 2 digits after point</string>
+
+    <string name="delete">Delete</string>
+    <string name="default_currency">Default currency</string>
+    <string name="currency">Currency</string>
+    <string name="select_default_currency">Select default currency</string>
+
+    <string name="rates">Rates</string>
+    <string name="refresh_rates">Refresh rates</string>
+    <string name="base">base</string>
+    <string name="required">Required</string>
+
+    <string name="ok">OK</string>
+    <string name="select_currency">Select currency</string>
 
 </resources>

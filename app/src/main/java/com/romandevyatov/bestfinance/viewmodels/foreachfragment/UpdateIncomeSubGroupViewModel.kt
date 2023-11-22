@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.entities.relations.IncomeGroupWithIncomeSubGroups
 import com.romandevyatov.bestfinance.data.repositories.IncomeGroupRepository
@@ -23,7 +23,7 @@ class UpdateIncomeSubGroupViewModel @Inject constructor(
         return incomeGroupRepository.getIncomeGroupWithIncomeSubGroupsByIncomeGroupIdLiveData(id)
     }
 
-    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroup>> {
+    fun getAllIncomeGroupNotArchivedLiveData(): LiveData<List<IncomeGroupEntity>> {
         return incomeGroupRepository.getAllIncomeGroupNotArchivedLiveData()
     }
 

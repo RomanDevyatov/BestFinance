@@ -10,16 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.data.validation.IsDigitValidator
 import com.romandevyatov.bestfinance.data.validation.TwoDigitsAfterPoint
 import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddWalletBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.ADD_INCOME_HISTORY_FRAGMENT
@@ -31,6 +33,11 @@ import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.NumberConverter
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedAddWalletFormViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransferForm
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddWalletForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,6 +47,10 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
+
+    private val sharedModifiedAddWalletFormViewModel: SharedModifiedAddWalletFormViewModel by activityViewModels()
+    private val sharedModifiedAddTransactionViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
+    private val sharedModifiedAddTransferViewModel: SharedModifiedViewModel<AddTransferForm> by activityViewModels()
 
     private val args: AddWalletFragmentArgs by navArgs()
 
@@ -56,19 +67,33 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
 
         setUpTextToSpeech()
 
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        restoreAmountDateCommentValues()
+
         binding.balanceEditText.addGenericTextWatcher()
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+        binding.currencyEditText.setOnClickListener {
+            saveAddWalletForm()
+
+            val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationSelectCurrency()
+            action.source = Constants.ADD_WALLET_FRAGMENT
+            findNavController().navigate(action)
+        }
+
+        val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                sharedModifiedAddWalletFormViewModel.set(null)
                 performNavigation(args.source, null)
             }
-        })
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.addButton.setOnClickListener {
             if (!isButtonClickable) return@setOnClickListener
@@ -85,10 +110,44 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
+    private fun saveAddWalletForm() {
+        val nameBinding = binding.nameEditText.text.toString().trim()
+        val balanceBinding = binding.balanceEditText.text.toString().trim()
+        val currencyBinding = binding.currencyEditText.text.toString().trim()
+        val descriptionBinding = binding.descriptionEditText.text.toString().trim()
+
+        val addWalletForm = AddWalletForm(
+            name = nameBinding,
+            balance = balanceBinding,
+            currencyCode = currencyBinding,
+            description = descriptionBinding
+        )
+        sharedModifiedAddWalletFormViewModel.set(addWalletForm)
+    }
+
+    private fun restoreAmountDateCommentValues() {
+        val modifiedAddWalletForm = sharedModifiedAddWalletFormViewModel.modelForm
+
+        if (modifiedAddWalletForm?.balance != null) {
+            binding.balanceEditText.setText(modifiedAddWalletForm.balance)
+        }
+
+        if (modifiedAddWalletForm?.name != null) {
+            binding.nameEditText.setText(modifiedAddWalletForm.name)
+        }
+
+        if (modifiedAddWalletForm?.description != null) {
+            binding.descriptionEditText.setText(modifiedAddWalletForm.description)
+        }
+        val currencyCode = modifiedAddWalletForm?.currencyCode ?: walletViewModel.currentDefaultCurrencyCode
+        binding.currencyEditText.text = currencyCode
+    }
+
     private fun sendWallet() {
         val walletNameBinding = binding.nameEditText.text.toString().trim()
         val walletBalanceBinding = binding.balanceEditText.text.toString().trim()
         val walletDescriptionBinding = binding.descriptionEditText.text.toString().trim()
+        val currencyCodeBinding = binding.currencyEditText.text.toString().trim()
 
         val walletNameValidation = EmptyValidator(walletNameBinding).validate()
         binding.nameLayout.error = if (!walletNameValidation.isSuccess) getString(walletNameValidation.message) else null
@@ -102,13 +161,15 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
             walletViewModel.getWalletByNameLiveData(walletNameBinding)
                 .observe(viewLifecycleOwner) { wallet ->
                     if (wallet == null) {
-                        val newWallet = Wallet(
+                        val newWalletEntity = WalletEntity(
                             name = walletNameBinding,
                             balance = walletBalanceBinding.toDouble(),
-                            description = walletDescriptionBinding
+                            description = walletDescriptionBinding,
+                            currencyCode = currencyCodeBinding
                         )
 
-                        walletViewModel.insertWallet(newWallet)
+                        walletViewModel.insertWallet(newWalletEntity)
+                        sharedModifiedAddWalletFormViewModel.set(null)
                         performNavigation(args.source, walletNameBinding)
                     } else if (wallet.archivedDate == null) {
                         WindowUtil.showExistingDialog(
@@ -120,6 +181,7 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
                             requireContext(),
                             getString(R.string.unarchive_wallet, wallet.name, wallet.name)
                         ) {
+                            sharedModifiedAddWalletFormViewModel.set(null)
                             walletViewModel.unarchiveWallet(wallet)
                             performNavigation(args.source, wallet.name)
                         }
@@ -235,32 +297,56 @@ class AddWalletFragment : VoiceAssistanceBaseFragment() {
     private fun performNavigation(prevFragmentString: String?, walletName: String?) {
         when (prevFragmentString) {
             ADD_INCOME_HISTORY_FRAGMENT -> {
-                val action =
-                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddIncome()
-                action.walletName = walletName
-                action.incomeGroupName = null
-                action.incomeSubGroupName = null
-                findNavController().navigate(action)
+                saveWalletName(walletName)
+                findNavController().popBackStack(R.id.add_income_fragment, false)
             }
             ADD_EXPENSE_HISTORY_FRAGMENT -> {
-                val action =
-                    AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddExpense()
-                action.walletName = walletName
-                action.expenseGroupName = null
-                action.expenseSubGroupName = null
-                findNavController().navigate(action)
+                saveWalletName(walletName)
+                findNavController().popBackStack(R.id.add_expense_fragment, false)
             }
             ADD_TRANSFER_HISTORY_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationAddTransfer()
-                action.walletName = walletName
-                action.spinnerType = args.spinnerType
-                findNavController().navigate(action)
+                saveWalletNameForTransferForm(walletName)
+                findNavController().popBackStack(R.id.add_transfer_fragment, false)
             }
             WALLETS_FRAGMENT -> {
-                val action = AddWalletFragmentDirections.actionNavigationAddWalletToNavigationWallet()
-                findNavController().navigate(action)
+                sharedModifiedAddWalletFormViewModel.set(null)
+                findNavController().popBackStack(R.id.wallet_fragment, false)
+            }
+            else -> {
+                findNavController().navigateUp()
             }
         }
     }
+
+    private fun saveWalletName(name: String?) {
+        if (name != null) {
+            val updatedMod = sharedModifiedAddTransactionViewModel.modelForm?.copy(
+                walletSpinnerValue = name
+            )
+            sharedModifiedAddTransactionViewModel.modelForm = updatedMod
+        }
+    }
+
+    private fun saveWalletNameForTransferForm(name: String?) {
+        if (name != null) {
+            when(args.spinnerType) {
+                Constants.SPINNER_FROM -> {
+                    val updatedFromWalletMod = sharedModifiedAddTransferViewModel.modelForm?.copy(
+                        fromWalletSpinnerValue = name
+                    )
+                    sharedModifiedAddTransferViewModel.modelForm = updatedFromWalletMod
+                }
+                Constants.SPINNER_TO -> {
+                    val updatedToWalletMod = sharedModifiedAddTransferViewModel.modelForm?.copy(
+                        toWalletSpinnerValue = name
+                    )
+                    sharedModifiedAddTransferViewModel.modelForm = updatedToWalletMod
+                }
+            }
+
+        }
+    }
+
+
 
 }

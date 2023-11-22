@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/CustomCardViewStyle"
     android:orientation="horizontal">
     
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" >
+        android:paddingTop="30dp" >
 
         <ImageView
             android:id="@+id/subcategoryIcon"
@@ -22,18 +21,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Add the tick icon at the end (visibility will be set programmatically) -->
-
         <TextView
             android:id="@+id/subcategoryName"
             style="@style/CustomTextViewStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Text"
             android:textSize="18sp"
+            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/subcategoryIcon"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/currencyCodeTextView"
+            style="@style/CustomTextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Currency"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tickIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
             android:id="@+id/tickIcon"

@@ -38,7 +38,7 @@ class GroupExpandableAdapter(private val groupItems: List<GroupItem>) :
 
         fun bind(groupItem: GroupItem) {
             binding.groupName.text = groupItem.groupName
-            binding.globalSummaTextView.text = calculateSubGroupSumma(groupItem).toString()
+            binding.globalSummaTextView.text = groupItem.groupSum
 
             if (groupItem.isExpanded) {
                 binding.expandableLayout.visibility = View.VISIBLE
@@ -52,10 +52,6 @@ class GroupExpandableAdapter(private val groupItems: List<GroupItem>) :
 
             val adapter = groupItem.subGroupNameAndSumItem?.let { SubGroupAdapter(it) }
             binding.subGroupsRecyclerview.adapter = adapter
-        }
-
-        private fun calculateSubGroupSumma(groupItem: GroupItem): Double {
-            return groupItem.subGroupNameAndSumItem?.sumOf { it.sumOfSubGroup } ?: 0.0
         }
     }
 

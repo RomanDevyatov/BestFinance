@@ -16,11 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.entities.relations.ExpenseGroupWithExpenseSubGroups
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateFormat
 import com.romandevyatov.bestfinance.data.roomdb.converters.LocalDateTimeRoomTypeConverter.Companion.dateTimeFormatter
@@ -32,9 +31,11 @@ import com.romandevyatov.bestfinance.data.validation.base.BaseValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseHistoryBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.Constants.ADD_EXPENSE_HISTORY_FRAGMENT
 import com.romandevyatov.bestfinance.utils.Constants.SHOW_DROP_DOWN_DELAY_MS
+import com.romandevyatov.bestfinance.utils.Constants.UNCALLABLE_WORD
 import com.romandevyatov.bestfinance.utils.DateTimeUtils
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
@@ -54,7 +55,6 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
     private val addHistoryViewModel: AddExpenseHistoryViewModel by viewModels()
     private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
-    private val args: AddExpenseHistoryFragmentArgs by navArgs()
 
     private val groupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
     private val subGroupSpinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
@@ -93,6 +93,8 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
         handler = Handler(Looper.getMainLooper())
 
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -101,6 +103,8 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.amountEditText.addGenericTextWatcher()
+
+        binding.currencyEditText.setText(addHistoryViewModel.getDefaultCurrencyCode())
 
         setOnBackPressedCallback()
 
@@ -181,11 +185,11 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.group_doesnt_exist, handledSpokenValue)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // create new
                     addHistoryViewModel.insertExpenseGroup(
-                        ExpenseGroup(
+                        ExpenseGroupEntity(
                             name = spokenValue!!
                         )
                     )
@@ -198,13 +202,13 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = getString(R.string.created_group_is_set))
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = Constants.UNCALLABLE_WORD // any
+                    spokenValue = UNCALLABLE_WORD // any
                     val ask = getString(R.string.call_group_one_more_time)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // start again
                     startVoiceAssistance()
@@ -232,18 +236,18 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.add_new_subgroup_prompt, handledSpokenValue)
                 speakTextAndRecognize(ask, false) // ask new
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) { // if i want to create new subgroup
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) { // if i want to create new subgroup
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // if I sad yes I want to create new subgroup
                     speakText(getString(R.string.adding_subgroup, spokenValue))
 
                     val groupId = groupSpinnerItemsGlobal.find { it.name == binding.groupSpinner.text.toString() }?.id!!
 
-                    val newExpenseSubGroup = ExpenseSubGroup(
+                    val newExpenseSubGroupEntity = ExpenseSubGroupEntity(
                         name = spokenValue!!,
                         expenseGroupId = groupId
                     )
-                    addHistoryViewModel.insertExpenseSubGroup(newExpenseSubGroup)
+                    addHistoryViewModel.insertExpenseSubGroup(newExpenseSubGroupEntity)
                     binding.subGroupSpinner.setText(spokenValue, false)
 
                     spokenValue = null
@@ -251,13 +255,13 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = getString(R.string.created_subgroup_is_set))
                 }
                 getString(R.string.no) -> { // if I sad no I don't want to create new subgroup
-                    spokenValue = Constants.UNCALLABLE_WORD
+                    spokenValue = UNCALLABLE_WORD
                     val ask = getString(R.string.continue_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) { // one more time
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) { // one more time
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> {
                     startVoiceAssistance()
@@ -288,7 +292,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                 val ask = getString(R.string.wallet_doesnt_exist, handledSpokenValue, handledSpokenValue)
                 speakTextAndRecognize(ask, false)
             }
-        } else if (!spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (!spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> {
                     voicedWalletName = spokenValue as String
@@ -299,14 +303,14 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     nextStage(speakTextBefore = message)
                 }
                 getString(R.string.no) -> { // then ask exit or start again?
-                    spokenValue = Constants.UNCALLABLE_WORD // any
+                    spokenValue = UNCALLABLE_WORD // any
 
                     val ask = getString(R.string.continue_wallet_prompt)
                     speakTextAndRecognize(ask, false)
                 }
                 else -> speakText(getString(R.string.you_said, handledSpokenValue))
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> startVoiceAssistance() // start again
                 getString(R.string.no) -> { // exit
@@ -325,11 +329,12 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
             if (convertedNumber != null) {
                 if (voicedWalletName != null) {
-                    val newWallet = Wallet(
+                    val newWalletEntity = WalletEntity(
                         name = voicedWalletName!!,
-                        balance = convertedNumber
+                        balance = convertedNumber,
+                        currencyCode = addHistoryViewModel.getDefaultCurrencyCode()
                     )
-                    addHistoryViewModel.insertWallet(newWallet)
+                    addHistoryViewModel.insertWallet(newWalletEntity)
 
                     binding.walletSpinner.setText(voicedWalletName, false)
 
@@ -338,18 +343,18 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
                     Log.e("AIH.balance", "voicedWalletName is null!")
                 }
             } else {
-                spokenValue = Constants.UNCALLABLE_WORD
+                spokenValue = UNCALLABLE_WORD
 
                 val askSpeechText = getString(R.string.incorrect_balance)
                 speakTextAndRecognize(askSpeechText, false)
             }
-        } else if (spokenValue.equals(Constants.UNCALLABLE_WORD)) {
+        } else if (spokenValue.equals(UNCALLABLE_WORD)) {
             when (handledSpokenValue.lowercase()) {
                 getString(R.string.yes) -> { // start again setting balance
                     startVoiceAssistance()
                 }
                 getString(R.string.no) -> { // exit
-                    spokenValue = Constants.UNCALLABLE_WORD
+                    spokenValue = UNCALLABLE_WORD
                     voicedWalletName = null
                     steps.remove(InputState.SET_WALLET_BALANCE)
                     currentStageIndex -= 1
@@ -424,7 +429,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 sharedModViewModel.set(null)
-                findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+                navigateToHome()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -466,10 +471,10 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendExpenseHistory() {
-        val subGroupNameBinding = binding.subGroupSpinner.text.toString()
+        val subGroupNameBinding = binding.subGroupSpinner.text.toString().trim()
         val amountBinding = binding.amountEditText.text.toString().trim()
         val commentBinding = binding.commentEditText.text.toString().trim()
-        val walletNameBinding = binding.walletSpinner.text.toString()
+        val walletNameBinding = binding.walletSpinner.text.toString().trim()
         val dateBinding = binding.dateEditText.text.toString().trim()
         val timeBinding = binding.timeEditText.text.toString().trim()
 
@@ -518,7 +523,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun navigateToHome() {
-        findNavController().navigate(R.id.action_navigation_add_expense_to_navigation_home)
+        findNavController().popBackStack(R.id.home_fragment, false)
     }
 
     private fun setGroupAndSubGroupSpinnerAdapter() {
@@ -569,7 +574,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
         ).observe(viewLifecycleOwner) { groupWithSubGroups ->
             val spinnerSubItems: MutableList<SpinnerItem> = mutableListOf()
 
-            if (groupWithSubGroups != null) {
+            groupWithSubGroups?.let {
                 spinnerSubItems.addAll(getSpinnerSubItemsNotArchived(groupWithSubGroups))
             }
 
@@ -699,6 +704,15 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
 
             val selectedWalletName = binding.walletSpinner.text.toString()
 
+            val selectedWalletId = walletItemsGlobal.find { it.name == selectedWalletName }?.id
+            if (selectedWalletId != null) {
+                addHistoryViewModel.getWalletById(selectedWalletId).observe(viewLifecycleOwner) { wallet ->
+                    wallet?.let {
+                        binding.currencyEditText.setText(it.currencyCode)
+                    }
+                }
+            }
+
             if (selectedWalletName == ADD_NEW_WALLET) {
                 setPrevValue(walletSpinnerValueGlobalBeforeAdd, binding.walletSpinner)
 
@@ -715,7 +729,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableGroupSpinnersValue(spinnerGroupItems: MutableList<SpinnerItem>) {
-        val savedGroupName = args.expenseGroupName ?: sharedModViewModel.modelForm?.groupSpinnerValue
+        val savedGroupName = sharedModViewModel.modelForm?.groupSpinnerValue
 
         if (savedGroupName?.isNotBlank() == true) {
             resetSubGroupSpinner()
@@ -729,7 +743,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableSubGroupSpinnersValue(spinnerSubItems: MutableList<SpinnerItem>) {
-        val savedSubGroupName = args.expenseSubGroupName ?: sharedModViewModel.modelForm?.subGroupSpinnerValue
+        val savedSubGroupName = sharedModViewModel.modelForm?.subGroupSpinnerValue
 
         if (savedSubGroupName?.isNotBlank() == true && spinnerSubItems.find { it.name == savedSubGroupName} != null) {
             subGroupSpinnerValueGlobalBeforeAdd = savedSubGroupName
@@ -739,7 +753,7 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun setIfAvailableWalletSpinnerValue(spinnerWalletItems: MutableList<SpinnerItem>) {
-        val savedWalletName = args.walletName ?: sharedModViewModel.modelForm?.walletSpinnerValue
+        val savedWalletName = sharedModViewModel.modelForm?.walletSpinnerValue
 
         if (savedWalletName?.isNotBlank() == true && spinnerWalletItems.find { it.name == savedWalletName} != null) {
             walletSpinnerValueGlobalBeforeAdd = savedWalletName
@@ -749,41 +763,41 @@ class AddExpenseHistoryFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun restoreAmountDateCommentValues() {
-        val mod = sharedModViewModel.modelForm
+        val addTransactionForm = sharedModViewModel.modelForm
 
-        if (mod?.amount != null) {
-            binding.amountEditText.setText(mod.amount)
+        if (addTransactionForm?.amount != null) {
+            binding.amountEditText.setText(addTransactionForm.amount)
         }
 
-        if (mod?.date != null) {
-            binding.dateEditText.setText(mod.date)
+        if (addTransactionForm?.date != null) {
+            binding.dateEditText.setText(addTransactionForm.date)
         }
 
-        if (mod?.time != null) {
-            binding.timeEditText.setText(mod.time)
+        if (addTransactionForm?.time != null) {
+            binding.timeEditText.setText(addTransactionForm.time)
         }
 
-        if (mod?.comment != null) {
-            binding.commentEditText.setText(mod.comment)
+        if (addTransactionForm?.comment != null) {
+            binding.commentEditText.setText(addTransactionForm.comment)
         }
     }
 
-    private fun getGroupItemsForSpinner(groups: List<ExpenseGroup>): MutableList<SpinnerItem> {
+    private fun getGroupItemsForSpinner(groups: List<ExpenseGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
 
     private fun getSpinnerSubItemsNotArchived(groupWithSubGroups: ExpenseGroupWithExpenseSubGroups): MutableList<SpinnerItem> {
-        return groupWithSubGroups.expenseSubGroups.filter {
+        return groupWithSubGroups.expenseSubGroupEntities.filter {
             it.archivedDate == null
         }.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
 
-    private fun getWalletItemsForSpinner(wallets: List<Wallet>): MutableList<SpinnerItem> {
-        return wallets.map {
+    private fun getWalletItemsForSpinner(walletEntities: List<WalletEntity>): MutableList<SpinnerItem> {
+        return walletEntities.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }

@@ -1,5 +1,6 @@
 package com.romandevyatov.bestfinance.ui.fragments.add.subgroup
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -7,23 +8,28 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
-import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
+import com.romandevyatov.bestfinance.data.entities.ExpenseSubGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddExpenseSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddExpenseSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,12 +39,26 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
     private val binding get() = _binding!!
 
     private val addSubGroupViewModel: AddExpenseSubGroupViewModel by viewModels()
+    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private val args: AddExpenseSubGroupFragmentArgs by navArgs()
 
     private val spinnerItemsGlobal: MutableList<SpinnerItem> = mutableListOf()
 
     private var isButtonClickable = true
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val callback = object : OnBackPressedCallback(
+            true
+        ) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack(R.id.add_expense_fragment, false)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +70,8 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
         setUpSpeechRecognizer()
 
         setUpTextToSpeech()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -75,9 +97,9 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun createExpenseSubGroup() {
-        val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
-        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
-        val selectedGroupNameBinding = binding.groupSpinner.text.toString()
+        val subGroupNameBinding = binding.subGroupNameEditText.text.toString().trim()
+        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString().trim()
+        val selectedGroupNameBinding = binding.groupSpinner.text.toString().trim()
 
         val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
         binding.subGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(R.string.error_empty_sub_group_name) else null
@@ -92,9 +114,16 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
                 subGroupNameBinding, groupId
             ).observe(viewLifecycleOwner) { subGroup ->
                 if (subGroup == null) {
-                    addIncomeSubGroup(subGroupNameBinding, descriptionBinding, groupId)
+                    val newExpenseSubGroupEntity = ExpenseSubGroupEntity(
+                        name = subGroupNameBinding,
+                        description = descriptionBinding,
+                        expenseGroupId = groupId
+                    )
 
-                    navigateToAddExpense(selectedGroupNameBinding, subGroupNameBinding)
+                    addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroupEntity)
+
+                    saveGroupAndSubGroupName(selectedGroupNameBinding, subGroupNameBinding)
+                    findNavController().popBackStack(R.id.add_expense_fragment, false)
                 } else if (subGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -110,6 +139,11 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun calculateSteps(): MutableList<InputState> {
@@ -205,39 +239,8 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
         spokenValue = null
     }
 
-    private fun addIncomeSubGroup(
-        subGroupNameBinding: String,
-        descriptionBinding: String,
-        groupId: Long
-    ) {
-        val newExpenseSubGroup = ExpenseSubGroup(
-            name = subGroupNameBinding,
-            description = descriptionBinding,
-            expenseGroupId = groupId
-        )
-
-        addSubGroupViewModel.insertExpenseSubGroup(newExpenseSubGroup)
-    }
-
-    private fun navigateToAddExpense(
-        selectedGroupNameBinding: String,
-        subGroupNameBinding: String
-    ) {
-        val action =
-            AddExpenseSubGroupFragmentDirections.actionNavigationAddExpenseSubGroupToNavigationAddExpense()
-        action.expenseGroupName = selectedGroupNameBinding
-        action.expenseSubGroupName = subGroupNameBinding
-
-        findNavController().navigate(action)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun initGroupSpinner() {
-        addSubGroupViewModel.allExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
+        addSubGroupViewModel.allEntityExpenseGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { expenseGroupList ->
             val spinnerItems = getExpenseGroupListForSpinner(expenseGroupList)
 
             spinnerItemsGlobal.clear()
@@ -259,7 +262,15 @@ class AddExpenseSubGroupFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getExpenseGroupListForSpinner(groups: List<ExpenseGroup>): MutableList<SpinnerItem> {
+    private fun saveGroupAndSubGroupName(groupName: String, subGroupName: String) {
+        val updatedModelForm = sharedModViewModel.modelForm?.copy(
+            groupSpinnerValue = groupName,
+            subGroupSpinnerValue = subGroupName
+        )
+        sharedModViewModel.modelForm = updatedModelForm
+    }
+
+    private fun getExpenseGroupListForSpinner(groups: List<ExpenseGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()

@@ -10,22 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.entities.IncomeSubGroup
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentAddIncomeSubGroupBinding
 import com.romandevyatov.bestfinance.ui.adapters.spinner.GroupSpinnerAdapter
 import com.romandevyatov.bestfinance.ui.adapters.spinner.models.SpinnerItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.SpinnerUtil
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.utils.voiceassistance.InputState
 import com.romandevyatov.bestfinance.utils.voiceassistance.base.VoiceAssistanceBaseFragment
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.AddIncomeSubGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedModifiedViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.models.AddTransactionForm
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +39,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
     private val binding get() = _binding!!
 
     private val addSubGroupViewModel: AddIncomeSubGroupViewModel by viewModels()
+    private val sharedModViewModel: SharedModifiedViewModel<AddTransactionForm> by activityViewModels()
 
     private val args: AddIncomeSubGroupFragmentArgs by navArgs()
 
@@ -49,12 +54,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
             true
         ) {
             override fun handleOnBackPressed() {
-                val action =
-                    AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-                action.incomeGroupName = null
-                action.incomeSubGroupName = null
-                action.walletName = null
-                findNavController().navigate(action)
+                findNavController().popBackStack(R.id.add_income_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -70,6 +70,8 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
         setUpSpeechRecognizer()
 
         setUpTextToSpeech()
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -94,10 +96,10 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    fun createIncomeSubGroup() {
-        val subGroupNameBinding = binding.subGroupNameEditText.text.toString()
-        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString()
-        val selectedGroupNameBinding = binding.groupSpinner.text.toString()
+    private fun createIncomeSubGroup() {
+        val subGroupNameBinding = binding.subGroupNameEditText.text.toString().trim()
+        val descriptionBinding = binding.subGroupDescriptionEditText.text.toString().trim()
+        val selectedGroupNameBinding = binding.groupSpinner.text.toString().trim()
 
         val subGroupNameValidation = EmptyValidator(subGroupNameBinding).validate()
         binding.incomeSubGroupNameTextInputLayout.error = if (!subGroupNameValidation.isSuccess) getString(R.string.error_empty_sub_group_name) else null
@@ -119,11 +121,9 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
                     )
 
                     addSubGroupViewModel.insertIncomeSubGroup(newIncomeSubGroup)
-                    val action =
-                        AddIncomeSubGroupFragmentDirections.actionNavigationAddIncomeSubGroupToNavigationAddIncome()
-                    action.incomeGroupName = selectedGroupNameBinding
-                    action.incomeSubGroupName = subGroupNameBinding
-                    findNavController().navigate(action)
+
+                    saveGroupAndSubGroupName(selectedGroupNameBinding, subGroupNameBinding)
+                    findNavController().popBackStack(R.id.add_income_fragment, false)
                 } else if (subGroup.archivedDate == null) {
                     WindowUtil.showExistingDialog(
                         requireContext(),
@@ -240,7 +240,7 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
     }
 
     private fun initGroupSpinner() {
-        addSubGroupViewModel.incomeGroupsNotArchivedLiveData.observe(viewLifecycleOwner) { incomeGroupList ->
+        addSubGroupViewModel.incomeGroupsNotArchivedLiveDataEntity.observe(viewLifecycleOwner) { incomeGroupList ->
             incomeGroupList?.let { groups ->
                 val spinnerItems = getIncomeGroupList(groups)
 
@@ -264,9 +264,18 @@ class AddIncomeSubGroupFragment : VoiceAssistanceBaseFragment() {
         }
     }
 
-    private fun getIncomeGroupList(groups: List<IncomeGroup>): MutableList<SpinnerItem> {
+    private fun saveGroupAndSubGroupName(groupName: String, subGroupName: String) {
+        val updatedModelForm = sharedModViewModel.modelForm?.copy(
+            groupSpinnerValue = groupName,
+            subGroupSpinnerValue = subGroupName
+        )
+        sharedModViewModel.modelForm = updatedModelForm
+    }
+
+    private fun getIncomeGroupList(groups: List<IncomeGroupEntity>): MutableList<SpinnerItem> {
         return groups.map {
             SpinnerItem(it.id, it.name)
         }.toMutableList()
     }
+
 }

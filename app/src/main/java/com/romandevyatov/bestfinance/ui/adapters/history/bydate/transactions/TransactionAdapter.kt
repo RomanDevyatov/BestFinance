@@ -38,11 +38,10 @@ class TransactionAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(transactionItem: TransactionItem) {
-            var amount = transactionItem.amount.toString()
-            if (transactionItem.amount >= 0.0) {
-                amount = "+$amount"
-            }
-            binding.amountTextView.text = amount
+
+            binding.amountTextView.text = transactionItem.amount
+
+            binding.amountBaseTextView.text = transactionItem.amountBase
 
             binding.incomeGroupNameTextView.text = transactionItem.groupName
 
@@ -50,7 +49,7 @@ class TransactionAdapter(
 
             binding.walletNameTextView.text = transactionItem.walletName
 
-            binding.dateIncomeTextView.text = transactionItem.date?.toLocalTime().toString()
+            binding.timeTextView.text = transactionItem.date?.toLocalTime().toString()
 
             if (imageId != null) {
                 binding.imageView.setImageResource(imageId)

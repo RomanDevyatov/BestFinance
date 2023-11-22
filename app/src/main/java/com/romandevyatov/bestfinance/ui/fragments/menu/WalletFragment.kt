@@ -18,7 +18,9 @@ import com.romandevyatov.bestfinance.R
 import com.romandevyatov.bestfinance.databinding.FragmentBottomMenuWalletsBinding
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.WalletMenuAdapter
 import com.romandevyatov.bestfinance.ui.adapters.menu.wallet.model.WalletItem
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
+import com.romandevyatov.bestfinance.utils.TextFormatter.removeTrailingZeros
 import com.romandevyatov.bestfinance.viewmodels.foreachmodel.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -38,6 +40,9 @@ class WalletFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBottomMenuWalletsBinding.inflate(inflater, container, false)
+
+        BackStackLogger.logBackStack(findNavController())
+
         return binding.root
     }
 
@@ -47,7 +52,11 @@ class WalletFragment : Fragment() {
         setOnBackPressedHandler()
 
         walletViewModel.allWalletsNotArchivedLiveData.observe(viewLifecycleOwner) { walletList ->
-            walletList?.map { WalletItem(it.id, it.name, it.balance) }?.toMutableList()?.let { walletItems ->
+            walletList?.map { WalletItem(
+                it.id,
+                it.name,
+                removeTrailingZeros(it.balance.toString()) + walletViewModel.getCurrencySymbolByCode(it.currencyCode))
+            }?.toMutableList()?.let { walletItems ->
                 val spinnerWalletItems: MutableList<WalletItem> = mutableListOf()
 
                 walletItems.let {
@@ -67,7 +76,7 @@ class WalletFragment : Fragment() {
     private fun setOnBackPressedHandler() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.home_fragment)
+                findNavController().popBackStack(R.id.home_fragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -152,7 +161,7 @@ class WalletFragment : Fragment() {
                 walletViewModel.archiveWalletById(selectedWalletItem.id, LocalDateTime.now())
 
                 Snackbar.make(viewHolder.itemView, getString(R.string.wallet_is_archived, selectedWalletItem.name), Snackbar.LENGTH_LONG).apply {
-                    setAction("UNDO") {
+                    setAction(R.string.undo) {
                         walletViewModel.unarchiveWalletById(selectedWalletItem.id)
                     }
                     show()

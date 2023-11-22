@@ -37,7 +37,7 @@
 		<type label="SET" length="1" sql="SET" quote=""/>
 		<type label="Bit" length="0" sql="bit" quote=""/>
 	</group>
-</datatypes><table x="83" y="101" name="income_group">
+</datatypes><table x="127" y="102" name="income_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -57,7 +57,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="302" y="102" name="IncomeSubGroup">
+<table x="302" y="102" name="income_sub_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -78,13 +78,13 @@
 <part>id</part>
 </key>
 </table>
-<table x="602" y="101" name="income_history">
+<table x="516" y="101" name="income_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="income_sub_group_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="IncomeSubGroup" row="id" />
+<default>NULL</default><relation table="income_sub_group" row="id" />
 </row>
 <row name="date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -105,15 +105,11 @@
 <row name="created_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="currency_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="currency" row="id" />
-</row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="987" y="471" name="wallet">
+<table x="729" y="252" name="wallet">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -132,9 +128,9 @@
 <row name="description" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="currency_id" null="1" autoincrement="0">
+<row name="currency_code" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="currency" row="id" />
+<default>NULL</default><relation table="currency" row="code" />
 </row>
 <row name="archived_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -143,7 +139,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="77" y="373" name="expense_group">
+<table x="117" y="372" name="expense_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -181,7 +177,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="602" y="371" name="expense_history">
+<table x="514" y="377" name="expense_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -208,29 +204,22 @@
 <row name="created_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="currency_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="currency" row="id" />
-</row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="979" y="758" name="currency">
-<row name="id" null="1" autoincrement="1">
+<table x="902" y="392" name="currency">
+<row name="code" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="name" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="value" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>id</part>
+<part>code</part>
 </key>
 </table>
-<table x="602" y="625" name="transfer_history">
+<table x="902" y="102" name="transfer_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -257,10 +246,20 @@
 <row name="created_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="currency_id" null="1" autoincrement="0">
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="779" y="539" name="base_currency_rate">
+<row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="currency" row="id" />
-</row>
+<default>NULL</default></row>
+<row name="pair_name" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="value" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>

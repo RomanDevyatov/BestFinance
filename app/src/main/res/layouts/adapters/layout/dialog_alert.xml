@@ -15,9 +15,8 @@
 
         <TextView
             android:id="@+id/tvMessage"
-            style="@style/CustomTextViewStyle"
+            style="@style/CustomTextViewStyleWindow"
             android:textSize="24sp"
-            android:textColor="@color/black"
             android:textStyle="bold"
             android:text="Message"
             android:gravity="center"
@@ -36,7 +35,6 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNo"
                 style="@style/MaterialButtonStyle"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"
                 android:text="@string/no"
@@ -48,7 +46,6 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnYes"
                 style="@style/MaterialButtonStyle"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textAllCaps="false"
                 android:text="@string/yes"

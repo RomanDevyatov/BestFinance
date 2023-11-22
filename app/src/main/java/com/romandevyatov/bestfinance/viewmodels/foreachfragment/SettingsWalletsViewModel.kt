@@ -3,10 +3,11 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.Wallet
+import com.romandevyatov.bestfinance.data.entities.WalletEntity
 import com.romandevyatov.bestfinance.data.repositories.WalletRepository
+import com.romandevyatov.bestfinance.utils.sharedpreferences.Storage
+import com.romandevyatov.bestfinance.viewmodels.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,17 +16,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsWalletsViewModel @Inject constructor(
+    storage: Storage,
     private val walletRepository: WalletRepository
-) : ViewModel() {
+): BaseViewModel(storage) {
 
-    val allWalletsLiveData: LiveData<List<Wallet>> = walletRepository.getAllWalletLiveData()
+    val currentDefaultCurrencySymbol: String = getDefaultCurrencySymbol()
 
-    fun updateWallet(wallet: Wallet) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.updateWallet(wallet)
-    }
+    val allWalletsLiveData: LiveData<List<WalletEntity>> = walletRepository.getAllWalletLiveData()
 
-    fun deleteWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        walletRepository.deleteWalletById(id)
+    fun updateWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
+        walletRepository.updateWallet(walletEntity)
     }
 
     fun unarchiveWalletById(id: Long?) = viewModelScope.launch(Dispatchers.IO) {
@@ -34,7 +34,7 @@ class SettingsWalletsViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun archiveWalletById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        val wallet = walletRepository.getWalletById(id)
+        val wallet = walletRepository.getWalletByIdAsync(id)
         if (wallet != null) {
             val walletArchived = wallet.copy(
                 archivedDate = LocalDateTime.now()
@@ -44,12 +44,12 @@ class SettingsWalletsViewModel @Inject constructor(
         }
     }
 
-    private var deletedWalletItem: Wallet? = null
+    private var deletedWalletItemEntity: WalletEntity? = null
 
     fun deleteItem(id: Long) = viewModelScope.launch (Dispatchers.IO) {
         try {
-            val itemToDelete = walletRepository.getWalletById(id)
-            deletedWalletItem = itemToDelete
+            val itemToDelete = walletRepository.getWalletByIdAsync(id)
+            deletedWalletItemEntity = itemToDelete
             walletRepository.deleteWalletById(id)
         } catch (_: Exception) {
 
@@ -57,10 +57,10 @@ class SettingsWalletsViewModel @Inject constructor(
     }
 
     fun undoDeleteItem() = viewModelScope.launch (Dispatchers.IO) {
-        deletedWalletItem?.let { walletToRestore ->
+        deletedWalletItemEntity?.let { walletToRestore ->
             try {
                 walletRepository.insertWallet(walletToRestore)
-                deletedWalletItem = null
+                deletedWalletItemEntity = null
             } catch (_: Exception) { }
         }
     }

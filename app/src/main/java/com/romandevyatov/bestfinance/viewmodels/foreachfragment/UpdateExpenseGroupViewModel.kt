@@ -3,7 +3,7 @@ package com.romandevyatov.bestfinance.viewmodels.foreachfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.romandevyatov.bestfinance.data.entities.ExpenseGroup
+import com.romandevyatov.bestfinance.data.entities.ExpenseGroupEntity
 import com.romandevyatov.bestfinance.data.repositories.ExpenseGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,11 +15,11 @@ class UpdateExpenseGroupViewModel @Inject constructor(
     private val expenseGroupRepository: ExpenseGroupRepository
 ) : ViewModel() {
 
-    fun getExpenseGroupByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroup?> {
+    fun getExpenseGroupByNameLiveData(expenseGroupName: String): LiveData<ExpenseGroupEntity?> {
         return expenseGroupRepository.getExpenseGroupNameByNameLiveData(expenseGroupName)
     }
 
-    fun updateExpenseGroup(updatedExpenseGroup: ExpenseGroup) = viewModelScope.launch(Dispatchers.IO) {
-        expenseGroupRepository.updateExpenseGroup(updatedExpenseGroup)
+    fun updateExpenseGroup(updatedExpenseGroupEntity: ExpenseGroupEntity) = viewModelScope.launch(Dispatchers.IO) {
+        expenseGroupRepository.updateExpenseGroup(updatedExpenseGroupEntity)
     }
 }

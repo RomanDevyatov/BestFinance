@@ -10,16 +10,19 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.romandevyatov.bestfinance.R
-import com.romandevyatov.bestfinance.data.entities.IncomeGroup
+import com.romandevyatov.bestfinance.data.entities.IncomeGroupEntity
 import com.romandevyatov.bestfinance.data.validation.EmptyValidator
 import com.romandevyatov.bestfinance.databinding.FragmentUpdateIncomeGroupBinding
+import com.romandevyatov.bestfinance.utils.BackStackLogger
 import com.romandevyatov.bestfinance.utils.Constants
 import com.romandevyatov.bestfinance.utils.WindowUtil
 import com.romandevyatov.bestfinance.viewmodels.foreachfragment.UpdateIncomeGroupViewModel
+import com.romandevyatov.bestfinance.viewmodels.shared.SharedInitialTabIndexViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,11 +34,13 @@ class UpdateIncomeGroupFragment : Fragment() {
 
     private val updateIncomeGroupViewModel: UpdateIncomeGroupViewModel by viewModels()
 
+    private val sharedInitialTabIndexViewModel: SharedInitialTabIndexViewModel by activityViewModels()
+
     private val args: UpdateIncomeGroupFragmentArgs by navArgs()
 
     private var incomeGroupId: Long? = null
 
-    private var incomeGroupGlobal: IncomeGroup? = null
+    private var incomeGroupEntityGlobal: IncomeGroupEntity? = null
 
     private var isButtonClickable = true
 
@@ -52,7 +57,7 @@ class UpdateIncomeGroupFragment : Fragment() {
         updateIncomeGroupViewModel.getIncomeGroupByNameLiveData(args.incomeGroupName.toString())
             .observe(viewLifecycleOwner) { incomeGroup ->
                 incomeGroup?.let {
-                    incomeGroupGlobal = it.copy()
+                    incomeGroupEntityGlobal = it.copy()
                     binding.reusable.groupNameInputEditText.setText(it.name)
                     binding.reusable.groupDescriptionInputEditText.setText(it.description)
                     incomeGroupId = it.id
@@ -60,6 +65,8 @@ class UpdateIncomeGroupFragment : Fragment() {
                     binding.checkedTextView.isEnabled = false
                 }
             }
+
+        BackStackLogger.logBackStack(findNavController())
 
         return binding.root
     }
@@ -82,8 +89,8 @@ class UpdateIncomeGroupFragment : Fragment() {
             isButtonClickable = false
             view.isEnabled = false
 
-            val nameBinding = binding.reusable.groupNameInputEditText.text.toString()
-            val descriptionBinding = binding.reusable.groupDescriptionInputEditText.text.toString()
+            val nameBinding = binding.reusable.groupNameInputEditText.text.toString().trim()
+            val descriptionBinding = binding.reusable.groupDescriptionInputEditText.text.toString().trim()
             val isPassiveBinding = binding.reusable.isPassiveCheckBox.isChecked
 
             val nameEmptyValidation = EmptyValidator(nameBinding).validate()
@@ -115,10 +122,8 @@ class UpdateIncomeGroupFragment : Fragment() {
     }
 
     private fun navigateToSettingsGroupsAndSubGroupsSettingsFragment() {
-        val action =
-            UpdateIncomeGroupFragmentDirections.actionNavigationUpdateIncomeGroupToNavigationSettingsGroupsAndSubGroupsSettingsFragment()
-        action.initialTabIndex = 0
-        findNavController().navigate(action)
+        sharedInitialTabIndexViewModel.set(0)
+        findNavController().popBackStack(R.id.groups_and_sub_groups_settings_fragment, false)
     }
 
     private fun updateIncomeGroup(
@@ -126,15 +131,15 @@ class UpdateIncomeGroupFragment : Fragment() {
         descriptionBinding: String,
         isPassiveBinding: Boolean
     ) {
-        val updatedIncomeGroup = IncomeGroup(
+        val updatedIncomeGroupEntity = IncomeGroupEntity(
             id = incomeGroupId,
             name = nameBinding,
             isPassive = isPassiveBinding,
             description = descriptionBinding,
-            archivedDate = incomeGroupGlobal?.archivedDate
+            archivedDate = incomeGroupEntityGlobal?.archivedDate
         )
 
-        updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroup)
+        updateIncomeGroupViewModel.updateIncomeGroup(updatedIncomeGroupEntity)
     }
 
     override fun onDestroyView() {
