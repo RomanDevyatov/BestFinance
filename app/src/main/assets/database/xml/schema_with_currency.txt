@@ -37,7 +37,7 @@
 		<type label="SET" length="1" sql="SET" quote=""/>
 		<type label="Bit" length="0" sql="bit" quote=""/>
 	</group>
-</datatypes><table x="127" y="102" name="income_group">
+</datatypes><table x="103" y="241" name="income_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -57,7 +57,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="302" y="102" name="income_sub_group">
+<table x="285" y="234" name="income_sub_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -78,7 +78,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="516" y="101" name="income_history">
+<table x="506" y="233" name="income_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -86,19 +86,22 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="income_sub_group" row="id" />
 </row>
-<row name="date" null="1" autoincrement="0">
+<row name="wallet_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="wallet" row="id" />
+</row>
+<row name="amount" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="amount" null="1" autoincrement="0">
+<row name="amount_base" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="comment" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="wallet_id" null="1" autoincrement="0">
+<row name="date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="wallet" row="id" />
-</row>
+<default>NULL</default></row>
 <row name="archived_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -109,7 +112,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="729" y="252" name="wallet">
+<table x="736" y="409" name="wallet">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -139,7 +142,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="117" y="372" name="expense_group">
+<table x="96" y="486" name="expense_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -156,7 +159,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="303" y="372" name="expense_sub_group">
+<table x="281" y="488" name="expense_sub_group">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -177,7 +180,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="514" y="377" name="expense_history">
+<table x="502" y="489" name="expense_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -185,19 +188,22 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="expense_sub_group" row="id" />
 </row>
-<row name="date" null="1" autoincrement="0">
+<row name="wallet_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="wallet" row="id" />
+</row>
+<row name="amount" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="amount" null="1" autoincrement="0">
+<row name="amount_base" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="comment" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="wallet_id" null="1" autoincrement="0">
+<row name="date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="wallet" row="id" />
-</row>
+<default>NULL</default></row>
 <row name="archived_date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -208,7 +214,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="902" y="392" name="currency">
+<table x="918" y="639" name="currency">
 <row name="code" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -219,7 +225,7 @@
 <part>code</part>
 </key>
 </table>
-<table x="902" y="102" name="transfer_history">
+<table x="901" y="232" name="transfer_history">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -231,10 +237,13 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="wallet" row="id" />
 </row>
-<row name="date" null="1" autoincrement="0">
+<row name="amount" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="amount" null="1" autoincrement="0">
+<row name="amount_base" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="date" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="comment" null="1" autoincrement="0">
@@ -250,12 +259,12 @@
 <part>id</part>
 </key>
 </table>
-<table x="779" y="539" name="base_currency_rate">
+<table x="903" y="504" name="base_currency_rate">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="pair_name" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="value" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
